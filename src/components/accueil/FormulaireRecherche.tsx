@@ -78,7 +78,7 @@ export default function FormulaireRecherche({
   return (
     <form
       onSubmit={rechercher}
-      className="rounded-lg bg-alpine/90 p-5 shadow-flottant backdrop-blur-sm sm:p-6"
+      className="rounded-2xl bg-alpine/90 p-5 shadow-flottant backdrop-blur-sm sm:p-6"
       aria-label="Search for a transfer"
     >
       <div className="grid gap-4 sm:grid-cols-3">

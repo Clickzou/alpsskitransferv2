@@ -60,13 +60,13 @@ export default function Hero() {
             passe à la serif du site et à une taille lisible, et le bandeau ne
             court plus sur toute la largeur.
           */}
-          <p className="inline-block rounded bg-alpes px-6 py-3 font-display text-titre-section font-semibold text-white shadow-carte">
+          <p className="inline-block rounded-full bg-alpes px-8 py-3 font-display text-titre-section font-semibold text-white shadow-carte">
             {HERO.accroche}
           </p>
           {/* Le titre passe à la ligne sous l'accroche : côte à côte, les deux
               aplats de couleur se touchaient et formaient un seul bloc confus. */}
           <div className="mt-4">
-            <h1 className="mx-auto inline-block max-w-3xl text-balance rounded bg-marque px-5 py-2.5 font-display text-lg leading-snug text-white shadow-carte sm:text-xl">
+            <h1 className="mx-auto inline-block max-w-3xl text-balance rounded-2xl bg-marque px-7 py-3 font-display text-lg leading-snug text-white shadow-carte sm:text-xl">
               {HERO.titre}
             </h1>
           </div>
@@ -91,7 +91,7 @@ export default function Hero() {
           ].map((repere) => (
             <div
               key={repere.libelle}
-              className="rounded border border-white/15 bg-alpine/40 px-4 py-3 backdrop-blur-sm"
+              className="rounded-xl border border-white/15 bg-alpine/40 px-4 py-3 backdrop-blur-sm"
             >
               <dt className="font-display text-2xl text-white">{repere.valeur}</dt>
               <dd className="mt-1 text-xs uppercase tracking-wide text-glacier-300">
