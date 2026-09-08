@@ -61,6 +61,24 @@ const CHAMP =
   "mt-1 w-full min-w-0 rounded border border-glacier-300 bg-white px-3 py-2 text-sm text-alpine focus:border-alpes focus:outline-none focus:ring-2 focus:ring-alpes/30";
 const ETIQUETTE = "block text-xs font-semibold uppercase tracking-wide text-alpine-600";
 
+/**
+ * L'adresse telle que l'exploitant la lira, et telle que le chauffeur la
+ * saisira dans son GPS : la voie, puis le code postal et la commune.
+ *
+ * Un lieu du registre garde son seul nom — « Geneva Airport » n'a pas de code
+ * postal utile, et en ajouter un brouillerait la lecture.
+ */
+function adresseEntiere(valeur: ValeurLieu): string {
+  if (valeur.slug) return valeur.texte;
+  const commune = [valeur.codePostal, valeur.ville]
+    .map((p) => p?.trim())
+    .filter(Boolean)
+    .join(" ");
+  return commune && !valeur.texte.includes(commune)
+    ? `${valeur.texte}, ${commune}`
+    : valeur.texte;
+}
+
 export default function Tunnel({
   lieux,
   depart,
@@ -131,14 +149,14 @@ export default function Tunnel({
     () => ({
       from: de.slug,
       to: vers.slug,
-      fromText: de.texte,
-      toText: vers.texte,
+      fromText: adresseEntiere(de),
+      toText: adresseEntiere(vers),
       when,
       returnWhen: allerRetour ? returnWhen : undefined,
       returnFrom: allerRetour && retourAilleurs ? retourDe.slug : undefined,
       returnTo: allerRetour && retourAilleurs ? retourVers.slug : undefined,
-      returnFromText: retourDe.texte,
-      returnToText: retourVers.texte,
+      returnFromText: adresseEntiere(retourDe),
+      returnToText: adresseEntiere(retourVers),
       passengers,
       bags,
       skis,

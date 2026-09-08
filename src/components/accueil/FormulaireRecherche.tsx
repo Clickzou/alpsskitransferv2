@@ -101,7 +101,7 @@ export default function FormulaireRecherche({
           valeur={de}
           onChange={setDe}
           etiquette="Pick-up location"
-          placeholder="Airport, resort or address"
+          placeholder="Airport, resort, or address with postcode"
           variante="sombre"
           requis
         />
@@ -112,7 +112,7 @@ export default function FormulaireRecherche({
           valeur={vers}
           onChange={setVers}
           etiquette="Drop-off location"
-          placeholder="Resort, hotel or chalet address"
+          placeholder="Resort, or address with postcode and town"
           variante="sombre"
           requis
         />

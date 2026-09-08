@@ -34,6 +34,19 @@ export interface ValeurLieu {
   slug: string | null;
   /** Ce qui est affiché dans le champ, et envoyé au serveur si `slug` est nul. */
   texte: string;
+  /*
+   * Code postal et commune, pour une adresse. Renseignés automatiquement quand
+   * le visiteur choisit une suggestion, demandés à part sinon : un chauffeur ne
+   * se rend pas à « chez moi », et une adresse sans commune n'est pas une
+   * adresse. Ils ne concernent jamais un aéroport ni une station.
+   */
+  codePostal?: string;
+  ville?: string;
+}
+
+/** Une adresse est complète quand on sait dans quelle commune elle se trouve. */
+export function adresseComplete(valeur: ValeurLieu): boolean {
+  return valeur.slug !== null || (!!valeur.ville?.trim() && !!valeur.codePostal?.trim());
 }
 
 const ICONES: Record<Lieu["type"], string> = {
@@ -76,6 +89,7 @@ export default function ChampLieu({
   const conteneur = useRef<HTMLDivElement>(null);
 
   const [adresses, setAdresses] = useState<Lieu[]>([]);
+  const [complementOuvert, setComplementOuvert] = useState(false);
 
   const locales = useMemo(
     () => (ouvert ? chercherLieux(lieux, valeur.texte) : []),
@@ -131,8 +145,28 @@ export default function ChampLieu({
     return () => document.removeEventListener("mousedown", dehors);
   }, []);
 
+  /**
+   * Ce qui s'écrit dans le champ après un choix.
+   *
+   * Une adresse s'y écrit **en entier** — voie, code postal, commune — parce que
+   * c'est ce que le visiteur relit pour vérifier, et ce que le chauffeur devra
+   * saisir. « 8 Golf Palmola » seul ne dit pas où l'on va ; « 8 Golf Palmola,
+   * 31660 Buzet-sur-Tarn » le dit. Un aéroport ou une station gardent leur nom :
+   * ils sont uniques au registre, un code postal ne leur ajoute rien.
+   */
+  function libelleComplet(lieu: Lieu): string {
+    if (lieu.slug) return lieu.nom;
+    const commune = [lieu.codePostal, lieu.ville].map((x) => x?.trim()).filter(Boolean).join(" ");
+    return commune && !lieu.nom.includes(commune) ? `${lieu.nom}, ${commune}` : lieu.nom;
+  }
+
   function choisir(lieu: Lieu) {
-    onChange({ slug: lieu.slug, texte: lieu.nom });
+    onChange({
+      slug: lieu.slug,
+      texte: libelleComplet(lieu),
+      codePostal: lieu.codePostal,
+      ville: lieu.ville,
+    });
     setOuvert(false);
     setActif(-1);
   }
@@ -157,6 +191,25 @@ export default function ChampLieu({
       choisir(suggestions[actif === -1 ? 0 : actif]);
     }
   }
+
+  /*
+   * On ne réclame le complément qu'une fois la saisie posée : l'afficher pendant
+   * la frappe ferait apparaître et disparaître deux champs à chaque caractère.
+   */
+  /*
+   * Le complément s'ouvre quand l'adresse n'est pas reconnue, et **reste**
+   * ouvert : le masquer dès que la ville est saisie faisait disparaître le champ
+   * sous les doigts du visiteur au moment précis où il finissait de le remplir.
+   * Il ne se referme qu'en choisissant une suggestion, ou en vidant le champ.
+   */
+  const adresseLibre = !valeur.slug && valeur.texte.trim().length >= 3;
+
+  useEffect(() => {
+    if (!adresseLibre) setComplementOuvert(false);
+    else if (!ouvert && !adresseComplete(valeur)) setComplementOuvert(true);
+  }, [adresseLibre, ouvert, valeur]);
+
+  const complementRequis = complementOuvert && adresseLibre;
 
   const sombre = variante === "sombre";
   const champ = `mt-1 w-full min-w-0 rounded border bg-white px-3 py-2 text-sm text-alpine focus:border-alpes focus:outline-none focus:ring-2 focus:ring-alpes/40 ${
@@ -190,7 +243,12 @@ export default function ChampLieu({
         onChange={(e) => {
           // Toute frappe efface le slug : le texte ne correspond plus forcément
           // à un lieu du registre, et le prix ne doit pas rester celui d'avant.
-          onChange({ slug: null, texte: e.target.value });
+          onChange({
+            slug: null,
+            texte: e.target.value,
+            codePostal: undefined,
+            ville: undefined,
+          });
           setOuvert(true);
           setActif(-1);
         }}
@@ -229,13 +287,43 @@ export default function ChampLieu({
         </ul>
       ) : null}
 
-      {valeur.texte.length >= 2 && !valeur.slug && !ouvert ? (
-        <p className={`mt-1 text-xs ${sombre ? "text-glacier-300" : "text-alpine-600"}`}>
-          {langue === "fr"
-            ? "Adresse libre — nous confirmons le prix par e-mail."
-            : "Free-text address — we will confirm the price by email."}
-        </p>
+      {/*
+        Le complément n'apparaît que pour une adresse tapée à la main que le
+        géocodeur n'a pas confirmée. Demander code postal et ville d'entrée de
+        jeu aurait alourdi le formulaire pour tous ceux — la grande majorité —
+        qui choisissent une suggestion, laquelle les apporte déjà.
+      */}
+      {complementRequis ? (
+        <div className="mt-2">
+          <p className={`text-xs ${sombre ? "text-glacier-300" : "text-alpine-600"}`}>
+            {langue === "fr"
+              ? "Adresse non reconnue — précisez la commune :"
+              : "Address not recognised — tell us the town:"}
+          </p>
+          <div className="mt-1 grid grid-cols-[7rem_1fr] gap-2">
+            <input
+              className={champ.replace("mt-1 ", "")}
+              value={valeur.codePostal ?? ""}
+              onChange={(e) => onChange({ ...valeur, codePostal: e.target.value })}
+              placeholder={langue === "fr" ? "Code postal" : "Postcode"}
+              aria-label={langue === "fr" ? "Code postal" : "Postcode"}
+              autoComplete="postal-code"
+              inputMode="numeric"
+              required={requis}
+            />
+            <input
+              className={champ.replace("mt-1 ", "")}
+              value={valeur.ville ?? ""}
+              onChange={(e) => onChange({ ...valeur, ville: e.target.value })}
+              placeholder={langue === "fr" ? "Ville" : "Town"}
+              aria-label={langue === "fr" ? "Ville" : "Town"}
+              autoComplete="address-level2"
+              required={requis}
+            />
+          </div>
+        </div>
       ) : null}
+
     </div>
   );
 }

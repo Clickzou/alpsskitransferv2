@@ -112,11 +112,20 @@ async function viaPhoton(saisie: string, langue: string, limite: number): Promis
       const nom = p.name ?? voie;
       if (!nom) return null;
       const libelle = p.name && voie && voie !== p.name ? `${p.name}, ${voie}` : nom;
-      const detail = [p.postcode, p.city ?? p.county, p.country].filter(Boolean).join(" · ");
-      return { nom: libelle, detail } as { nom: string; detail: string };
+      const ville = p.city ?? p.county;
+      const detail = [p.postcode, ville, p.country].filter(Boolean).join(" · ");
+      return {
+        slug: null,
+        nom: libelle,
+        type: "adresse" as const,
+        detail,
+        cles: [],
+        codePostal: p.postcode,
+        ville,
+        pays: p.country,
+      } as Lieu;
     })
-    .filter((x): x is { nom: string; detail: string } => x !== null)
-    .map((x) => ({ slug: null, nom: x.nom, type: "adresse" as const, detail: x.detail, cles: [] }));
+    .filter((x): x is Lieu => x !== null);
 }
 
 /**
@@ -155,6 +164,9 @@ async function viaBan(saisie: string, limite: number): Promise<Lieu[]> {
         type: "adresse" as const,
         detail: [p.postcode, p.city, "France"].filter(Boolean).join(" · "),
         cles: [],
+        codePostal: p.postcode,
+        ville: p.city,
+        pays: "France",
       };
     })
     .filter((l): l is Lieu => l !== null);
@@ -192,6 +204,9 @@ async function viaGoogle(
       type: "adresse" as const,
       detail: p.structured_formatting?.secondary_text ?? "",
       cles: [],
+      // Google ne rend pas le code postal dans l'autocomplétion : le champ
+      // demandera alors le complément au visiteur, comme pour une saisie libre.
+      ville: p.structured_formatting?.secondary_text?.split(",")[0]?.trim(),
     }))
     .filter((l) => l.nom.length > 0);
 }

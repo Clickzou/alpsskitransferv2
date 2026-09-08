@@ -114,45 +114,57 @@ export function Presentation() {
 /**
  * Les trois catégories de véhicules.
  *
- * La photo passe au-dessus du texte, sur un aplat glacier et à format constant :
- * les trois images n'ont ni la même proportion ni le même cadrage, et posées sous
- * le texte elles laissaient des vides différents dans chaque carte.
+ * Pleine largeur, 100 px de marge, au gabarit de « Wherever you land » : les
+ * deux sections font le même travail — trois choix mis côte à côte — et n'ont
+ * aucune raison d'avoir deux mises en page.
+ *
+ * Deux détails font la carte, plus que la bordure :
+ *
+ * - **L'ombre portée sous la voiture.** Les trois photos sont des détourages sur
+ *   fond blanc, qui flottaient au milieu du cadre. Une ellipse floutée posée
+ *   sous les roues les ancre, comme dans un hall d'exposition.
+ * - **Le format constant du cadre photo.** Les trois fichiers n'ont ni la même
+ *   proportion ni le même cadrage ; rognés au contenu et posés dans un cadre
+ *   identique, les trois véhicules occupent enfin la même largeur.
  */
 export function Vehicules() {
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-section-lg">
-        <div className="mx-auto max-w-2xl text-center" data-anime>
+      <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
+        <div className="mx-auto max-w-3xl text-center" data-anime>
           <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
             {VEHICULES.surtitre}
           </p>
-          <h2 className="mt-3 font-display text-titre-section text-alpine">{VEHICULES.titre}</h2>
+          <h2 className="mt-3 font-display text-titre-page text-alpine">{VEHICULES.titre}</h2>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-3" data-anime data-anime-decale>
+        <div className="mt-12 grid gap-8 sm:grid-cols-3" data-anime data-anime-decale>
           {VEHICULES.categories.map((v) => (
             <article
               key={v.nom}
-              className="group overflow-hidden rounded-lg border border-glacier-200 transition duration-300 hover:-translate-y-1 hover:border-glacier-300 hover:shadow-flottant"
+              className="group flex flex-col overflow-hidden rounded-xl border border-glacier-200 bg-white shadow-carte transition duration-300 hover:-translate-y-1.5 hover:border-glacier-300 hover:shadow-flottant"
             >
-              <div className="flex aspect-[16/10] items-center justify-center bg-white p-5">
-                {/*
-                  Au survol, la voiture avance et se redresse légèrement — un
-                  léger effet de perspective, pas une rotation : nous n'avons
-                  qu'une photo par véhicule, et faire tourner une image plate
-                  l'écraserait au lieu de la faire tourner.
-                */}
+              <div className="relative flex aspect-[16/10] items-center justify-center px-6 pb-8 pt-6">
+                {/* L'ombre au sol : une ellipse floutée, pas une image. */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute bottom-6 left-1/2 h-4 w-3/5 -translate-x-1/2 rounded-[50%] bg-alpine/25 blur-md transition-all duration-500 group-hover:h-3 group-hover:w-2/3 group-hover:bg-alpine/20"
+                />
                 <Visuel
                   nom={v.image.nom}
                   alt={v.image.alt}
-                  sizes="(min-width: 640px) 30vw, 90vw"
-                  className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.06]"
+                  sizes="(min-width: 640px) 32vw, 90vw"
+                  className="relative h-full w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.05]"
                 />
               </div>
-              <div className="border-t border-glacier-200 p-5">
+
+              <div className="flex flex-1 flex-col border-t border-glacier-200 p-7 lg:p-8">
                 <h3 className="font-display text-titre-carte text-alpine">{v.nom}</h3>
-                <p className="mt-2 text-sm text-alpine-600">{v.modele}</p>
-                <p className="mt-2 text-sm font-medium text-alpes">{v.capacite}</p>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-alpine-600">{v.modele}</p>
+                <p className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-alpes-50 px-3 py-1.5 text-sm font-semibold text-alpes-700">
+                  <Coche className="h-3.5 w-3.5" />
+                  {v.capacite}
+                </p>
               </div>
             </article>
           ))}
@@ -330,51 +342,101 @@ export function Departs() {
   );
 }
 
+/**
+ * « Booking process » — les trois étapes de la réservation.
+ *
+ * Sur fond vert pleine largeur, à 100 px des bords comme les autres sections.
+ * Les étapes deviennent trois cartes numérotées plutôt qu'une liste : c'est un
+ * parcours, il se lit de gauche à droite, et le chiffre doit se voir. Le trait
+ * pointillé qui relie les cartes sur grand écran dit que ce sont des étapes, et
+ * non trois options au choix.
+ */
 export function Etapes() {
   return (
     <section className="bg-alpes text-white">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2" data-anime>
-        <div>
-          <h2 className="font-display text-titre-section">{ETAPES.titre}</h2>
-          <p className="mt-3 text-sm text-white/90">{ETAPES.chapo}</p>
-          <Link
-            href={lienReservation()}
-            className="mt-6 inline-block rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
-          >
-            Book now
-          </Link>
+      <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
+        <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-14">
+          <div data-anime>
+            <h2 className="font-display text-titre-page">{ETAPES.titre}</h2>
+            <p className="mt-4 text-chapo text-white/90">{ETAPES.chapo}</p>
+            <Link
+              href={lienReservation()}
+              className="mt-8 inline-block rounded bg-marque px-7 py-3 text-sm font-semibold text-white shadow-carte transition hover:bg-marque-600"
+            >
+              Book now
+            </Link>
+          </div>
+
+          <div>
+            <ol className="relative grid gap-5 sm:grid-cols-3" data-anime data-anime-decale>
+              {/* Le fil qui relie les trois étapes, sur écran large seulement. */}
+              <span
+                aria-hidden="true"
+                className="absolute left-0 right-0 top-11 hidden border-t border-dashed border-white/30 sm:block"
+              />
+              {ETAPES.etapes.map((etape, i) => (
+                <li
+                  key={etape.titre}
+                  className="relative rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/15"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white font-display text-lg font-semibold text-alpes">
+                    {i + 1}
+                  </span>
+                  <h3 className="mt-5 font-display text-titre-carte">{etape.titre}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/90">{etape.texte}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-sm text-white/80" data-anime>
+              {ETAPES.conclusion}
+            </p>
+          </div>
         </div>
-        <ol className="space-y-4">
-          {ETAPES.etapes.map((etape, i) => (
-            <li key={etape.titre} className="flex gap-3 text-sm">
-              <span className="font-semibold">{i + 1}.</span>
-              <span>
-                <span className="font-semibold">{etape.titre}</span> — {etape.texte}
-              </span>
-            </li>
-          ))}
-          <li className="pt-2 text-sm text-white/90">{ETAPES.conclusion}</li>
-        </ol>
       </div>
     </section>
   );
 }
 
+/**
+ * « Why choose us » — les cinq engagements.
+ *
+ * La liste centrée d'origine était juste et illisible : cinq lignes de même
+ * poids sous un titre, sans hiérarchie. Elles deviennent cinq tuiles à pastille
+ * verte, en pleine largeur. Le texte est court, la grille le supporte, et la
+ * section cesse d'être un paragraphe déguisé.
+ */
 export function Pourquoi() {
   return (
-    <section className="bg-white">
-      <div className="mx-auto max-w-3xl px-4 py-section-lg text-center" data-anime>
-        <h2 className="font-display text-titre-section text-alpine">{POURQUOI.titre}</h2>
-        <p className="mt-3 text-sm text-alpine-600">{POURQUOI.chapo}</p>
-        <ul className="mt-6 inline-block space-y-2 text-left">
+    <section className="border-t border-glacier-200 bg-glacier-50">
+      <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
+        <div className="mx-auto max-w-3xl text-center" data-anime>
+          <h2 className="font-display text-titre-page text-alpine">{POURQUOI.titre}</h2>
+          <p className="mt-4 text-chapo text-alpine-700">{POURQUOI.chapo}</p>
+        </div>
+
+        {/* Cinq colonnes pour cinq engagements : sur trois, la dernière rangée
+            restait à moitié vide et le bloc paraissait inachevé. */}
+        <ul
+          className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5"
+          data-anime
+          data-anime-decale
+        >
           {POURQUOI.points.map((point) => (
-            <li key={point} className="flex gap-3 text-sm text-alpine-700">
-              <Coche className="mt-0.5 shrink-0 text-alpes" />
-              {point}
+            <li
+              key={point}
+              className="flex flex-col gap-4 rounded-xl border border-glacier-200 bg-white p-6 shadow-carte transition duration-300 hover:-translate-y-1 hover:shadow-flottant"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-alpes-50 text-alpes-700">
+                <Coche className="h-5 w-5" />
+              </span>
+              <span className="text-sm leading-relaxed text-alpine-700">{point}</span>
             </li>
           ))}
         </ul>
-        <p className="mt-6 text-sm text-alpine-600">{POURQUOI.conclusion}</p>
+
+        <p className="mt-10 text-center text-chapo text-alpine-700" data-anime>
+          {POURQUOI.conclusion}
+        </p>
       </div>
     </section>
   );

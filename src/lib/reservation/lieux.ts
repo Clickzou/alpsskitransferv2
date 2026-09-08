@@ -30,6 +30,15 @@ export interface Lieu {
   detail: string;
   /** Formes normalisées pour la recherche : nom, code, variantes usuelles. */
   cles: string[];
+  /*
+   * Pour une adresse seulement : ses composants, tels que les rend le géocodeur.
+   * Une course se conduit à une porte, pas à une chaîne de caractères — le
+   * chauffeur a besoin du code postal et de la commune, et les garder séparés
+   * évite d'avoir à les redemander au visiteur qui vient de choisir sa rue.
+   */
+  codePostal?: string;
+  ville?: string;
+  pays?: string;
 }
 
 /** Sans accents, en minuscules : « Méribel » se trouve en tapant « meribel ». */
