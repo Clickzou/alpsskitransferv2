@@ -372,18 +372,21 @@ export function Etapes() {
               {/* Le fil qui relie les trois étapes, sur écran large seulement. */}
               <span
                 aria-hidden="true"
-                className="absolute left-0 right-0 top-11 hidden border-t border-dashed border-white/30 sm:block"
+                className="absolute left-0 right-0 top-11 hidden border-t border-dashed border-white/50 sm:block"
               />
+              {/* Cartes blanches, pas translucides : sur le vert, un fond à 10 %
+                  d'opacité se lisait à peine et les trois étapes se fondaient
+                  dans le bandeau. */}
               {ETAPES.etapes.map((etape, i) => (
                 <li
                   key={etape.titre}
-                  className="relative rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/15"
+                  className="relative rounded-xl bg-white p-6 shadow-carte transition duration-300 hover:-translate-y-1 hover:shadow-flottant"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white font-display text-lg font-semibold text-alpes">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-alpes font-display text-lg font-semibold text-white">
                     {i + 1}
                   </span>
-                  <h3 className="mt-5 font-display text-titre-carte">{etape.titre}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/90">{etape.texte}</p>
+                  <h3 className="mt-5 font-display text-titre-carte text-alpine">{etape.titre}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-alpine-700">{etape.texte}</p>
                 </li>
               ))}
             </ol>
