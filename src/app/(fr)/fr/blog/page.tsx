@@ -27,7 +27,7 @@ export default function PageBlogFr() {
             [Aucun article traduit pour l&apos;instant.]
           </p>
         ) : (
-          <ul className="mt-8 space-y-6">
+          <ul className="mt-8 space-y-6" data-anime data-anime-decale>
             {articles.map((a) => (
               <li key={a.slug}>
                 <h2 className="font-display text-xl">

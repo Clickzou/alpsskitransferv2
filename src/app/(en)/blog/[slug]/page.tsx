@@ -48,13 +48,13 @@ export default async function PageArticle({ params }: { params: Promise<{ slug: 
         <h1 className="font-display text-titre-page text-alpine">{article.titre}</h1>
         <p className="mt-4 max-w-prose text-chapo text-alpine-700">{article.chapo}</p>
 
-        <div className="mt-8">
+        <div className="mt-8" data-anime>
           <Contenu blocs={article.contenu} />
         </div>
 
         {/* Maillage sortant vers les pages qui convertissent. */}
         {article.stationsLiees && article.stationsLiees.length > 0 ? (
-          <section className="mt-12">
+          <section className="mt-12" data-anime>
             <h2 className="font-display text-2xl text-alpine">Transfers mentioned</h2>
             <ul className="mt-4 space-y-2">
               {article.stationsLiees.map((slugStation) => {

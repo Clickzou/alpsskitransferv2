@@ -22,6 +22,7 @@ import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
 import { TRANSFERS, segmentTrajet } from "@/lib/transfers";
 import { faqSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
+import { avisDuSite } from "@/lib/avis";
 
 export const metadata = pageMetadata({
   title: "Alps Ski Transfers | Private Airport Transfers to the Alps",
@@ -77,7 +78,9 @@ function trajetsPopulaires() {
   });
 }
 
-export default function Accueil() {
+export default async function Accueil() {
+  const avis = await avisDuSite();
+
   return (
     <>
       <Header lang="en" />
@@ -92,7 +95,7 @@ export default function Accueil() {
         <Etapes />
         <Pourquoi />
         <TrajetsPopulaires aeroports={trajetsPopulaires()} />
-        <Avis />
+        <Avis bloc={avis} />
         <FaqAccueil />
       </main>
       <Footer lang="en" />

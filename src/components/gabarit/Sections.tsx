@@ -175,8 +175,10 @@ export function EnTeteSection({
     <div className={centre ? "text-center" : ""}>
       {surtitre ? (
         <p
+          /* L'or du logo sur le surtitre : c'est le seul élément de la section
+             qui porte l'identité sans jamais se cliquer. */
           className={`text-xs font-semibold uppercase tracking-widest ${
-            clair ? "text-glacier-300" : "text-alpine-600"
+            clair ? "text-or-300" : "text-or-700"
           }`}
         >
           {surtitre}

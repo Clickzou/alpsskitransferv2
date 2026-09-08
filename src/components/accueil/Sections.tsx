@@ -2,6 +2,7 @@ import Link from "next/link";
 import Visuel from "@/components/Visuel";
 import { BandeauReassurance, Coche } from "@/components/gabarit/Sections";
 import { lienReservation } from "@/lib/reservation/config";
+import type { BlocAvis } from "@/lib/avis";
 import { airportParSlug } from "@/lib/airports";
 import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
 import {
@@ -15,11 +16,18 @@ import {
   VEHICULES,
 } from "@/data/accueil";
 
-function Etoiles() {
+function Etoiles({ note = 5 }: { note?: number }) {
+  const pleines = Math.round(note);
   return (
-    <div className="flex gap-0.5 text-alpes" aria-label="5 out of 5">
+    <div className="flex gap-0.5" aria-label={`${note} out of 5`}>
       {[0, 1, 2, 3, 4].map((i) => (
-        <svg key={i} viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden="true">
+        <svg
+          key={i}
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={`h-4 w-4 ${i < pleines ? "text-or" : "text-glacier-200"}`}
+          aria-hidden="true"
+        >
           <path d="m10 1.5 2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8L1.5 7.7l5.9-.9L10 1.5Z" />
         </svg>
       ))}
@@ -132,7 +140,7 @@ export function Vehicules() {
     <section className="bg-white">
       <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
         <div className="mx-auto max-w-3xl text-center" data-anime>
-          <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
+          <p className="text-xs font-semibold uppercase tracking-widest text-or-700">
             {VEHICULES.surtitre}
           </p>
           <h2 className="mt-3 font-display text-titre-page text-alpine">{VEHICULES.titre}</h2>
@@ -179,7 +187,7 @@ export function Avantages() {
     <section className="border-y border-glacier-200 bg-glacier-50">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-section lg:grid-cols-[1fr_1.4fr]" data-anime>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
+          <p className="text-xs font-semibold uppercase tracking-widest text-or-700">
             {AVANTAGES.surtitre}
           </p>
           <h2 className="mt-3 font-display text-titre-section text-alpine">{AVANTAGES.titre}</h2>
@@ -231,7 +239,7 @@ export function StationsPhares() {
           data-anime
         >
           <div className="lg:max-w-xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
+            <p className="text-xs font-semibold uppercase tracking-widest text-or-700">
               {STATIONS_PHARES.surtitre}
             </p>
             <h2 className="mt-3 font-display text-titre-section text-alpine">
@@ -466,7 +474,7 @@ export function TrajetsPopulaires({
     <section className="bg-alpine-900 text-white">
       <div className="mx-auto max-w-6xl px-4 py-section-lg">
         <div className="mx-auto max-w-2xl text-center" data-anime>
-          <p className="text-xs font-semibold uppercase tracking-widest text-glacier-400">
+          <p className="text-xs font-semibold uppercase tracking-widest text-or-300">
             Where we drive
           </p>
           <h2 className="mt-3 font-display text-titre-section">
@@ -515,27 +523,71 @@ function dureeCourte(minutes: number) {
   return h === 0 ? `${m} min` : m === 0 ? `${h} h` : `${h} h ${String(m).padStart(2, "0")}`;
 }
 
-export function Avis() {
+/**
+ * Les avis.
+ *
+ * La section dit **d'où viennent les avis qu'elle montre**. Quand ce sont de
+ * vrais avis Google, elle affiche la note, le nombre total et le lien vers la
+ * fiche — c'est ce que les conditions de l'API imposent, et c'est surtout ce
+ * qui rend une preuve sociale vérifiable. Tant que la fiche n'existe pas, elle
+ * présente les quatre témoignages repris du WordPress comme des témoignages :
+ * pas d'étoiles, pas de note moyenne, rien qui laisse croire à une note
+ * vérifiée qui n'existe pas.
+ */
+export function Avis({ bloc }: { bloc: BlocAvis }) {
+  const google = bloc.source === "google";
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-section-lg">
-        <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
-          {AVIS.surtitre}
-        </p>
-        <h2 className="mt-3 font-display text-titre-section text-alpine">{AVIS.titre}</h2>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-anime data-anime-decale>
-          {AVIS.avis.map((avis) => (
-            <figure
-              key={avis.auteur}
-              className="flex h-full flex-col rounded border border-glacier-200 p-5"
+      <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
+        <div className="flex flex-wrap items-end justify-between gap-6" data-anime>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-or-700">
+              {google ? "Google reviews" : AVIS.surtitre}
+            </p>
+            <h2 className="mt-3 font-display text-titre-page text-alpine">{AVIS.titre}</h2>
+          </div>
+
+          {google && bloc.moyenne ? (
+            <a
+              href={bloc.lienFiche}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 rounded-xl border border-glacier-200 px-5 py-3 transition hover:border-or hover:shadow-carte"
             >
-              <Etoiles />
-              <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-alpine-700">
+              <span className="font-display text-2xl text-alpine">
+                {bloc.moyenne.toFixed(1)}
+              </span>
+              <span>
+                <Etoiles note={bloc.moyenne} />
+                <span className="mt-1 block text-xs text-alpine-600">
+                  {bloc.total} reviews on Google
+                </span>
+              </span>
+            </a>
+          ) : null}
+        </div>
+
+        <div
+          className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          data-anime
+          data-anime-decale
+        >
+          {bloc.avis.map((avis) => (
+            <figure
+              key={avis.auteur + avis.detail}
+              className="flex h-full flex-col rounded-xl border border-glacier-200 bg-white p-6 shadow-carte transition duration-300 hover:-translate-y-1 hover:shadow-flottant"
+            >
+              {avis.note ? <Etoiles note={avis.note} /> : null}
+              <blockquote
+                className={`flex-1 text-sm leading-relaxed text-alpine-700 ${avis.note ? "mt-4" : ""}`}
+              >
                 {avis.texte}
               </blockquote>
-              <figcaption className="mt-4 text-sm">
+              <figcaption className="mt-5 border-t border-glacier-200 pt-4 text-sm">
                 <span className="font-semibold text-alpine">{avis.auteur}</span>
-                <span className="block text-xs text-alpine-600">{avis.ville}</span>
+                {avis.detail ? (
+                  <span className="block text-xs text-alpine-600">{avis.detail}</span>
+                ) : null}
               </figcaption>
             </figure>
           ))}

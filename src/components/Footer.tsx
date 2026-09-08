@@ -112,7 +112,7 @@ export default function Footer({ lang }: { lang: Lang }) {
             <Link href={fr ? "/fr/" : "/"} className="inline-block">
               <Logo lang={lang} variante="clair" />
             </Link>
-            <h2 className="mt-5 text-xs font-semibold uppercase tracking-widest text-white">
+            <h2 className="mt-5 text-xs font-semibold uppercase tracking-widest text-or-300">
               {fr ? "À propos" : "About Transfers"}
             </h2>
             <address className="mt-3 space-y-1 text-sm not-italic">
@@ -149,7 +149,7 @@ export default function Footer({ lang }: { lang: Lang }) {
 
           {colonnes.map((colonne) => (
             <div key={colonne.titre}>
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-white">{colonne.titre}</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-or-300">{colonne.titre}</h2>
               <ul className="mt-3 space-y-2 text-sm">
                 {colonne.liens.map((lien) => (
                   <li key={lien.texte}>

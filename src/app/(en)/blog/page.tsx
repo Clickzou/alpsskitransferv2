@@ -26,7 +26,7 @@ export default function PageBlog() {
             arrivent avant la mise en ligne.]
           </p>
         ) : (
-          <ul className="mt-8 space-y-6">
+          <ul className="mt-8 space-y-6" data-anime data-anime-decale>
             {articles.map((a) => (
               <li key={a.slug}>
                 <h2 className="font-display text-xl">

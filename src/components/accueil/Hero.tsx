@@ -91,9 +91,9 @@ export default function Hero() {
           ].map((repere) => (
             <div
               key={repere.libelle}
-              className="rounded-xl border border-white/15 bg-alpine/40 px-4 py-3 backdrop-blur-sm"
+              className="rounded-xl border border-or/25 bg-alpine/40 px-4 py-3 backdrop-blur-sm"
             >
-              <dt className="font-display text-2xl text-white">{repere.valeur}</dt>
+              <dt className="font-display text-2xl text-or-300">{repere.valeur}</dt>
               <dd className="mt-1 text-xs uppercase tracking-wide text-glacier-300">
                 {repere.libelle}
               </dd>

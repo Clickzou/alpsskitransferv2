@@ -32,6 +32,21 @@ const config: Config = {
           300: "#5FC7A9",
           50: "#E7F6F1",
         },
+        /*
+         * L'or du logo, en touches seulement.
+         *
+         * Il ne remplace rien : le vert reste la réassurance, le magenta reste
+         * l'action. L'or sert les détails qui portent l'identité — surtitres,
+         * étoiles, filets — là où une couleur de plus ne crée pas de confusion
+         * sur ce qui se clique. Le ton du logo (`DEFAULT`) est trop clair pour
+         * du texte sur blanc : `700` est sa version lisible, à 4,9:1.
+         */
+        or: {
+          DEFAULT: "#C9A87A",
+          700: "#8A6B3A",
+          300: "#E0C8A0",
+          50: "#F8F2E7",
+        },
         // Magenta des boutons d'action — la seule couleur qui appelle au clic.
         marque: {
           DEFAULT: "#E6007E",

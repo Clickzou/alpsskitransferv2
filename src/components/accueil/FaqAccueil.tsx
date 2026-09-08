@@ -13,7 +13,7 @@ export default function FaqAccueil() {
     <section className="border-t border-glacier-200 bg-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section-lg lg:grid-cols-[1fr_1.4fr]">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
+          <p className="text-xs font-semibold uppercase tracking-widest text-or-700">
             {FAQ_ACCUEIL.surtitre}
           </p>
           <h2 className="mt-3 font-display text-titre-section text-alpine">
