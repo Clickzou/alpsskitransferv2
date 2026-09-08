@@ -159,6 +159,33 @@ Les pages juridiques restent en anglais : les traduire sans validation juridique
 créerait deux versions divergentes d'un même engagement, et le pied de page le
 signale par un `(EN)`.
 
+## Où reprendre — 8 septembre au soir
+
+**Prochaine séance : la page `/book-ski-transfer-tickets/`**, puis les autres
+onglets du menu. JC valide la home (les avis attendent la fiche Google) et a
+demandé de traiter les onglets avant les pages de station.
+
+Ce qui est déjà établi sur cette page, à ne pas rechercher :
+
+- **Elle n'est pas vide.** Elle contient 927 mots repris du WordPress. Elle
+  *paraissait* vide à cause du seuil d'apparition au défilement — corrigé.
+- **Trois titres y sont orphelins** : « Most popular routes » et « Our vehicles »
+  portaient des blocs dynamiques du thème, que la migration ne reprend pas, et
+  « Frequently asked questions… » double le titre de la section FAQ, que
+  `separerFaq` sort déjà du corps.
+- **Les listes du WordPress ont été aplaties en paragraphes**, avec leurs
+  marqueurs : `✅`, `✔`, `1️⃣`. Mesuré sur tout le site — **60 signes dans les
+  pages fonctionnelles, 188 dans les stations, 400 dans les trajets**. C'est
+  systémique : la correction va dans `scripts/_wordpress.mjs` (une étape de
+  normalisation après `assembler`), pas dans les 122 fichiers produits.
+- **Mots collés** : « type)Up to 8 passengers », « SedanUp to 4 passengers ».
+- Attention avant de relancer `migrer:stations` : 38 des 73 modules de station
+  sont écrits à la main. Le garde-fou de l'index ne protège que `rediges.ts`.
+
+Pour revoir la mise en page de l'original, la capture se refait en une commande
+(le site refuse un navigateur sans agent utilisateur complet, d'où le `userAgent`
+dans le script de capture du bloc-notes de session).
+
 ## À reprendre, dans l'ordre
 
 **Ordre de travail arrêté avec JC le 8 septembre : d'abord toutes les pages, ensuite le
@@ -178,9 +205,22 @@ design, la technique en dernier.** Les pages sont faites.
    trajets populaires groupés par aéroport avec distance et durée, stations phares
    rendues cliquables (7 liens internes de plus depuis la home).
 
-   *Reste à faire* : la déclinaison sur les gabarits intérieurs — pages de station
-   (les plus longues), pages de trajet, hubs pays et aéroport, blog, tunnel de
-   réservation. Puis une passe de contrôle sur les quatre largeurs.
+   *Fait le 8 septembre au soir* : le nouveau logo (bleu nuit et or) et son
+   favicon, l'or du logo posé par touches sur ce qui ne se clique pas — surtitres,
+   étoiles, filets — le vert et le magenta conservés dans leurs rôles, les
+   sections de la home en pleine largeur à 100 px des bords, l'apparition au
+   défilement sur les sept types de page, et le moteur de recherche à saisie
+   libre avec suggestions d'adresses réelles. **La home est validée par JC**,
+   à l'exception des avis, qui attendent la fiche Google.
+
+   *Reste à faire* : les onglets du menu (en cours), puis les pages de station
+   (les plus longues), les trajets, les hubs, le blog et le tunnel. Puis une
+   passe de contrôle sur les quatre largeurs.
+
+   Un essai de palette entièrement bleu nuit et or vit sur la branche
+   `essai-palette-or` — écarté, mais conservé. Il a montré une chose utile :
+   l'or exact du logo plafonne à 2,3:1 sur blanc, il ne peut donc pas porter de
+   texte.
 2. **Le moteur de réservation** — écrit et testé, à brancher : créer les tables
    (`docs/supabase-schema.sql`), poser les clés Stripe de test, jouer une réservation
    de bout en bout (session, carte 4242…, webhook signé, e-mails, ligne `payee`), puis
