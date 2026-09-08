@@ -1,0 +1,21 @@
+
+# Sauvegarde WordPress et son extraction : hors dépôt (745 Mo)
+*.tsbuildinfo
+*.wpress
+.DS_Store
+.env*.local
+.next
+.next-build/
+.next-dev-agent/
+.vercel
+dist
+next-env.d.ts
+node_modules
+out
+wp-export/
+
+# Documents commerciaux et audit client : le dépôt est public. Ils restent en
+# local, et CLAUDE.md dit où les trouver.
+devis/
+docs/Audit-alpsskitransfers-Clickzou.pdf
+docs/audit-alpsskitransfers-2026-09-04.html

@@ -1,0 +1,72 @@
+-- Schéma Supabase du moteur de réservation — alpsskitransfers.com
+--
+-- À exécuter une fois dans l'éditeur SQL du projet Supabase. Le site écrit avec
+-- la clé de service depuis ses route handlers ; aucune écriture ne vient du
+-- navigateur, d'où des politiques RLS fermées : rien n'est lisible ni écrivable
+-- avec la clé publique.
+--
+-- Les montants sont en euros, en `numeric` — jamais en flottant : un centime
+-- perdu à l'arrondi sur une réservation, c'est une réconciliation impossible.
+
+create table if not exists reservations (
+  id            uuid primary key default gen_random_uuid(),
+  reference     text not null unique,              -- AST-4F7K2Q, dite au téléphone
+  statut        text not null default 'devis-a-confirmer',
+                -- devis-a-confirmer · en-attente-paiement · payee · annulee
+  airport       text not null,                     -- slug du registre des aéroports
+  resort        text not null,                     -- slug du registre des stations
+  vehicule      text not null,                     -- standard · business · premium
+  passagers     smallint not null check (passagers between 1 and 16),
+  aller         timestamptz not null,
+  retour        timestamptz,                       -- null = aller simple
+  montant       numeric(10, 2) not null,
+  devise        text not null default 'EUR',
+  client_nom    text not null,
+  client_email  text not null,
+  client_telephone text not null,
+  vol           text,
+  adresse       text not null,                     -- adresse exacte en station
+  bagages_ski   smallint not null default 0,
+  enfants       text,                              -- âges, pour les bons sièges
+  message       text,
+  session_stripe   text,
+  paiement_stripe  text,
+  paye_le       timestamptz,
+  cree_le       timestamptz not null default now()
+);
+
+-- Le back-office liste les courses à venir : c'est l'index qui compte.
+create index if not exists reservations_aller_idx on reservations (aller);
+create index if not exists reservations_statut_idx on reservations (statut);
+
+create table if not exists paiements (
+  id            uuid primary key default gen_random_uuid(),
+  reference     text references reservations (reference),
+  session_stripe   text,
+  paiement_stripe  text,
+  montant       numeric(10, 2),
+  devise        text not null default 'EUR',
+  statut        text not null,                     -- paye · rembourse
+  cree_le       timestamptz not null default now()
+);
+
+-- Grille tarifaire éditable depuis le back-office : changer un prix ne doit
+-- jamais demander un déploiement. Tant que la table est vide, le site applique
+-- le barème de `src/lib/tarification/bareme.ts`.
+create table if not exists tarifs (
+  id            uuid primary key default gen_random_uuid(),
+  airport       text not null,
+  resort        text not null,
+  vehicule      text not null,
+  type_jour     text not null default 'semaine',   -- semaine · samedi · dimanche
+  prix          numeric(10, 2) not null,
+  capacite      smallint not null default 8,
+  valide        boolean not null default false,    -- confirmé par le client
+  maj_le        timestamptz not null default now(),
+  unique (airport, resort, vehicule, type_jour)
+);
+
+-- Row Level Security : tout est fermé, seule la clé de service écrit et lit.
+alter table reservations enable row level security;
+alter table paiements     enable row level security;
+alter table tarifs        enable row level security;

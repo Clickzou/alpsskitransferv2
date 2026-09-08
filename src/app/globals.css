@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Les fondations visuelles du site.
+ *
+ * Tout ce qui est ici s'applique partout et n'a donc pas à être répété dans les
+ * composants : la police, le rythme du texte, l'anneau de focus, la sélection.
+ * Les pages, elles, ne décrivent que ce qui leur est propre.
+ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Une ancre ne doit pas glisser sous l'en-tête. */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-neige text-alpine antialiased;
+    /* Chiffres de même largeur : les distances et les durées s'alignent dans
+       les tableaux et les cartes sans réglage supplémentaire. */
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /*
+   * Les titres portent la serif, et **héritent de la couleur de leur contexte**.
+   *
+   * Leur imposer `text-alpine` ici peignait en bleu nuit les titres posés sur le
+   * bandeau bleu nuit : le H1 des pages de station devenait illisible. Une règle
+   * globale fixe la forme, jamais la couleur — celle-ci appartient à la section.
+   */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-normal;
+    color: inherit;
+    text-wrap: balance;
+  }
+
+  h1 {
+    letter-spacing: -0.015em;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /*
+   * Anneau de focus visible, sur tout ce qui se navigue au clavier.
+   *
+   * Le site actuel n'en a aucun : un formulaire de réservation qui ne se remplit
+   * qu'à la souris exclut une partie des clients, et c'est un manquement
+   * d'accessibilité avant d'être un défaut de design.
+   */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    @apply outline-none ring-2 ring-alpes ring-offset-2 ring-offset-white;
+    border-radius: 0.125rem;
+  }
+
+  /* Sur fond sombre, l'anneau doit se détacher du bleu nuit. */
+  .bg-alpine :where(a, button):focus-visible,
+  .bg-alpine-900 :where(a, button):focus-visible,
+  .bg-alpes :where(a, button):focus-visible {
+    @apply ring-white ring-offset-alpine;
+  }
+
+  ::selection {
+    @apply bg-alpes-50 text-alpine;
+  }
+
+  /* Une image sans dimensions décale la page au chargement : on ne veut ni l'un
+     ni l'autre, et `next/image` fournit déjà les attributs. */
+  img,
+  svg,
+  video {
+    @apply block max-w-full;
+  }
+}
+
+@layer components {
+  /*
+   * Le lien de contenu : souligné, discret, et qui se colore au survol.
+   * Répété une trentaine de fois dans les pages avant d'être nommé ici.
+   */
+  .lien {
+    @apply text-alpine-700 underline decoration-glacier-300 underline-offset-4 transition hover:text-marque hover:decoration-marque;
+  }
+
+  /* Le passage à la ligne des longs noms de station dans les cartes étroites. */
+  .equilibre {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

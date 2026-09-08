@@ -1,0 +1,226 @@
+{
+  "hero-alps-ski-transfers": {
+    "width": 1600,
+    "height": 1067
+  },
+  "route-alpine": {
+    "width": 1200,
+    "height": 800
+  },
+  "station-alpes": {
+    "width": 1200,
+    "height": 801
+  },
+  "vehicule-standard": {
+    "width": 640,
+    "height": 640
+  },
+  "vehicule-business": {
+    "width": 640,
+    "height": 640
+  },
+  "vehicule-premium": {
+    "width": 616,
+    "height": 241
+  },
+  "aeroport-lyon-grenoble-chambery": {
+    "width": 800,
+    "height": 533
+  },
+  "aeroport-geneve": {
+    "width": 800,
+    "height": 533
+  },
+  "aeroport-paris-milan-turin": {
+    "width": 724,
+    "height": 482
+  },
+  "faq": {
+    "width": 800,
+    "height": 532
+  },
+  "station-alpe-dhuez": {
+    "width": 724,
+    "height": 483
+  },
+  "station-avoriaz": {
+    "width": 724,
+    "height": 482
+  },
+  "station-chamonix": {
+    "width": 724,
+    "height": 482
+  },
+  "station-courchevel": {
+    "width": 724,
+    "height": 482
+  },
+  "station-la-plagne": {
+    "width": 724,
+    "height": 483
+  },
+  "station-les-arcs": {
+    "width": 724,
+    "height": 483
+  },
+  "station-les-deux-alpes": {
+    "width": 724,
+    "height": 482
+  },
+  "station-meribel": {
+    "width": 724,
+    "height": 483
+  },
+  "station-morzine": {
+    "width": 724,
+    "height": 482
+  },
+  "station-tignes": {
+    "width": 724,
+    "height": 482
+  },
+  "station-val-disere": {
+    "width": 724,
+    "height": 483
+  },
+  "station-val-thorens": {
+    "width": 726,
+    "height": 481
+  },
+  "station-cervinia": {
+    "width": 722,
+    "height": 483
+  },
+  "station-cortina": {
+    "width": 732,
+    "height": 476
+  },
+  "station-courmayeur": {
+    "width": 724,
+    "height": 483
+  },
+  "station-la-thuile": {
+    "width": 737,
+    "height": 473
+  },
+  "station-livigno": {
+    "width": 724,
+    "height": 483
+  },
+  "station-sauze-doulx": {
+    "width": 724,
+    "height": 483
+  },
+  "station-selva-val-gardena": {
+    "width": 724,
+    "height": 482
+  },
+  "station-sestriere": {
+    "width": 724,
+    "height": 483
+  },
+  "station-andermatt": {
+    "width": 724,
+    "height": 483
+  },
+  "station-davos": {
+    "width": 724,
+    "height": 483
+  },
+  "station-grindelwald": {
+    "width": 724,
+    "height": 483
+  },
+  "station-gstaad": {
+    "width": 724,
+    "height": 483
+  },
+  "station-st-moritz": {
+    "width": 724,
+    "height": 482
+  },
+  "station-tasch": {
+    "width": 724,
+    "height": 483
+  },
+  "station-verbier": {
+    "width": 724,
+    "height": 483
+  },
+  "station-villars-sur-ollon": {
+    "width": 723,
+    "height": 483
+  },
+  "station-ischgl": {
+    "width": 724,
+    "height": 483
+  },
+  "station-kitzbuhel": {
+    "width": 724,
+    "height": 483
+  },
+  "station-mayrhofen": {
+    "width": 724,
+    "height": 483
+  },
+  "station-obergurgl": {
+    "width": 724,
+    "height": 483
+  },
+  "station-serfaus": {
+    "width": 724,
+    "height": 483
+  },
+  "station-st-anton-am-arlberg": {
+    "width": 723,
+    "height": 483
+  },
+  "station-solden": {
+    "width": 726,
+    "height": 482
+  },
+  "station-zell-am-see": {
+    "width": 725,
+    "height": 482
+  },
+  "aeroport-geneva-airport": {
+    "width": 1200,
+    "height": 800
+  },
+  "aeroport-lyon-airport": {
+    "width": 1200,
+    "height": 800
+  },
+  "aeroport-chambery-savoie-airport": {
+    "width": 750,
+    "height": 466
+  },
+  "aeroport-grenoble-isere-airport": {
+    "width": 724,
+    "height": 483
+  },
+  "aeroport-turin-airport": {
+    "width": 724,
+    "height": 483
+  },
+  "aeroport-zurich-airport": {
+    "width": 724,
+    "height": 482
+  },
+  "aeroport-salzburg-airport": {
+    "width": 724,
+    "height": 483
+  },
+  "aeroport-milan-malpensa-airport": {
+    "width": 727,
+    "height": 481
+  },
+  "aeroport-nice-airport": {
+    "width": 724,
+    "height": 483
+  },
+  "aeroport-paris-charles-de-gaulle-airport": {
+    "width": 724,
+    "height": 482
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "alpsskitransfers",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "dev:agent": "node scripts/dev-agent.mjs",
+    "prebuild": "vitest run && node scripts/check-redirections.mjs && node scripts/check-seo.mjs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run",
+    "seo:check": "node scripts/check-seo.mjs",
+    "redirects:check": "node scripts/check-redirections.mjs",
+    "migration:status": "node scripts/migration-status.mjs",
+    "wp:list": "node scripts/extract-wpress.mjs --list",
+    "wp:extract": "node scripts/extract-wpress.mjs --extract",
+    "wp:analyse": "node scripts/analyse-wordpress.mjs",
+    "redirects:generer": "node scripts/generer-redirections.mjs",
+    "migrer:stations": "node scripts/migrer-stations.mjs",
+    "migrer:trajets": "node scripts/migrer-trajets.mjs",
+    "migrer:pages": "node scripts/migrer-pages.mjs",
+    "tarifs:extraire": "node scripts/extraire-tarifs.mjs",
+    "distances:calculer": "node scripts/calculer-distances.mjs",
+    "images:preparer": "node scripts/preparer-images.mjs",
+    "destination:analyser": "node scripts/analyser-destination.mjs",
+    "audit:seo": "node scripts/audit-seo.mjs"
+  },
+  "dependencies": {
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "sharp": "^0.34.5",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3",
+    "vitest": "^5.0.0"
+  }
+}
