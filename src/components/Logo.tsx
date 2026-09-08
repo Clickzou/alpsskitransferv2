@@ -25,7 +25,7 @@ export default function Logo({
   const { largeur, hauteur, hauteurAffichee } = dimensions;
   return (
     <Image
-      src={variante === "clair" ? "/logo-alps-ski-transfers-blanc.png" : "/logo-alps-ski-transfers.png"}
+      src={variante === "clair" ? "/logo-alpsskitransfers-blanc.png" : "/logo-alpsskitransfers.png"}
       alt={lang === "en" ? "Alps Ski Transfers" : "Alps Ski Transfers"}
       width={largeur}
       height={hauteur}
