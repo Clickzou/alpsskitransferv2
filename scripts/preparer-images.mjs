@@ -24,16 +24,33 @@ const IMAGES = [
   // Le hero est l'image LCP : c'est la seule que le visiteur attend, elle doit
   // rester sous les 200 Ko du budget page.
   { source: "alps-ski-transfers.jpg", nom: "hero-alps-ski-transfers", largeur: 1600, qualite: 68 },
+  /*
+   * Le bandeau de présentation occupe la moitié gauche de l'écran, à fond
+   * perdu : sur un écran large, cette image est affichée à près de 1 000 px de
+   * côté, d'où sa largeur. La route en lacets reprend le propos de la section
+   * de l'ancien site — c'est le trajet, pas la station, qu'elle raconte.
+   */
   {
-    source: "transfer-from-airport-to-alpine-peaks.jpg",
+    source: "ski-transfer-from-airport-to-alpine-peaks.jpg",
     nom: "route-alpine",
-    largeur: 1200,
+    largeur: 1400,
+    // Une photo de nuit, très détaillée : sans baisser la qualité elle dépasse
+    // seule le budget de 200 Ko fixé pour une image de page.
+    qualite: 68,
   },
   { source: "alps-ski-resorts-transfer.jpg", nom: "station-alpes", largeur: 1200 },
-  // Les trois catégories de véhicule.
-  { source: "volkswagen-caravelle-noir.png", nom: "vehicule-standard", largeur: 640 },
-  { source: "mercedes-classe-v-transfer.png", nom: "vehicule-business", largeur: 640 },
-  { source: "mercedes-classe-e.jpg", nom: "vehicule-premium", largeur: 640 },
+  /*
+   * Les trois catégories de véhicule, **rognées**.
+   *
+   * Les trois fichiers sources sont des détourages, mais avec des marges vides
+   * très différentes : la berline touche presque le bord, les deux vans flottent
+   * au milieu de leur cadre. Affichées côte à côte, les voitures paraissaient
+   * alors de tailles différentes alors qu'elles occupent le même cadre. Rogner
+   * le vide rend les trois comparables — ce qui est le propos de la section.
+   */
+  { source: "volkswagen-caravelle-noir.png", nom: "vehicule-standard", largeur: 640, rogner: true },
+  { source: "mercedes-classe-v-transfer.png", nom: "vehicule-business", largeur: 640, rogner: true },
+  { source: "mercedes-classe-e.jpg", nom: "vehicule-premium", largeur: 640, rogner: true },
   // Les trois familles d'aéroports mises en avant.
   { source: "lyon-airport.jpg", nom: "aeroport-lyon-grenoble-chambery", largeur: 800 },
   { source: "geneve-airport.jpg", nom: "aeroport-geneve", largeur: 800 },
@@ -161,7 +178,14 @@ for (const image of IMAGES) {
     continue;
   }
   const entree = path.join(SOURCE, image.source);
-  const base = sharp(entree).resize({ width: image.largeur, withoutEnlargement: true });
+  /*
+   * `trim` retire la bordure uniforme en partant de la couleur du coin
+   * supérieur gauche : le blanc d'un JPEG détouré comme la transparence d'un
+   * PNG. Le seuil laisse passer les compressions un peu sales — un blanc à
+   * 253 reste du blanc.
+   */
+  const source = image.rogner ? sharp(entree).trim({ threshold: 12 }) : sharp(entree);
+  const base = source.resize({ width: image.largeur, withoutEnlargement: true });
 
   const webp = path.join(SORTIE, `${image.nom}.webp`);
   const avif = path.join(SORTIE, `${image.nom}.avif`);

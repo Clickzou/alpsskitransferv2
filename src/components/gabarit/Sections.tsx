@@ -146,7 +146,12 @@ export function Section({
 }) {
   return (
     <section className={FONDS[fond]}>
-      <div className={`mx-auto max-w-6xl px-4 py-section ${className}`}>{children}</div>
+      {/* `data-anime` ici couvre tout le site : chaque section d'une page de
+          station, de trajet ou de hub apparaît au défilement sans que le
+          gabarit ait à s'en occuper. */}
+      <div className={`mx-auto max-w-6xl px-4 py-section ${className}`} data-anime>
+        {children}
+      </div>
     </section>
   );
 }
@@ -338,7 +343,7 @@ export function AppelAction({
   const destination = lien ?? lienReservation();
   return (
     <section className="bg-alpes text-white">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2" data-anime>
         <div>
           <h2 className="font-display text-titre-section">{titre}</h2>
           <p className="mt-3 text-sm text-white/90">{texte ?? ETAPES.chapo}</p>

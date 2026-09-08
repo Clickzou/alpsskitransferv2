@@ -1,14 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-
-export interface OptionLieu {
-  slug: string;
-  nom: string;
-  /** Pays du silo, pour construire l'URL de destination. */
-  silo: string;
-}
+import { useState } from "react";
+import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
+import type { Lieu } from "@/lib/reservation/lieux";
 
 export interface Liaison {
   airport: string;
@@ -20,58 +15,63 @@ export interface Liaison {
 /**
  * Recherche de transfert.
  *
- * Le moteur de réservation n'encaisse pas encore — le barème n'est pas validé.
- * En attendant, ce formulaire fait déjà le travail utile : il conduit le visiteur
- * à la page du trajet demandé, ou à défaut à la page de la station, en passant la
- * date et le nombre de passagers en paramètres. Le jour où le moteur ouvre, la
- * même saisie alimentera le devis sans que le visiteur ait à la reprendre.
+ * Deux champs de saisie libre, pas deux menus déroulants. Un menu impose de
+ * choisir dans une liste de 68 stations, et surtout il rend impossible ce que le
+ * visiteur veut réellement faire : donner l'adresse de son chalet ou de son
+ * hôtel. Le champ accepte donc tout — un aéroport, une station, une adresse — et
+ * suggère au fur et à mesure, le registre d'abord, un géocodeur ensuite.
+ *
+ * Trois issues, selon ce qui a été saisi :
+ *
+ * 1. Aéroport et station connus, page de trajet existante → cette page.
+ * 2. Station connue sans page de trajet → la page de la station.
+ * 3. Une adresse libre d'un côté ou de l'autre → le tunnel de réservation, qui
+ *    sait demander un devis. Aucune de ces trois issues n'affiche un prix
+ *    inventé, et la saisie est toujours transmise : le visiteur ne la refait pas.
  */
 export default function FormulaireRecherche({
-  aeroports,
-  stations,
+  lieux,
   liaisons,
 }: {
-  aeroports: OptionLieu[];
-  stations: OptionLieu[];
+  lieux: Lieu[];
   liaisons: Liaison[];
 }) {
   const router = useRouter();
-  const [depart, setDepart] = useState(aeroports[0]?.slug ?? "");
-  const [arrivee, setArrivee] = useState("");
+  const [de, setDe] = useState<ValeurLieu>({ slug: null, texte: "" });
+  const [vers, setVers] = useState<ValeurLieu>({ slug: null, texte: "" });
   const [quand, setQuand] = useState("");
   const [passagers, setPassagers] = useState(2);
   const [allerRetour, setAllerRetour] = useState(false);
 
-  /** Stations réellement desservies depuis l'aéroport choisi, sinon toutes. */
-  const destinations = useMemo(() => {
-    const desservies = new Set(
-      liaisons.filter((l) => l.airport === depart).map((l) => l.resort),
-    );
-    const connues = stations.filter((s) => desservies.has(s.slug));
-    return connues.length > 0 ? connues : stations;
-  }, [depart, liaisons, stations]);
-
   function rechercher(evenement: React.FormEvent) {
     evenement.preventDefault();
-    const station = stations.find((s) => s.slug === arrivee);
-    if (!station) return;
 
-    const liaison = liaisons.find((l) => l.airport === depart && l.resort === arrivee);
     const parametres = new URLSearchParams({
-      from: depart,
       passengers: String(passagers),
       trip: allerRetour ? "return" : "one-way",
     });
     if (quand) parametres.set("when", quand);
 
-    const destination = liaison?.chemin ?? `/${station.silo}/${station.slug}/`;
-    router.push(`${destination}?${parametres.toString()}`);
+    const liaison =
+      de.slug && vers.slug
+        ? liaisons.find((l) => l.airport === de.slug && l.resort === vers.slug)
+        : undefined;
+
+    if (liaison) {
+      parametres.set("from", de.slug as string);
+      router.push(`${liaison.chemin}?${parametres.toString()}`);
+      return;
+    }
+
+    // Pas de page de trajet : le tunnel prend le relais, avec la saisie intacte.
+    parametres.set("from", de.slug ?? de.texte);
+    parametres.set("to", vers.slug ?? vers.texte);
+    router.push(`/booking/?${parametres.toString()}`);
   }
 
   const etiquette = "block text-xs font-medium uppercase tracking-wide text-glacier-300";
-  // `min-w-0` compte autant que `w-full` : un `datetime-local` et un `select`
-  // dont les options sont longues ont une largeur intrinsèque supérieure à
-  // l'écran, et c'est elle qui faisait déborder la page sur mobile.
+  // `min-w-0` compte autant que `w-full` : un `datetime-local` a une largeur
+  // intrinsèque supérieure à l'écran, et c'est elle qui faisait déborder la page.
   const champ =
     "mt-1 w-full min-w-0 rounded border border-alpine-700 bg-white/95 px-3 py-2 text-sm text-alpine focus:border-alpes focus:outline-none focus:ring-2 focus:ring-alpes/40";
 
@@ -95,46 +95,27 @@ export default function FormulaireRecherche({
           />
         </div>
 
-        <div className="min-w-0">
-          <label className={etiquette} htmlFor="depart">
-            Pick-up location
-          </label>
-          <select
-            id="depart"
-            value={depart}
-            onChange={(e) => {
-              setDepart(e.target.value);
-              setArrivee("");
-            }}
-            className={champ}
-          >
-            {aeroports.map((a) => (
-              <option key={a.slug} value={a.slug}>
-                {a.nom}
-              </option>
-            ))}
-          </select>
-        </div>
+        <ChampLieu
+          id="depart"
+          lieux={lieux}
+          valeur={de}
+          onChange={setDe}
+          etiquette="Pick-up location"
+          placeholder="Airport, resort or address"
+          variante="sombre"
+          requis
+        />
 
-        <div className="min-w-0">
-          <label className={etiquette} htmlFor="arrivee">
-            Drop-off location
-          </label>
-          <select
-            id="arrivee"
-            value={arrivee}
-            onChange={(e) => setArrivee(e.target.value)}
-            className={champ}
-            required
-          >
-            <option value="">Choose a resort</option>
-            {destinations.map((s) => (
-              <option key={s.slug} value={s.slug}>
-                {s.nom}
-              </option>
-            ))}
-          </select>
-        </div>
+        <ChampLieu
+          id="arrivee"
+          lieux={lieux}
+          valeur={vers}
+          onChange={setVers}
+          etiquette="Drop-off location"
+          placeholder="Resort, hotel or chalet address"
+          variante="sombre"
+          requis
+        />
       </div>
 
       <div className="mt-4 flex flex-wrap items-end gap-4 sm:gap-6">

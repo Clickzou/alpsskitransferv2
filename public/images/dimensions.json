@@ -4,8 +4,8 @@
     "height": 1067
   },
   "route-alpine": {
-    "width": 1200,
-    "height": 800
+    "width": 1400,
+    "height": 788
   },
   "station-alpes": {
     "width": 1200,
@@ -13,15 +13,15 @@
   },
   "vehicule-standard": {
     "width": 640,
-    "height": 640
+    "height": 333
   },
   "vehicule-business": {
     "width": 640,
-    "height": 640
+    "height": 302
   },
   "vehicule-premium": {
-    "width": 616,
-    "height": 241
+    "width": 604,
+    "height": 236
   },
   "aeroport-lyon-grenoble-chambery": {
     "width": 800,

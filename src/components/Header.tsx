@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { PAYS } from "@/lib/pays";
 import { lienReservation } from "@/lib/reservation/config";
 import type { Lang } from "@/lib/i18n";
@@ -57,11 +58,10 @@ export default function Header({
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3">
         <Link
           href={accueil}
-          className="flex shrink-0 items-baseline gap-1.5 font-display text-xl leading-none"
+          className="shrink-0"
           aria-label={lang === "en" ? "Alps Ski Transfers, home" : "Alps Ski Transfers, accueil"}
         >
-          <span className="font-semibold text-alpine">Alps Ski</span>
-          <span className="text-alpes">Transfers</span>
+          <Logo lang={lang} />
         </Link>
 
         <div className="flex flex-1 items-center justify-end gap-x-5 gap-y-2">

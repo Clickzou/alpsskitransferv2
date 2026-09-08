@@ -1,32 +1,38 @@
-import { Inter, Newsreader } from "next/font/google";
+import { Outfit } from "next/font/google";
 
 /**
- * Les deux polices du site.
+ * La police du site : **Outfit**, celle du site actuel.
  *
- * Jusqu'au 8 septembre, `--font-display` et `--font-sans` étaient déclarées dans
- * Tailwind mais **jamais définies** : le site tournait sur Georgia et system-ui,
- * c'est-à-dire sur ce que le navigateur avait sous la main. La maquette validée
- * ayant un rendu à empattements, on garde cette famille — mais choisie.
+ * Le WordPress charge `Outfit` en 400, 500, 600, 700 et 900, et rien d'autre.
+ * C'est aussi la famille du lettrage du logo. La refonte change la mise en page,
+ * pas l'identité : une serif aurait donné un autre site.
+ *
+ * Une seule famille, donc, pour les titres comme pour le texte — c'est ce que
+ * fait le site actuel, et c'est un fichier de moins à charger. Les deux
+ * variables restent distinctes : si un jour les titres prennent une autre
+ * police, seule cette ligne change.
  *
  * `next/font` télécharge les fichiers au build et les sert depuis notre domaine :
  * aucune requête vers Google au chargement, donc pas de dépendance à un tiers ni
  * de question RGPD, et le `font-display: swap` évite le texte invisible.
- *
- * Deux familles, pas cinq — le concurrent en charge cinq sur sa home.
  */
-
-/** Titres : une serif variable, chaleureuse et lisible en gros comme en petit. */
-export const display = Newsreader({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-});
-
-/** Texte courant et interface : neutre, dessinée pour l'écran. */
-export const sans = Inter({
+export const police = Outfit({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
 });
+
+/**
+ * Les titres partagent la même famille, exposée sous son propre nom pour que les
+ * composants continuent de dire `font-display` là où ils veulent un titre.
+ */
+export const display = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["500", "600", "700"],
+});
+
+/** Alias conservé : les deux mises en page importent `sans`. */
+export const sans = police;

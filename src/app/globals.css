@@ -25,23 +25,29 @@
   }
 
   /*
-   * Les titres portent la serif, et **héritent de la couleur de leur contexte**.
+   * Les titres portent Outfit en demi-gras, et **héritent de la couleur de leur
+   * contexte**.
    *
    * Leur imposer `text-alpine` ici peignait en bleu nuit les titres posés sur le
    * bandeau bleu nuit : le H1 des pages de station devenait illisible. Une règle
    * globale fixe la forme, jamais la couleur — celle-ci appartient à la section.
+   *
+   * Le poids 600 est celui du site actuel. Une géométrique en 400 ne fait pas un
+   * titre : elle se confond avec le paragraphe qui la suit.
    */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display font-normal;
+    @apply font-display font-semibold;
     color: inherit;
     text-wrap: balance;
   }
 
-  h1 {
-    letter-spacing: -0.015em;
+  /* Une géométrique se resserre bien en grande taille, pas en petite. */
+  h1,
+  h2 {
+    letter-spacing: -0.02em;
   }
 
   p,
@@ -96,6 +102,51 @@
   }
 }
 
+@layer components {
+  /*
+   * Apparition au défilement.
+   *
+   * L'état masqué n'existe **que** sous `[data-anime-pret]`, posé par un script
+   * en ligne avant le premier rendu. Sans JavaScript — un robot d'indexation, un
+   * navigateur texte — la règle ne s'applique pas et la page est entière. C'est
+   * la seule façon d'animer une page sans risquer d'en cacher le contenu.
+   */
+  [data-anime-pret] [data-anime] {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  [data-anime-pret] [data-anime].vu {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  /* Décalage en cascade, pour les grilles de cartes : les éléments d'une même
+     rangée n'arrivent pas tous à la même milliseconde. */
+  [data-anime-pret] [data-anime-decale] > * {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-anime-pret] [data-anime-decale].vu > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-anime-pret] [data-anime-decale].vu > *:nth-child(2) { transition-delay: 90ms; }
+  [data-anime-pret] [data-anime-decale].vu > *:nth-child(3) { transition-delay: 180ms; }
+  [data-anime-pret] [data-anime-decale].vu > *:nth-child(4) { transition-delay: 270ms; }
+  [data-anime-pret] [data-anime-decale].vu > *:nth-child(5) { transition-delay: 360ms; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -106,5 +157,16 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /*
+   * Et surtout : le contenu reste visible. Neutraliser la transition sans lever
+   * l'état masqué laisserait la page vide pour qui a demandé moins de mouvement
+   * — l'exact inverse du service rendu.
+   */
+  [data-anime-pret] [data-anime],
+  [data-anime-pret] [data-anime-decale] > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

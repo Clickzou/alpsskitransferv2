@@ -1,7 +1,7 @@
 import Visuel from "@/components/Visuel";
 import { HERO } from "@/data/accueil";
-import { AIRPORTS } from "@/lib/airports";
 import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
+import { LIEUX } from "@/lib/reservation/lieux";
 import { TRANSFERS, segmentTrajet } from "@/lib/transfers";
 import FormulaireRecherche from "./FormulaireRecherche";
 
@@ -13,18 +13,12 @@ import FormulaireRecherche from "./FormulaireRecherche";
  * to Alpine Resorts ».
  */
 export default function Hero() {
-  const aeroports = AIRPORTS.map((a) => ({
-    slug: a.slug,
-    nom: a.name,
-    silo: SLUG_PAYS[a.country],
-  }));
-
-  const stations = RESORTS_MIGRES.map((r) => ({
-    slug: r.slug,
-    nom: r.name,
-    silo: SLUG_PAYS[r.country],
-  })).sort((a, b) => a.nom.localeCompare(b.nom));
-
+  /*
+   * Le catalogue de lieux est construit ici, côté serveur, et passé au champ
+   * sous sa forme réduite : `RESORTS_MIGRES` contient le contenu complet des
+   * 68 pages de station, plusieurs centaines de kilo-octets qui n'ont rien à
+   * faire dans le navigateur.
+   */
   const liaisons = TRANSFERS.flatMap((t) => {
     const station = RESORTS_MIGRES.find((r) => r.slug === t.resort);
     if (!station) return [];
@@ -37,8 +31,10 @@ export default function Hero() {
     ];
   });
 
+  // `overflow-clip` plutôt que `overflow-hidden` : il rogne l'image de fond comme
+  // avant, mais laisse la liste de suggestions déborder du bandeau.
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-clip">
       <Visuel
         nom={HERO.image.nom}
         alt={HERO.image.alt}
@@ -76,16 +72,18 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="mt-10">
-          <FormulaireRecherche
-            aeroports={aeroports}
-            stations={stations}
-            liaisons={liaisons}
-          />
+        {/*
+          `relative z-20` n'est pas décoratif : le `backdrop-blur` du formulaire
+          crée un contexte d'empilement, dans lequel le `z-20` de la liste de
+          suggestions reste enfermé. Sans cette élévation du formulaire lui-même,
+          les suggestions passaient sous les tuiles de chiffres qui le suivent.
+        */}
+        <div className="relative z-20 mt-10">
+          <FormulaireRecherche lieux={LIEUX} liaisons={liaisons} />
         </div>
 
         {/* Les trois chiffres qui répondent à « est-ce que ça me concerne ? » */}
-        <dl className="mt-10 grid gap-4 text-center sm:grid-cols-3">
+        <dl className="relative z-0 mt-10 grid gap-4 text-center sm:grid-cols-3">
           {[
             { valeur: "68", libelle: "Alpine resorts served" },
             { valeur: "34", libelle: "Airports across four countries" },

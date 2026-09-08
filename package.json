@@ -23,6 +23,7 @@
     "tarifs:extraire": "node scripts/extraire-tarifs.mjs",
     "distances:calculer": "node scripts/calculer-distances.mjs",
     "images:preparer": "node scripts/preparer-images.mjs",
+    "logo:preparer": "node scripts/preparer-logo.mjs",
     "destination:analyser": "node scripts/analyser-destination.mjs",
     "audit:seo": "node scripts/audit-seo.mjs"
   },

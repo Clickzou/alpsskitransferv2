@@ -36,7 +36,10 @@ export const REASSURANCES = [
 
 export const PRESENTATION = {
   titre: "Need a transfer ? You've come to the right place",
-  image: { nom: "route-alpine", alt: "Route de montagne enneigée au coucher du soleil" },
+  image: {
+    nom: "route-alpine",
+    alt: "Village alpin enneigé et route de montagne en lacets au crépuscule",
+  },
   paragraphes: [
     "Looking for the best Alps ski transfers? If you need a private transfer our airport transfer service provides fast, safe, and reliable ski transfers from Geneva Airport, Lyon Airport, Grenoble Airport, and Chambéry Airport, to top ski resorts like Tignes Val, Val Thorens, Chamonix, Morzine, Avoriaz, La Plagne, and Les Deux Alpes.",
     "Our transfer services are designed for winter sports enthusiasts and summer travelers looking for a hassle-free experience. You can book ski transfers online in just a few steps with our simple booking process, secure your seats, and choose from a range of options. We specialise in door-to-door transfers, ensuring a comfortable, professional, and tailored service with experienced drivers and English-speaking staff.",

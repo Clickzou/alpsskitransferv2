@@ -39,8 +39,13 @@ const config: Config = {
           300: "#FF5FB2",
         },
       },
+      /*
+       * Une seule famille — Outfit, celle du site actuel et du logo. Les deux
+       * noms restent distincts pour que les composants disent ce qu'ils veulent
+       * (`font-display` sur un titre) sans dépendre du choix de police.
+       */
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       /*

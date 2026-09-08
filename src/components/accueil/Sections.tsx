@@ -38,12 +38,17 @@ export function Reassurances() {
 }
 
 /**
- * Bandeau sombre : le visuel à gauche, l'argumentaire à droite.
+ * Bandeau de présentation, **à fond perdu** : l'image occupe la moitié gauche de
+ * l'écran d'un bord à l'autre, le texte la moitié droite sur le bleu nuit.
  *
- * Le premier paragraphe passe en chapô — c'est lui qui porte les quatre aéroports
- * et les stations phares, donc la promesse. Les deux suivants sont du détail, et
- * s'affichent comme tel. Les aéroports cités sont cliquables : ils mènent aux
- * hubs, qui sont exactement les pages que ce paragraphe décrit.
+ * C'est la composition de l'ancien site, et elle vaut mieux que la précédente :
+ * une photo enfermée dans la colonne de contenu n'est qu'une illustration, la
+ * même photo à fond perdu porte la section. Le texte, lui, reste aligné sur la
+ * grille du site — son bord droit tombe sur celui des autres sections.
+ *
+ * Le premier paragraphe passe en chapô : c'est lui qui porte les quatre
+ * aéroports et les stations phares, donc la promesse. Les aéroports cités sont
+ * cliquables — ils mènent aux hubs, qui sont les pages que ce paragraphe décrit.
  */
 export function Presentation() {
   const hubs = ["geneva-airport", "lyon-airport", "grenoble-isere-airport", "chambery-savoie-airport"]
@@ -61,33 +66,45 @@ export function Presentation() {
 
   return (
     <section className="bg-alpine text-white">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-section-lg lg:grid-cols-[0.9fr_1.1fr]">
-        <Visuel
-          nom={PRESENTATION.image.nom}
-          alt={PRESENTATION.image.alt}
-          sizes="(min-width: 1024px) 40vw, 100vw"
-          className="aspect-[4/3] w-full rounded object-cover lg:aspect-[3/4] lg:h-full"
-        />
-        <div>
-          <h2 className="font-display text-titre-section">{PRESENTATION.titre}</h2>
-          <p className="mt-5 text-chapo leading-relaxed text-white">{chapo}</p>
-          <div className="mt-5 space-y-4 text-sm leading-relaxed text-glacier-300">
-            {suite.map((p) => (
-              <p key={p.slice(0, 40)}>{p}</p>
-            ))}
-          </div>
+      <div className="lg:grid lg:grid-cols-2">
+        {/* L'image se comporte comme un fond : elle prend toute la hauteur de la
+            colonne de texte, quelle que soit la longueur de celle-ci. */}
+        <div className="relative h-64 sm:h-80 lg:h-auto">
+          <Visuel
+            nom={PRESENTATION.image.nom}
+            alt={PRESENTATION.image.alt}
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
 
-          <nav aria-label="Main departure airports" className="mt-7 flex flex-wrap gap-2">
-            {hubs.map((hub) => (
-              <Link
-                key={hub.chemin}
-                href={hub.chemin}
-                className="rounded-full border border-white/20 px-4 py-1.5 text-sm transition hover:border-alpes hover:bg-alpes hover:text-white"
-              >
-                {hub.nom}
-              </Link>
-            ))}
-          </nav>
+        <div className="px-4 py-section-lg sm:px-6 lg:pl-12 xl:pl-16">
+          {/*
+            La demi-largeur d'une grille de 72 rem fait 36 rem : en contraignant
+            le texte à cette mesure, son bord droit tombe exactement sur celui
+            des sections centrées, sur un écran de 1152 px comme au-delà.
+          */}
+          <div className="max-w-[36rem]" data-anime>
+            <h2 className="font-display text-titre-section">{PRESENTATION.titre}</h2>
+            <p className="mt-5 text-chapo leading-relaxed text-white">{chapo}</p>
+            <div className="mt-5 space-y-4 text-sm leading-relaxed text-glacier-300">
+              {suite.map((p) => (
+                <p key={p.slice(0, 40)}>{p}</p>
+              ))}
+            </div>
+
+            <nav aria-label="Main departure airports" className="mt-7 flex flex-wrap gap-2">
+              {hubs.map((hub) => (
+                <Link
+                  key={hub.chemin}
+                  href={hub.chemin}
+                  className="rounded-full border border-white/20 px-4 py-1.5 text-sm transition hover:border-alpes hover:bg-alpes hover:text-white"
+                >
+                  {hub.nom}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
       </div>
     </section>
@@ -105,25 +122,31 @@ export function Vehicules() {
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-6xl px-4 py-section-lg">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-2xl text-center" data-anime>
           <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
             {VEHICULES.surtitre}
           </p>
           <h2 className="mt-3 font-display text-titre-section text-alpine">{VEHICULES.titre}</h2>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:grid-cols-3" data-anime data-anime-decale>
           {VEHICULES.categories.map((v) => (
             <article
               key={v.nom}
-              className="overflow-hidden rounded-lg border border-glacier-200 transition hover:shadow-carte"
+              className="group overflow-hidden rounded-lg border border-glacier-200 transition duration-300 hover:-translate-y-1 hover:border-glacier-300 hover:shadow-flottant"
             >
               <div className="flex aspect-[16/10] items-center justify-center bg-white p-5">
+                {/*
+                  Au survol, la voiture avance et se redresse légèrement — un
+                  léger effet de perspective, pas une rotation : nous n'avons
+                  qu'une photo par véhicule, et faire tourner une image plate
+                  l'écraserait au lieu de la faire tourner.
+                */}
                 <Visuel
                   nom={v.image.nom}
                   alt={v.image.alt}
                   sizes="(min-width: 640px) 30vw, 90vw"
-                  className="h-full w-full object-contain"
+                  className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.06]"
                 />
               </div>
               <div className="border-t border-glacier-200 p-5">
@@ -142,7 +165,7 @@ export function Vehicules() {
 export function Avantages() {
   return (
     <section className="border-y border-glacier-200 bg-glacier-50">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-section lg:grid-cols-[1fr_1.4fr]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-section lg:grid-cols-[1fr_1.4fr]" data-anime>
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
             {AVANTAGES.surtitre}
@@ -164,27 +187,48 @@ export function Avantages() {
   );
 }
 
-/** Image large et carte blanche en surimpression, comme sur la maquette. */
+/**
+ * Stations phares : l'image à fond perdu, la carte blanche par-dessus.
+ *
+ * Composition reprise de l'ancien site, et c'est la plus forte de la page : la
+ * photo court du bord gauche de l'écran jusque sous la carte, et la carte court
+ * jusqu'au bord droit. Enfermée dans la colonne de contenu, la même image
+ * n'était plus qu'une vignette à côté d'un pavé de texte.
+ *
+ * Les noms de station sont des liens : les sept destinations citées ici ont
+ * toutes leur page, et c'était le maillage le plus évident du site à ne pas
+ * faire.
+ */
 export function StationsPhares() {
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-section-lg">
-        <div className="relative lg:grid lg:grid-cols-2 lg:items-center">
+      <div className="lg:grid lg:grid-cols-[1.1fr_1fr] lg:items-center">
+        <div className="relative h-72 sm:h-96 lg:h-[38rem]">
           <Visuel
             nom={STATIONS_PHARES.image.nom}
             alt={STATIONS_PHARES.image.alt}
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="h-72 w-full rounded object-cover lg:h-[26rem]"
+            sizes="(min-width: 1024px) 60vw, 100vw"
+            className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="-mt-10 rounded bg-white p-6 shadow-flottant sm:p-8 lg:-ml-16 lg:mt-0">
+        </div>
+
+        {/* La carte remonte sur l'image sur écran large, et se contente de la
+            chevaucher légèrement sur mobile, où il n'y a qu'une colonne. */}
+        <div
+          className="relative z-10 -mt-10 bg-white px-5 py-8 shadow-flottant sm:px-8 lg:-ml-24 lg:mt-0 lg:py-14 lg:pl-14 lg:pr-8 xl:pl-20"
+          data-anime
+        >
+          <div className="lg:max-w-xl">
             <p className="text-xs font-semibold uppercase tracking-widest text-alpine-600">
               {STATIONS_PHARES.surtitre}
             </p>
-            <h2 className="mt-3 font-display text-2xl text-alpine">{STATIONS_PHARES.titre}</h2>
-            <p className="mt-4 text-sm leading-relaxed text-alpine-700">
+            <h2 className="mt-3 font-display text-titre-section text-alpine">
+              {STATIONS_PHARES.titre}
+            </h2>
+            <p className="mt-5 text-chapo leading-relaxed text-alpine-700">
               {STATIONS_PHARES.chapo}
             </p>
-            <ul className="mt-4 space-y-2 text-sm text-alpine-700">
+            <ul className="mt-5 space-y-2 text-sm text-alpine-700">
               {STATIONS_PHARES.stations.map((station) => (
                 <li key={station.nom}>
                   {station.slugs.map((slug, i) => {
@@ -210,12 +254,12 @@ export function StationsPhares() {
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-sm leading-relaxed text-alpine-600">
+            <p className="mt-5 text-sm leading-relaxed text-alpine-600">
               {STATIONS_PHARES.conclusion}
             </p>
             <Link
               href={lienReservation()}
-              className="mt-6 inline-block rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
+              className="mt-7 inline-block rounded bg-marque px-7 py-3 text-sm font-semibold text-white transition hover:bg-marque-600"
             >
               Book now
             </Link>
@@ -226,32 +270,58 @@ export function StationsPhares() {
   );
 }
 
+/**
+ * « Wherever you land » — les trois familles d'aéroports de départ.
+ *
+ * Pleine largeur, avec 100 px de marge de chaque côté : la section respire
+ * entre deux bandeaux à fond perdu, et les trois cartes ont enfin la place
+ * d'être des cartes plutôt que trois colonnes de texte.
+ *
+ * L'aplat glacier de la section est ce qui fait exister les cartes : posées
+ * blanches sur blanc, elles n'auraient été qu'une bordure. La photo remplit le
+ * haut de la carte d'un bord à l'autre, et la carte entière est cliquable au
+ * survol — c'est le lien du bas qui porte l'action, mais toute la carte réagit.
+ *
+ * Le lien de bas de carte est le seul ajout à l'original : ces trois blocs
+ * décrivaient des pages que rien ne pointait.
+ */
 export function Departs() {
   return (
-    <section className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 pb-section-lg">
-        <h2 className="text-center font-display text-titre-section text-alpine">
+    <section className="border-y border-glacier-200 bg-glacier-50">
+      <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
+        <h2
+          className="mx-auto max-w-4xl text-center font-display text-titre-page text-alpine"
+          data-anime
+        >
           {DEPARTS.titre}
         </h2>
-        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+
+        <div className="mt-12 grid gap-8 lg:grid-cols-3" data-anime data-anime-decale>
           {DEPARTS.cartes.map((carte) => (
-            <article key={carte.titre} className="flex flex-col">
-              <Visuel
-                nom={carte.image.nom}
-                alt={carte.image.alt}
-                sizes="(min-width: 1024px) 30vw, 90vw"
-                className="h-48 w-full rounded object-cover"
-              />
-              <h3 className="mt-4 font-display text-base font-semibold text-alpine">
-                {carte.titre}
-              </h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-alpine-600">{carte.texte}</p>
-              <Link
-                href={carte.lien.chemin}
-                className="mt-3 text-sm font-medium text-marque underline underline-offset-4"
-              >
-                {carte.lien.texte}
-              </Link>
+            <article
+              key={carte.titre}
+              className="group flex flex-col overflow-hidden rounded-xl border border-glacier-200 bg-white shadow-carte transition duration-300 hover:-translate-y-1.5 hover:shadow-flottant"
+            >
+              <div className="overflow-hidden">
+                <Visuel
+                  nom={carte.image.nom}
+                  alt={carte.image.alt}
+                  sizes="(min-width: 1024px) 32vw, 92vw"
+                  className="h-60 w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 lg:h-72"
+                />
+              </div>
+
+              <div className="flex flex-1 flex-col p-7 lg:p-8">
+                <h3 className="font-display text-titre-carte text-alpine">{carte.titre}</h3>
+                <p className="mt-4 flex-1 leading-relaxed text-alpine-700">{carte.texte}</p>
+                <Link
+                  href={carte.lien.chemin}
+                  className="mt-6 inline-flex items-center gap-2 self-start border-b-2 border-transparent pb-1 text-sm font-semibold text-marque transition group-hover:border-marque group-hover:gap-3"
+                >
+                  {carte.lien.texte}
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
+              </div>
             </article>
           ))}
         </div>
@@ -263,7 +333,7 @@ export function Departs() {
 export function Etapes() {
   return (
     <section className="bg-alpes text-white">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2" data-anime>
         <div>
           <h2 className="font-display text-titre-section">{ETAPES.titre}</h2>
           <p className="mt-3 text-sm text-white/90">{ETAPES.chapo}</p>
@@ -293,7 +363,7 @@ export function Etapes() {
 export function Pourquoi() {
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-3xl px-4 py-section-lg text-center">
+      <div className="mx-auto max-w-3xl px-4 py-section-lg text-center" data-anime>
         <h2 className="font-display text-titre-section text-alpine">{POURQUOI.titre}</h2>
         <p className="mt-3 text-sm text-alpine-600">{POURQUOI.chapo}</p>
         <ul className="mt-6 inline-block space-y-2 text-left">
@@ -330,7 +400,7 @@ export function TrajetsPopulaires({
   return (
     <section className="bg-alpine-900 text-white">
       <div className="mx-auto max-w-6xl px-4 py-section-lg">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-2xl text-center" data-anime>
           <p className="text-xs font-semibold uppercase tracking-widest text-glacier-400">
             Where we drive
           </p>
@@ -339,7 +409,7 @@ export function TrajetsPopulaires({
           </h2>
         </div>
 
-        <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4" data-anime data-anime-decale>
           {aeroports.map((aeroport) => (
             <div key={aeroport.chemin}>
               <h3 className="border-b border-white/15 pb-3 font-display text-titre-carte">
@@ -388,7 +458,7 @@ export function Avis() {
           {AVIS.surtitre}
         </p>
         <h2 className="mt-3 font-display text-titre-section text-alpine">{AVIS.titre}</h2>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-anime data-anime-decale>
           {AVIS.avis.map((avis) => (
             <figure
               key={avis.auteur}

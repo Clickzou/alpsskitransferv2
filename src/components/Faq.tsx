@@ -21,7 +21,7 @@ export default function Faq({
   if (items.length === 0) return null;
   return (
     <section className="border-y border-glacier-200 bg-glacier-50">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-[1fr_1.4fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-[1fr_1.4fr]" data-anime>
         <EnTeteSection surtitre={surtitre} titre={titre} />
 
         <div className="divide-y divide-glacier-200 rounded border border-glacier-200 bg-white">

@@ -77,9 +77,15 @@ export default function Tunnel({
   langue?: LangueTunnel;
 }) {
   const t = TEXTES[langue];
-  const lieuDe = (slug?: string): ValeurLieu => {
-    const trouve = slug ? lieux.find((l) => l.slug === slug) : undefined;
-    return trouve ? { slug: trouve.slug, texte: trouve.nom } : { slug: null, texte: "" };
+  /*
+   * Un paramètre d'URL est soit un slug du registre, soit une adresse tapée sur
+   * la home. Ne reconnaître que le slug faisait perdre l'adresse en chemin : le
+   * visiteur arrivait sur un tunnel vide après l'avoir déjà saisie une fois.
+   */
+  const lieuDe = (valeur?: string): ValeurLieu => {
+    if (!valeur) return { slug: null, texte: "" };
+    const trouve = lieux.find((l) => l.slug === valeur);
+    return trouve ? { slug: trouve.slug, texte: trouve.nom } : { slug: null, texte: valeur };
   };
 
   const [etape, setEtape] = useState<Etape>("trajet");
@@ -259,6 +265,7 @@ export default function Tunnel({
               etiquette={t.de}
               placeholder={t.deIndice}
               requis
+              langue={langue}
             />
             <button
               type="button"
@@ -277,6 +284,7 @@ export default function Tunnel({
               etiquette={t.vers}
               placeholder={t.versIndice}
               requis
+              langue={langue}
             />
           </div>
 
@@ -393,6 +401,7 @@ export default function Tunnel({
                       onChange={setRetourDe}
                       etiquette={t.retourDe}
                       placeholder={vers.texte || t.vers}
+                      langue={langue}
                     />
                     <ChampLieu
                       id="returnTo"
@@ -401,6 +410,7 @@ export default function Tunnel({
                       onChange={setRetourVers}
                       etiquette={t.retourVers}
                       placeholder={de.texte || t.de}
+                      langue={langue}
                     />
                   </div>
                 ) : null}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { ENTREPRISE, SITE } from "@/data/site";
 import type { Lang } from "@/lib/i18n";
 import { PAYS } from "@/lib/pays";
@@ -108,7 +109,10 @@ export default function Footer({ lang }: { lang: Lang }) {
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-white">
+            <Link href={fr ? "/fr/" : "/"} className="inline-block">
+              <Logo lang={lang} variante="clair" />
+            </Link>
+            <h2 className="mt-5 text-xs font-semibold uppercase tracking-widest text-white">
               {fr ? "À propos" : "About Transfers"}
             </h2>
             <address className="mt-3 space-y-1 text-sm not-italic">
