@@ -15,7 +15,11 @@ import { useEffect } from "react";
  * 2. **`prefers-reduced-motion` gagne.** La feuille de styles neutralise
  *    l'apparition pour qui a demandé moins de mouvement ; ce composant n'a alors
  *    rien à faire.
- * 3. **On observe, on révèle, on oublie.** Chaque élément n'est observé qu'une
+ * 3. **Ce qui est déjà à l'écran est révélé tout de suite.** Sans cela, un bloc
+ *    plus haut que la fenêtre — le corps d'une page de station, par exemple —
+ *    reste invisible sous le bandeau : il n'atteint jamais le seuil de
+ *    visibilité demandé, puisqu'il est trop grand pour y entrer.
+ * 4. **On observe, on révèle, on oublie.** Chaque élément n'est observé qu'une
  *    fois : la page ne doit pas continuer à calculer après avoir été lue.
  */
 export default function Animations() {
@@ -38,12 +42,25 @@ export default function Animations() {
           observateur.unobserve(entree.target);
         }
       },
-      // Le seuil bas et la marge négative en bas évitent qu'un bloc apparaisse
-      // alors qu'il est déjà lu : il se révèle juste avant d'entrer dans l'œil.
-      { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
+      /*
+       * Seuil à zéro : **le moindre pixel visible suffit**. Un seuil en
+       * pourcentage paraît plus fin, mais il condamne les blocs plus hauts que
+       * la fenêtre — ils n'en occuperont jamais 8 %. La marge négative en bas
+       * garde l'idée utile : révéler juste avant que l'œil n'arrive.
+       */
+      { threshold: 0, rootMargin: "0px 0px -5% 0px" },
     );
 
-    cibles.forEach((element) => observateur.observe(element));
+    /*
+     * Ce qui est déjà à l'écran au chargement se révèle sans transition : une
+     * animation d'entrée sur du contenu que le visiteur regarde déjà n'est pas
+     * une entrée, c'est un clignotement.
+     */
+    const hauteur = window.innerHeight;
+    for (const element of cibles) {
+      if (element.getBoundingClientRect().top < hauteur * 0.95) element.classList.add("vu");
+      else observateur.observe(element);
+    }
     return () => observateur.disconnect();
   }, []);
 
