@@ -67,7 +67,7 @@ export default function IndexBlogIntl({ lang }: { lang: LangueSecondaire }) {
                   >
                     <Visuel
                       nom={aLaUne.visuel.nom}
-                      alt={aLaUne.visuel.alt}
+                      alt={aLaUne.traductions![lang]!.altVisuel ?? aLaUne.visuel.alt}
                       priority
                       sizes="(min-width: 1024px) 50vw, 100vw"
                       className="aspect-[16/10] w-full rounded-xl object-cover shadow-carte transition duration-500 group-hover:scale-[1.02]"
@@ -116,7 +116,7 @@ export default function IndexBlogIntl({ lang }: { lang: LangueSecondaire }) {
                           {article.visuel ? (
                             <Visuel
                               nom={article.visuel.nom}
-                              alt={article.visuel.alt}
+                              alt={traduction.altVisuel ?? article.visuel.alt}
                               sizes="(min-width: 1024px) 32vw, (min-width: 640px) 50vw, 100vw"
                               className="aspect-[16/10] w-full object-cover"
                             />

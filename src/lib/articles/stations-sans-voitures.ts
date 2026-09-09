@@ -131,4 +131,131 @@ export const stationsSansVoitures: Article = {
       ],
     },
   ],
+  /**
+   * Version allemande — le sujet est encore plus à sa place ici qu'en anglais :
+   * Zermatt, Wengen, Mürren, Saas-Fee, Bettmeralp, Braunwald et Stoos sont
+   * toutes en Suisse alémanique. C'est le lecteur germanophone qui connaît le
+   * mieux ces endroits, et c'est donc à lui qu'il faut donner des horaires
+   * plutôt que des généralités.
+   */
+  traductions: {
+    de: {
+      slug: "autofreie-skiorte",
+      titre: "Autofreie Skiorte: wie Sie wirklich hinkommen",
+      metaTitre: "Autofreie Skiorte: wie Sie wirklich hinkommen",
+      metaDescription:
+        "Zermatt, Wengen, Mürren, Saas-Fee, Bettmeralp: wo die Straße endet, was mit dem Gepäck passiert, und wie Sie die letzte Etappe planen.",
+      altVisuel: "Autofreier Skiort, erreichbar nur zu Fuß oder mit der Bahn",
+      chapo:
+        "Einige der schönsten Orte der Alpen sind mit dem Auto nicht erreichbar, und die Transferanbieter, die Sie dorthin fahren, sagen das nicht immer gern. Hier steht, wo die Straße bei jedem von ihnen tatsächlich endet, was an diesem Punkt mit Ski und Koffern passiert, und wie Sie die letzten zwanzig Minuten so planen, dass sie der angenehme Teil der Reise werden und nicht der Moment, in dem es kippt.",
+      stationsLiees: ["zermatt", "davos", "st-moritz"],
+      contenu: [
+        {
+          type: "paragraphe",
+          texte:
+            "Autofrei ist bei diesen Orten keine Marketingzeile. In Zermatt, Wengen und Mürren gibt es überhaupt keine Straße: Die Dörfer entstanden vor dem Auto und wurden nie angebunden. In Saas-Fee führt eine Straße hinauf, endet aber am Parkhaus vor dem Ort. In jedem Fall ist die letzte Etappe eine Bahn, eine Seilbahn oder ein Elektrofahrzeug — und sie hat einen Fahrplan.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Nichts davon ist ein Problem, wenn man es vorher weiß. Es wird eines um elf Uhr abends, im Februar, mit vier Koffern, drei Skisäcken und einem Kind, das seit sechs Uhr früh unterwegs ist.",
+        },
+
+        { type: "titre2", texte: "Zermatt: die Straße endet in Täsch" },
+        {
+          type: "paragraphe",
+          texte:
+            "Zermatt hat Verbrennungsfahrzeuge in den 1960er-Jahren verboten und hält daran fest. Jeder Straßentransfer — unserer eingeschlossen — endet am Matterhorn Terminal in Täsch, 5 km talauswärts. Der Shuttlezug fährt tagsüber etwa alle zwanzig Minuten und braucht zwölf.",
+        },
+        {
+          type: "liste",
+          items: [
+            "Das Terminal ist überdacht, mit Gepäckwagen am Bahnsteig und einem großen Parkhaus.",
+            "Tickets kauft man vor Ort; Ski und Gepäck fahren ohne Aufpreis mit.",
+            "Der Bahnhof Zermatt liegt mitten im Dorf, und die meisten Hotels schicken ein Elektrotaxi zu einem Zug, den Sie ihnen genannt haben.",
+            "Die Züge fahren bis in den Abend — prüfen Sie den letzten, wenn Sie spät landen.",
+            "Auf dem Rückweg planen Sie einen Zug mehr ein, als die Rechnung ergibt: Ihr Fahrer wartet in Täsch, der Flug nicht.",
+          ],
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Nach Täsch sind es 251 km und rund 4 h 15 ab Zürich, 237 km und rund 3 h 10 ab Genf, und 195 km und rund 3 h ab Mailand Malpensa. Die zwölf Minuten Bahn kommen überall obendrauf.",
+        },
+
+        { type: "titre2", texte: "Wengen: eine Zahnradbahn die Wand hinauf" },
+        {
+          type: "paragraphe",
+          texte:
+            "Wengen liegt auf einer Terrasse über dem Lauterbrunnental und hatte nie eine Straße. Die Wengernalpbahn fährt seit 1893 hinauf, in rund fünfzehn Minuten, etwa halbstündlich. Straßentransfers enden am Bahnhof Lauterbrunnen, mitten im Dorf, wenige Schritte vom Bahnsteig.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Lauterbrunnen liegt 149 km und rund 2 h 30 von Zürich, 226 km und rund 2 h 50 von Genf. Die Hotels in Wengen holen ihre Gäste mit Elektrowagen oder Schlitten am Zug ab, wenn Sie die Ankunftszeit durchgeben — was sich lohnt, denn die Dorfstraße ist kein Ort, an dem man einen Koffer durch den Schnee zieht.",
+        },
+
+        { type: "titre2", texte: "Mürren: Seilbahn oder Standseilbahn und Bergbahn" },
+        {
+          type: "paragraphe",
+          texte:
+            "Mürren, auf der anderen Seite desselben Tals, erreicht man entweder mit der Seilbahn ab Stechelberg — 6 km talaufwärts von Lauterbrunnen — oder mit der Standseilbahn nach Grütschalp und der kleinen Bahn entlang der Felskante. Beides dauert insgesamt rund zwanzig Minuten, und beides fährt nach Fahrplan.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Fragen Sie Ihr Hotel, welche Variante es empfiehlt: Die Antwort hängt davon ab, wo im Dorf Sie wohnen und welche der beiden in dieser Woche fährt. Sagen Sie uns die Antwort, und wir setzen Sie an der richtigen Talstation ab.",
+        },
+
+        { type: "titre2", texte: "Saas-Fee: die Straße endet am Parkhaus" },
+        {
+          type: "paragraphe",
+          texte:
+            "Saas-Fee ist ein anderer Fall: Es gibt eine Straße hinauf, sie ist offen, aber sie endet an den Parkhäusern am Ortsrand. Im Dorf selbst fahren nur Elektrofahrzeuge. Wir bringen Sie bis zum Parkhaus; von dort holt Sie ein Elektrotaxi des Hotels ab, wenn Sie es angekündigt haben.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Diese letzte Etappe im Voraus zu buchen ist bei später Ankunft kein Luxus. Um elf Uhr abends steht am Parkhaus niemand, der spontan einspringt.",
+        },
+
+        { type: "titre2", texte: "Die anderen, die man kennen sollte" },
+        {
+          type: "liste",
+          items: [
+            "Bettmeralp und Riederalp am Aletschgletscher: Seilbahnen aus dem Rhonetal, kein Autozugang.",
+            "Braunwald über Linthal: nur mit der Standseilbahn erreichbar.",
+            "Stoos über Schwyz: die steilste Standseilbahn der Welt, und keine Straße.",
+            "Rigi: Zahnradbahnen ab Vitznau und Arth-Goldau.",
+            "Avoriaz in Frankreich: Straße bis zum Parkhaus, im Ort Pferdeschlitten und Pistenraupen-Taxis.",
+            "Nicht autofrei, entgegen mancher Buchungsseite: Grindelwald, Davos, St. Moritz und das ganze Chamonixtal sind mit dem Fahrzeug erreichbar.",
+          ],
+        },
+
+        { type: "titre2", texte: "Wie Sie die letzte Etappe planen" },
+        {
+          type: "paragraphe",
+          texte:
+            "Drei Gewohnheiten machen das alles einfach. Erstens: Nennen Sie Ihrem Transferanbieter den Namen des Hotels und nicht den des Orts — das ist der Unterschied zwischen dem richtigen und dem falschen Bahnhof. Zweitens: Geben Sie Ihrem Hotel die Zeit Ihres Zugs oder Ihrer Seilbahn durch, damit man Sie abholt; die meisten tun das, meist kostenlos. Drittens: Nehmen Sie auf dem Rückweg die Abfahrt vor derjenigen, die auf dem Papier passt.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Die Bahnen und Seilbahnen an diesen Orten sind Schweizer Bergverkehr: Sie fahren bei Wetter, das eine Straße sperren würde, und sie fahren pünktlich. Die Unsicherheit Ihrer Reise liegt in der Straße darunter — und genau die fahren wir.",
+        },
+
+        { type: "titre2", texte: "Was wir auf diesen Strecken anders machen" },
+        {
+          type: "liste",
+          items: [
+            "Wir nennen den Preis bis zum Bahnhof oder zur Seilbahn und sagen das vorher — niemand steht überrascht vor einer Schranke.",
+            "Wir stimmen die Ankunft auf eine Abfahrt ab, statt Sie auf einem kalten Bahnsteig warten zu lassen.",
+            "Wir helfen Ihnen mit dem Gepäck bis zum Bahnsteig: In Täsch oder Lauterbrunnen gehört das zur Fahrt.",
+            "Auf dem Rückweg rechnen wir einen Zug Reserve ein, denn ein verpasster Anschluss am Berg ist ein verpasster Flug im Tal.",
+            "Ski- und Snowboardtaschen fahren auf jeder Etappe kostenlos mit — auch in den Bahnen, wo sie schlicht Gepäck sind.",
+          ],
+        },
+      ],
+    },
+  },
 };

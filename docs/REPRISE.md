@@ -18,12 +18,66 @@ vérifiée. **Ce fichier dit où reprendre.**
 | Hubs pays et hubs aéroport | 5 + 31 — les **10 aéroports qui portent le trafic** ont un contenu rédigé |
 | Pages fonctionnelles conservées | 14 |
 | Français | home + **10 stations** + **17 trajets** + **2 articles** + **5 pages de conversion**, tunnel compris — 35 URL |
-| Allemand | home + **10 stations** + **18 trajets** + **5 pages de conversion**, tunnel compris — 34 URL |
-| Italien | home + **11 stations** + **16 trajets** + **5 pages de conversion**, tunnel compris — 33 URL |
-| Blog | **3 articles** en anglais, **2 en français** — pas encore d'article DE ni IT |
+| Allemand | home + **10 stations** + **18 trajets** + **5 pages de conversion** + **2 articles**, tunnel compris — 37 URL |
+| Italien | home + **11 stations** + **16 trajets** + **5 pages de conversion** + **2 articles**, tunnel compris — 36 URL |
+| Blog | **3 articles** en anglais, **2 par langue traduite** — chacun adapté à son marché |
 | Home | **au design validé** par le client |
 | Stations, trajets, hubs, pages fonctionnelles | **au design de la home** (8 septembre) |
 | Moteur de réservation | **au niveau du concurrent** (autocomplétion, adresse libre, bagages, retour asymétrique, devises) — reste à brancher Stripe et Supabase |
+
+## Fait le 9 septembre
+
+**Le site parle quatre langues.** Le socle n'en gérait que deux : une seule
+alternative par page (`alternate?: {lang, path}`) et `lang === "fr"` en dur dans
+l'en-tête et le pied de page. À quatre langues, chaque page n'aurait déclaré qu'une
+seule de ses trois voisines à Google, et chaque libellé serait devenu une échelle de
+ternaires.
+
+Ce qui a changé de forme :
+
+- `Resort.fr` / `Transfer.fr` / `Article.fr` deviennent `traductions`, indexées par
+  langue. Ajouter une langue est désormais une ligne de données, pas une branche.
+- `pageMetadata` prend `alternatives[]` et construit un groupe hreflang complet et
+  réciproque, la page courante comprise.
+- `src/lib/intl/liens.ts` calcule ces paires **en un seul endroit** : le hreflang des
+  metas et le sélecteur de langue de l'en-tête montrent forcément le même groupe. Les
+  faire diriger par deux calculs séparés, c'était se garantir qu'ils divergent.
+- Les gabarits traduits (accueil, station, trajet, page de conversion, blog, tunnel)
+  sont des composants partagés. Next impose un segment statique par langue, donc trois
+  arborescences de routes — elles ne contiennent que des aiguillages de quinze lignes.
+
+**Allemand et italien, écrits pour leur marché.** L'allemand part d'Innsbruck, de
+Salzbourg et de Zurich vers le Tyrol, l'Arlberg et la Suisse alémanique ; l'italien de
+Turin, Milan et Bergame vers la Vallée d'Aoste, le Piémont et la Via Lattea. Ce ne sont
+pas des traductions du français : le périmètre, les exemples et la réglementation
+hivernale citée diffèrent. Toutes les distances viennent de `data/distances.ts`.
+
+Deux choses que ces pages disent et qu'un comparateur ne dit pas : où la voiture
+s'arrête vraiment (Zermatt s'arrête à Täsch, la Val Ferret est fermée l'hiver au trafic
+privé), et quel aéroport est réellement le plus proche — Turin pour Serre Chevalier,
+Innsbruck pour la Val Gardena — y compris quand cela raccourcit la course.
+
+**Le blog suit, deux articles par langue.** « Quel aéroport ? » devient en allemand
+Innsbruck contre Munich contre Friedrichshafen, avec le déroutement fréquent d'Innsbruck
+comme argument ; en italien, Turin contre Malpensa, avec le péage du tunnel comme
+critère de comparaison. Les stations sans voiture sont passées en allemand parce que
+Zermatt, Wengen, Mürren, Saas-Fee, Bettmeralp et Stoos sont toutes en Suisse alémanique.
+
+Deux champs ajoutés à `TraductionArticle` pour que cela tienne : `stationsLiees`, parce
+qu'un article allemand sur le Tyrol n'a rien à dire de Val Thorens et que la liste
+anglaise, filtrée sur les stations traduites, serait tombée à zéro ; et `altVisuel`,
+parce que l'image est la même montagne mais son texte alternatif ne peut pas rester
+anglais sur une page qui se déclare allemande.
+
+**Le nettoyage « pas de transfert partagé » n'avait porté que sur l'anglais.** La page
+`/fr/transferts-prives/` était entièrement bâtie sur la comparaison privé/partagé, et
+l'article français la reprenait. Les deux sont refaits. Corrigé au passage un artefact
+du nettoyage anglais : un paragraphe de l'article répétait deux fois la même phrase.
+
+**Deux défauts de hreflang corrigés** : `x-default` sortait en URL doublée sur les pages
+anglaises, et `/de/blog/` comme `/it/blog/` existaient sans aucun article. Les index
+vides répondaient 404 et sortaient du menu ; depuis la publication des articles, ils
+sont revenus d'eux-mêmes — l'entrée est dérivée du registre, personne ne l'a rallumée.
 
 ## Fait le 8 septembre
 

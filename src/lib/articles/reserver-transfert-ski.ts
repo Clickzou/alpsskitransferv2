@@ -256,5 +256,157 @@ export const reserverTransfertSki: Article = {
         },
       ],
     },
+    /**
+     * Version italienne — même angle, exemples italiens.
+     *
+     * Le point 2 n'est pas le même qu'en anglais : ici les péages ne sont pas un
+     * détail mais le poste qui décide, parce que la moitié des liaisons passent
+     * par le Mont-Blanc ou le Fréjus. Et le point 5 change de règle — le seuil
+     * italien est la taille de l'enfant, pas son âge.
+     */
+    it: {
+      slug: "prenotare-un-transfer-cosa-verificare",
+      titre: "Prenotare un transfer sulla neve: cosa verificare prima di pagare",
+      metaTitre: "Prenotare un transfer: 8 cose da verificare prima di pagare",
+      metaDescription:
+        "Per veicolo o a persona, pedaggi e trafori, sci, seggiolini, ritardi, catene, cancellazione: le otto cose che decidono quanto costa davvero.",
+      altVisuel: "Pneumatici invernali su una strada innevata verso una località sciistica",
+      chapo:
+        "Il transfer è uno dei pochi acquisti di una vacanza in cui il prezzo annunciato e quello finale differiscono con regolarità, e in cui il preventivo più basso è spesso il viaggio più caro. Ecco le otto cose da verificare prima di pagare, perché ognuna conta su una strada di montagna a febbraio, e le domande che ottengono una risposta chiara.",
+      stationsLiees: [
+        "cervinia",
+        "courmayeur",
+        "sestriere",
+        "sauze-doulx",
+        "champoluc",
+        "la-thuile",
+      ],
+      contenu: [
+        {
+          type: "paragraphe",
+          texte:
+            "Un transfer sembra un prodotto indifferenziato: due punti, un veicolo, un prezzo. Non lo è, e le differenze si vedono solo il giorno stesso — quando il volo ha due ore di ritardo, quando le sacche da sci sono più di quante il bagagliaio ne prenda, o quando il pedaggio del traforo si scopre non essere compreso.",
+        },
+
+        { type: "titre2", texte: "1. Per veicolo o a persona?" },
+        {
+          type: "paragraphe",
+          texte:
+            "È la prima domanda, e cambia tutto. Un transfer privato si paga per veicolo: in quattro o in otto, il prezzo è lo stesso, pedaggi compresi. Quello che compri è l’auto intera e il viaggio intero, non un posto dentro.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Quindi, davanti a due preventivi, controlla l’unità prima dell’importo. Un «da 40 €» e una tariffa forfettaria di 240 € sembrano molto diversi su una pagina di risultati e, moltiplicati per sei, danno lo stesso totale — ma solo uno dei due ti porta davanti alla porta all’ora in cui atterri davvero.",
+        },
+
+        { type: "titre2", texte: "2. Pedaggi e trafori sono nel prezzo?" },
+        {
+          type: "paragraphe",
+          texte:
+            "In Italia questa domanda pesa più che altrove. Il traforo del Monte Bianco e quello del Fréjus costano ciascuno una cifra a due cifre alte per un minibus, il vignette svizzero è annuale, e le autostrade si pagano al casello. Su un Ginevra–Courmayeur o un Torino–Serre Chevalier, i pedaggi sono una voce che si vede nel totale.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Chiedilo esplicitamente: questo prezzo comprende il traforo e tutti i pedaggi? La risposta deve essere sì, e per iscritto. Un preventivo che li esclude non è confrontabile con uno che li include.",
+        },
+
+        { type: "titre2", texte: "3. Le sacche da sci si pagano a parte?" },
+        {
+          type: "paragraphe",
+          texte:
+            "Alcuni operatori le fatturano, altri le includono, e qualcuno dimensiona il veicolo solo sui posti a sedere — ed è così che sei persone con sei paia di sci e sei sacche scarponi finiscono per tenersi l’attrezzatura sulle ginocchia per due ore.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "La domanda giusta non è «quanto costa una sacca» ma «con quanti bagagli avete calcolato questo veicolo». Un operatore che te lo chiede prima del preventivo è un operatore che ha già pensato al bagagliaio.",
+        },
+
+        { type: "titre2", texte: "4. Cosa succede se il volo ritarda?" },
+        {
+          type: "paragraphe",
+          texte:
+            "È il punto in cui i preventivi si assomigliano di più e i servizi si assomigliano di meno. Le differenze concrete sono tre: se l’autista segue il numero del volo o l’orario prenotato, quanti minuti di attesa sono compresi, e cosa succede oltre.",
+        },
+        {
+          type: "liste",
+          items: [
+            "L’autista vede l’orario reale di atterraggio, o aspetta all’ora scritta in prenotazione?",
+            "Quanta attesa è inclusa dopo l’atterraggio — e da quale momento parte il conteggio?",
+            "Se il volo viene dirottato, si riparte dall’aeroporto giusto o si perde la corsa?",
+            "Chi ti scrive, e su quale numero, se qualcosa cambia?",
+          ],
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Da noi il volo è monitorato, l’attesa non si paga e un dirottamento si risolve con un messaggio. Non è generosità: è la differenza tra un servizio e una prenotazione.",
+        },
+
+        { type: "titre2", texte: "5. I seggiolini" },
+        {
+          type: "paragraphe",
+          texte:
+            "In Italia il seggiolino è obbligatorio fino a 150 cm di altezza — non fino a un’età. In Francia la regola è fino a 10 anni, in Austria fino a 135 cm o 14 anni. Se il percorso attraversa una frontiera, vale la regola più severa del tragitto, e conviene che sia il trasportatore a saperlo.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Chiedi che siano forniti e montati prima della partenza, e indica l’età dei bambini in prenotazione. Un seggiolino che arriva ma non è del gruppo giusto non serve a nulla.",
+        },
+
+        { type: "titre2", texte: "6. Le dotazioni invernali del veicolo" },
+        {
+          type: "paragraphe",
+          texte:
+            "In Italia le dotazioni invernali sono obbligatorie dal 15 novembre al 15 aprile sulle strade indicate dagli enti gestori; in Francia dal 1° novembre al 31 marzo nei comuni montani designati; in Svizzera conta lo stato della strada, non la data. Un veicolo che sale a Cervinia o a Sauze d’Oulx a gennaio deve avere pneumatici invernali e catene a bordo — e un autista che sappia dove fermarsi per montarle.",
+        },
+
+        { type: "titre2", texte: "7. L’indirizzo, non la località" },
+        {
+          type: "paragraphe",
+          texte:
+            "«Serre Chevalier» sono quindici chilometri di valle. «Monterosa Ski» sono tre valli che in auto distano un’ora l’una dall’altra. «Courmayeur» comprende Entrèves e la Val Ferret, che d’inverno è chiusa al traffico privato oltre un certo punto.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Dai sempre l’indirizzo e il nome della struttura, non il nome del comprensorio. È l’errore che costa più tempo di tutti gli altri messi insieme, e si evita scrivendo una riga in più nel modulo.",
+        },
+
+        { type: "titre2", texte: "8. La cancellazione, e cosa viene promesso davvero" },
+        {
+          type: "paragraphe",
+          texte:
+            "Leggi la finestra di cancellazione gratuita e cosa succede dopo. Verifica anche chi risponde se una strada viene chiusa per neve: se il prezzo cambia perché l’autista ha fatto una deviazione, il rischio è tuo; se non cambia, è del trasportatore. Sono due contratti diversi che si assomigliano molto in fase di prenotazione.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Chiedi infine chi effettua materialmente il trasporto e con quale licenza. Un marchio non è un trasportatore: dietro deve esserci un’impresa iscritta, assicurata e identificabile — e deve essere scritto sul sito, non solo nelle risposte via e-mail.",
+        },
+
+        { type: "titre2", texte: "Le domande che ottengono una risposta chiara" },
+        {
+          type: "liste",
+          items: [
+            "Questo prezzo è per veicolo o a persona, e comprende trafori e pedaggi?",
+            "Con quanti bagagli e quante sacche da sci avete dimensionato il veicolo?",
+            "Seguite il numero del volo, e quanta attesa è compresa?",
+            "I seggiolini sono forniti e montati, e per quali età?",
+            "Il veicolo ha pneumatici invernali e catene a bordo?",
+            "Se una strada è chiusa, il prezzo resta quello concordato?",
+            "Chi effettua il trasporto, e con quale licenza?",
+          ],
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Sette domande, cinque minuti. È il modo più veloce di capire se il preventivo più basso è anche il viaggio più corto — e di solito la risposta si vede già dalla prima.",
+        },
+      ],
+    },
   },
 };

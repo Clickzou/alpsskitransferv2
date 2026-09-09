@@ -19,8 +19,10 @@ export default function ArticleIntl({ lang, article }: { lang: LangueSecondaire;
   const traduction = article.traductions![lang]!;
   const chemin = `/${lang}/blog/${traduction.slug}/`;
 
-  // Maillage sortant : seules les stations qui ont une page dans cette langue.
-  const stations = (article.stationsLiees ?? [])
+  // Maillage sortant : la liste propre à la langue si elle existe, sinon celle
+  // de l'article — et dans les deux cas, filtrée sur les stations qui ont
+  // réellement une page dans cette langue.
+  const stations = (traduction.stationsLiees ?? article.stationsLiees ?? [])
     .map((s) => resortsTraduits(lang).find((r) => r.slug === s))
     .filter((r) => r != null)
     .slice(0, 8);

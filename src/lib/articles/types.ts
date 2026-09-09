@@ -48,4 +48,22 @@ export interface TraductionArticle {
   metaDescription: string;
   chapo: string;
   contenu: BlocContenu[];
+  /**
+   * Le texte alternatif du visuel, dans cette langue.
+   *
+   * L'image est la même — c'est la même montagne — mais son `alt` est rédigé en
+   * anglais dans l'article d'origine. Le laisser tel quel ferait lire de
+   * l'anglais à un lecteur d'écran allemand, et donnerait à Google un texte dans
+   * une langue que la page ne déclare pas. Absent, on retombe sur l'anglais.
+   */
+  altVisuel?: string;
+  /**
+   * Le maillage sortant propre à cette langue.
+   *
+   * Il ne peut pas être partagé : un article allemand sur les aéroports du
+   * Tyrol n'a rien à dire de Val Thorens, et la liste anglaise, filtrée sur les
+   * stations traduites en allemand, tomberait à zéro. Absent, on retombe sur
+   * `stationsLiees` — ce qui convient quand le sujet est le même des deux côtés.
+   */
+  stationsLiees?: string[];
 }
