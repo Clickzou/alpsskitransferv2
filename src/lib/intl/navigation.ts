@@ -1,3 +1,4 @@
+import { articlesPublies } from "@/lib/articles";
 import type { Lang } from "@/lib/i18n";
 import { CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import { lienReserver } from "./textes";
@@ -19,7 +20,7 @@ export interface LienNav {
  * Les slugs sont des mots-clés : `privattransfer`, `transfer-privato`. Ce sont
  * les requêtes de ces marchés, et elles vivent dans l'URL.
  */
-export const NAVIGATION: Record<Lang, LienNav[]> = {
+const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
   en: [
     { texte: "Private transfers", chemin: "/private-airport-transfers-to-alps-ski-resort/" },
     // Les deux index du silo, côte à côte : où l'on va, d'où l'on part.
@@ -61,6 +62,20 @@ export const NAVIGATION: Record<Lang, LienNav[]> = {
     { texte: "Contatti", chemin: "/it/contatti/" },
   ],
 };
+
+/**
+ * La navigation d'une langue, amputée de ce qui n'existe pas encore.
+ *
+ * Concrètement : le blog. Il n'a d'articles qu'en anglais et en français, et un
+ * menu qui mène à un index vide est la version polie du lien mort. Le jour où un
+ * article allemand est publié, l'entrée réapparaît d'elle-même — c'est dérivé,
+ * pas déclaré.
+ */
+export function navigation(lang: Lang): LienNav[] {
+  const aUnBlog =
+    lang === "en" || articlesPublies().some((a) => a.traductions?.[lang]);
+  return NAVIGATION_COMPLETE[lang].filter((item) => aUnBlog || item.texte !== "Blog");
+}
 
 /** L'accueil de la langue. */
 export function lienAccueil(lang: Lang): string {

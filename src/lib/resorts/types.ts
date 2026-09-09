@@ -57,6 +57,14 @@ export interface Resort extends ResortStub {
  */
 export interface TraductionStation {
   slug: string;
+  /**
+   * Le nom de la station dans cette langue, quand il diffère.
+   *
+   * Rare mais réel : Montgenèvre est « Monginevro » en italien, et c'est sous
+   * ce nom qu'un Italien la cherche. Absent, on retombe sur `Resort.name`, qui
+   * porte déjà les accents et les tréma corrects.
+   */
+  nom?: string;
   metaTitre: string;
   metaDescription: string;
   h1: string;

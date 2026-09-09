@@ -37,20 +37,23 @@ export default function StationIntl({
 }) {
   const t = T(lang);
   const traduction = resort.traductions![lang]!;
+  // Le nom local quand il diffère — « Monginevro » plutôt que « Montgenèvre »
+  // sur une page italienne. C'est le mot que le marché cherche.
+  const nom = traduction.nom ?? resort.name;
   const chemin = cheminStation(resort, lang)!;
   const trajets = trajetsTraduitsDeLaStation(resort.slug, lang);
   const reserver = lienReserver(lang);
 
   const filAriane = [
     { nom: t.accueil, chemin: `/${lang}/` },
-    { nom: resort.name, chemin },
+    { nom, chemin },
   ];
 
   return (
     <>
       <Header lang={lang} alternatives={alternativesStation(resort, lang)} />
       <main id="contenu">
-        <HeroInterieur image={visuelStation(resort.slug, resort.name, lang)}>
+        <HeroInterieur image={visuelStation(resort.slug, nom, lang)}>
           <FilAriane clair elements={filAriane} />
 
           <h1 className="mt-4 max-w-3xl text-balance font-display text-titre-page">
@@ -85,7 +88,7 @@ export default function StationIntl({
           <Section fond="glacier">
             <EnTeteSection
               surtitre={t.trajets}
-              titre={t.transfertsVers(resort.name)}
+              titre={t.transfertsVers(nom)}
               chapo={t.mesureNote}
             />
             <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -97,7 +100,7 @@ export default function StationIntl({
                   <li key={x.airport}>
                     <CarteLien
                       href={cheminTrajet(resort, x.airport, lang)!}
-                      titre={`${SEGMENTS_AEROPORT[lang][x.airport].nom} → ${resort.name}`}
+                      titre={`${SEGMENTS_AEROPORT[lang][x.airport].nom} → ${nom}`}
                       meta={
                         d ? [`${d.km} km`, duree(d.minutes)].filter(Boolean).join(" · ") : undefined
                       }
@@ -110,11 +113,11 @@ export default function StationIntl({
           </Section>
         ) : null}
 
-        <Faq items={traduction.faq} titre={t.faqStation(resort.name)} surtitre={t.aide} />
+        <Faq items={traduction.faq} titre={t.faqStation(nom)} surtitre={t.aide} />
 
         <section className="bg-alpine text-white">
           <div className="mx-auto max-w-6xl px-4 py-section">
-            <h2 className="font-display text-titre-section">{t.reservezVers(resort.name)}</h2>
+            <h2 className="font-display text-titre-section">{t.reservezVers(nom)}</h2>
             <p className="mt-3 max-w-prose text-sm text-white/90">{t.devisImmediat}</p>
             <BoutonAction sur="sombre" href={reserver} className="mt-6">
               {t.reserver}

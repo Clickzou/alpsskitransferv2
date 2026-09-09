@@ -56,7 +56,7 @@ export default function AccueilIntl({ lang }: { lang: LangueSecondaire }) {
       return [
         {
           cle: `${x.airport}-${station.slug}`,
-          titre: `${SEGMENTS_AEROPORT[lang][x.airport].nom} → ${station.name}`,
+          titre: `${SEGMENTS_AEROPORT[lang][x.airport].nom} → ${station.traductions![lang]!.nom ?? station.name}`,
           chemin,
           distance: DISTANCES.find(
             (d) => d.airport === x.airport && d.resort === station.slug,
@@ -116,7 +116,7 @@ export default function AccueilIntl({ lang }: { lang: LangueSecondaire }) {
                 <li key={station.slug}>
                   <CarteLien
                     href={cheminStation(station, lang)!}
-                    titre={station.name}
+                    titre={station.traductions![lang]!.nom ?? station.name}
                     meta={plusProche ? `${plusProche.km} km` : undefined}
                     texte={
                       liste.length > 0

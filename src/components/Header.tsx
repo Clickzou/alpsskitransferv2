@@ -4,7 +4,7 @@ import SelecteurLangue from "@/components/SelecteurLangue";
 import IconePanier from "@/components/panier/IconePanier";
 import { PAYS } from "@/lib/pays";
 import type { Alternative, Lang } from "@/lib/i18n";
-import { NAVIGATION, lienAccueil, lienTunnelLangue } from "@/lib/intl/navigation";
+import { lienAccueil, lienTunnelLangue, navigation as liensNavigation } from "@/lib/intl/navigation";
 import { T } from "@/lib/intl/textes";
 
 /**
@@ -28,7 +28,7 @@ export default function Header({
   alternatives?: Alternative[];
 }) {
   const t = T(lang);
-  const navigation = NAVIGATION[lang];
+  const navigation = liensNavigation(lang);
 
   return (
     <header className="sticky top-0 z-30 border-b border-glacier-200 bg-white/95 shadow-entete backdrop-blur">

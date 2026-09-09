@@ -63,10 +63,14 @@ export function pageMetadata({
   }
 
   if (alternatives.length > 0) {
-    // x-default pointe sur l'anglais, langue de référence du site — et sur la
-    // page courante si c'est elle qui est anglaise.
-    const anglaise = lang === "en" ? url : alternatives.find((a) => a.lang === "en")?.path;
-    languages["x-default"] = anglaise ? absoluteUrl(anglaise) : url;
+    /*
+      x-default pointe sur l'anglais, langue de référence du site — et sur la
+      page courante quand c'est elle qui est anglaise. `url` est déjà absolue :
+      la repasser dans `absoluteUrl` produisait une URL doublée, visible sur la
+      home.
+    */
+    const cheminEn = alternatives.find((a) => a.lang === "en")?.path;
+    languages["x-default"] = lang === "en" || !cheminEn ? url : absoluteUrl(cheminEn);
   }
 
   return {

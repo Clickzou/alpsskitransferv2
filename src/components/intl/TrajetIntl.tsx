@@ -41,6 +41,7 @@ export default function TrajetIntl({
 }) {
   const t = T(lang);
   const traduction = trajet.traductions![lang]!;
+  const nom = resort.traductions![lang]!.nom ?? resort.name;
   const aeroport = SEGMENTS_AEROPORT[lang][trajet.airport];
   const chemin = cheminTrajet(resort, trajet.airport, lang)!;
   const lienStation = cheminStation(resort, lang)!;
@@ -68,7 +69,7 @@ export default function TrajetIntl({
 
   const filAriane = [
     { nom: t.accueil, chemin: `/${lang}/` },
-    { nom: resort.name, chemin: lienStation },
+    { nom, chemin: lienStation },
     { nom: aeroport.nom, chemin },
   ];
 
@@ -104,7 +105,7 @@ export default function TrajetIntl({
               href={lienStation}
               className="text-sm font-medium text-white underline underline-offset-4 hover:text-alpes-300"
             >
-              {t.tousLesTransfertsVers(resort.name)}
+              {t.tousLesTransfertsVers(nom)}
             </Link>
           </div>
         </HeroInterieur>
@@ -125,7 +126,7 @@ export default function TrajetIntl({
                   </div>
                   <div className="flex justify-between gap-3">
                     <dt className="text-alpine-600">{t.arrivee}</dt>
-                    <dd className="text-right font-medium text-alpine">{resort.name}</dd>
+                    <dd className="text-right font-medium text-alpine">{nom}</dd>
                   </div>
                   {distance?.km ? (
                     <div className="flex justify-between gap-3">
@@ -157,7 +158,7 @@ export default function TrajetIntl({
           <Section fond="glacier">
             <EnTeteSection
               surtitre={t.trajets}
-              titre={t.transfertsVers(resort.name)}
+              titre={t.transfertsVers(nom)}
               chapo={t.mesureNote}
             />
             <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -165,7 +166,7 @@ export default function TrajetIntl({
                 <li key={x.slug}>
                   <CarteLien
                     href={x.chemin}
-                    titre={`${x.nom} → ${resort.name}`}
+                    titre={`${x.nom} → ${nom}`}
                     meta={[x.km ? `${x.km} km` : null, duree(x.minutes) || null]
                       .filter(Boolean)
                       .join(" · ")}
@@ -179,14 +180,14 @@ export default function TrajetIntl({
 
         <Faq
           items={traduction.faq}
-          titre={t.faqTrajet(aeroport.nom, resort.name)}
+          titre={t.faqTrajet(aeroport.nom, nom)}
           surtitre={t.aide}
         />
 
         <section className="bg-alpine text-white">
           <div className="mx-auto max-w-6xl px-4 py-section">
             <h2 className="font-display text-titre-section">
-              {t.reservezTrajet(aeroport.nom, resort.name)}
+              {t.reservezTrajet(aeroport.nom, nom)}
             </h2>
             <p className="mt-3 max-w-prose text-sm text-white/90">{t.devisImmediatChauffeur}</p>
             <BoutonAction sur="sombre" href={reserver} className="mt-6">

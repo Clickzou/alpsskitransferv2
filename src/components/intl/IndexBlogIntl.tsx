@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -26,6 +27,12 @@ import { T, lienReserver } from "@/lib/intl/textes";
 export default function IndexBlogIntl({ lang }: { lang: LangueSecondaire }) {
   const t = T(lang);
   const articles = articlesDeLaLangue(lang);
+  /*
+    Pas d'article traduit, pas d'index. Une page de titre suivie d'un appel à
+    l'action n'est pas un blog : c'est la coquille vide que ce projet corrige
+    partout ailleurs, et elle n'a pas plus sa place ici.
+  */
+  if (articles.length === 0) notFound();
   const [aLaUne, ...suivants] = articles;
 
   return (
