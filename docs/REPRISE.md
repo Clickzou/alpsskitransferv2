@@ -301,6 +301,16 @@ design, la technique en dernier.** Les pages sont faites.
 - **Les avis** : les 4 témoignages repris de la home ne sont rattachés à aucune
   plateforme. À sourcer, ou à remplacer par un flux Trustpilot ou Google.
 
+**À expliquer à JC à la reprise (9 septembre au soir, question restée ouverte) :**
+l'article « quel aéroport » existe en quatre versions qui ne couvrent pas les mêmes
+massifs — les Alpes françaises en anglais et en français, le Tyrol et la Suisse en
+allemand, les Alpes italiennes en italien — et les quatre se déclarent mutuellement
+en `hreflang`. La question est de savoir si l'on garde ce lien ou si on le coupe.
+Reprendre l'explication **en partant du problème concret**, pas du vocabulaire :
+Google doit-il traiter ces quatre pages comme une seule, servie dans la langue du
+visiteur, ou comme quatre pages distinctes ? Décision de JC, une ligne de code dans
+les deux cas.
+
 ## Trois points de méthode à ne pas réapprendre
 
 - **Le dépôt n'est pas versionné.** 200 fichiers, aucun `git init`. À faire avant
