@@ -17,8 +17,10 @@ vérifiée. **Ce fichier dit où reprendre.**
 | Trajets | **104** : 89 repris, **15 rédigés** (les liaisons Genève de l'audit) — **0 inerte** |
 | Hubs pays et hubs aéroport | 5 + 31 — les **10 aéroports qui portent le trafic** ont un contenu rédigé |
 | Pages fonctionnelles conservées | 14 |
-| Français | home + **10 stations** + **16 trajets** + **2 articles** + **6 pages de conversion**, tunnel compris |
-| Blog | **3 articles** en anglais, **2 en français** |
+| Français | home + **10 stations** + **17 trajets** + **2 articles** + **5 pages de conversion**, tunnel compris — 35 URL |
+| Allemand | home + **10 stations** + **18 trajets** + **5 pages de conversion**, tunnel compris — 34 URL |
+| Italien | home + **11 stations** + **16 trajets** + **5 pages de conversion**, tunnel compris — 33 URL |
+| Blog | **3 articles** en anglais, **2 en français** — pas encore d'article DE ni IT |
 | Home | **au design validé** par le client |
 | Stations, trajets, hubs, pages fonctionnelles | **au design de la home** (8 septembre) |
 | Moteur de réservation | **au niveau du concurrent** (autocomplétion, adresse libre, bagages, retour asymétrique, devises) — reste à brancher Stripe et Supabase |

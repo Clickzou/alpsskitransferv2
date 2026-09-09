@@ -57,14 +57,21 @@ exclut :
 Décision d'architecture prise au démarrage, à confirmer avec les données réelles
 du `.wpress` :
 
-| Type | Anglais (racine) | Français (`/fr/`) |
+| Type | Anglais (racine) | Langues traduites (`/fr/`, `/de/`, `/it/`) |
 |---|---|---|
-| Hub pays | `/{country}-ski-transfers/` | à définir |
-| Station (page mère) | `/{country}-ski-transfers/{resort}/` | `/fr/transferts-ski/{station}/` |
-| Trajet (page fille) | `/{country}-ski-transfers/{resort}/{airport}-transfers/` | à définir |
-| Hub aéroport | `/{country-de-l-aéroport}-ski-transfers/{airport}/` | à définir |
-| Page fonctionnelle | `/{slug}/` — URL conservées du WordPress | à définir |
-| Blog | `/blog/{slug}/` | `/fr/blog/{slug}/` |
+| Hub pays | `/{country}-ski-transfers/` | pas de hub pays : l'accueil de la langue joue ce rôle |
+| Station (page mère) | `/{country}-ski-transfers/{resort}/` | `/{lang}/{silo}/{station}/` |
+| Trajet (page fille) | `/{country}-ski-transfers/{resort}/{airport}-transfers/` | `/{lang}/{silo}/{station}/{aéroport}/` |
+| Hub aéroport | `/{country-de-l-aéroport}-ski-transfers/{airport}/` | pas de hub aéroport traduit |
+| Page fonctionnelle | `/{slug}/` — URL conservées du WordPress | `/{lang}/{slug}/` |
+| Blog | `/blog/{slug}/` | `/{lang}/blog/{slug}/` |
+| Réservation | `/book-ski-transfer-tickets/` | `/fr/reserver/`, `/de/buchen/`, `/it/prenota/` |
+
+Le segment `{silo}` est propre à chaque langue, parce que c'est un mot-clé :
+`transferts-ski`, `skitransfer`, `trasferimenti-sci` (`SEGMENT_STATIONS` dans
+`src/lib/i18n.ts`). Idem pour les aéroports : `geneve`, `genf`, `ginevra`
+(`SEGMENTS_AEROPORT` dans `src/lib/transfers/segments.ts`). **Un aéroport absent de
+la table d'une langue ferme le trajet** — sans segment, pas d'URL, donc pas de page.
 
 Le segment racine `[silo]` sert les hubs pays **et** les pages fonctionnelles ; le
 segment `[silo]/[resort]` sert les pages de station **et** les hubs d'aéroport.
@@ -101,10 +108,20 @@ d'où une forme plus courte.
    modules produits, sauf pour une retouche ponctuelle.
    **Contenu à refondre** : les 92 pages `/destination/` (≈ 260 mots utiles chacune)
    fusionnent dans les pages de trajet.
-5. **i18n : anglais d'abord, français page par page.** Un `hreflang` n'est émis que
-   sur une paire qui existe réellement, et le sélecteur de langue n'affiche le
-   français que là où il existe. Le site actuel annonce EN / ES / DE / IT alors
-   qu'aucune version n'existe — c'est le défaut à ne pas reproduire.
+5. **i18n : anglais d'abord, les autres langues page par page.** Quatre langues —
+   EN, FR, DE, IT — décidées le 9 septembre 2026 sur les données de l'audit :
+   l'allemand est le premier marché après l'anglais (Innsbruck, Salzbourg, Zurich
+   desservis, fort pouvoir d'achat), l'italien suit ; l'espagnol et le portugais ne
+   sont pas des marchés du ski alpin. Un `hreflang` n'est émis que sur une paire qui
+   existe réellement, et le sélecteur de langue n'affiche une langue que là où la
+   page existe. Le site actuel annonce EN / ES / DE / IT alors qu'aucune version
+   n'existe — c'est le défaut à ne pas reproduire.
+   Les deux se calculent **au même endroit**, `src/lib/intl/liens.ts` : un sélecteur
+   qui proposerait une langue que le hreflang ne déclare pas serait le même défaut,
+   en plus discret. Les traductions vivent dans des registres à part
+   (`traductions-{lang}.ts`) pour survivre aux scripts de migration, et chaque langue
+   a son propre périmètre — l'allemand vise l'Autriche et la Suisse alémanique,
+   l'italien la Vallée d'Aoste et le Piémont. Ce ne sont pas des miroirs du français.
 6. **Blog** : gabarits livrés, maillage automatique dans les deux sens avec les
    stations et les trajets. `src/lib/articles/`.
    **Design** : la home suit la maquette validée par le client (bleu nuit, vert de
