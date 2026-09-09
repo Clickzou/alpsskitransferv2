@@ -1,4 +1,4 @@
-import type { Transfer } from "./types";
+import type { TraductionTrajet } from "./types";
 
 /**
  * Traductions françaises des pages de trajet.
@@ -10,8 +10,6 @@ import type { Transfer } from "./types";
  * La clé est `{aéroport}|{station}`. Périmètre du 8 septembre 2026 : les départs
  * de Genève et de Lyon vers les dix stations traduites.
  */
-export type TraductionTrajet = NonNullable<Transfer["fr"]>;
-
 const inclus = {
   type: "liste" as const,
   items: [

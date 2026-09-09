@@ -13,75 +13,21 @@ export const genevaAirportToLaThuile: Transfer = {
     "La Thuile is 133 km from Geneva Airport, about 2 hours 30 minutes through the Mont Blanc tunnel and down the Aosta valley. The village sits at 1,441 m at the foot of the Petit-Saint-Bernard pass, on the Italian side of the border it shares with La Rosière — the two are linked on skis by the Espace San Bernardo. The price is fixed per vehicle with the tunnel toll included, quoted before you book, ski bags and child seats included, and your driver tracks your flight.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "The first hour is the Chamonix road, then the Mont Blanc tunnel — 11.6 km at an enforced 70 km/h — and out at Entrèves in Italy. From there the Aosta valley motorway runs down to Morgex, and the last 15 km climb to La Thuile at 1,441 m.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The tunnel toll is included in what we quote. It is a real cost on a minibus, and the kind of extra that turns up at the end of a cheaper-looking booking made elsewhere.",
-    },
-
-    { type: "titre2", texte: "Winter timings and the pass that closes" },
-    {
-      type: "paragraphe",
-      texte:
-        "2 h 30 is the clear-road time. Add 45 minutes on a February Saturday, when the A40 to the tunnel and the tunnel itself both queue. The Petit-Saint-Bernard pass, above the village, is closed all winter — so there is no shortcut from the French side, and a transfer from Bourg-Saint-Maurice, 30 km away as the crow flies, is a three-hour drive round.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "Our vehicles are insured for France, Italy and Switzerland, and carry winter tyres and chains as all three require.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to La Thuile runs 133 km and takes about 2 h 33 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "paragraphe", texte: "This transfer crosses a border: you land in Switzerland and finish in Italy. There is nothing for you to arrange — our vehicles carry what each country requires in winter, and the crossing itself rarely costs more than a few minutes." },
+    { type: "titre2", texte: "The drive from Geneva to La Thuile" },
+    { type: "paragraphe", texte: "2 h 33 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "The Mont Blanc tunnel toll and all motorway tolls.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door in La Thuile village, Entrèves or Pré-Saint-Didier.",
-      ],
-    },
-
-    { type: "titre2", texte: "Private or shared, and when to book" },
-    {
-      type: "paragraphe",
-      texte:
-        "On a cross-border run with a tunnel, the per-vehicle price is the honest comparison — and it is usually the cheaper one from four people up. Book early: cross-border vehicles are the first taken on the February Saturdays.",
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to La Thuile transfer?",
-      reponse:
-        "About 2 hours 30 minutes for 133 km through the Mont Blanc tunnel. Allow 45 minutes more on a Saturday in February.",
-    },
-    {
-      question: "Is the tunnel toll included?",
-      reponse:
-        "Yes, the Mont Blanc tunnel toll and all motorway tolls are in the quoted price.",
-    },
-    {
-      question: "Can we reach La Thuile from the French side over the pass?",
-      reponse:
-        "Not in winter. The Petit-Saint-Bernard pass is closed from autumn to late spring; the only way in is through the Mont Blanc tunnel and the Aosta valley.",
-    },
-    {
-      question: "Can we ski across to La Rosière?",
-      reponse:
-        "Yes — the Espace San Bernardo links the two resorts across the border on one pass. Crossing on skis takes a morning; crossing by road takes three hours.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to La Thuile?", reponse: "About 2 h 33 for 133 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to La Thuile cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

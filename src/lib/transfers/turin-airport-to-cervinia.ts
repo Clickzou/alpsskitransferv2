@@ -15,22 +15,24 @@ export const turinAirportToCervinia: Transfer = {
   chapo: "Looking for Turin to Cervinia transfers that are reliable, fast, and hassle-free? Whether you’re traveling alone, with family, or in a group, our ski transfers provide a stress-free journey from Turin Airport (TRN) or the city center directly to the slopes of Breuil-Cervinia. Avoid the long waits and discomfort of public transport—our door-to-door transfer service ensures you arrive on time and in comfort.",
 
   contenu: [
-    { type: "paragraphe", texte: "Our private and shared transfers are operated by experienced drivers who know the Alpine roads well, ensuring a safe and smooth ride. With options for luxury vehicles, minivans, and group shuttles, you can choose the best way to reach Cervinia. No waiting, no hassle—just a direct ride to your ski resort." },
-    { type: "paragraphe", texte: "Enjoy a comfortable transfer with extra space for your luggage and ski equipment. Whether you’re coming for a weekend or an extended ski holiday, our transfers from Turin to Cervinia guarantee the best value for money with fixed, transparent pricing and no hidden fees." },
-    { type: "titre2", texte: "The Route from Turin to Cervinia & Estimated Pricing" },
-    { type: "paragraphe", texte: "The distance from Turin to Cervinia is approximately 120 km, with a travel time of around 1h45 to 2h, depending on road and weather conditions. The journey takes you through the scenic Aosta Valley, offering breathtaking views of the Alpine landscapes as you approach one of Italy’s best ski resorts." },
-    { type: "liste", items: ["Turin Airport (TRN) to Cervinia: Around 1h45 via the A5 motorway.", "Turin City Center to Cervinia: Estimated travel time 2h, depending on traffic."] },
-    { type: "titre3", texte: "Estimated Transfer Prices" },
-    { type: "liste", items: ["Shared Transfer: Starting from €45 per person.", "Private Transfer: Prices range from €180 to €350 per vehicle, depending on the size and type of car."] },
-    { type: "paragraphe", texte: "For an exact price, enter your travel details in our online booking system and get an instant quote." },
-    { type: "titre3", texte: "Our vehicles" },
-    { type: "titre2", texte: "How to Book Your Ski Transfer from Turin to Cervinia" },
-    { type: "paragraphe", texte: "Booking your Turin to Cervinia transfer is quick and easy. Follow these steps to secure your ride:" },
-    { type: "paragraphe", texte: "✅ 1. Select Your Transfer Type – Choose between private or shared transfers.✅ 2. Enter Your Travel Details – Pick-up/drop-off location, date, and number of passengers.✅ 3. Get an Instant Quote – See transparent pricing with no hidden fees.✅ 4. Confirm & Pay Securely – Complete your booking online in a few clicks.✅ 5. Meet Your Driver – On arrival, your driver will be waiting at the designated spot." },
-    { type: "paragraphe", texte: "Ready to book? Get your quote today and secure the best price for your ski transfer!" },
+    { type: "paragraphe", texte: "The road from Turin Airport to Cervinia runs 121 km and takes about 1 h 42 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "titre2", texte: "The drive from Turin to Cervinia" },
+    { type: "paragraphe", texte: "1 h 42 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Turin the best airport for Cervinia?" },
+    { type: "paragraphe", texte: "Yes, on driving time: Turin is the closest of the 2 airports we serve Cervinia from. The next is Geneva, 1 h 20 further. Flights often decide the rest — a cheaper fare into a slightly longer road can still be the better trip." },
+    { type: "liste", items: ["Turin — 121 km, 1 h 42 (this route)", "Geneva — 197 km, 3 h 02"] },
+    { type: "titre2", texte: "What the price includes" },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-
+    { question: "How long is the transfer from Turin Airport to Cervinia?", reponse: "About 1 h 42 for 121 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Turin to Cervinia cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Cervinia?", reponse: "Turin, at 1 h 42 for 121 km. That is this route. We serve Cervinia from 2 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

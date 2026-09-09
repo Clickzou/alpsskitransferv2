@@ -13,70 +13,20 @@ export const genevaAirportToVillarsSurOllon: Transfer = {
     "Villars-sur-Ollon is 123 km from Geneva Airport, about 1 hour 45 minutes — one of the shortest transfers to a Swiss resort from an international airport. The route is motorway along Lake Geneva to Aigle, then a 10 km climb to the village at 1,300 m, on its terrace above the Rhône valley. The price is fixed per vehicle, vignette and tolls included, quoted before you book, with ski bags and child seats included and your flight tracked.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "Motorway from the airport along the north shore of the lake through Lausanne, Vevey and Montreux to Aigle at 400 m — an hour and a quarter of easy Swiss motorway with the lake beside it. The climb from Aigle is 10 km of hairpins to Villars at 1,300 m, and continues to Bretaye by rack railway.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "It is a short, well-maintained climb, cleared and gritted daily, and one of the more dependable Swiss arrivals in bad weather.",
-    },
-
-    { type: "titre2", texte: "Winter timings" },
-    {
-      type: "paragraphe",
-      texte:
-        "1 h 45 holds most days. Add half an hour on a Saturday in high season. Our vehicles carry winter tyres, chains and the Swiss motorway vignette, and the vignette and tolls are in your price.",
-    },
-
-    { type: "titre2", texte: "Villars, Gryon and Les Diablerets" },
-    {
-      type: "paragraphe",
-      texte:
-        "Villars shares its lift network with Gryon, 4 km away, and with Les Diablerets over the Col de la Croix — the Villars-Gryon-Diablerets pass covers about 125 km of piste and the Glacier 3000. All three are on our route; give us the exact address at booking, because Les Diablerets is reached by a different valley in winter when the col is closed.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Villars-sur-Ollon runs 123 km and takes about 1 h 41 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "titre2", texte: "The drive from Geneva to Villars-sur-Ollon" },
+    { type: "paragraphe", texte: "1 h 41 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "Swiss motorway vignette and all tolls.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door in Villars, Gryon, Chesières or Arveyes.",
-      ],
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Villars transfer?",
-      reponse:
-        "About 1 hour 45 minutes for 123 km, motorway along the lake then a 10 km climb from Aigle. Allow half an hour more on a busy Saturday.",
-    },
-    {
-      question: "Do you also serve Gryon and Les Diablerets?",
-      reponse:
-        "Yes. Gryon is 4 km from Villars on the same road; Les Diablerets shares the lift pass but is reached by another valley in winter, when the Col de la Croix is closed.",
-    },
-    {
-      question: "Is the Swiss vignette included?",
-      reponse:
-        "Yes, along with all tolls, ski bags and child seats. Nothing is payable on the day.",
-    },
-    {
-      question: "Is the road up from Aigle difficult in winter?",
-      reponse:
-        "It is 10 km of hairpins, cleared and gritted daily, and short by Alpine standards. Our vehicles carry winter tyres and chains.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Villars-sur-Ollon?", reponse: "About 1 h 41 for 123 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Villars-sur-Ollon cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

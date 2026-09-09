@@ -10,26 +10,25 @@ export const innsbruckAirportToSerfaus: Transfer = {
   resort: "serfaus",
 
   metaTitre: "Innsbruck to Serfaus Transfers | Fast & Comfortable Rides",
-  metaDescription: "Book your Innsbruck to Serfaus transfers now! Private & shared options available, competitive prices & door-to-door service. Secure your ride today!",
+  metaDescription: "Book your Innsbruck to Serfaus transfers now! Private transfers, competitive prices & door-to-door service. Secure your ride today!",
   h1: "Innsbruck to Serfaus Transfers",
-  chapo: "Planning your ski trip to Serfaus? Our Innsbruck to Serfaus transfers offer a hassle-free, comfortable, and efficient way to reach your ski destination. Whether you choose a private transfer for exclusivity or a shared transfer for a budget-friendly option, we ensure door-to-door service with professional drivers and modern vehicles.",
+  chapo: "Planning your ski trip to Serfaus? Our Innsbruck to Serfaus transfers offer a hassle-free, comfortable, and efficient way to reach your ski destination. We ensure door-to-door service with professional drivers and modern vehicles.",
 
   contenu: [
-    { type: "paragraphe", texte: "Skip the hassle of public transport and enjoy a seamless journey in a well-maintained, winter-ready vehicle. Our transfers from Innsbruck to Serfaus are designed to meet your needs, whether you are traveling solo, with family, or in a group." },
-    { type: "paragraphe", texte: "With competitive pricing, flexible booking options, and a service tailored to skiers, you can rely on us to get you to Serfaus ski resort quickly and safely. Secure your ride now and start your ski holiday stress-free!" },
-    { type: "titre2", texte: "Scenic Route & Transfer Pricing" },
-    { type: "paragraphe", texte: "The journey from Innsbruck to Serfaus takes approximately 1 hour 15 minutes (100 km), following a scenic Alpine route through the Austrian Tyrol. Travelers will pass breathtaking mountain landscapes, picturesque villages, and well-maintained roads leading to one of Austria’s top ski destinations." },
-    { type: "paragraphe", texte: "Our Innsbruck to Serfaus transfers are available at competitive prices:" },
-    { type: "liste", items: ["Shared transfer: Starting from €45 per person", "Private transfer: Starting from €180 per vehicle (up to 8 passengers)"] },
-    { type: "paragraphe", texte: "With our modern, winter-equipped vehicles, you can enjoy a safe and comfortable ride regardless of weather conditions." },
-    { type: "titre3", texte: "Our vehicles" },
-    { type: "titre2", texte: "How to Book Your Ski Transfer from Innsbruck to Serfaus" },
-    { type: "paragraphe", texte: "Booking your ski transfer from Innsbruck to Serfaus is quick and easy:" },
-    { type: "paragraphe", texte: "✅ 1. Get a Quote – Enter your travel details (pick-up, drop-off, number of passengers).✅ 2. Choose Your Option – Select a shared or private transfer based on your needs.✅ 3. Confirm & Pay Securely – Complete your booking with instant confirmation.✅ 4. Meet Your Driver – Enjoy a stress-free journey with our professional, punctual drivers." },
-    { type: "paragraphe", texte: "Book your Innsbruck to Serfaus transfer now and enjoy a smooth, direct ride to your ski resort!" },
+    { type: "paragraphe", texte: "The road from Innsbruck Airport to Serfaus runs 92 km and takes about 1 h 14 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "titre2", texte: "The drive from Innsbruck to Serfaus" },
+    { type: "paragraphe", texte: "At 1 h 14, this is one of the shorter alpine transfers — short enough that a morning landing still leaves you half a day on the slopes. The last stretch is mountain road, so the time depends more on conditions than on distance." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "What the price includes" },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-
+    { question: "How long is the transfer from Innsbruck Airport to Serfaus?", reponse: "About 1 h 14 for 92 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Innsbruck to Serfaus cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

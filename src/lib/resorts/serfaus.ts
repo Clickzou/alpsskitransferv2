@@ -14,7 +14,7 @@ export const serfaus: Resort = {
   metaTitre: "Serfaus Ski Transfers | Fast & Reliable Airport Rides",
   metaDescription: "Book your Serfaus Ski Transfer now for a fast, reliable, and stress-free ride from Innsbruck, Munich, or Zurich straight to your ski resort!",
   h1: "Serfaus Ski Transfers – Fast, Reliable & Stress-Free Travel",
-  chapo: "Looking for a Serfaus Ski Transfer that ensures a comfortable, hassle-free journey to one of Austria’s most renowned ski destinations? Whether you're traveling from Innsbruck Airport, Munich Airport, or Zurich Airport, our ski transfers provide a direct, door-to-door service to your accommodation in Serfaus. Say goodbye to the inconvenience of public transport or rental cars, and enjoy a private or shared transfer designed to meet your travel needs.",
+  chapo: "Looking for a Serfaus Ski Transfer that ensures a comfortable, hassle-free journey to one of Austria’s most renowned ski destinations? Whether you're traveling from Innsbruck Airport, Munich Airport, or Zurich Airport, our ski transfers provide a direct, door-to-door service to your accommodation in Serfaus. Say goodbye to the inconvenience of public transport and rental cars, and enjoy a private transfer designed to meet your travel needs.",
 
   airports: ["innsbruck-airport", "munich-airport", "zurich-airport"],
 
@@ -29,15 +29,15 @@ export const serfaus: Resort = {
     { type: "titre3", texte: "Comfort, Convenience & Flexibility" },
     { type: "liste", items: ["Door-to-door service – Pick-up directly at the airport, drop-off at your hotel or chalet.", "Reliable, punctual transfers – No waiting time, no unnecessary stops.", "Spacious vehicles – Extra room for ski gear and luggage.", "Professional drivers – Experienced in winter road conditions."] },
     { type: "titre3", texte: "Transfer Options to Serfaus" },
-    { type: "liste", items: ["Private transfers – Exclusive transport for families, groups, or VIP travelers.", "Shared transfers – An economical and comfortable option for budget-conscious skiers."] },
-    { type: "titre3", texte: "Top Ski Resorts in Austria for Private & Shared Transfers" },
+    { type: "liste", items: ["Private transfers – Exclusive transport for families, groups, or VIP travelers."] },
+    { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions Serfaus Ski Transfers" },
     { type: "titre3", texte: "How to Book Your Serfaus Ski Transfer?" },
-    { type: "liste", items: ["Enter your travel details – Choose your airport, date, and number of passengers.", "Select your preferred transfer option – Private or shared.", "Confirm your booking – Secure your transfer with instant confirmation.", "Meet your driver at the airport – Enjoy a smooth, direct ride to Serfaus."] },
+    { type: "liste", items: ["Enter your travel details – Choose your airport, date, and number of passengers.", "Select your vehicle – Standard, Business or Premium.", "Confirm your booking – Secure your transfer with instant confirmation.", "Meet your driver at the airport – Enjoy a smooth, direct ride to Serfaus."] },
     { type: "paragraphe", texte: "By booking in advance, you guarantee the best price and availability for your ski transfer to Serfaus." },
     { type: "liste", items: ["Door-to-door service – Pick-up and drop-off at your accommodation.", "No waiting times – Immediate departure upon arrival.", "Comfortable, spacious vehicles – Plenty of room for ski equipment and luggage.", "Reliable, professional drivers – Experienced in winter conditions.", "Fixed pricing – No hidden costs or surge pricing."] },
-    { type: "paragraphe", texte: "Whether you prefer a private ski transfer or a shared option, our service guarantees a stress-free and efficient travel experience." },
-    { type: "liste", items: ["The airport you’re traveling from", "The type of transfer (private or shared)"] },
+    { type: "paragraphe", texte: "Whichever vehicle category you choose, our service guarantees a stress-free and efficient journey." },
+    { type: "liste", items: ["The airport you’re traveling from", "The vehicle category"] },
     { type: "paragraphe", texte: "We offer competitive prices for all budgets, with affordable options that provide excellent value. To get an exact price, enter your details in our booking system for an instant quote." },
     { type: "liste", items: ["A dedicated children’s ski area and fun slopes", "Excellent ski schools with English-speaking instructors", "A pedestrian-friendly village with a child-friendly metro system"] },
     { type: "paragraphe", texte: "Our ski transfers to Serfaus are also family-friendly, ensuring a safe and comfortable journey for passengers of all ages." },
@@ -47,7 +47,7 @@ export const serfaus: Resort = {
 
   faq: [
     { question: "Which Airports Offer Serfaus Ski Transfers?", reponse: "We provide ski transfers from major airports to Serfaus, ensuring a seamless connection from your flight to the slopes. ✅ Innsbruck Airport (INN) – 1h 15m✅Munich Airport (MUC) – 3h✅Zurich Airport (ZRH) – 3h 30m No matter where you arrive, our Serfaus Ski Transfers will get you to your destination safely and efficiently." },
-    { question: "What is the best way to get to Serfaus from the airport?", reponse: "The most comfortable and hassle-free way to reach Serfaus is by booking a Serfaus Ski Transfer. We provide private and shared transfers from Innsbruck Airport, Munich Airport, and Zurich Airport, ensuring a smooth, direct, and stress-free journey. Public transport options are available, but they often require multiple connections and longer travel times." },
+    { question: "What is the best way to get to Serfaus from the airport?", reponse: "The most comfortable and hassle-free way to reach Serfaus is by booking a Serfaus Ski Transfer. We provide private transfers from Innsbruck Airport, Munich Airport, and Zurich Airport, ensuring a smooth, direct, and stress-free journey. Public transport options are available, but they often require multiple connections and longer travel times." },
     { question: "What are the benefits of booking a Serfaus ski transfer?", reponse: "Opting for a Serfaus Ski Transfer ensures:" },
     { question: "Are child seats available for ski transfers to Serfaus?", reponse: "Yes! We provide child seats upon request to ensure a safe and family-friendly journey. Just mention your passenger requirements when booking, and we’ll include the necessary extra safety features at no additional cost." },
     { question: "How much does a ski transfer to Serfaus cost?", reponse: "The cost of your Serfaus Ski Transfer depends on several factors, including:" },

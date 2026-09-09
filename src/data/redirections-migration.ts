@@ -6,10 +6,9 @@
  * wp-export/redirections-a-arbitrer.csv et se traitent à la main dans
  * `redirections.ts`.
  *
- * 189 règles générées le 2026-09-07.
+ * 188 règles générées le 2026-09-09.
  */
 export const REDIRECTIONS_MIGRATION: Record<string, string> = {
-  "/airport-ski-transfers": "/", // hub d'une arborescence supprimée
   "/airport-ski-transfers/austria": "/austria-ski-transfers/", // hub pays
   "/airport-ski-transfers/austria/innsbruck-to-ischgl-transfers": "/austria-ski-transfers/ischgl/innsbruck-airport-transfers/", // trajet
   "/airport-ski-transfers/austria/innsbruck-to-kitzbuhel": "/austria-ski-transfers/kitzbuhel/innsbruck-airport-transfers/", // trajet
@@ -230,6 +229,7 @@ export const TUNNEL_MIGRATION: string[] = [
 
 /** URL reprises telles quelles par le nouveau site : aucune règle nécessaire. */
 export const URL_CONSERVEES: string[] = [
+  "/airport-ski-transfers/",
   "/book-ski-transfer-tickets/",
   "/contact/",
   "/cookie-policy-uk/",

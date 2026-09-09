@@ -13,75 +13,25 @@ export const genevaAirportToChampoluc: Transfer = {
     "Champoluc is 207 km from Geneva Airport, about 3 hours 05 minutes: the Chamonix road, the Mont Blanc tunnel, then the length of the Aosta valley before turning 30 km up the Val d’Ayas. It is the long way into Monterosa Ski — Turin and Milan are closer — but it is the route to take when Geneva has the flight and Italy does not. The price is fixed per vehicle with the tunnel toll included, quoted before you book, ski bags and child seats included, and your driver tracks your flight.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "Motorway to Le Fayet, the valley up to Chamonix, the 11.6 km tunnel under Mont Blanc, then the Aosta valley motorway east past Aosta itself to Verrès. From there the road turns north up the Val d’Ayas for 30 km to Champoluc at 1,570 m.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The tunnel toll is included in what we quote — on a minibus it is a substantial sum, and it belongs in the price rather than in a surprise at the end.",
-    },
-
-    { type: "titre2", texte: "Is Geneva the right airport?" },
-    {
-      type: "paragraphe",
-      texte:
-        "Honestly, often not. Turin is 109 km from Champoluc, about 1 h 30, and Milan Malpensa 169 km, about 2 h 10 — both shorter and usually cheaper. Geneva earns its place when your flight times, your airline or your onward plans point that way, or when you are combining Monterosa with a few days in Chamonix.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "We run all three, so the comparison is worth making before you book the flight rather than after.",
-    },
-
-    { type: "titre2", texte: "Winter timings" },
-    {
-      type: "paragraphe",
-      texte:
-        "3 h 05 on a clear road. The A40 and the tunnel both queue on February Saturdays — allow 45 minutes more. Our vehicles are insured for all three countries and carry winter tyres and chains, as Italy requires on Alpine roads from mid-November to mid-April.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Champoluc runs 207 km and takes about 3 h 06 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "paragraphe", texte: "This transfer crosses a border: you land in Switzerland and finish in Italy. There is nothing for you to arrange — our vehicles carry what each country requires in winter, and the crossing itself rarely costs more than a few minutes." },
+    { type: "titre2", texte: "The drive from Geneva to Champoluc" },
+    { type: "paragraphe", texte: "At 3 h 06, this is a long transfer. Your driver plans a comfort stop, and it is worth telling us if you are travelling with young children so we build the journey around them. Motorway covers most of it; the climb at the end is the slow part." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Geneva the best airport for Champoluc?" },
+    { type: "paragraphe", texte: "Not the closest: Turin reaches Champoluc in 1 h 31, 1 h 35 less than from Geneva. That said, Geneva carries more flights on many routes, and an earlier arrival with a longer drive often beats a late landing with a short one." },
+    { type: "liste", items: ["Turin — 109 km, 1 h 31", "Geneva — 207 km, 3 h 06 (this route)"] },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "The Mont Blanc tunnel toll and all motorway tolls.",
-        "Ski and snowboard bags, and freeride or touring kit — declare it, this valley attracts it.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time.",
-        "Door-to-door in Champoluc, Antagnod, Brusson or Saint-Jacques.",
-      ],
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Champoluc transfer?",
-      reponse:
-        "About 3 hours 05 minutes for 207 km through the Mont Blanc tunnel and down the Aosta valley. Allow 45 minutes more on a busy Saturday.",
-    },
-    {
-      question: "Would Turin or Milan be quicker?",
-      reponse:
-        "Yes. Turin is about 1 h 30 away and Milan Malpensa about 2 h 10, both usually with cheaper fares. Geneva makes sense when its flights suit you better.",
-    },
-    {
-      question: "Is the Mont Blanc tunnel toll included?",
-      reponse:
-        "Yes, along with all motorway tolls. Nothing is payable on the day.",
-    },
-    {
-      question: "Can you drop us in Gressoney or Alagna instead?",
-      reponse:
-        "Yes — they are the other two valleys of Monterosa Ski, reached by different roads off the same motorway. Tell us which at booking.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Champoluc?", reponse: "About 3 h 06 for 207 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Champoluc cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Champoluc?", reponse: "Turin, at 1 h 31 for 109 km. From Geneva it is 3 h 06. We serve Champoluc from 2 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

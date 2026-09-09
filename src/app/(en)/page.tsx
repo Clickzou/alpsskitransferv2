@@ -21,6 +21,7 @@ import { airportParSlug } from "@/lib/airports";
 import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
 import { TRANSFERS, segmentTrajet } from "@/lib/transfers";
 import { faqSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
+import { alternativesAccueil } from "@/lib/intl/liens";
 import { pageMetadata } from "@/lib/seo";
 import { avisDuSite } from "@/lib/avis";
 
@@ -30,6 +31,7 @@ export const metadata = pageMetadata({
     "Private airport transfers to the Alps from Geneva, Lyon, Chambéry and Grenoble. Fixed price per vehicle, flight tracking, English-speaking drivers.",
   path: "/",
   lang: "en",
+  alternatives: alternativesAccueil("en"),
 });
 
 /**
@@ -83,7 +85,7 @@ export default async function Accueil() {
 
   return (
     <>
-      <Header lang="en" />
+      <Header lang="en" alternatives={alternativesAccueil("en")} />
       <main id="contenu">
         <Hero />
         <Reassurances />

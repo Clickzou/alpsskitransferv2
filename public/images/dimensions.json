@@ -39,6 +39,42 @@
     "width": 800,
     "height": 532
   },
+  "popular-alps-ski-transfer": {
+    "width": 724,
+    "height": 483
+  },
+  "transfert-prive": {
+    "width": 750,
+    "height": 465
+  },
+  "transfert-prive-detail": {
+    "width": 724,
+    "height": 483
+  },
+  "stations-index": {
+    "width": 724,
+    "height": 482
+  },
+  "route-hiver": {
+    "width": 724,
+    "height": 483
+  },
+  "pays-france": {
+    "width": 723,
+    "height": 482
+  },
+  "pays-switzerland": {
+    "width": 723,
+    "height": 482
+  },
+  "pays-italy": {
+    "width": 723,
+    "height": 482
+  },
+  "pays-austria": {
+    "width": 723,
+    "height": 482
+  },
   "station-alpe-dhuez": {
     "width": 724,
     "height": 483

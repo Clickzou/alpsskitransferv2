@@ -11,6 +11,45 @@
  */
 
 @layer base {
+  /*
+   * La palette, en variables.
+   *
+   * Deux rôles portent la couleur : l'ACTION — celle des boutons, la seule qui
+   * appelle au clic — et la RÉASSURANCE, celle des coches et des bandes de
+   * confiance. Les définir ici plutôt que dans les composants permet d'en
+   * changer sans toucher à une seule classe : c'est ce qui a rendu l'essai du
+   * 10 septembre 2026 réversible, puis son adoption immédiate.
+   *
+   * **Palette retenue le 10 septembre 2026, sur tout le site.** Le magenta
+   * disparaît : l'action passe au vert, la réassurance à l'or du logo. Trois
+   * couleurs avec le bleu nuit, au lieu de quatre.
+   */
+  :root {
+    /*
+     * L'action, en vert foncé. Le vert du logo (#12A37A) ne donne que 3,2:1
+     * sous du texte blanc quand il en faut 4,5 ; celui-ci monte à 4,98. Un
+     * bouton illisible n'est pas un bouton.
+     */
+    --c-marque: 14 127 95;
+    --c-marque-600: 10 98 73;
+    --c-marque-300: 95 199 169;
+
+    /*
+     * La réassurance, en or. La teinte de référence est #B07F31 — un ambre à
+     * 37°, chaud comme l'or du logo. Elle donne 3,54 avec du texte blanc, soit
+     * juste sous le seuil : la famille est construite autour d'elle, à teinte et
+     * saturation constantes, en descendant d'un cran pour les aplats (4,58) et
+     * de deux pour le texte sur blanc (6,07). Le ton clair `300` sert les
+     * accents posés sur du bleu nuit, où il donne 7,11.
+     */
+    --c-alpes: 151 110 43;
+    --c-alpes-700: 127 92 36;
+    --c-alpes-300: 212 171 104;
+    --c-alpes-50: 248 242 231;
+  }
+}
+
+@layer base {
   html {
     scroll-behavior: smooth;
     /* Une ancre ne doit pas glisser sous l'en-tête. */

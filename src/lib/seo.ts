@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SITE } from "@/data/site";
-import { LOCALES, type Lang } from "@/lib/i18n";
+import { LOCALES, type Alternative, type Lang } from "@/lib/i18n";
 
 export const LIMITE_TITLE = 60;
 export const LIMITE_DESCRIPTION = 155;
@@ -25,11 +25,17 @@ interface PageMetaInput {
   path: string;
   lang: Lang;
   /**
-   * Chemin de la version dans l'autre langue, S'IL EXISTE VRAIMENT.
-   * Laisser vide sinon : un hreflang vers une page inexistante est exactement
-   * ce que fait le site actuel, et c'est un défaut, pas une couverture.
+   * Les autres langues dans lesquelles CETTE page existe vraiment.
+   *
+   * Vide = aucune annonce. Un `hreflang` vers une page inexistante est
+   * précisément ce que fait l'ancien site — il annonce quatre langues dont
+   * aucune n'a de contenu — et c'est un défaut, pas une couverture.
+   *
+   * Le tableau remplace l'ancien `alternate` unique : avec quatre langues, une
+   * page peut avoir jusqu'à trois voisines, et n'en déclarer qu'une reviendrait
+   * à cacher les autres à Google.
    */
-  alternate?: { lang: Lang; path: string };
+  alternatives?: Alternative[];
   noindex?: boolean;
   image?: string;
 }
@@ -39,24 +45,37 @@ export function pageMetadata({
   description,
   path,
   lang,
-  alternate,
+  alternatives = [],
   noindex = false,
   image,
 }: PageMetaInput): Metadata {
   const url = absoluteUrl(path);
   const ogImage = image ? { ...OG_IMAGE, url: `${SITE.url}${image}` } : OG_IMAGE;
 
+  /*
+    Le groupe hreflang doit être complet et réciproque : chaque page du groupe
+    déclare toutes les autres ET elle-même. Une page qui s'omet du groupe qu'elle
+    annonce est ignorée par Google.
+  */
   const languages: Record<string, string> = { [LOCALES[lang]]: url };
-  if (alternate) {
-    languages[LOCALES[alternate.lang]] = absoluteUrl(alternate.path);
-    // x-default pointe sur l'anglais, langue de référence du site.
-    languages["x-default"] = lang === "en" ? url : absoluteUrl(alternate.path);
+  for (const autre of alternatives) {
+    languages[LOCALES[autre.lang]] = absoluteUrl(autre.path);
+  }
+
+  if (alternatives.length > 0) {
+    // x-default pointe sur l'anglais, langue de référence du site — et sur la
+    // page courante si c'est elle qui est anglaise.
+    const anglaise = lang === "en" ? url : alternatives.find((a) => a.lang === "en")?.path;
+    languages["x-default"] = anglaise ? absoluteUrl(anglaise) : url;
   }
 
   return {
     title,
     description,
-    alternates: { canonical: url, languages: alternate ? languages : undefined },
+    alternates: {
+      canonical: url,
+      languages: alternatives.length > 0 ? languages : undefined,
+    },
     robots: noindex
       ? { index: false, follow: true }
       : { index: true, follow: true, "max-image-preview": "large" },

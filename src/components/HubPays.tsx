@@ -3,6 +3,7 @@ import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
+import Visuel from "@/components/Visuel";
 import {
   AppelAction,
   BandeauReassurance,
@@ -95,10 +96,21 @@ export default function HubPays({ silo }: { silo: string }) {
 
         {pays.intro ? (
           <Section fond="blanc">
-            <div className="max-w-prose space-y-4 leading-relaxed text-alpine-700">
-              {pays.intro.map((paragraphe) => (
-                <p key={paragraphe.slice(0, 40)}>{paragraphe}</p>
-              ))}
+            {/* Texte à gauche, photo du pays à droite, centrés l'un sur l'autre. */}
+            <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]">
+              <div className="max-w-prose space-y-4 leading-relaxed text-alpine-700">
+                {pays.intro.map((paragraphe) => (
+                  <p key={paragraphe.slice(0, 40)}>{paragraphe}</p>
+                ))}
+              </div>
+              {pays.visuel ? (
+                <Visuel
+                  nom={pays.visuel.nom}
+                  alt={pays.visuel.alt}
+                  sizes="(min-width: 1024px) 26rem, 100vw"
+                  className="h-full min-h-[14rem] w-full rounded-xl object-cover shadow-carte"
+                />
+              ) : null}
             </div>
           </Section>
         ) : null}

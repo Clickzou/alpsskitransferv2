@@ -12,7 +12,21 @@
  * un redéploiement des pages, pas une modification du dépôt.
  */
 
-export const CHEMIN_TUNNEL = "/booking/";
+/**
+ * Le tunnel et la page éditoriale sont **la même page** depuis le 9 septembre
+ * 2026 : le formulaire de réservation vit sur `/book-ski-transfer-tickets/`,
+ * sous l'ancre `#reserver`. Décision du client — « tout doit se faire sur la
+ * même page ». `/booking/` redirige vers elle.
+ *
+ * Ce qu'on y gagne : une seule URL à faire connaître, l'antériorité et le
+ * mot-clé au même endroit, et un visiteur qui n'a pas à saisir sa recherche deux
+ * fois. Ce qu'il faut surveiller : la page reste **statique et indexée**, donc
+ * le pré-remplissage se lit côté navigateur (`TunnelAutonome`).
+ */
+export const CHEMIN_TUNNEL = "/book-ski-transfer-tickets/";
+
+/** L'ancre du formulaire sur la page de réservation. */
+export const ANCRE_TUNNEL = "#reserver";
 
 /** L'ancienne page éditoriale de réservation, conservée et indexée. */
 export const CHEMIN_PAGE_RESERVATION = "/book-ski-transfer-tickets/";
@@ -38,6 +52,22 @@ export interface PreRemplissage {
  * En mode repli, les paramètres sont ignorés : le tunnel WooCommerce ne sait pas
  * les lire, et lui en passer donnerait une URL bancale.
  */
+/**
+ * Où va « Book now » **depuis la page de réservation elle-même**.
+ *
+ * `lienReservation` retombe sur `/book-ski-transfer-tickets/` tant que le moteur
+ * maison n'est pas armé — ce qui est le bon comportement partout, sauf sur cette
+ * page : elle s'y renverrait à elle-même, et le bouton ne ferait que recharger
+ * ce que le visiteur a déjà sous les yeux. Ici le repli est le tunnel externe
+ * quand il est configuré, et le tunnel interne sinon.
+ */
+export function lienTunnel(pre: PreRemplissage = {}): string {
+  if (!moteurInterne()) {
+    return process.env.NEXT_PUBLIC_URL_RESERVATION_REPLI || CHEMIN_TUNNEL;
+  }
+  return lienReservation(pre);
+}
+
 export function lienReservation(pre: PreRemplissage = {}): string {
   if (!moteurInterne()) {
     return process.env.NEXT_PUBLIC_URL_RESERVATION_REPLI || CHEMIN_PAGE_RESERVATION;
@@ -50,5 +80,7 @@ export function lienReservation(pre: PreRemplissage = {}): string {
   if (pre.passagers) parametres.set("passengers", String(pre.passagers));
 
   const requete = parametres.toString();
-  return requete ? `${CHEMIN_TUNNEL}?${requete}` : CHEMIN_TUNNEL;
+  return requete
+    ? `${CHEMIN_TUNNEL}?${requete}${ANCRE_TUNNEL}`
+    : `${CHEMIN_TUNNEL}${ANCRE_TUNNEL}`;
 }

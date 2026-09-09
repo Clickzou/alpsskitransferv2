@@ -12,6 +12,7 @@ import {
   CarteLien,
   EnTeteSection,
   HeroInterieur,
+  LienBillets,
   Reperes,
   Section,
 } from "@/components/gabarit/Sections";
@@ -19,6 +20,7 @@ import { DISTANCES } from "@/data/distances";
 import { airportParSlug } from "@/lib/airports";
 import { duree } from "@/lib/airports/dessertes";
 import { articlesDeLaStation } from "@/lib/articles";
+import { alternativesStation } from "@/lib/intl/liens";
 import { PAYS } from "@/lib/pays";
 import { lienReservation } from "@/lib/reservation/config";
 import { RESORTS_MIGRES, resortParSlug } from "@/lib/resorts";
@@ -81,12 +83,7 @@ export default function PageStation({ silo, slug }: { silo: string; slug: string
 
   return (
     <>
-      <Header
-        lang="en"
-        alternate={
-          station.fr ? { lang: "fr", path: `/fr/transferts-ski/${station.fr.slug}/` } : undefined
-        }
-      />
+      <Header lang="en" alternatives={alternativesStation(station, "en")} />
       <main id="contenu">
         <HeroInterieur image={visuelStation(station.slug, station.name)}>
           <FilAriane clair elements={filAriane} />
@@ -167,6 +164,7 @@ export default function PageStation({ silo, slug }: { silo: string; slug: string
                 <BoutonAction href={lienReservation({ resort: station.slug })} className="mt-4">
                   Book now
                 </BoutonAction>
+                <LienBillets clair />
               </div>
             </aside>
           </div>

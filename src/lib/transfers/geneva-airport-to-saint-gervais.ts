@@ -13,82 +13,25 @@ export const genevaAirportToSaintGervais: Transfer = {
     "Saint-Gervais-les-Bains is 77 km from Geneva Airport, about 1 hour 15 minutes — one of the shortest transfers to a Mont Blanc resort, and shorter than Chamonix by twenty minutes. The route is motorway to Le Fayet, at the foot of the village, with only a short climb at the end. The price is fixed per vehicle and quoted before you book, motorway tolls, ski bags and child seats included, and your driver tracks your flight so a delayed landing costs you nothing.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "From the airport the A40 runs south-east through Annemasse, Bonneville and Sallanches to Le Fayet, at 580 m, where the Mont Blanc tramway and the thermal baths are. Saint-Gervais village is 3 km and 250 m above it, on a short climb. Saint-Nicolas-de-Véroce, higher again on the Megève side, adds another fifteen minutes on a narrower road.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "It is the same motorway as for Chamonix, without the last 20 km up the valley — which is why this transfer is consistently quicker than its more famous neighbour.",
-    },
-
-    { type: "titre2", texte: "Winter timings" },
-    {
-      type: "paragraphe",
-      texte:
-        "1 hour 15 minutes holds midweek and in the evening. The exception is Saturday morning in February, when the A40 carries the whole Mont Blanc valley’s changeover: allow 45 minutes more, and let us have your flight number so the pick-up follows the actual landing rather than a plan.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The road is a cleared main road at low altitude, so heavy snow slows this transfer rather than threatening it. Our vehicles carry winter tyres and chains, as Haute-Savoie requires from 1 November to 31 March.",
-    },
-
-    { type: "titre2", texte: "Where exactly we drop you" },
-    {
-      type: "liste",
-      items: [
-        "Le Fayet, 580 m — the station, the thermal baths and the Tramway du Mont-Blanc.",
-        "Saint-Gervais village, 850 m — the centre, the Bettex gondola and most hotels.",
-        "Saint-Nicolas-de-Véroce, 1,100 m — a hamlet on a narrow road, 8 km further.",
-        "Le Bettex, on the ski area itself, when the road is open.",
-        "Combloux and Megève, on the same approach, if you are staying on the Evasion Mont-Blanc pass.",
-      ],
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Saint-Gervais runs 77 km and takes about 1 h 16 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "paragraphe", texte: "This transfer crosses a border: you land in Switzerland and finish in France. There is nothing for you to arrange — our vehicles carry what each country requires in winter, and the crossing itself rarely costs more than a few minutes." },
+    { type: "titre2", texte: "The drive from Geneva to Saint-Gervais" },
+    { type: "paragraphe", texte: "At 1 h 16, this is one of the shorter alpine transfers — short enough that a morning landing still leaves you half a day on the slopes. The last stretch is mountain road, so the time depends more on conditions than on distance." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Geneva the best airport for Saint-Gervais?" },
+    { type: "paragraphe", texte: "Yes, on driving time: Geneva is the closest of the 2 airports we serve Saint-Gervais from. The next is Chambéry-Savoie, 13 min further. Flights often decide the rest — a cheaper fare into a slightly longer road can still be the better trip." },
+    { type: "liste", items: ["Geneva — 77 km, 1 h 16 (this route)", "Chambéry-Savoie — 104 km, 1 h 29"] },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "paragraphe",
-      texte:
-        "Motorway tolls, ski and snowboard bags, child and booster seats, flight tracking and waiting time. The vehicle is sized to the equipment you declare rather than to the number of seats, so a family of five with five ski bags gets a van rather than a car with the boot lid tied down.",
-    },
-
-    { type: "titre2", texte: "Private or shared, and when to book" },
-    {
-      type: "paragraphe",
-      texte:
-        "On a transfer this short, a private vehicle is often barely more than the equivalent seats, and it leaves the moment you land. A shared transfer is cheaper per person with flexible timings. Book as soon as your flights are set — the Mont Blanc valley fills from Christmas to March.",
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Saint-Gervais transfer?",
-      reponse:
-        "About 1 hour 15 minutes for 77 km, motorway most of the way. Allow up to 45 minutes more on a Saturday in February.",
-    },
-    {
-      question: "Is Saint-Gervais quicker to reach than Chamonix?",
-      reponse:
-        "Yes, by about twenty minutes: the two share the same motorway, but Chamonix is a further 20 km up the valley.",
-    },
-    {
-      question: "Can you drop us at Saint-Nicolas-de-Véroce?",
-      reponse:
-        "Yes. It is 8 km above the village on a narrower road and adds about fifteen minutes — tell us at booking so the right vehicle is sent.",
-    },
-    {
-      question: "Are ski bags and child seats included?",
-      reponse:
-        "Both, at no extra charge. Declare your bags and the ages of any children when booking.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Saint-Gervais?", reponse: "About 1 h 16 for 77 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Saint-Gervais cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Saint-Gervais?", reponse: "Geneva, at 1 h 16 for 77 km. That is this route. We serve Saint-Gervais from 2 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

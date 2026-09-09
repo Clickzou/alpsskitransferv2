@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 /**
@@ -21,8 +22,15 @@ import { useEffect } from "react";
  *    visibilité demandé, puisqu'il est trop grand pour y entrer.
  * 4. **On observe, on révèle, on oublie.** Chaque élément n'est observé qu'une
  *    fois : la page ne doit pas continuer à calculer après avoir été lue.
+ * 5. **On recommence à chaque page.** Ce composant est posé dans le layout
+ *    racine, qui ne se remonte pas d'une navigation à l'autre : un effet à
+ *    dépendances vides ne s'exécuterait qu'au tout premier chargement, et
+ *    chaque page atteinte depuis un lien interne resterait masquée. D'où le
+ *    chemin en dépendance.
  */
 export default function Animations() {
+  const chemin = usePathname();
+
   useEffect(() => {
     const doux = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cibles = document.querySelectorAll<HTMLElement>(
@@ -62,7 +70,7 @@ export default function Animations() {
       else observateur.observe(element);
     }
     return () => observateur.disconnect();
-  }, []);
+  }, [chemin]);
 
   return null;
 }

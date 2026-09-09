@@ -11,7 +11,7 @@ export const HERO = {
   titre: "Alps Ski Transfers – Private Airport Transfers to Alpine Resorts",
   image: {
     nom: "hero-alps-ski-transfers",
-    alt: "Skieurs dans la poudreuse au-dessus d'une station des Alpes",
+    alt: "Skiers in fresh powder above an Alpine ski resort",
   },
 } as const;
 
@@ -38,7 +38,7 @@ export const PRESENTATION = {
   titre: "Need a transfer ? You've come to the right place",
   image: {
     nom: "route-alpine",
-    alt: "Village alpin enneigé et route de montagne en lacets au crépuscule",
+    alt: "Snow-covered Alpine village and winding mountain road at dusk",
   },
   paragraphes: [
     "Looking for the best Alps ski transfers? If you need a private transfer our airport transfer service provides fast, safe, and reliable ski transfers from Geneva Airport, Lyon Airport, Grenoble Airport, and Chambéry Airport, to top ski resorts like Tignes Val, Val Thorens, Chamonix, Morzine, Avoriaz, La Plagne, and Les Deux Alpes.",
@@ -55,19 +55,19 @@ export const VEHICULES = {
       nom: "Standard",
       modele: "Volkswagen Transporter (T5/T6, Combi or Shuttle type)",
       capacite: "Up to 8 passengers",
-      image: { nom: "vehicule-standard", alt: "Volkswagen Transporter noir" },
+      image: { nom: "vehicule-standard", alt: "Black Volkswagen Transporter minibus" },
     },
     {
       nom: "Business",
       modele: "Mercedes V-Class (or Vito Tourer)",
       capacite: "Up to 7 passengers",
-      image: { nom: "vehicule-business", alt: "Mercedes Classe V noire" },
+      image: { nom: "vehicule-business", alt: "Black Mercedes V-Class people carrier" },
     },
     {
       nom: "Premium",
       modele: "Mercedes E-Class Sedan",
       capacite: "Up to 4 passengers",
-      image: { nom: "vehicule-premium", alt: "Mercedes Classe E berline noire" },
+      image: { nom: "vehicule-premium", alt: "Black Mercedes E-Class saloon" },
     },
   ],
 } as const;
@@ -86,7 +86,7 @@ export const AVANTAGES = {
 export const STATIONS_PHARES = {
   surtitre: "Transfers",
   titre: "Hassle-Free Transfers to the Best Ski Resorts in the Alps",
-  image: { nom: "station-alpes", alt: "Station de ski des Alpes sous la neige" },
+  image: { nom: "station-alpes", alt: "Alpine ski resort under snow" },
   chapo:
     "Choosing the right ski transfer is crucial for a smooth journey to your ski resort. At Alps Ski Transfers, we offer private airport transfers to popular ski resorts.",
   /*
@@ -130,21 +130,21 @@ export const DEPARTS = {
   cartes: [
     {
       titre: "Ski transfers from Lyon, Grenoble & Chambéry Airports",
-      image: { nom: "aeroport-lyon-grenoble-chambery", alt: "Terminal de l'aéroport de Lyon" },
+      image: { nom: "aeroport-lyon-grenoble-chambery", alt: "Lyon airport terminal" },
       texte:
         "Our airport ski transfers also operate from Lyon Airport, Grenoble Airport, and Chambéry Airport, providing reliable ski transfers to Val Thorens, Tignes Val and La Plagne, hassle-free booking with real-time availability, and professional drivers ensuring safe mountain travel.",
       lien: { texte: "French airports", chemin: "/france-ski-transfers/" },
     },
     {
       titre: "Private transfers from Geneva – Affordable & Reliable",
-      image: { nom: "aeroport-geneve", alt: "Aéroport de Genève" },
+      image: { nom: "aeroport-geneve", alt: "Geneva airport" },
       texte:
         "For those looking for affordable ski transfers, our private transfers from Geneva are the perfect choice: the lowest price guaranteed for budget-conscious travelers, regular departures and estimated departure times to match flights, and comfortable, insured minibuses with dedicated space for luggage and ski equipment.",
       lien: { texte: "Transfers from Geneva", chemin: "/switzerland-ski-transfers/geneva-airport/" },
     },
     {
       titre: "Private transfers from Paris, Milan, Turin, Zurich, Salzburg",
-      image: { nom: "aeroport-paris-milan-turin", alt: "Avion à l'approche au-dessus de Paris" },
+      image: { nom: "aeroport-paris-milan-turin", alt: "Aircraft on approach over Paris" },
       texte:
         "Traveling from Paris, Milan, Turin, Zurich, or Salzburg? Alps Ski Transfers offers private transfers to top French Alps ski resorts: door-to-door service, flexible schedule and premium comfort, with modern vehicles with space for luggage and ski equipment.",
       lien: { texte: "All airports", chemin: "/italy-ski-transfers/" },
@@ -229,7 +229,7 @@ export const AVIS = {
 export const FAQ_ACCUEIL = {
   surtitre: "Help",
   titre: "Frequently asked questions Alps Ski Transfers",
-  image: { nom: "faq", alt: "Skieur au soleil couchant" },
+  image: { nom: "faq", alt: "Skier at sunset" },
   questions: [
     {
       question: "What are the best ski transfer options?",

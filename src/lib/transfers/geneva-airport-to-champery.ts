@@ -13,70 +13,24 @@ export const genevaAirportToChampery: Transfer = {
     "Champéry is 128 km from Geneva Airport, about 1 hour 45 minutes: motorway around the lake to Monthey, then 15 km up the Val-d’Illiez to the village at 1,050 m. It is the Swiss gateway to the Portes du Soleil, the twelve-resort circuit that runs across the border to Morzine, Avoriaz and Châtel — and the approach has no pass to cross, which makes it one of the steadier arrivals in bad weather. Price fixed per vehicle, vignette and tolls included, ski bags and child seats included, flight tracked.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "The motorway follows the lake through Lausanne and Montreux, then turns up the Rhône valley to Monthey at 400 m. The last 15 km climb the Val-d’Illiez past Troistorrents and Val-d’Illiez village to Champéry, at the end of the valley under the Dents du Midi.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "You cross one border, at Geneva, and stay in Switzerland the rest of the way — so the Swiss vignette and Swiss winter rules apply, both covered by our vehicles and included in the price.",
-    },
-
-    { type: "titre2", texte: "Winter timings" },
-    {
-      type: "paragraphe",
-      texte:
-        "1 h 45 on a clear road. The Portes du Soleil changes over on Saturday like everywhere else — allow half an hour more on those mornings in February. The valley road is cleared and gritted daily and the climb is gentle; snow slows this transfer rather than threatening it.",
-    },
-
-    { type: "titre2", texte: "The Swiss side of the Portes du Soleil" },
-    {
-      type: "paragraphe",
-      texte:
-        "Champéry’s cable car climbs to Planachaux and into the circuit, from where you can ski to Avoriaz and Morzine in France on the same pass. Les Crosets, Champoussin and Morgins — the other Swiss villages of the circuit — are within twenty minutes by road, and we serve all of them on this transfer.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Champéry runs 128 km and takes about 1 h 44 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "titre2", texte: "The drive from Geneva to Champéry" },
+    { type: "paragraphe", texte: "1 h 44 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Geneva the best airport for Champéry?" },
+    { type: "paragraphe", texte: "Yes, on driving time: Geneva is the closest of the 2 airports we serve Champéry from. The next is Zurich, 1 h 38 further. Flights often decide the rest — a cheaper fare into a slightly longer road can still be the better trip." },
+    { type: "liste", items: ["Geneva — 128 km, 1 h 44 (this route)", "Zurich — 253 km, 3 h 22"] },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "Swiss motorway vignette and all tolls.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door in Champéry, Les Crosets, Champoussin or Morgins.",
-      ],
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Champéry transfer?",
-      reponse:
-        "About 1 hour 45 minutes for 128 km, motorway then a valley road with no high pass. Allow half an hour more on a February Saturday.",
-    },
-    {
-      question: "Can we ski from Champéry to Avoriaz and Morzine?",
-      reponse:
-        "Yes — Champéry is on the Portes du Soleil pass, which covers twelve resorts on both sides of the border. The cable car from the village takes you into the circuit.",
-    },
-    {
-      question: "Do you serve Les Crosets, Champoussin and Morgins?",
-      reponse:
-        "All of them, on the same transfer. They are within about twenty minutes of Champéry; give us the exact address at booking.",
-    },
-    {
-      question: "Are the vignette and tolls included?",
-      reponse:
-        "Yes, along with ski bags and child seats. Nothing is payable on the day.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Champéry?", reponse: "About 1 h 44 for 128 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Champéry cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Champéry?", reponse: "Geneva, at 1 h 44 for 128 km. That is this route. We serve Champéry from 2 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

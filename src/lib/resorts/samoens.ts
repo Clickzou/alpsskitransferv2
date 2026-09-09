@@ -84,11 +84,11 @@ export const samoens: Resort = {
         "Child and booster seats are included and fitted before departure; an approved restraint is required in France for every child under 10. Send the ages with the booking.",
     },
 
-    { type: "titre2", texte: "Private or shared, and when to book" },
+    { type: "titre2", texte: "Which vehicle, and when to book" },
     {
       type: "paragraphe",
       texte:
-        "A private transfer is priced per vehicle and leaves when you land — from four people up it usually costs less than individual seats. A shared transfer is cheaper per person and fits flexible timings, with a wait and intermediate stops.",
+        "A private transfer is priced per vehicle and leaves when you land — from four people up it usually costs less than individual seats. The category is set by your group and your luggage: in winter the boot fills up before the seats do, so tell us how many bags and ski carriers you have.",
     },
     {
       type: "paragraphe",

@@ -13,82 +13,24 @@ export const genevaAirportToGrindelwald: Transfer = {
     "Grindelwald is 233 km from Geneva Airport, about 3 hours by road, on motorway through Lausanne and Bern to Interlaken and then 20 km up the valley to the village at 1,034 m. Zurich is closer to the Bernese Oberland, but Geneva has the widest European flight choice — and this drive is one of the easiest long transfers in the Alps, with no pass to cross. The price is fixed per vehicle, Swiss motorway vignette and tolls included, and quoted before you book. Ski bags and child seats are included, and your driver tracks your flight.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "Motorway along Lake Geneva to Lausanne, north to Bern, then east to Interlaken — around two and a half hours of it, at Swiss motorway speeds, with the lakes on one side for most of the way. The last stretch leaves the motorway at Interlaken Ost and climbs the Lütschental to Grindelwald, under the north face of the Eiger.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "No col, no tunnel toll, no border: from Geneva to Grindelwald you never leave Switzerland, and the only climbing is the final 600 m into the valley.",
-    },
-
-    { type: "titre2", texte: "Winter timings" },
-    {
-      type: "paragraphe",
-      texte:
-        "Three hours holds well: this is motorway that is cleared and gritted as a matter of national routine, and Swiss traffic on it is disciplined. The predictable slowdowns are Friday evenings around Bern and Saturday mornings on the Interlaken road in the high season — allow 30 to 45 minutes more then.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "Our vehicles carry winter tyres and chains and the Swiss motorway vignette. The vignette is included in your price, as are all tolls.",
-    },
-
-    { type: "titre2", texte: "Grindelwald, and the villages you cannot drive to" },
-    {
-      type: "paragraphe",
-      texte:
-        "Grindelwald itself is reached by road, so we drop you at your hotel or chalet. Its neighbours are not all so simple: Wengen has no road at all and is reached by cog railway from Lauterbrunnen, and Mürren by cable car or funicular. If your booking is in one of those, this transfer becomes a Lauterbrunnen transfer plus a train — tell us and we set the drop-off against a departure time.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Grindelwald runs 233 km and takes about 3 h without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "titre2", texte: "The drive from Geneva to Grindelwald" },
+    { type: "paragraphe", texte: "At 3 h, this is a long transfer. Your driver plans a comfort stop, and it is worth telling us if you are travelling with young children so we build the journey around them. Motorway covers most of it; the climb at the end is the slow part." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Geneva the best airport for Grindelwald?" },
+    { type: "paragraphe", texte: "Not the closest: Zurich reaches Grindelwald in 2 h 38, 22 min less than from Geneva. That said, Geneva carries more flights on many routes, and an earlier arrival with a longer drive often beats a late landing with a short one." },
+    { type: "liste", items: ["Zurich — 157 km, 2 h 38", "Geneva — 233 km, 3 h (this route)"] },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "Swiss motorway vignette and all tolls on the route.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door service in Grindelwald, Grund, Wargistal or the Terrassenweg.",
-      ],
-    },
-
-    { type: "titre2", texte: "Private or shared, and when to book" },
-    {
-      type: "paragraphe",
-      texte:
-        "Three hours is a journey where a private vehicle earns its price: it leaves when you land, it stops when you ask, and it goes to the door. Book as soon as your flights are confirmed — the Jungfrau region fills for Christmas, New Year and the January Lauberhorn race week.",
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Grindelwald transfer?",
-      reponse:
-        "About 3 hours for 233 km, motorway almost the whole way through Bern and Interlaken. Allow 30 to 45 minutes more on a busy Saturday.",
-    },
-    {
-      question: "Is Zurich a better airport for Grindelwald?",
-      reponse:
-        "Zurich is closer — around 2 h 20 — and better for long-haul. Geneva has the widest choice of European flights, and the drive is easy motorway; choose on the flight rather than the distance.",
-    },
-    {
-      question: "Can you take us to Wengen or Mürren?",
-      reponse:
-        "Not by road — neither has one. We drop at Lauterbrunnen station for the Wengen cog railway, or at the funicular or Stechelberg cable car for Mürren, timed against a departure.",
-    },
-    {
-      question: "Is the Swiss motorway vignette included?",
-      reponse:
-        "Yes. The vignette and all tolls are in the quoted price; there is nothing to pay on the day.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Grindelwald?", reponse: "About 3 h for 233 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Grindelwald cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Grindelwald?", reponse: "Zurich, at 2 h 38 for 157 km. From Geneva it is 3 h. We serve Grindelwald from 2 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

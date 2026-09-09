@@ -13,70 +13,20 @@ export const genevaAirportToGstaad: Transfer = {
     "Gstaad is 151 km from Geneva Airport, about 2 hours 10 minutes: motorway along Lake Geneva to Montreux, then the Pays-d’Enhaut road over the Col des Mosses or through Château-d’Œx to the Saanenland. The village sits at 1,050 m and the drive is one of the prettier ones in Switzerland — narrow valleys, wooden chalets, no motorway for the last hour. Price fixed per vehicle, vignette and tolls included, quoted before you book, ski bags and child seats included, flight tracked.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "The motorway follows the lake to Montreux, then the road climbs into the Pays-d’Enhaut — either over the Col des Mosses at 1,445 m or by Château-d’Œx, depending on conditions — and drops into the Saanenland at Saanen, a couple of kilometres from Gstaad.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The last hour is a mountain road rather than a motorway: two lanes, villages, and a col that is kept open all winter but occasionally closed for snow clearance. Your driver takes whichever way is running on the day.",
-    },
-
-    { type: "titre2", texte: "Winter timings" },
-    {
-      type: "paragraphe",
-      texte:
-        "2 h 10 on a clear road, and this is a route where weather matters more than traffic: the Mosses in a snowstorm is slow going, and the alternative through Château-d’Œx adds twenty minutes. Winter tyres and chains are on board, and the Swiss vignette and tolls are in your price.",
-    },
-
-    { type: "titre2", texte: "Gstaad and the villages around it" },
-    {
-      type: "paragraphe",
-      texte:
-        "The Gstaad ski area spreads over ten villages and 200 km of piste: Saanenmöser and Schönried above the valley, Rougemont and Château-d’Œx to the west, Zweisimmen and the Glacier 3000 at Les Diablerets. Almost all of them are on our approach — tell us the exact address and it is quoted as one transfer.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Gstaad runs 151 km and takes about 2 h 10 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "titre2", texte: "The drive from Geneva to Gstaad" },
+    { type: "paragraphe", texte: "2 h 10 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "Swiss motorway vignette and all tolls.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door in Gstaad, Saanen, Schönried, Saanenmöser or Rougemont.",
-      ],
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Gstaad transfer?",
-      reponse:
-        "About 2 hours 10 minutes for 151 km. The last hour is a mountain road rather than motorway, so allow more in heavy snow.",
-    },
-    {
-      question: "Which way does the driver go?",
-      reponse:
-        "Over the Col des Mosses, or through Château-d’Œx when the col is being cleared — about twenty minutes longer. Your driver takes whichever is running on the day.",
-    },
-    {
-      question: "Do you serve Saanen, Schönried and Rougemont?",
-      reponse:
-        "Yes, all are in the same valley and on the Gstaad lift pass. Give us the exact address when you book.",
-    },
-    {
-      question: "Are the vignette and tolls included?",
-      reponse:
-        "Yes, with ski bags and child seats. Nothing is payable on the day.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Gstaad?", reponse: "About 2 h 10 for 151 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Gstaad cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

@@ -222,8 +222,15 @@ export function Avantages() {
 export function StationsPhares() {
   return (
     <section className="bg-white">
-      <div className="lg:grid lg:grid-cols-[1.1fr_1fr] lg:items-center">
-        <div className="relative h-72 sm:h-96 lg:h-[38rem]">
+      {/*
+        `items-stretch` et non `items-center` : la colonne image avait une hauteur
+        fixe et se retrouvait centrée dès que le texte était plus haut, laissant
+        une bande blanche au-dessus et au-dessous. Elle suit maintenant la
+        hauteur de la colonne de texte, avec un plancher pour que la photo reste
+        présentable quand le texte est court.
+      */}
+      <div className="lg:grid lg:grid-cols-[1.1fr_1fr] lg:items-stretch">
+        <div className="relative h-72 sm:h-96 lg:h-auto lg:min-h-[38rem]">
           <Visuel
             nom={STATIONS_PHARES.image.nom}
             alt={STATIONS_PHARES.image.alt}
@@ -361,7 +368,7 @@ export function Departs() {
  */
 export function Etapes() {
   return (
-    <section className="bg-alpes text-white">
+    <section className="bg-alpine text-white">
       <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-14">
           <div data-anime>
@@ -369,7 +376,7 @@ export function Etapes() {
             <p className="mt-4 text-chapo text-white/90">{ETAPES.chapo}</p>
             <Link
               href={lienReservation()}
-              className="mt-8 inline-block rounded bg-marque px-7 py-3 text-sm font-semibold text-white shadow-carte transition hover:bg-marque-600"
+              className="mt-8 inline-block rounded bg-alpes-300 px-7 py-3 text-sm font-semibold text-alpine shadow-carte transition hover:bg-alpes-300/90"
             >
               Book now
             </Link>
@@ -394,11 +401,11 @@ export function Etapes() {
                     {i + 1}
                   </span>
                   <h3 className="mt-5 font-display text-titre-carte text-alpine">{etape.titre}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-alpine-700">{etape.texte}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-alpine-600">{etape.texte}</p>
                 </li>
               ))}
             </ol>
-            <p className="mt-6 text-sm text-white/80" data-anime>
+            <p className="mt-6 text-sm text-white/90" data-anime>
               {ETAPES.conclusion}
             </p>
           </div>

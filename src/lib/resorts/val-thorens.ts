@@ -147,7 +147,7 @@ export const valThorens: Resort = {
         "Child seats and booster seats are available at no extra charge; tell us the ages and we fit them before we leave the airport. French law requires an approved restraint for every child under 10, and a mountain road is not the place to improvise one.",
     },
 
-    { type: "titre2", texte: "Private or shared — which to book for Val Thorens" },
+    { type: "titre2", texte: "Which vehicle to book for Val Thorens" },
     {
       type: "paragraphe",
       texte:
@@ -156,7 +156,7 @@ export const valThorens: Resort = {
     {
       type: "paragraphe",
       texte:
-        "A shared transfer costs less per seat and suits couples and solo travellers on flexible timings. It waits for other passengers on the same flight window and may stop in Les Menuires or Saint-Martin on the way up, which adds time to the climb. Both are quoted before you book, with the price fixed and no surcharge on arrival.",
+        "The category is decided by the group and the luggage, and in winter the boot fills up before the seats do: a Transporter takes eight passengers but not eight suitcases and eight pairs of skis. Tell us how many bags and ski carriers you have when you book — the climb to Val Thorens is no place to discover that the load does not fit. Every category is quoted before you book, with the price fixed and no surcharge on arrival.",
     },
 
     { type: "titre2", texte: "When to book your Val Thorens transfer" },

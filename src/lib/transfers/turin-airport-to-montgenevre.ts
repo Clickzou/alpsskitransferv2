@@ -10,25 +10,26 @@ export const turinAirportToMontgenevre: Transfer = {
   resort: "montgenevre",
 
   metaTitre: "Turin to Montgenevre Transfers | Book Now & Save!",
-  metaDescription: "Turin to Montgenèvre transfers – Fast, safe & affordable. Private & shared options available. Book now for the best ski transfer prices!",
+  metaDescription: "Turin to Montgenèvre transfers – Fast, safe & affordable. Private transfers, door to door. Book now for the best ski transfer prices!",
   h1: "Turin to Montgenevre Transfers",
-  chapo: "Looking for the best Turin to Montgenèvre transfers? Whether you need a private or shared ski transfer, we provide a fast, comfortable, and stress-free journey from Turin Airport (TRN) or Turin city center directly to your accommodation in Montgenèvre. Our door-to-door service ensures you avoid the hassle of public transport, long waiting times, or expensive last-minute taxi fares.",
+  chapo: "Looking for the best Turin to Montgenèvre transfers? We provide a fast, comfortable, and stress-free journey from Turin Airport (TRN) or Turin city center directly to your accommodation in Montgenèvre. Our door-to-door service ensures you avoid the hassle of public transport, long waiting times, or expensive last-minute taxi fares.",
 
   contenu: [
-    { type: "paragraphe", texte: "With our Turin to Montgenèvre transfers, you travel in a modern, spacious vehicle equipped for winter conditions, with plenty of space for your luggage and ski equipment. Our experienced drivers monitor flight arrivals and road conditions to guarantee a smooth and safe ride. Whether you're traveling solo, with family, or in a group, we offer the best-value transfers tailored to your needs. Book your transfer today and enjoy a worry-free start to your ski holiday!" },
-    { type: "titre2", texte: "Turin to Montgenèvre – Route & Transfer Prices" },
-    { type: "paragraphe", texte: "The Turin to Montgenèvre route is one of the most scenic and convenient ways to reach the French Alps. Covering approximately 98 km, the journey takes around 1h30, depending on weather and traffic conditions. The route follows the A32 motorway before passing through the Susa Valley, offering breathtaking views of the snow-covered Alps." },
-    { type: "titre3", texte: "Transfer Prices" },
-    { type: "liste", items: ["Shared Transfers: Starting from €45 per person", "Private Transfers: Starting from €190 per vehicle (up to 4 passengers)"] },
-    { type: "paragraphe", texte: "Our vehicles are fully equipped for winter travel, ensuring safety and comfort even in snowy conditions. With no hidden fees and competitive pricing, our Turin to Montgenèvre transfers provide affordable luxury for your ski trip." },
-    { type: "titre3", texte: "Our vehicles" },
-    { type: "titre2", texte: "How to Book Your Ski Transfer from Turin to Montgenèvre" },
-    { type: "paragraphe", texte: "Booking your Turin to Montgenèvre transfer is quick and easy. Follow these simple steps to secure your ride:" },
-    { type: "paragraphe", texte: "✅ 1. Get a Quote – Enter your travel details online to see availability and pricing.✅ 2. Choose Your Transfer – Select a shared or private transfer that suits your budget and group size.✅ 3. Confirm & Pay – Complete your booking securely with instant confirmation.✅ 4. Meet Your Driver – Your driver will be waiting at Turin Airport or your hotel at the scheduled time.✅ 5. Enjoy Your Trip – Sit back, relax, and enjoy a smooth ride to Montgenèvre!" },
-    { type: "paragraphe", texte: "Don’t wait until the last minute—book your Turin to Montgenèvre transfer today and start your ski holiday stress-free!" },
+    { type: "paragraphe", texte: "The road from Turin Airport to Montgenèvre runs 105 km and takes about 1 h 40 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "paragraphe", texte: "This transfer crosses a border: you land in Italy and finish in France. There is nothing for you to arrange — our vehicles carry what each country requires in winter, and the crossing itself rarely costs more than a few minutes." },
+    { type: "titre2", texte: "The drive from Turin to Montgenèvre" },
+    { type: "paragraphe", texte: "1 h 40 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "What the price includes" },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-
+    { question: "How long is the transfer from Turin Airport to Montgenèvre?", reponse: "About 1 h 40 for 105 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Turin to Montgenèvre cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

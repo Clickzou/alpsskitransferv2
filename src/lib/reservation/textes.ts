@@ -1,12 +1,16 @@
 /**
- * Les libellés du tunnel de réservation, en anglais et en français.
+ * Les libellés du tunnel de réservation, dans les quatre langues.
  *
- * Le moteur est le même des deux côtés : un seul composant, un seul calcul, un
- * seul comportement. Seuls les mots changent. Dupliquer le tunnel pour le
- * traduire aurait garanti que les deux versions divergent au premier correctif.
+ * Le moteur est le même partout : un seul composant, un seul calcul, un seul
+ * comportement, un seul re-chiffrage côté serveur. Seuls les mots changent.
+ * Dupliquer le tunnel pour le traduire aurait garanti que les versions divergent
+ * au premier correctif — et sur un tunnel de paiement, une divergence se compte
+ * en euros.
  */
 
-export type LangueTunnel = "en" | "fr";
+import type { Lang } from "@/lib/i18n";
+
+export type LangueTunnel = Lang;
 
 export interface TextesTunnel {
   etapes: [string, string, string];
@@ -172,5 +176,128 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     erreurPrix: "Nous n’avons pas pu chiffrer ce trajet.",
     erreurEnvoi: "Nous n’avons pas pu enregistrer votre demande.",
     demandeDevis: "Demandez-nous un devis",
+  },
+
+  /**
+   * Allemand. « Abholung » plutôt que « Abfahrt » pour la prise en charge :
+   * c'est le mot des transferts, pas celui des horaires de train. Le vouvoiement
+   * est de rigueur sur un site commercial en allemand.
+   */
+  de: {
+    etapes: ["Fahrt", "Fahrzeug und Preis", "Kontaktdaten"],
+    devise: "Währung",
+    de: "Von",
+    vers: "Nach",
+    deIndice: "Flughafen, Skiort oder Adresse",
+    versIndice: "Skiort, Flughafen oder Adresse",
+    inverser: "Abholung und Ziel tauschen",
+    arrivee: "Ankunftsdatum und -zeit",
+    passagers: "Personen",
+    bagages: "Koffer",
+    housses: "Skisäcke",
+    noteBagages:
+      "Das Gepäck bestimmt das Fahrzeug: Wir fragen davor danach, nicht danach.",
+    retour: "Rückfahrt",
+    retourCase: "Ich brauche auch die Rückfahrt",
+    retourQuand: "Abholung für die Rückfahrt",
+    retourAilleurs: "Meine Rückfahrt startet oder endet woanders",
+    retourDe: "Rückfahrt ab",
+    retourVers: "Rückfahrt nach",
+    voirPrix: "Preise anzeigen",
+    calculEnCours: "Wird berechnet …",
+    parVehicule: "pro Fahrzeug",
+    parVehiculeAllerRetour: "Hin- und Rückfahrt, pro Fahrzeug",
+    remiseRetour: "Rabatt für Hin- und Rückfahrt",
+    jusqua: "Bis zu",
+    pieces: "Gepäckstücke",
+    noteInclus:
+      "Die Preise gelten pro Fahrzeug und nicht pro Person — Skisäcke, Kindersitze, Maut, Flugüberwachung und Wartezeit inklusive.",
+    noteDevise: (code) =>
+      ` Beträge in ${code} sind Richtwerte — abgerechnet wird in Euro.`,
+    nom: "Hauptreisender",
+    email: "E-Mail",
+    telephone: "Mobiltelefon",
+    vol: "Flugnummer",
+    adresse: "Adresse im Skiort",
+    adresseIndice: "Chalet, Hotel oder Appartement",
+    enfants: "Alter der Kinder, für die richtigen Sitze",
+    enfantsIndice: "zum Beispiel 3 und 7",
+    message: "Sonstige Hinweise",
+    sansPaiement:
+      "Wir bestätigen diesen Transfer per E-Mail, statt online abzubuchen: Sie erhalten den Preis schriftlich, und vor Ihrer Zustimmung wird nichts belastet.",
+    payer: (prix) => `${prix} zahlen und bestätigen`,
+    demander: "Diesen Transfer anfragen",
+    envoiEnCours: "Wird gesendet …",
+    modifier: "Ändern",
+    recuTitre: "Anfrage eingegangen",
+    recuTexte: (de, vers) =>
+      `Ihre Fahrt von ${de} nach ${vers} liegt uns vor. Wir bestätigen per E-Mail, in der Regel innerhalb weniger Stunden.`,
+    reference: "Ihre Referenz",
+    retourSite: "Zurück zur Website",
+    erreurReseau: "Netzwerkfehler — bitte erneut versuchen.",
+    erreurPrix: "Wir konnten diese Fahrt nicht berechnen.",
+    erreurEnvoi: "Wir konnten Ihre Anfrage nicht speichern.",
+    demandeDevis: "Fragen Sie uns nach einem Angebot",
+  },
+
+  /**
+   * Italien. Le tutoiement est l'usage sur les sites de voyage italiens, y
+   * compris commerciaux — le vouvoiement y sonne administratif.
+   */
+  it: {
+    etapes: ["Tragitto", "Veicolo e prezzo", "Dati di contatto"],
+    devise: "Valuta",
+    de: "Partenza",
+    vers: "Arrivo",
+    deIndice: "Aeroporto, località o indirizzo",
+    versIndice: "Località, aeroporto o indirizzo",
+    inverser: "Inverti partenza e arrivo",
+    arrivee: "Data e ora di arrivo",
+    passagers: "Passeggeri",
+    bagages: "Valigie",
+    housses: "Sacche da sci",
+    noteBagages:
+      "È il bagaglio a decidere il veicolo: lo chiediamo prima del preventivo, non dopo.",
+    retour: "Ritorno",
+    retourCase: "Mi serve anche il ritorno",
+    retourQuand: "Presa in carico per il ritorno",
+    retourAilleurs: "Il ritorno parte o arriva altrove",
+    retourDe: "Ritorno da",
+    retourVers: "Ritorno verso",
+    voirPrix: "Vedi i prezzi",
+    calculEnCours: "Calcolo in corso…",
+    parVehicule: "per veicolo",
+    parVehiculeAllerRetour: "andata e ritorno, per veicolo",
+    remiseRetour: "sconto andata e ritorno",
+    jusqua: "Fino a",
+    pieces: "colli",
+    noteInclus:
+      "I prezzi sono per veicolo e non per persona: sacche da sci, seggiolini, pedaggi, monitoraggio del volo e tempo di attesa inclusi.",
+    noteDevise: (code) =>
+      ` Gli importi in ${code} sono indicativi — la fattura è in euro.`,
+    nom: "Passeggero principale",
+    email: "E-mail",
+    telephone: "Cellulare",
+    vol: "Numero del volo",
+    adresse: "Indirizzo in località",
+    adresseIndice: "Chalet, hotel o residence",
+    enfants: "Età dei bambini, per i seggiolini giusti",
+    enfantsIndice: "per esempio 3 e 7",
+    message: "Altro da segnalarci",
+    sansPaiement:
+      "Confermiamo questo trasferimento via e-mail invece di incassare online: avrai il prezzo per iscritto, e nulla viene addebitato prima del tuo accordo.",
+    payer: (prix) => `Paga ${prix} e conferma`,
+    demander: "Richiedi questo trasferimento",
+    envoiEnCours: "Invio…",
+    modifier: "Modifica",
+    recuTitre: "Richiesta ricevuta",
+    recuTexte: (de, vers) =>
+      `Abbiamo il tuo tragitto da ${de} a ${vers} e ti confermiamo via e-mail, di solito entro poche ore.`,
+    reference: "Il tuo riferimento",
+    retourSite: "Torna al sito",
+    erreurReseau: "Errore di rete — riprova.",
+    erreurPrix: "Non siamo riusciti a calcolare questo tragitto.",
+    erreurEnvoi: "Non siamo riusciti a registrare la tua richiesta.",
+    demandeDevis: "Chiedici un preventivo",
   },
 };

@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import SelecteurLangue from "@/components/SelecteurLangue";
+import IconePanier from "@/components/panier/IconePanier";
 import { PAYS } from "@/lib/pays";
-import { lienReservation } from "@/lib/reservation/config";
-import type { Lang } from "@/lib/i18n";
+import type { Alternative, Lang } from "@/lib/i18n";
+import { NAVIGATION, lienAccueil, lienTunnelLangue } from "@/lib/intl/navigation";
+import { T } from "@/lib/intl/textes";
 
 /**
  * En-tête du site.
@@ -12,38 +15,20 @@ import type { Lang } from "@/lib/i18n";
  * coloré, et il reste visible sur mobile là où le menu se replie.
  *
  * La barre secondaire liste les quatre pays du silo : c'est le maillage le plus
- * rentable du site, présent sur chaque page, et il remplace le menu de langues
- * décoratif de l'ancien site — quatre langues annoncées dont aucune n'existait.
+ * rentable du site, présent sur chaque page.
  *
- * `alternate` n'est passé que si la page existe réellement dans l'autre langue.
+ * `alternatives` ne contient que des pages qui existent réellement dans l'autre
+ * langue — voir `SelecteurLangue`.
  */
 export default function Header({
   lang,
-  alternate,
+  alternatives = [],
 }: {
   lang: Lang;
-  alternate?: { lang: Lang; path: string };
+  alternatives?: Alternative[];
 }) {
-  const accueil = lang === "en" ? "/" : "/fr/";
-
-  const navigation =
-    lang === "en"
-      ? [
-          { texte: "Book tickets", chemin: "/book-ski-transfer-tickets/" },
-          { texte: "Private transfers", chemin: "/private-airport-transfers-to-alps-ski-resort/" },
-          { texte: "Ski resorts", chemin: "/ski-resort-transfers/" },
-          { texte: "Blog", chemin: "/blog/" },
-          { texte: "Help", chemin: "/general-questions/" },
-          { texte: "Contact", chemin: "/contact/" },
-        ]
-      : [
-          { texte: "Stations", chemin: "/fr/" },
-          { texte: "Privé ou partagé", chemin: "/fr/transferts-prives/" },
-          { texte: "Comment réserver", chemin: "/fr/comment-reserver/" },
-          { texte: "Blog", chemin: "/fr/blog/" },
-          { texte: "Aide", chemin: "/fr/aide/" },
-          { texte: "Contact", chemin: "/fr/contact/" },
-        ];
+  const t = T(lang);
+  const navigation = NAVIGATION[lang];
 
   return (
     <header className="sticky top-0 z-30 border-b border-glacier-200 bg-white/95 shadow-entete backdrop-blur">
@@ -52,21 +37,17 @@ export default function Header({
         href="#contenu"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-alpine focus:px-4 focus:py-2 focus:text-sm focus:text-white"
       >
-        {lang === "en" ? "Skip to content" : "Aller au contenu"}
+        {t.allerAuContenu}
       </a>
 
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3">
-        <Link
-          href={accueil}
-          className="shrink-0"
-          aria-label={lang === "en" ? "Alps Ski Transfers, home" : "Alps Ski Transfers, accueil"}
-        >
+        <Link href={lienAccueil(lang)} className="shrink-0" aria-label={t.logoAccueil}>
           <Logo lang={lang} />
         </Link>
 
         <div className="flex flex-1 items-center justify-end gap-x-5 gap-y-2">
           <nav
-            aria-label={lang === "en" ? "Main" : "Principal"}
+            aria-label={t.navPrincipale}
             className="hidden flex-wrap items-center gap-x-5 gap-y-1 text-sm lg:flex"
           >
             {navigation.map((item) => (
@@ -80,21 +61,21 @@ export default function Header({
             ))}
           </nav>
 
-          {alternate ? (
-            <Link
-              href={alternate.path}
-              hrefLang={alternate.lang}
-              className="rounded border border-glacier-300 px-2 py-1 text-xs font-medium uppercase tracking-wide text-alpine-700 transition hover:border-alpes hover:text-alpes"
-            >
-              {alternate.lang}
-            </Link>
-          ) : null}
+          <SelecteurLangue lang={lang} alternatives={alternatives} />
+
+          {/*
+            Le panier vit avec le tunnel anglais : les lignes qu'il porte sont
+            re-chiffrées par `/api/panier/`, dont les libellés et la page `/cart/`
+            n'existent qu'en anglais. L'afficher ailleurs mènerait à une page
+            dans une autre langue que celle où le visiteur l'a rempli.
+          */}
+          {lang === "en" ? <IconePanier etiquette={t.panier} /> : null}
 
           <Link
-            href={lang === "en" ? lienReservation() : "/fr/reserver/"}
+            href={lienTunnelLangue(lang)}
             className="shrink-0 rounded bg-marque px-4 py-2 text-sm font-semibold text-white transition hover:bg-marque-600"
           >
-            {lang === "en" ? "Book now" : "Réserver"}
+            {t.reserver}
           </Link>
         </div>
       </div>
@@ -103,7 +84,7 @@ export default function Header({
           derrière un menu à ouvrir : six liens tiennent sur deux lignes, et un
           menu caché coûte un clic à chaque visiteur. */}
       <nav
-        aria-label={lang === "en" ? "Main, compact" : "Principal, compact"}
+        aria-label={t.navCompacte}
         className="border-t border-glacier-100 bg-glacier-50 lg:hidden"
       >
         <div className="mx-auto flex max-w-6xl flex-wrap gap-x-5 gap-y-1 px-4 py-2 text-xs text-alpine-700">
@@ -131,6 +112,12 @@ export default function Header({
                   {pays.nom}
                 </Link>
               ))}
+            {/*
+              Les deux index — stations et aéroports — vivent dans le menu
+              principal. Les répéter ici ferait deux liens vers la même URL sur
+              chaque page : le second n'apporte rien, et il dilue la barre, dont
+              le rôle est le maillage vers les quatre hubs pays.
+            */}
             <Link href="/switzerland-ski-transfers/geneva-airport/" className="hover:text-marque">
               Geneva Airport
             </Link>

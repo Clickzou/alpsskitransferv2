@@ -3,14 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
+import { ANCRE_TUNNEL, CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import type { Lieu } from "@/lib/reservation/lieux";
-
-export interface Liaison {
-  airport: string;
-  resort: string;
-  /** Chemin de la page de trajet, quand elle existe. */
-  chemin: string;
-}
 
 /**
  * Recherche de transfert.
@@ -29,13 +23,7 @@ export interface Liaison {
  *    sait demander un devis. Aucune de ces trois issues n'affiche un prix
  *    inventé, et la saisie est toujours transmise : le visiteur ne la refait pas.
  */
-export default function FormulaireRecherche({
-  lieux,
-  liaisons,
-}: {
-  lieux: Lieu[];
-  liaisons: Liaison[];
-}) {
+export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
   const router = useRouter();
   const [de, setDe] = useState<ValeurLieu>({ slug: null, texte: "" });
   const [vers, setVers] = useState<ValeurLieu>({ slug: null, texte: "" });
@@ -52,21 +40,22 @@ export default function FormulaireRecherche({
     });
     if (quand) parametres.set("when", quand);
 
-    const liaison =
-      de.slug && vers.slug
-        ? liaisons.find((l) => l.airport === de.slug && l.resort === vers.slug)
-        : undefined;
-
-    if (liaison) {
-      parametres.set("from", de.slug as string);
-      router.push(`${liaison.chemin}?${parametres.toString()}`);
-      return;
-    }
-
-    // Pas de page de trajet : le tunnel prend le relais, avec la saisie intacte.
+    /*
+     * Toujours le tunnel, jamais la page de trajet.
+     *
+     * Ce formulaire envoyait vers la page éditoriale du trajet quand elle
+     * existait : le visiteur qui venait de saisir son itinéraire et sa date
+     * atterrissait sur un article à lire, et devait ressaisir la même chose
+     * pour obtenir un prix. Une réservation commencée doit se terminer là où
+     * elle a commencé — décision du client, 9 septembre 2026.
+     *
+     * Les pages de trajet gardent tout leur rôle : elles captent la requête
+     * « Geneva to Val Thorens » dans les moteurs et renvoient elles-mêmes vers
+     * le tunnel. Ce sont des portes d'entrée, pas des étapes de commande.
+     */
     parametres.set("from", de.slug ?? de.texte);
     parametres.set("to", vers.slug ?? vers.texte);
-    router.push(`/booking/?${parametres.toString()}`);
+    router.push(`${CHEMIN_TUNNEL}?${parametres.toString()}${ANCRE_TUNNEL}`);
   }
 
   const etiquette = "block text-xs font-medium uppercase tracking-wide text-glacier-300";
@@ -162,7 +151,7 @@ export default function FormulaireRecherche({
           type="submit"
           className="w-full rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 sm:ml-auto sm:w-auto"
         >
-          See this transfer
+          Get my price
         </button>
       </div>
     </form>

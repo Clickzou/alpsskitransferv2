@@ -105,11 +105,11 @@ export const serreChevalier: Resort = {
         "Child and booster seats are free and fitted before departure — an approved restraint is required for every child under 10 in France, and this is a long transfer to make without one.",
     },
 
-    { type: "titre2", texte: "Private or shared, and when to book" },
+    { type: "titre2", texte: "Which vehicle, and when to book" },
     {
       type: "paragraphe",
       texte:
-        "On a journey of three hours, a private vehicle earns its price: it leaves when you land, stops when you ask, and goes to your door. A shared transfer costs less per seat if your timings are flexible. Book as soon as your flights are set — the Hautes-Alpes fill for the February half-terms, and vehicles crossing the border are taken early.",
+        "On a journey of three hours, a private vehicle earns its price: it leaves when you land, stops when you ask, and goes to your door. The vehicle category is set by your group and your luggage — in winter the boot fills before the seats do. Book as soon as your flights are set — the Hautes-Alpes fill for the February half-terms, and vehicles crossing the border are taken early.",
     },
   ],
 

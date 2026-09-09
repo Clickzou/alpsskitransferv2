@@ -88,11 +88,11 @@ export const megeve: Resort = {
         "Child and booster seats are free and fitted before departure — an approved restraint is required for every child under 10 in France. Give us the ages when you book.",
     },
 
-    { type: "titre2", texte: "Private or shared, and when to book" },
+    { type: "titre2", texte: "Which vehicle, and when to book" },
     {
       type: "paragraphe",
       texte:
-        "A private transfer is the vehicle for your party alone, priced per vehicle: for four people or more it usually beats buying individual seats, and it is the only comfortable option for a late arrival with children. A shared transfer is cheaper per person if your timings are flexible.",
+        "A private transfer is the vehicle for your party alone, priced per vehicle: for four people or more it usually beats buying individual seats, and it is the only comfortable option for a late arrival with children. The vehicle category is set by your group and your luggage — in winter the boot fills before the seats do.",
     },
     {
       type: "paragraphe",

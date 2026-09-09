@@ -84,11 +84,11 @@ export const flaine: Resort = {
         "Child and booster seats are free and fitted before we leave the airport, as French law requires for every child under 10. Send the ages with your booking.",
     },
 
-    { type: "titre2", texte: "Private or shared, and when to book" },
+    { type: "titre2", texte: "Which vehicle, and when to book" },
     {
       type: "paragraphe",
       texte:
-        "A private transfer leaves on your landing, drops you at your building, and is priced per vehicle — usually the cheaper option from four people up. A shared transfer costs less per seat and suits flexible timings, with a wait at the airport and stops on the way up.",
+        "A private transfer leaves on your landing, drops you at your building, and is priced per vehicle — usually the cheaper option from four people up. The category is set by your group and your luggage: in winter the boot fills up before the seats do, so tell us how many bags and ski carriers you have.",
     },
     {
       type: "paragraphe",

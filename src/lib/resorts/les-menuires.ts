@@ -95,11 +95,11 @@ export const lesMenuires: Resort = {
         "Child and booster seats are free, fitted before we leave the airport, as French law requires for every child under 10. Give us the ages when you book.",
     },
 
-    { type: "titre2", texte: "Private or shared, and when to book" },
+    { type: "titre2", texte: "Which vehicle, and when to book" },
     {
       type: "paragraphe",
       texte:
-        "A private transfer leaves when you land and is priced per vehicle: from four people up it usually costs less than buying seats, and it is the only sensible choice for an evening arrival with children before a 27 km climb. A shared transfer costs less per person, with a wait at the airport and stops at Saint-Martin or Val Thorens on the way.",
+        "A private transfer leaves when you land and is priced per vehicle: from four people up it usually costs less than buying seats, and it is the only sensible choice for an evening arrival with children before a 27 km climb. The category is set by your group and your luggage: in winter the boot fills up before the seats do, so tell us how many bags and ski carriers you have.",
     },
     {
       type: "paragraphe",

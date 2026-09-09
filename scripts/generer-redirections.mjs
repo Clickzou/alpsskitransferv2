@@ -108,6 +108,16 @@ const PAGES_FONCTIONNELLES = {
   // Deux pages de fond à ne pas perdre : 2 157 et 1 374 mots.
   "/private-airport-transfers-to-alps-ski-resort/": "garder",
   "/ski-resort-transfers/": "garder",
+  /*
+   * Le hub de l'ancienne arborescence des aéroports. Ses 95 pages filles partent
+   * bien en 301 vers le silo — c'est elle qui reste, et elle seule : une page
+   * index des aéroports, pas une racine sous laquelle on republie des trajets.
+   *
+   * Elle valait mieux qu'une 301 vers l'accueil : 598 mots, un title calibré, et
+   * l'antériorité du hub sur « airport ski transfers ». La rendre au silo coûte
+   * une page et récupère un actif.
+   */
+  "/airport-ski-transfers/": "garder",
   "/thanks-for-your-inquiry/": "garder",
   // Tunnel de réservation.
   "/cart/": "tunnel",
@@ -181,7 +191,13 @@ for (const entree of inventaire) {
   }
 
   // --- 2. Hubs des anciennes arborescences → hub pays du silo ----------------
-  if (url === "/airport-ski-transfers/" || url === "/destination/") {
+  /*
+   * `/airport-ski-transfers/` fait exception : ses 95 pages filles partent bien
+   * en 301, mais le hub lui-même est repris par le nouveau site comme index des
+   * aéroports (voir PAGES_FONCTIONNELLES). Il est donc traité plus bas, avec les
+   * pages conservées, et surtout pas redirigé vers l'accueil.
+   */
+  if (url === "/destination/") {
     poser(url, "/", "hub d'une arborescence supprimée");
     continue;
   }

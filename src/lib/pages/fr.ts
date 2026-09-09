@@ -1,4 +1,4 @@
-import type { BlocContenu, Faq } from "@/lib/resorts/types";
+import type { PageIntl } from "./intl";
 
 /**
  * Les pages de conversion françaises.
@@ -15,19 +15,7 @@ import type { BlocContenu, Faq } from "@/lib/resorts/types";
  * potentiellement divergentes d'un même engagement. Le pied de page le signale
  * par un `(EN)`.
  */
-export interface PageFr {
-  slug: string;
-  metaTitre: string;
-  metaDescription: string;
-  h1: string;
-  chapo: string;
-  contenu: BlocContenu[];
-  faq: Faq[];
-  /** Version anglaise équivalente, pour le hreflang. Absente = pas de paire. */
-  equivalentEn?: string;
-}
-
-export const PAGES_FR: PageFr[] = [
+export const PAGES_FR: PageIntl[] = [
   {
     slug: "comment-reserver",
     metaTitre: "Comment réserver un transfert vers les Alpes",
@@ -36,6 +24,7 @@ export const PAGES_FR: PageFr[] = [
     h1: "Comment réserver votre transfert",
     chapo:
       "Trois étapes, quelques minutes, et un prix ferme avant tout engagement. Vous indiquez votre trajet et vos dates, vous choisissez un véhicule sur son prix — annoncé par véhicule et non par personne — puis vous laissez vos coordonnées. Nous confirmons par e-mail, et votre chauffeur suit votre vol le jour venu.",
+    equivalentEn: "/book-ski-transfer-tickets/",
     contenu: [
       { type: "titre2", texte: "1. Votre trajet" },
       {
@@ -53,7 +42,7 @@ export const PAGES_FR: PageFr[] = [
       {
         type: "paragraphe",
         texte:
-          "Nous affichons un prix par véhicule pour chaque catégorie compatible avec votre groupe et vos bagages. À partir de quatre passagers, le transfert privé revient presque toujours moins cher que l’achat de places dans une navette partagée — et il part quand vous atterrissez.",
+          "Nous affichons un prix par véhicule pour chaque catégorie compatible avec votre groupe et vos bagages. Le montant ne dépend pas du nombre de passagers : à deux comme à huit, c’est le même prix, péages compris. Et le véhicule part quand vous atterrissez.",
       },
       {
         type: "liste",
@@ -116,71 +105,95 @@ export const PAGES_FR: PageFr[] = [
 
   {
     slug: "transferts-prives",
-    metaTitre: "Transfert privé ou partagé vers les Alpes ?",
+    metaTitre: "Transfert privé aéroport vers les Alpes | Prix par véhicule",
     metaDescription:
-      "Transfert privé ou navette partagée : ce qui change vraiment en temps, en prix et en confort sur une route de montagne en hiver.",
-    h1: "Transfert privé ou partagé : lequel choisir",
+      "Transfert privé depuis Genève, Lyon, Chambéry et Grenoble vers les stations des Alpes. Prix fixe par véhicule, départ à votre atterrissage, skis compris.",
+    h1: "Le transfert privé vers les Alpes",
     chapo:
-      "La question se règle en deux chiffres : le nombre de passagers et l’heure d’arrivée. Un transfert privé part quand vous atterrissez et se paie par véhicule ; une navette partagée se paie par personne, attend les autres passagers et s’arrête en route. À deux, le partagé est souvent moins cher. À partir de quatre, le privé gagne presque toujours — sur le prix comme sur le temps.",
+      "Un véhicule pour vous seuls, qui part à l’heure où vous atterrissez vraiment et vous dépose devant votre logement. Le prix est fixé par véhicule et annoncé avant la réservation : à six, vous payez une fois. Les housses à skis, les sièges enfants, les péages et le suivi du vol sont dedans.",
+    equivalentEn: "/private-airport-transfers-to-alps-ski-resort/",
     contenu: [
-      { type: "titre2", texte: "Le transfert privé" },
+      { type: "titre2", texte: "Ce que veut dire « privé »" },
       {
         type: "paragraphe",
         texte:
-          "Le véhicule est à vous seuls. Il part à l’heure de votre atterrissage réel — le chauffeur suit le vol — et va directement à l’adresse de votre logement, sans dépose intermédiaire. Le prix est fixé par véhicule : un groupe de six paie une fois.",
+          "Le véhicule ne transporte que votre groupe. Il n’attend personne d’autre à l’aéroport, ne dépose personne d’autre en route, et son itinéraire est le plus court entre votre terminal et votre adresse. C’est la différence qui se mesure : sur la montée de la Tarentaise un samedi de février, chaque dépose intermédiaire évitée vaut vingt à trente minutes.",
       },
       {
         type: "liste",
         items: [
-          "Départ à votre atterrissage, sans attendre d’autres passagers.",
-          "Aucun arrêt intermédiaire : le trajet est le plus court possible.",
-          "Prix par véhicule, annoncé avant réservation.",
-          "Sièges enfants installés avant le départ, housses à skis comprises.",
-          "Le seul choix raisonnable pour une arrivée tardive avec des enfants.",
+          "Départ à votre atterrissage réel : le chauffeur suit le numéro de vol.",
+          "Aucun arrêt intermédiaire, aucune fenêtre horaire à respecter.",
+          "Prix par véhicule, annoncé avant la réservation et non révisé après.",
+          "Sièges enfants et rehausseurs installés avant le départ.",
+          "Housses à skis et à snowboard sans supplément.",
+          "Dépose à l’adresse exacte de votre logement, en station.",
         ],
       },
 
-      { type: "titre2", texte: "Le transfert partagé" },
+      { type: "titre2", texte: "Le prix est par véhicule, pas par personne" },
       {
         type: "paragraphe",
         texte:
-          "Vous achetez des places dans un véhicule que d’autres voyageurs partagent. Le prix par personne est plus bas, mais le départ est calé sur une fenêtre horaire commune, et le véhicule dépose plusieurs groupes avant vous. Sur une montée comme celle de Val Thorens, cela peut représenter une heure de plus.",
+          "C’est le point qui change tout au moment de comparer. Un prix par véhicule ne bouge pas selon le nombre de passagers : deux ou huit, c’est le même montant. Quand vous comparez deux devis, vérifiez donc que vous comparez la même unité — un tarif « à partir de » par personne et un prix par véhicule se ressemblent sur une page de résultats et n’ont pas le même total.",
       },
       {
         type: "paragraphe",
         texte:
-          "C’est le bon choix pour un couple ou un voyageur seul dont les horaires sont souples, et un mauvais choix un samedi de février avec quatre valises et deux enfants fatigués.",
-      },
-
-      { type: "titre2", texte: "Le calcul, en pratique" },
-      {
-        type: "paragraphe",
-        texte:
-          "Comparez toujours un prix total à un prix total. Un tarif « à partir de » par personne et un prix par véhicule n’ont pas la même tête sur une page de résultats et donnent souvent le même montant une fois multipliés. Ajoutez-y les péages et les suppléments bagages, quand ils ne sont pas compris.",
+          "Vérifiez aussi ce que le prix couvre. Chez nous, les péages d’autoroute, les tunnels et la vignette suisse sont compris, le matériel de ski voyage gratuitement, et l’attente en cas de vol retardé n’est pas facturée. Ce sont les trois postes qui, ailleurs, se rajoutent à l’arrivée.",
       },
 
-      { type: "titre2", texte: "Ce qui ne change pas" },
+      { type: "titre2", texte: "Le véhicule est choisi sur vos bagages" },
       {
         type: "paragraphe",
         texte:
-          "Dans les deux cas, nos véhicules sont équipés pour l’hiver — pneus et chaînes, obligatoires en Savoie et Haute-Savoie du 1ᵉʳ novembre au 31 mars — et nos chauffeurs font ces routes toute la saison. Les housses à skis voyagent gratuitement, et le vol est suivi.",
+          "Le coffre décide avant les sièges. Un minibus homologué pour huit personnes ne transporte pas huit valises et huit paires de skis : c’est pour cela que nous demandons le nombre de valises et de housses avant de chiffrer, et non après. Vous évitez ainsi le cas classique — un véhicule conforme au nombre de passagers dans lequel le matériel ne rentre pas.",
+      },
+
+      { type: "titre2", texte: "L’hiver, sur ces routes" },
+      {
+        type: "paragraphe",
+        texte:
+          "Nos véhicules sont équipés pneus hiver et chaînes à bord. En Savoie et en Haute-Savoie, les équipements sont obligatoires du 1ᵉʳ novembre au 31 mars sur les communes concernées ; en Suisse, la règle est l’état de la route plutôt que la date ; en Autriche, l’obligation court du 1ᵉʳ novembre au 15 avril. Nos chauffeurs font ces montées toute la saison.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Si votre vol est dérouté — Innsbruck le fait plus souvent que la moyenne, généralement vers Munich ou Salzbourg — dites-le nous : nous partons de l’aéroport où vous vous posez réellement.",
+      },
+
+      { type: "titre2", texte: "Aller-retour, groupes et demandes particulières" },
+      {
+        type: "paragraphe",
+        texte:
+          "Le retour se réserve en même temps que l’aller, avec l’heure de décollage : nous calculons l’heure de prise en charge en station à partir d’elle, marge d’hiver comprise. Au-delà de huit passagers, nous coordonnons plusieurs véhicules sur le même horaire. Pour un séminaire, un groupe scolaire ou une prise en charge en gare — Moûtiers, Bourg-Saint-Maurice, Landry — écrivez-nous : ces trajets sont chiffrés à la main.",
       },
     ],
     faq: [
       {
-        question: "À partir de combien de personnes le privé est-il plus intéressant ?",
+        question: "Le prix est-il par personne ou par véhicule ?",
         reponse:
-          "En général à partir de quatre passagers : au-delà, le prix par véhicule passe sous le total des places achetées dans une navette partagée, et le trajet est plus court.",
+          "Par véhicule. Que vous soyez deux ou huit, le montant annoncé est celui que vous payez, péages compris.",
       },
       {
-        question: "Le transfert partagé fait-il beaucoup d’arrêts ?",
+        question: "Que se passe-t-il si mon vol a du retard ?",
         reponse:
-          "Cela dépend du remplissage et de la vallée. Sur la Tarentaise, un partagé dessert souvent deux à quatre logements avant le vôtre.",
+          "Le chauffeur suit votre numéro de vol et décale la prise en charge à l’heure réelle d’atterrissage. L’attente n’est pas facturée, et il n’y a rien à signaler de votre côté.",
       },
       {
-        question: "Puis-je réserver un privé pour l’aller et un partagé pour le retour ?",
+        question: "Les skis et les snowboards sont-ils comptés en supplément ?",
         reponse:
-          "Oui. Indiquez-le dans le message à la réservation et nous établissons les deux lignes séparément.",
+          "Non. Les housses voyagent gratuitement ; nous vous demandons seulement de les déclarer à la réservation pour dimensionner le coffre.",
+      },
+      {
+        question: "Fournissez-vous les sièges enfants ?",
+        reponse:
+          "Oui, sièges et rehausseurs sont fournis et installés avant le départ, sans supplément. La réglementation française les impose jusqu’à 10 ans.",
+      },
+      {
+        question: "Pouvez-vous nous prendre ailleurs qu’à l’aéroport ?",
+        reponse:
+          "Oui : gare, hôtel, adresse exacte. Indiquez le point de départ dans le formulaire et nous chiffrons le trajet.",
       },
     ],
   },
@@ -193,6 +206,7 @@ export const PAGES_FR: PageFr[] = [
     h1: "Aide et questions fréquentes",
     chapo:
       "Les questions que l’on nous pose le plus, et leurs réponses. Si la vôtre n’y est pas, écrivez-nous : quelqu’un répond, y compris le samedi de rotation.",
+    equivalentEn: "/general-questions/",
     contenu: [
       { type: "titre2", texte: "Avant la réservation" },
       {
@@ -255,6 +269,7 @@ export const PAGES_FR: PageFr[] = [
     h1: "Nous contacter",
     chapo:
       "Pour un devis, une réservation de groupe ou une question sur un transfert déjà réservé, écrivez-nous et nous revenons vers vous rapidement.",
+    equivalentEn: "/contact/",
     contenu: [
       { type: "titre2", texte: "Avant de nous écrire" },
       {
@@ -297,6 +312,7 @@ export const PAGES_FR: PageFr[] = [
     h1: "Agences, conciergeries et entreprises",
     chapo:
       "Si vous placez des clients dans les Alpes — agence, conciergerie, chalet, hôtel, comité d’entreprise —, vous n’avez pas besoin d’un formulaire mais d’un interlocuteur. Nous travaillons avec des professionnels francophones toute la saison : un contact unique, une facturation groupée, et des véhicules réservés à l’avance sur les samedis tendus.",
+    equivalentEn: "/inquiry/",
     contenu: [
       { type: "titre2", texte: "Ce que nous proposons aux professionnels" },
       {
@@ -341,7 +357,3 @@ export const PAGES_FR: PageFr[] = [
     ],
   },
 ];
-
-export function pageFrParSlug(slug: string) {
-  return PAGES_FR.find((p) => p.slug === slug);
-}

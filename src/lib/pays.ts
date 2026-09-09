@@ -1,3 +1,4 @@
+import type { NomVisuel } from "@/components/Visuel";
 /**
  * Les pays du silo. Le slug est la racine d'URL conservée du WordPress —
  * `/france-ski-transfers/` — parce qu'elle porte l'antériorité des 40 pages de
@@ -13,10 +14,17 @@ export interface Pays {
    * les 250 mots.
    */
   intro?: string[];
+  /**
+   * Visuel de l'introduction, à droite du texte. Un par pays : illustrer la
+   * France avec une photo autrichienne serait un mensonge visuel, celui-là même
+   * que le registre des stations s'interdit.
+   */
+  visuel?: { nom: NomVisuel; alt: string };
 }
 
 export const PAYS: Record<string, Pays> = {
   "austria-ski-transfers": {
+    visuel: { nom: "pays-austria", alt: "Austrian ski resort in the Tyrol under snow" },
     code: "AT",
     nom: "Austria",
     adjectif: "Austrian",
@@ -26,6 +34,7 @@ export const PAYS: Record<string, Pays> = {
     ],
   },
   "france-ski-transfers": {
+    visuel: { nom: "pays-france", alt: "French Alps ski resort above the tree line" },
     code: "FR",
     nom: "France",
     adjectif: "French",
@@ -35,6 +44,7 @@ export const PAYS: Record<string, Pays> = {
     ],
   },
   "italy-ski-transfers": {
+    visuel: { nom: "pays-italy", alt: "Italian Alps ski resort in winter sunshine" },
     code: "IT",
     nom: "Italy",
     adjectif: "Italian",
@@ -44,6 +54,7 @@ export const PAYS: Record<string, Pays> = {
     ],
   },
   "switzerland-ski-transfers": {
+    visuel: { nom: "pays-switzerland", alt: "Swiss Alps ski resort beneath the peaks" },
     code: "CH",
     nom: "Switzerland",
     adjectif: "Swiss",

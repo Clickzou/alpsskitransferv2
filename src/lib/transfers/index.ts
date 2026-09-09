@@ -1,3 +1,30 @@
+import { chamberySavoieAirportToAnnecy } from "./chambery-savoie-airport-to-annecy";
+import { genevaAirportToAnnecy } from "./geneva-airport-to-annecy";
+import { chamberySavoieAirportToLaClusaz } from "./chambery-savoie-airport-to-la-clusaz";
+import { chamberySavoieAirportToLeGrandBornand } from "./chambery-savoie-airport-to-le-grand-bornand";
+import { chamberySavoieAirportToChamrousse } from "./chambery-savoie-airport-to-chamrousse";
+import { chamberySavoieAirportToLesCarrozGrandMassif } from "./chambery-savoie-airport-to-les-carroz-grand-massif";
+import { turinAirportToSauzeDoulx } from "./turin-airport-to-sauze-doulx";
+import { grenobleIsereAirportToAnnecy } from "./grenoble-isere-airport-to-annecy";
+import { innsbruckAirportToObergurgl } from "./innsbruck-airport-to-obergurgl";
+import { lyonAirportToAnnecy } from "./lyon-airport-to-annecy";
+import { chamberySavoieAirportToSaintGervais } from "./chambery-savoie-airport-to-saint-gervais";
+import { niceAirportToIsola2000 } from "./nice-airport-to-isola-2000";
+import { turinAirportToChampoluc } from "./turin-airport-to-champoluc";
+import { turinAirportToGressoney } from "./turin-airport-to-gressoney";
+import { lyonAirportToChamrousse } from "./lyon-airport-to-chamrousse";
+import { innsbruckAirportToSelvaValGardena } from "./innsbruck-airport-to-selva-val-gardena";
+import { chamberySavoieAirportToCourmayeur } from "./chambery-savoie-airport-to-courmayeur";
+import { milanMalpensaAirportToAlagnaValsesia } from "./milan-malpensa-airport-to-alagna-valsesia";
+import { zurichAirportToEngelberg } from "./zurich-airport-to-engelberg";
+import { chamberySavoieAirportToArgentiere } from "./chambery-savoie-airport-to-argentiere";
+import { chamberySavoieAirportToSauzeDoulx } from "./chambery-savoie-airport-to-sauze-doulx";
+import { chamberySavoieAirportToAlpeDhuez } from "./chambery-savoie-airport-to-alpe-dhuez";
+import { chamberySavoieAirportToAvoriaz } from "./chambery-savoie-airport-to-avoriaz";
+import { chamberySavoieAirportToLesDeuxAlpes } from "./chambery-savoie-airport-to-les-deux-alpes";
+import { grenobleIsereAirportToLaClusaz } from "./grenoble-isere-airport-to-la-clusaz";
+import { grenobleIsereAirportToLeGrandBornand } from "./grenoble-isere-airport-to-le-grand-bornand";
+import { turinAirportToCourmayeur } from "./turin-airport-to-courmayeur";
 import { bergamoAirportToLauterbrunnen } from "./bergamo-airport-to-lauterbrunnen";
 import { bergamoAirportToZermatt } from "./bergamo-airport-to-zermatt";
 import { chamberySavoieAirportToChamonix } from "./chambery-savoie-airport-to-chamonix";
@@ -89,13 +116,44 @@ import { zurichAirportToWengen } from "./zurich-airport-to-wengen";
 import { zurichAirportToZermatt } from "./zurich-airport-to-zermatt";
 import { TRANSFERS_REDIGES } from "./rediges";
 import { TRADUCTIONS_TRAJETS_FR } from "./traductions-fr";
-import type { Transfer } from "./types";
+import { TRADUCTIONS_TRAJETS_DE } from "./traductions-de";
+import { TRADUCTIONS_TRAJETS_IT } from "./traductions-it";
+import { SEGMENTS_AEROPORT } from "./segments";
+import { LANGS_SECONDAIRES, type LangueSecondaire } from "@/lib/i18n";
+import type { Transfer, TraductionTrajet } from "./types";
 
-export type { Transfer } from "./types";
+export type { Transfer, TraductionTrajet } from "./types";
 
 /** Les trajets dont le contenu est migré. Pas de contenu = pas de page. */
 /** Trajets repris du WordPress. **Bloc régénéré** par `npm run migrer:trajets`. */
 const TRAJETS_MIGRES: Transfer[] = [
+  chamberySavoieAirportToAnnecy,
+  genevaAirportToAnnecy,
+  chamberySavoieAirportToLaClusaz,
+  chamberySavoieAirportToLeGrandBornand,
+  chamberySavoieAirportToChamrousse,
+  chamberySavoieAirportToLesCarrozGrandMassif,
+  turinAirportToSauzeDoulx,
+  grenobleIsereAirportToAnnecy,
+  innsbruckAirportToObergurgl,
+  lyonAirportToAnnecy,
+  chamberySavoieAirportToSaintGervais,
+  niceAirportToIsola2000,
+  turinAirportToChampoluc,
+  turinAirportToGressoney,
+  lyonAirportToChamrousse,
+  innsbruckAirportToSelvaValGardena,
+  chamberySavoieAirportToCourmayeur,
+  milanMalpensaAirportToAlagnaValsesia,
+  zurichAirportToEngelberg,
+  chamberySavoieAirportToArgentiere,
+  chamberySavoieAirportToSauzeDoulx,
+  chamberySavoieAirportToAlpeDhuez,
+  chamberySavoieAirportToAvoriaz,
+  chamberySavoieAirportToLesDeuxAlpes,
+  grenobleIsereAirportToLaClusaz,
+  grenobleIsereAirportToLeGrandBornand,
+  turinAirportToCourmayeur,
   bergamoAirportToLauterbrunnen,
   bergamoAirportToZermatt,
   chamberySavoieAirportToChamonix,
@@ -187,13 +245,25 @@ const TRAJETS_MIGRES: Transfer[] = [
   zurichAirportToZermatt,
 ];
 
+/** Les registres de traduction des trajets, par langue. Clé : `{aéroport}|{station}`. */
+const REGISTRES: Record<LangueSecondaire, Record<string, TraductionTrajet>> = {
+  fr: TRADUCTIONS_TRAJETS_FR,
+  de: TRADUCTIONS_TRAJETS_DE,
+  it: TRADUCTIONS_TRAJETS_IT,
+};
+
 /** Ce que le site publie : les trajets repris et ceux rédigés à la main. */
 export const TRANSFERS: Transfer[] = [...TRAJETS_MIGRES, ...TRANSFERS_REDIGES].map(
   // Les traductions vivent a part pour survivre a `migrer:trajets`, qui reecrit
   // les modules repris du WordPress. On les recolle ici.
   (trajet) => {
-    const fr = TRADUCTIONS_TRAJETS_FR[`${trajet.airport}|${trajet.resort}`];
-    return fr ? { ...trajet, fr } : trajet;
+    const clef = `${trajet.airport}|${trajet.resort}`;
+    const traductions: Partial<Record<LangueSecondaire, TraductionTrajet>> = {};
+    for (const lang of LANGS_SECONDAIRES) {
+      const traduction = REGISTRES[lang][clef];
+      if (traduction) traductions[lang] = traduction;
+    }
+    return Object.keys(traductions).length > 0 ? { ...trajet, traductions } : trajet;
   },
 );
 
@@ -217,37 +287,28 @@ export function airportDepuisSegment(segment: string): string | undefined {
   return segment.endsWith("-transfers") ? segment.slice(0, -"-transfers".length) : undefined;
 }
 
-/* --------------------------------------------------------------- français */
+/* --------------------------------------------------------- autres langues */
+
+export { SEGMENTS_AEROPORT, segmentAeroport, aeroportDepuisSegment } from "./segments";
+export type { SegmentAeroport } from "./segments";
 
 /**
- * Aéroports servis en français, et leur segment d'URL.
+ * Un trajet a-t-il une page dans cette langue ?
  *
- * Décision du 8 septembre 2026 : côté français, la page de trajet vit sous la
- * page de station, comme en anglais, mais avec un segment court et lisible —
- * `/fr/transferts-ski/val-thorens/geneve/`. Il n'y a aucune antériorité à
- * préserver de ce côté, donc autant prendre la forme la plus claire.
- *
- * Seuls les aéroports réellement traduits figurent ici : un trajet dont le
- * départ n'est pas dans cette table n'a pas de page française.
+ * Trois conditions, et il les faut toutes : le texte traduit, un segment d'URL
+ * pour l'aéroport de départ, et — vérifié par les appelants — la station mère
+ * traduite. Une page fille sans page mère n'est pas un silo, c'est une orpheline.
  */
-export const SEGMENTS_FR: Record<string, { nom: string; segment: string }> = {
-  "geneva-airport": { nom: "Genève", segment: "geneve" },
-  "lyon-airport": { nom: "Lyon", segment: "lyon" },
-  "chambery-savoie-airport": { nom: "Chambéry", segment: "chambery" },
-  "grenoble-isere-airport": { nom: "Grenoble", segment: "grenoble" },
-};
+export function trajetTraduit(trajet: Transfer, lang: LangueSecondaire): boolean {
+  return Boolean(trajet.traductions?.[lang] && SEGMENTS_AEROPORT[lang][trajet.airport]);
+}
 
-/** Les trajets d'une station qui portent une traduction française complète. */
-export function trajetsFrDeLaStation(resort: string) {
-  return TRANSFERS.filter((t) => t.resort === resort && t.fr && SEGMENTS_FR[t.airport]);
+/** Les trajets d'une station qui portent une traduction complète dans cette langue. */
+export function trajetsTraduitsDeLaStation(resort: string, lang: LangueSecondaire) {
+  return TRANSFERS.filter((t) => t.resort === resort && trajetTraduit(t, lang));
 }
 
 /** Tous les trajets traduits — sert au sitemap et à la génération des pages. */
-export function trajetsFr() {
-  return TRANSFERS.filter((t) => t.fr && SEGMENTS_FR[t.airport]);
-}
-
-/** Slug d'aéroport correspondant à un segment français, s'il existe. */
-export function airportDepuisSegmentFr(segment: string): string | undefined {
-  return Object.entries(SEGMENTS_FR).find(([, v]) => v.segment === segment)?.[0];
+export function trajetsTraduits(lang: LangueSecondaire) {
+  return TRANSFERS.filter((t) => trajetTraduit(t, lang));
 }

@@ -1,3 +1,4 @@
+import { airportSkiTransfers } from "./airport-ski-transfers";
 import { bookSkiTransferTickets } from "./book-ski-transfer-tickets";
 import { contact } from "./contact";
 import { cookiePolicyUk } from "./cookie-policy-uk";
@@ -5,6 +6,7 @@ import { findYourStop } from "./find-your-stop";
 import { generalQuestions } from "./general-questions";
 import { help } from "./help";
 import { inquiry } from "./inquiry";
+import { legalNotice } from "./legal-notice";
 import { lostLuggage } from "./lost-luggage";
 import { privacy } from "./privacy";
 import { privateAirportTransfersToAlpsSkiResort } from "./private-airport-transfers-to-alps-ski-resort";
@@ -22,6 +24,7 @@ export type { PageFonctionnelle } from "./types";
  * migration : la déplacer créerait une 404 que rien ne rattrape.
  */
 export const PAGES: PageFonctionnelle[] = [
+  airportSkiTransfers,
   bookSkiTransferTickets,
   contact,
   cookiePolicyUk,
@@ -29,6 +32,7 @@ export const PAGES: PageFonctionnelle[] = [
   generalQuestions,
   help,
   inquiry,
+  legalNotice,
   lostLuggage,
   privacy,
   privateAirportTransfersToAlpsSkiResort,

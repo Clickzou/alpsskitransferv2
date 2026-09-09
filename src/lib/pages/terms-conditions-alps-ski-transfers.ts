@@ -10,7 +10,7 @@ export const termsConditionsAlpsSkiTransfers: PageFonctionnelle = {
   metaDescription:
     "The terms that apply to every Alps Ski Transfers booking: service, payment, changes, cancellations and liability.",
   h1: "Terms & Conditions – Alps Ski Transfers",
-  chapo: "Welcome to Alps Ski Transfers. These Terms & Conditions govern the use of our website https://alpsskitransfers.com/ and our ski transfer services. By booking a private or shared ski transfer with us, you agree to these terms. Please read them carefully.",
+  chapo: "Welcome to Alps Ski Transfers. These Terms & Conditions govern the use of our website https://alpsskitransfers.com/ and our ski transfer services. By booking a private ski transfer with us, you agree to these terms. Please read them carefully.",
 
   contenu: [
     { type: "titre2", texte: "1. Introduction" },
@@ -40,7 +40,7 @@ export const termsConditionsAlpsSkiTransfers: PageFonctionnelle = {
     { type: "titre3", texte: "6.1 Flight Delays" },
     { type: "liste", items: ["We monitor flight arrivals and adjust pick-up times accordingly.", "Free waiting time is provided for up to 60 minutes after your scheduled landing time.", "Beyond this, extra waiting charges may apply."] },
     { type: "titre3", texte: "6.2 Passenger Delays" },
-    { type: "liste", items: ["If a passenger is late for pick-up, drivers will wait for a maximum of 15 minutes for private transfers.", "In shared transfers, the driver cannot wait beyond the scheduled departure time."] },
+    { type: "liste", items: ["If a passenger is late for pick-up, drivers will wait for a maximum of 15 minutes for private transfers.", "Your driver waits for you in the arrivals hall, whatever time you actually land."] },
     { type: "titre2", texte: "7. Liability & Force Majeure" },
     { type: "titre3", texte: "7.1 Service Liability" },
     { type: "liste", items: ["Alps Ski Transfers is not responsible for delays due to weather conditions, traffic, strikes, or unforeseen events.", "We will make every effort to transport passengers on time but cannot guarantee exact arrival times."] },

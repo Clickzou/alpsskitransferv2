@@ -12,9 +12,9 @@ export const ischgl: Resort = {
   status: "migre",
 
   metaTitre: "Ischgl Ski Transfers – Fast & Reliable Airport Rides",
-  metaDescription: "Book your Ischgl ski transfer for a fast, comfortable ride from Innsbruck, Munich, Zurich & Salzburg airports. Private & shared options available!",
+  metaDescription: "Book your Ischgl ski transfer for a fast, comfortable ride from Innsbruck, Munich, Zurich & Salzburg airports. Private, door to door, fixed price!",
   h1: "Ischgl Ski Transfers – Fast, Comfortable & Stress-Free Travel",
-  chapo: "Looking for Ischgl Ski Transfers that offer fast, comfortable, and hassle-free travel to one of Austria’s most popular ski resorts? Whether you're arriving at Innsbruck, Munich, Zurich, or Salzburg airports, we provide private and shared transfers directly to Ischgl, ensuring a smooth, door-to-door service with professional drivers.",
+  chapo: "Looking for Ischgl Ski Transfers that offer fast, comfortable, and hassle-free travel to one of Austria’s most popular ski resorts? Whether you're arriving at Innsbruck, Munich, Zurich, or Salzburg airports, we provide private transfers directly to Ischgl, ensuring a smooth, door-to-door service with professional drivers.",
 
   airports: ["innsbruck-airport", "munich-airport", "zurich-airport", "salzburg-airport"],
 
@@ -30,9 +30,9 @@ export const ischgl: Resort = {
     { type: "titre3", texte: "Flexible Pick-up & Drop-off Locations" },
     { type: "paragraphe", texte: "We provide transfers from all major airports near Ischgl, including:" },
     { type: "paragraphe", texte: "No matter where you arrive, we ensure a stress-free and seamless connection to Ischgl." },
-    { type: "titre3", texte: "Top Ski Resorts in Austria for Private & Shared Transfers" },
+    { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions Obergurgl-Hochgurgl Ski Transfer Service" },
-    { type: "liste", items: ["Choose your airport – Select Innsbruck, Munich, Zurich, or Salzburg.", "Pick your transfer type – Select from private or shared transfer options.", "Enter your details – Provide flight information and accommodation address.", "Confirm your booking – Secure your transfer with instant confirmation.", "Meet your driver – Enjoy a smooth and comfortable journey to Ischgl."] },
+    { type: "liste", items: ["Choose your airport – Select Innsbruck, Munich, Zurich, or Salzburg.", "Pick your vehicle – Standard, Business or Premium.", "Enter your details – Provide flight information and accommodation address.", "Confirm your booking – Secure your transfer with instant confirmation.", "Meet your driver – Enjoy a smooth and comfortable journey to Ischgl."] },
     { type: "paragraphe", texte: "With our competitive prices and easy booking process, you can relax and focus on your ski adventure." },
     { type: "liste", items: ["Innsbruck Airport (INN) – Closest airport, 1h30 transfer.", "Munich Airport (MUC) – Great for international arrivals, 3h transfer.", "Zurich Airport (ZRH) – Popular for skiers traveling from Switzerland, 2h45 transfer.", "Salzburg Airport (SZG) – A good alternative, 2h50 transfer."] },
     { type: "paragraphe", texte: "No matter where you land, our Ischgl ski transfers ensure a reliable and stress-free start to your holiday." },

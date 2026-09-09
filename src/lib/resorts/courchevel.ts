@@ -12,14 +12,14 @@ export const courchevel: Resort = {
   status: "migre",
 
   metaTitre: "Courchevel Ski Transfers | Book Now for a Hassle-Free Ride!",
-  metaDescription: "Secure your Courchevel ski transfer! Fast, direct & reliable from Geneva, Lyon, Grenoble & Chambéry. Private & shared option, Book your ride now!",
+  metaDescription: "Secure your Courchevel ski transfer! Fast, direct & reliable from Geneva, Lyon, Grenoble & Chambéry. Private, door to door. Book your ride now!",
   h1: "Courchevel Ski Transfers – Fast, Reliable & Comfortable Transport",
-  chapo: "Looking for a Courchevel Ski Transfer that ensures a comfortable, reliable, and direct journey to this world-class ski destination? Whether arriving from Geneva Airport, Lyon Airport, Grenoble Airport, or Chambéry Airport, our private and shared transfers provide a door-to-door service, getting you to Courchevel hassle-free.",
+  chapo: "Looking for a Courchevel Ski Transfer that ensures a comfortable, reliable, and direct journey to this world-class ski destination? Whether arriving from Geneva Airport, Lyon Airport, Grenoble Airport, or Chambéry Airport, our private transfers provide a door-to-door service, getting you to Courchevel hassle-free.",
 
   airports: ["geneva-airport", "lyon-airport", "grenoble-isere-airport", "chambery-savoie-airport"],
 
   contenu: [
-    { type: "paragraphe", texte: "Avoid the inconvenience of public transport and enjoy a smooth, comfortable transfer with an experienced driver. Our ski transfers guarantee direct travel with no unnecessary delays, allowing you to maximize your time on the slopes. Whether you need a luxury private transfer for ultimate comfort or a shared ski transfer for a budget-friendly option, we ensure an affordable, high-quality service." },
+    { type: "paragraphe", texte: "Avoid the inconvenience of public transport and enjoy a smooth, comfortable transfer with an experienced driver. Our ski transfers guarantee direct travel with no unnecessary delays, allowing you to maximize your time on the slopes. Whether you are travelling as a couple or as a group of eight, there is a vehicle category that fits, at a price fixed before you book." },
     { type: "paragraphe", texte: "With our Courchevel ski transfers, you can compare transfer options, book online, and save money while traveling with a trusted provider. Our fleet of modern vehicles is designed to handle winter road conditions, ensuring a safe journey even in snowy weather. Book your Courchevel transfer today and enjoy a quick, seamless trip to one of the most prestigious ski resorts in the French Alps." },
     { type: "titre2", texte: "Discover Courchevel – The Jewel of the Three Valleys" },
     { type: "paragraphe", texte: "Located in the heart of the Three Valleys, Courchevel is one of the most exclusive ski resorts in the world, attracting skiers from across the globe. Known for its luxurious accommodations, Michelin-star restaurants, and impeccable ski slopes, it offers a premium ski experience like no other." },
@@ -29,12 +29,10 @@ export const courchevel: Resort = {
     { type: "titre3", texte: "Our vehicles" },
     { type: "titre3", texte: "Private Ski Transfers" },
     { type: "liste", items: ["Direct, door-to-door service.", "No waiting time – Your driver is ready upon arrival.", "Luxury vehicle options available for a high-end experience."] },
-    { type: "titre3", texte: "Shared Ski Transfers" },
-    { type: "liste", items: ["Affordable option for budget-conscious travelers.", "Scheduled departure times.", "Comfortable and reliable service with limited stops."] },
-    { type: "titre3", texte: "Top Ski Resorts in France for Private & Shared Transfers" },
-    { type: "titre2", texte: "FAQ about Val Thorens Ski Transfer" },
+    { type: "titre3", texte: "Top Ski Resorts in France for Private Transfers" },
+    { type: "titre2", texte: "FAQ about Courchevel ski transfers" },
     { type: "titre3", texte: "Steps to Book" },
-    { type: "liste", items: ["Compare transfer options for private and shared services.", "Book online with instant confirmation.", "Save money by booking early.", "Meet your driver at the airport.", "Enjoy a smooth ride directly to Courchevel."] },
+    { type: "liste", items: ["Compare vehicle categories and pick the one that fits your group.", "Book online with instant confirmation.", "Save money by booking early.", "Meet your driver at the airport.", "Enjoy a smooth ride directly to Courchevel."] },
     { type: "paragraphe", texte: "With competitive prices, reliable service, and a commitment to quality, our ski transfers ensure you arrive in Courchevel relaxed and ready to ski." },
     { type: "titre3", texte: "Why Choose Our Courchevel Ski Transfers?" },
     { type: "liste", items: ["Professional, experienced drivers who know the mountain roads.", "Modern, winter-equipped vehicles for safe travel.", "Flexible options for individuals, families, and groups.", "24/7 customer support for assistance at any time."] },
@@ -44,10 +42,10 @@ export const courchevel: Resort = {
   ],
 
   faq: [
-    { question: "Private vs Shared Courchevel Ski Transfers – Which One to Choose?", reponse: "We offer both private and shared ski transfers to Courchevel, catering to different needs and budgets:" },
-    { question: "Which Airports Offer Courchevel Ski Transfers?", reponse: "We provide Courchevel ski transfers from the following major airports: ✅ Geneva Airport (GVA) – 2h30 transfer time.✅ Lyon Airport (LYS) – 2h30 transfer time.✅ Grenoble Airport (GNB) – 2h15 transfer time.✅ Chambéry Airport (CMF) – Closest option at 1h30. Our ski transfers from Geneva, Lyon, Grenoble, and Chambéry are available for private and shared transfers, ensuring you get to Courchevel with comfort and ease." },
+    { question: "Which vehicle should I book for Courchevel?", reponse: "It depends on your group and your luggage. The Standard takes up to 8 passengers, the Business up to 7 in more comfort, and the Premium saloon up to 4. In winter the boot decides before the seats do — eight passengers rarely travel with eight suitcases and eight pairs of skis — so tell us how many bags and ski carriers you have when you book, and we send a vehicle that fits." },
+    { question: "Which Airports Offer Courchevel Ski Transfers?", reponse: "We provide Courchevel ski transfers from the following major airports: ✅ Geneva Airport (GVA) – 2h30 transfer time.✅ Lyon Airport (LYS) – 2h30 transfer time.✅ Grenoble Airport (GNB) – 2h15 transfer time.✅ Chambéry Airport (CMF) – Closest option at 1h30. Our ski transfers from Geneva, Lyon, Grenoble, and Chambéry run as private transfers, ensuring you get to Courchevel with comfort and ease." },
     { question: "How to Book Your Courchevel Ski Transfer?", reponse: "Booking your Courchevel ski transfer is quick and simple." },
-    { question: "What are the available transfer options to Courchevel?", reponse: "Travelers to Courchevel can choose between private and shared transfers. Private transfers offer direct, door-to-door service with flexibility in pick-up times and locations, ideal for groups or those seeking convenience. Shared transfers are a cost-effective option, where you share the vehicle with other passengers heading to the same destination. These typically have scheduled departure times and may include multiple stops." },
+    { question: "What are the available transfer options to Courchevel?", reponse: "Every transfer to Courchevel is private: the vehicle is yours alone, from the arrivals hall to your chalet or hotel door. There is no waiting for other passengers and no stop on the way. What you choose is the vehicle category — Standard, Business or Premium — according to the size of your group and the amount of luggage, and the pick-up time, which follows your flight." },
     { question: "How long does it take to get to Courchevel from nearby airports?", reponse: "Transfer durations vary depending on the airport of arrival:" },
     { question: "Are child seats available during the transfer?", reponse: "Yes, most transfer companies provide child seats and booster seats at no extra charge. It’s important to request these when making your booking to ensure they are available and properly installed for your journey." },
     { question: "What if my flight is delayed?", reponse: "Reputable transfer services monitor flight arrivals to accommodate delays. However, it’s crucial to inform your transfer provider as soon as possible if you anticipate any delays. Policies may vary, so checking the specific terms regarding delays with your chosen company is recommended." },

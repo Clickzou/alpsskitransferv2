@@ -25,12 +25,20 @@ const config: Config = {
           50: "#F6F8FB",
         },
         neige: "#FFFFFF",
-        // Vert des pastilles de réassurance et de la bande « Booking process ».
+        /*
+         * Vert des pastilles de réassurance et de la bande « Booking process ».
+         *
+         * Défini en variables CSS plutôt qu'en valeurs fixes : la home teste une
+         * palette où l'action passe au vert et la réassurance à l'or, et une
+         * classe de thème suffit alors à les permuter sans dupliquer un seul
+         * composant. Les valeurs par défaut, sur `:root`, restent celles de la
+         * maquette validée. Voir `globals.css`.
+         */
         alpes: {
-          DEFAULT: "#12A37A",
-          700: "#0E7F5F",
-          300: "#5FC7A9",
-          50: "#E7F6F1",
+          DEFAULT: "rgb(var(--c-alpes) / <alpha-value>)",
+          700: "rgb(var(--c-alpes-700) / <alpha-value>)",
+          300: "rgb(var(--c-alpes-300) / <alpha-value>)",
+          50: "rgb(var(--c-alpes-50) / <alpha-value>)",
         },
         /*
          * L'or du logo, en touches seulement.
@@ -47,11 +55,14 @@ const config: Config = {
           300: "#E0C8A0",
           50: "#F8F2E7",
         },
-        // Magenta des boutons d'action — la seule couleur qui appelle au clic.
+        /*
+         * La couleur d'action — la seule qui appelle au clic. Magenta par
+         * défaut, vert sur la home tant que l'essai de palette dure.
+         */
         marque: {
-          DEFAULT: "#E6007E",
-          600: "#C10069",
-          300: "#FF5FB2",
+          DEFAULT: "rgb(var(--c-marque) / <alpha-value>)",
+          600: "rgb(var(--c-marque-600) / <alpha-value>)",
+          300: "rgb(var(--c-marque-300) / <alpha-value>)",
         },
       },
       /*

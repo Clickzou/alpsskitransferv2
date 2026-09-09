@@ -18,94 +18,25 @@ export const genevaAirportToCourmayeur: Transfer = {
     "Courmayeur is 102 km from Geneva Airport, about 1 hour 40 minutes — and the journey goes under Mont Blanc rather than around it. The route runs up the Arve valley to Chamonix, through the 11.6 km Mont Blanc tunnel, and down into the Aosta valley on the Italian side. It is one of the shortest international transfers in the Alps: you land in Switzerland, drive through France, and arrive in Italy in under two hours. The price is fixed per vehicle, tunnel toll included, and quoted before you book. Ski and board bags travel free, child seats are provided, and your driver tracks your flight.",
 
   contenu: [
-    { type: "titre2", texte: "The route: Geneva, Chamonix, and under Mont Blanc" },
-    {
-      type: "paragraphe",
-      texte:
-        "The first hour is the Chamonix road: motorway to Le Fayet, then the valley up past Les Houches and Chamonix to the tunnel entrance at 1,274 m. The tunnel itself takes about ten minutes at the enforced 70 km/h, with the mandatory 150 m gap between vehicles, and comes out at Entrèves — a couple of kilometres from Courmayeur.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The tunnel toll is included in the price we quote. It is not a small sum for a minibus, and it is exactly the kind of extra that appears at the end of a journey booked elsewhere.",
-    },
-
-    { type: "titre2", texte: "How long it really takes in winter" },
-    {
-      type: "paragraphe",
-      texte:
-        "1 hour 40 minutes is the clear-road time, and it holds midweek. Two things stretch it. The A40 between Geneva and Le Fayet is the artery for the whole Mont Blanc area and slows badly on Saturday mornings in February — allow 45 minutes more. And the tunnel itself queues at peak times, particularly Saturday afternoons going south and Sunday evenings coming north.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The tunnel also closes occasionally for maintenance, always announced in advance. When it does, the alternative is the Grand-Saint-Bernard tunnel via Martigny, which adds about an hour and a half. Your driver knows the day’s status before you land.",
-    },
-
-    { type: "titre2", texte: "Border, documents and vehicles" },
-    {
-      type: "paragraphe",
-      texte:
-        "You cross two borders on this run — Switzerland to France, France to Italy — and all three countries are in the Schengen area, so there are no routine checks. Carry your passport or identity card even so: spot checks happen at the tunnel, and you need identification for your flight home.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "Our vehicles are insured and equipped for all three countries, with winter tyres and chains as French, Italian and Swiss law require through the season.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Courmayeur runs 102 km and takes about 1 h 36 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "paragraphe", texte: "This transfer crosses a border: you land in Switzerland and finish in Italy. There is nothing for you to arrange — our vehicles carry what each country requires in winter, and the crossing itself rarely costs more than a few minutes." },
+    { type: "titre2", texte: "The drive from Geneva to Courmayeur" },
+    { type: "paragraphe", texte: "1 h 36 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Geneva the best airport for Courmayeur?" },
+    { type: "paragraphe", texte: "Yes, on driving time: Geneva is the closest of the 3 airports we serve Courmayeur from. The next is Chambéry-Savoie, 15 min further. Flights often decide the rest — a cheaper fare into a slightly longer road can still be the better trip." },
+    { type: "liste", items: ["Geneva — 102 km, 1 h 36 (this route)", "Chambéry-Savoie — 151 km, 1 h 51", "Turin — 158 km, 1 h 59"] },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "The Mont Blanc tunnel toll and all motorway tolls on the route.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door service: Courmayeur, Entrèves, Dolonne, La Palud or Val Ferret.",
-      ],
-    },
-
-    { type: "titre2", texte: "Private or shared" },
-    {
-      type: "paragraphe",
-      texte:
-        "A private transfer leaves when you land and is priced per vehicle, which from four people up usually beats buying individual seats — and on a route with a tunnel toll, the per-vehicle price is the honest comparison. A shared transfer costs less per person if your timings are flexible.",
-    },
-
-    { type: "titre2", texte: "Booking ahead" },
-    {
-      type: "paragraphe",
-      texte:
-        "Book as soon as your flights are confirmed. Courmayeur fills for Christmas, New Year and the Italian and British half-terms, and cross-border vehicles are the first to be taken on those Saturdays.",
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long does the Geneva to Courmayeur transfer take?",
-      reponse:
-        "About 1 hour 40 minutes for 102 km through the Mont Blanc tunnel, without traffic. On a February Saturday, allow up to 45 minutes more on the A40 and at the tunnel.",
-    },
-    {
-      question: "Is the Mont Blanc tunnel toll included?",
-      reponse:
-        "Yes. The tunnel toll and all motorway tolls are in the price we quote — there is nothing to pay on the day.",
-    },
-    {
-      question: "What happens if the tunnel is closed?",
-      reponse:
-        "Closures are announced in advance. The alternative is the Grand-Saint-Bernard tunnel via Martigny, about an hour and a half longer; your driver checks the day’s status before you land.",
-    },
-    {
-      question: "Do we need passports for this transfer?",
-      reponse:
-        "There are no routine border checks in the Schengen area, but carry your passport or identity card: spot checks happen at the tunnel and you need identification for your return flight.",
-    },
-    {
-      question: "Can you drop us in Entrèves, Dolonne or Val Ferret?",
-      reponse:
-        "Yes, all are within a few kilometres of Courmayeur and part of the same transfer. Give us the exact address when you book.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Courmayeur?", reponse: "About 1 h 36 for 102 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Courmayeur cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Courmayeur?", reponse: "Geneva, at 1 h 36 for 102 km. That is this route. We serve Courmayeur from 3 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

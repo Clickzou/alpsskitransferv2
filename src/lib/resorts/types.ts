@@ -1,4 +1,5 @@
 import type { CodePays } from "@/lib/airports/types";
+import type { LangueSecondaire } from "@/lib/i18n";
 
 export type StatutMigration = "a-migrer" | "migre" | "a-reecrire";
 
@@ -38,14 +39,28 @@ export interface Resort extends ResortStub {
   airports: string[];
   contenu: BlocContenu[];
   faq: Faq[];
-  /** Traduction française. Absente = pas de page FR, pas de hreflang. */
-  fr?: {
-    slug: string;
-    metaTitre: string;
-    metaDescription: string;
-    h1: string;
-    chapo: string;
-    contenu: BlocContenu[];
-    faq: Faq[];
-  };
+  /**
+   * Les traductions de la page, par langue. Une langue absente = pas de page
+   * dans cette langue, et pas de `hreflang` : c'est la règle n°5 du projet, et
+   * c'est ce qui distingue ce site de l'ancien, qui annonçait quatre langues
+   * pour zéro traduction.
+   */
+  traductions?: Partial<Record<LangueSecondaire, TraductionStation>>;
+}
+
+/**
+ * Une page de station dans une autre langue.
+ *
+ * Le `slug` est propre à la langue — `val-disere` en français, `soelden` en
+ * allemand — parce que l'URL est un mot-clé avant d'être un identifiant. Le slug
+ * anglais reste la clé qui relie les versions entre elles.
+ */
+export interface TraductionStation {
+  slug: string;
+  metaTitre: string;
+  metaDescription: string;
+  h1: string;
+  chapo: string;
+  contenu: BlocContenu[];
+  faq: Faq[];
 }

@@ -31,6 +31,14 @@ export const REDIRECTIONS_301: Record<string, string> = {
   // Cette URL porte en réalité le contenu Courchevel (doublon WordPress recyclé).
   "/france-ski-transfers/val-thorens-2": "/france-ski-transfers/courchevel/",
   "/italy-ski-transfers/sestriere-2": "/italy-ski-transfers/sestriere/",
+
+  /*
+   * Le tunnel a été fusionné dans la page éditoriale le 9 septembre 2026 :
+   * réserver et se renseigner se font au même endroit. `/booking/confirmed/`,
+   * le retour de paiement Stripe, n'est pas concerné — le proxy compare l'URL
+   * entière, pas un préfixe.
+   */
+  "/booking": "/book-ski-transfer-tickets/",
   // Le reste — faute « innsbruck-aiport », dossier « swiss » qui contenait des
   // stations françaises, 89 trajets, 51 doublons de stations, 31 hubs d'aéroport —
   // est traité par le plan généré. Ne rien recopier ici : une règle en double

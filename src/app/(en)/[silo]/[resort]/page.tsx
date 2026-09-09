@@ -5,6 +5,7 @@ import PageStation from "@/components/PageStation";
 import { AIRPORTS, airportParSlug } from "@/lib/airports";
 import { dessertes } from "@/lib/airports/dessertes";
 import { RESORTS_MIGRES, SLUG_PAYS, resortParSlug } from "@/lib/resorts";
+import { alternativesStation } from "@/lib/intl/liens";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -47,9 +48,7 @@ export async function generateMetadata({
       description: station.metaDescription,
       path: `/${silo}/${station.slug}/`,
       lang: "en",
-      alternate: station.fr
-        ? { lang: "fr", path: `/fr/transferts-ski/${station.fr.slug}/` }
-        : undefined,
+      alternatives: alternativesStation(station, "en"),
     });
   }
 

@@ -2,8 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HubPays from "@/components/HubPays";
 import PageContenu from "@/components/PageContenu";
+import PageReservation from "@/components/PageReservation";
+import PageAeroports from "@/components/PageAeroports";
+import PageAide from "@/components/PageAide";
+import PageContact from "@/components/PageContact";
+import PageGroupes from "@/components/PageGroupes";
+import PageStations from "@/components/PageStations";
+import PageTransfertsPrives from "@/components/PageTransfertsPrives";
 import { PAGES, pageParSlug } from "@/lib/pages";
 import { PAYS } from "@/lib/pays";
+import { CHEMIN_PAGE_RESERVATION } from "@/lib/reservation/config";
 import { RESORTS_MIGRES } from "@/lib/resorts";
 import { pageMetadata } from "@/lib/seo";
 
@@ -64,7 +72,20 @@ export default async function Page({ params }: { params: Promise<{ silo: string 
   if (PAYS[silo]) return <HubPays silo={silo} />;
 
   const page = pageParSlug(silo);
-  if (page) return <PageContenu page={page} />;
+  // Deux pages ont leur gabarit — la page de conversion et la page de service.
+  // Les autres pages fonctionnelles se lisent, et le gabarit générique suffit.
+  if (page) {
+    if (silo === CHEMIN_PAGE_RESERVATION.slice(1, -1)) return <PageReservation page={page} />;
+    if (silo === "private-airport-transfers-to-alps-ski-resort") {
+      return <PageTransfertsPrives page={page} />;
+    }
+    if (silo === "ski-resort-transfers") return <PageStations page={page} />;
+    if (silo === "airport-ski-transfers") return <PageAeroports page={page} />;
+    if (silo === "inquiry") return <PageGroupes page={page} />;
+    if (silo === "general-questions") return <PageAide page={page} />;
+    if (silo === "contact") return <PageContact page={page} />;
+    return <PageContenu page={page} />;
+  }
 
   notFound();
 }

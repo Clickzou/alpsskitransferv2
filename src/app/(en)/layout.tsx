@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import Animations, { SCRIPT_ANIMATIONS } from "@/components/Animations";
+import { PanierProvider } from "@/components/panier/PanierProvider";
 import { display, sans } from "../polices";
 import { SITE } from "@/data/site";
 import { absoluteUrl } from "@/lib/seo";
@@ -34,7 +35,11 @@ export default function RootLayoutEn({ children }: { children: React.ReactNode }
         {/* Avant tout rendu : sans lui, l'apparition au défilement masquerait du
             contenu chez qui n'a pas JavaScript. */}
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_ANIMATIONS }} />
-        {children}
+        {/*
+          Le panier enveloppe tout le silo : la pastille de l'en-tête et la page
+          `/cart/` lisent le même état, et il survit à la navigation.
+        */}
+        <PanierProvider>{children}</PanierProvider>
         <Animations />
       </body>
     </html>

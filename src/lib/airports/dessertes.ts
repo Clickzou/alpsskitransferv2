@@ -1,4 +1,5 @@
 import { DISTANCES } from "@/data/distances";
+import { AIRPORTS } from "@/lib/airports";
 import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
 import { TRANSFERS, segmentTrajet } from "@/lib/transfers";
 
@@ -53,4 +54,44 @@ export function duree(minutes: number | null): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return h === 0 ? `${m} min` : m === 0 ? `${h} h` : `${h} h ${String(m).padStart(2, "0")}`;
+}
+
+/**
+ * Comment on atteint une station : l'aéroport le plus rapide qui a une page de
+ * trajet, le temps de route, et combien de liaisons la desservent.
+ *
+ * C'est ce qu'attend l'index des stations. Le WordPress y annonçait onze
+ * stations avec des durées écrites à la main, dont plusieurs fausses — Zermatt
+ * était donné à « 3h30 from Zurich » pour 4 h 17 réelles. Ici la valeur sort des
+ * itinéraires calculés, comme partout ailleurs sur le site.
+ */
+export interface AccesStation {
+  /** Nom de l'aéroport le plus rapide, quand une page de trajet existe. */
+  aeroport: string | null;
+  minutes: number | null;
+  /** Nombre de pages de trajet qui mènent à cette station. */
+  trajets: number;
+}
+
+export function accesStation(resort: string): AccesStation {
+  const liaisons = TRANSFERS.filter((t) => t.resort === resort);
+
+  const chiffrees = liaisons
+    .map((t) => {
+      const distance = DISTANCES.find(
+        (d) => d.airport === t.airport && d.resort === resort,
+      );
+      const aeroport = AIRPORTS.find((a) => a.slug === t.airport);
+      return distance && aeroport
+        ? { nom: aeroport.name.replace(" Airport", ""), minutes: distance.minutes }
+        : null;
+    })
+    .filter((x): x is { nom: string; minutes: number } => x !== null)
+    .sort((a, b) => a.minutes - b.minutes);
+
+  return {
+    aeroport: chiffrees[0]?.nom ?? null,
+    minutes: chiffrees[0]?.minutes ?? null,
+    trajets: liaisons.length,
+  };
 }

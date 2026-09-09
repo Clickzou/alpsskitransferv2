@@ -15,6 +15,7 @@ export const reserverTransfertSki: Article = {
     "Per vehicle or per person, tolls, ski bags, child seats, flight tracking, cancellation: the eight things that decide what a ski transfer really costs.",
   chapo:
     "A ski transfer is one of the few holiday purchases where the advertised price and the final price routinely differ, and where the cheapest quote is often the most expensive journey. Here are the eight things worth checking before you pay, why each of them matters on a mountain road in February, and the questions that get you a straight answer.",
+  visuel: { nom: "route-hiver", alt: "Winter tyres on a snow-covered road to a ski resort" },
   datePublication: "2026-09-08",
   auteur: "Alps Ski Transfers",
 
@@ -31,12 +32,12 @@ export const reserverTransfertSki: Article = {
     {
       type: "paragraphe",
       texte:
-        "This is the first question, and it changes everything. A private transfer is priced per vehicle: four people or eight, the price is the same. A shared transfer is priced per seat and fills the vehicle with other passengers, which means waiting at the airport and stopping on the way.",
+        "This is the first question, and it changes everything. A private transfer is priced per vehicle: four people or eight, the price is the same, tolls included. What you are buying is the whole car and the whole journey, not a seat in it.",
     },
     {
       type: "paragraphe",
       texte:
-        "For two people, shared is usually cheaper. From four upwards, private frequently wins outright — and it always wins on time. When you compare quotes, make sure you are comparing the same thing: a per-person price and a per-vehicle price look very different on a search page and can end up identical.",
+        "So when you compare quotes, check the unit before the number. A headline “from £35” and a flat £210 look very different on a search page and can end up identical once you multiply — and only one of the two takes you straight to your door at the hour you actually land.",
     },
 
     { type: "titre2", texte: "2. Are the tolls in the price?" },
@@ -133,125 +134,127 @@ export const reserverTransfertSki: Article = {
     },
   ],
 
-  fr: {
-    slug: "reserver-un-transfert-ski-ce-quil-faut-verifier",
-    titre: "Réserver un transfert : ce qu’il faut vérifier avant de payer",
-    metaTitre: "Transfert ski : ce qu’il faut vérifier avant de payer",
-    metaDescription:
-      "Par personne ou par véhicule, péages, housses à skis, sièges enfants, suivi du vol, annulation : les huit points qui décident du prix réel d’un transfert.",
-    chapo:
-      "Le transfert est l’un des rares achats de vacances où le prix affiché et le prix payé diffèrent régulièrement, et où le devis le moins cher désigne souvent le trajet le plus coûteux. Voici les huit points à vérifier avant de payer, pourquoi chacun compte sur une route de montagne en février, et les questions qui obtiennent une réponse claire.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Un transfert a l’air d’être une marchandise : deux points, un véhicule, un prix. Il ne l’est pas, et les différences n’apparaissent que le jour même — quand le vol a deux heures de retard, quand il y a plus de housses à skis que le coffre n’en prend, ou quand le péage du tunnel n’était pas compris.",
-      },
+  traductions: {
+    fr: {
+      slug: "reserver-un-transfert-ski-ce-quil-faut-verifier",
+      titre: "Réserver un transfert : ce qu’il faut vérifier avant de payer",
+      metaTitre: "Transfert ski : ce qu’il faut vérifier avant de payer",
+      metaDescription:
+        "Par personne ou par véhicule, péages, housses à skis, sièges enfants, suivi du vol, annulation : les huit points qui décident du prix réel d’un transfert.",
+      chapo:
+        "Le transfert est l’un des rares achats de vacances où le prix affiché et le prix payé diffèrent régulièrement, et où le devis le moins cher désigne souvent le trajet le plus coûteux. Voici les huit points à vérifier avant de payer, pourquoi chacun compte sur une route de montagne en février, et les questions qui obtiennent une réponse claire.",
+      contenu: [
+        {
+          type: "paragraphe",
+          texte:
+            "Un transfert a l’air d’être une marchandise : deux points, un véhicule, un prix. Il ne l’est pas, et les différences n’apparaissent que le jour même — quand le vol a deux heures de retard, quand il y a plus de housses à skis que le coffre n’en prend, ou quand le péage du tunnel n’était pas compris.",
+        },
 
-      { type: "titre2", texte: "1. Par personne ou par véhicule ?" },
-      {
-        type: "paragraphe",
-        texte:
-          "C’est la première question, et elle change tout. Un transfert privé se paie par véhicule : à quatre ou à huit, le prix est le même. Un transfert partagé se paie par siège, et remplit le véhicule d’autres passagers — donc attente à l’aéroport et arrêts en route.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "À deux, le partagé est généralement moins cher. À partir de quatre, le privé gagne souvent sur le prix, et toujours sur le temps. Quand vous comparez deux devis, vérifiez que vous comparez la même chose : un prix par personne et un prix par véhicule n’ont pas la même tête sur une page de résultats et peuvent donner le même total.",
-      },
+        { type: "titre2", texte: "1. Par personne ou par véhicule ?" },
+        {
+          type: "paragraphe",
+          texte:
+            "C’est la première question, et elle change tout. Un transfert privé se paie par véhicule : à quatre ou à huit, le prix est le même, péages compris. Ce que vous achetez, c’est la voiture entière et le trajet entier, pas une place dedans.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Quand vous comparez deux devis, vérifiez donc l’unité avant le montant. Un « à partir de 35 € » et un forfait à 210 € n’ont pas la même tête sur une page de résultats et peuvent donner le même total une fois multipliés — et un seul des deux vous dépose devant votre porte à l’heure où vous vous posez vraiment.",
+        },
 
-      { type: "titre2", texte: "2. Les péages sont-ils dans le prix ?" },
-      {
-        type: "paragraphe",
-        texte:
-          "Sur les routes alpines, les péages ne sont pas anecdotiques. Le tunnel du Mont-Blanc et celui du Fréjus coûtent chacun une somme sérieuse pour un minibus, la vignette suisse est annuelle, et les autoroutes françaises facturent à l’essieu. Un devis qui les exclut n’est pas un devis, c’est une estimation.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Posez la question franchement : ce prix comprend-il le tunnel et tous les péages ? La réponse doit être oui, et par écrit.",
-      },
+        { type: "titre2", texte: "2. Les péages sont-ils dans le prix ?" },
+        {
+          type: "paragraphe",
+          texte:
+            "Sur les routes alpines, les péages ne sont pas anecdotiques. Le tunnel du Mont-Blanc et celui du Fréjus coûtent chacun une somme sérieuse pour un minibus, la vignette suisse est annuelle, et les autoroutes françaises facturent à l’essieu. Un devis qui les exclut n’est pas un devis, c’est une estimation.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Posez la question franchement : ce prix comprend-il le tunnel et tous les péages ? La réponse doit être oui, et par écrit.",
+        },
 
-      { type: "titre2", texte: "3. Les housses à skis sont-elles facturées ?" },
-      {
-        type: "paragraphe",
-        texte:
-          "Certains opérateurs facturent la housse, d’autres l’incluent, quelques-uns dimensionnent le véhicule au nombre de sièges seulement — c’est ainsi que six personnes avec six paires de skis et six sacs à chaussures se retrouvent à tenir leur matériel sur les genoux pendant deux heures.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Déclarez précisément ce que vous emportez : skis, snowboards, sacs à chaussures, splitboard, poussette, sac airbag. Un opérateur sérieux s’en sert pour choisir le véhicule, pas pour ajouter un supplément.",
-      },
+        { type: "titre2", texte: "3. Les housses à skis sont-elles facturées ?" },
+        {
+          type: "paragraphe",
+          texte:
+            "Certains opérateurs facturent la housse, d’autres l’incluent, quelques-uns dimensionnent le véhicule au nombre de sièges seulement — c’est ainsi que six personnes avec six paires de skis et six sacs à chaussures se retrouvent à tenir leur matériel sur les genoux pendant deux heures.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Déclarez précisément ce que vous emportez : skis, snowboards, sacs à chaussures, splitboard, poussette, sac airbag. Un opérateur sérieux s’en sert pour choisir le véhicule, pas pour ajouter un supplément.",
+        },
 
-      { type: "titre2", texte: "4. Que se passe-t-il si le vol a du retard ?" },
-      {
-        type: "paragraphe",
-        texte:
-          "Les vols d’hiver vers les aéroports alpins sont souvent retardés : météo aux deux bouts, file de dégivrage, déroutement. La question est de savoir ce que l’opérateur en fait.",
-      },
-      {
-        type: "liste",
-        items: [
-          "Le chauffeur suit-il le vol, ou travaille-t-il sur l’heure réservée ?",
-          "Combien de temps d’attente est compris, et que se passe-t-il ensuite ?",
-          "Y a-t-il un numéro auquel quelqu’un répond à onze heures du soir ?",
-          "Et si le vol est dérouté sur un autre aéroport ?",
-          "Tout cela est-il facturé ?",
-        ],
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Le suivi du vol devrait être compris et gratuit. Si l’attente se facture au quart d’heure, vous achetez un taxi, pas un transfert.",
-      },
+        { type: "titre2", texte: "4. Que se passe-t-il si le vol a du retard ?" },
+        {
+          type: "paragraphe",
+          texte:
+            "Les vols d’hiver vers les aéroports alpins sont souvent retardés : météo aux deux bouts, file de dégivrage, déroutement. La question est de savoir ce que l’opérateur en fait.",
+        },
+        {
+          type: "liste",
+          items: [
+            "Le chauffeur suit-il le vol, ou travaille-t-il sur l’heure réservée ?",
+            "Combien de temps d’attente est compris, et que se passe-t-il ensuite ?",
+            "Y a-t-il un numéro auquel quelqu’un répond à onze heures du soir ?",
+            "Et si le vol est dérouté sur un autre aéroport ?",
+            "Tout cela est-il facturé ?",
+          ],
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Le suivi du vol devrait être compris et gratuit. Si l’attente se facture au quart d’heure, vous achetez un taxi, pas un transfert.",
+        },
 
-      { type: "titre2", texte: "5. Les sièges enfants" },
-      {
-        type: "paragraphe",
-        texte:
-          "La France, la Suisse, l’Italie et l’Autriche imposent toutes un dispositif homologué pour les enfants — en France, jusqu’à 10 ans. Les sièges doivent être gratuits, installés avant le départ et adaptés aux âges donnés à la réservation. Un chauffeur qui sort un rehausseur pour un enfant de trois ans au bord du trottoir est un mauvais signe, et une infraction.",
-      },
+        { type: "titre2", texte: "5. Les sièges enfants" },
+        {
+          type: "paragraphe",
+          texte:
+            "La France, la Suisse, l’Italie et l’Autriche imposent toutes un dispositif homologué pour les enfants — en France, jusqu’à 10 ans. Les sièges doivent être gratuits, installés avant le départ et adaptés aux âges donnés à la réservation. Un chauffeur qui sort un rehausseur pour un enfant de trois ans au bord du trottoir est un mauvais signe, et une infraction.",
+        },
 
-      { type: "titre2", texte: "6. L’équipement hiver du véhicule" },
-      {
-        type: "paragraphe",
-        texte:
-          "En Savoie et en Haute-Savoie, pneus hiver ou chaînes sont obligatoires du 1ᵉʳ novembre au 31 mars ; l’Autriche applique une règle voisine du 1ᵉʳ novembre au 15 avril, et l’Italie sur les routes alpines de la mi-novembre à la mi-avril. Demandez ce que le véhicule embarque. Dans la montée de Val Thorens ou de Flaine sur neige fraîche, ce n’est pas un détail administratif.",
-      },
+        { type: "titre2", texte: "6. L’équipement hiver du véhicule" },
+        {
+          type: "paragraphe",
+          texte:
+            "En Savoie et en Haute-Savoie, pneus hiver ou chaînes sont obligatoires du 1ᵉʳ novembre au 31 mars ; l’Autriche applique une règle voisine du 1ᵉʳ novembre au 15 avril, et l’Italie sur les routes alpines de la mi-novembre à la mi-avril. Demandez ce que le véhicule embarque. Dans la montée de Val Thorens ou de Flaine sur neige fraîche, ce n’est pas un détail administratif.",
+        },
 
-      { type: "titre2", texte: "7. L’adresse, pas la station" },
-      {
-        type: "paragraphe",
-        texte:
-          "Donnez l’adresse exacte de votre logement, pas seulement le nom de la station. Plusieurs « stations » sont en réalité deux ou trois villages distants de plusieurs kilomètres — Crans et Montana, Recoin et Roche-Béranger à Chamrousse, Le Fayet et le village à Saint-Gervais, les quatre niveaux des Arcs. Et certaines ne se rejoignent pas du tout en voiture : Zermatt, Wengen et Mürren se terminent à une gare.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Un opérateur qui vous demande l’adresse avant de chiffrer est un opérateur qui y a déjà conduit.",
-      },
+        { type: "titre2", texte: "7. L’adresse, pas la station" },
+        {
+          type: "paragraphe",
+          texte:
+            "Donnez l’adresse exacte de votre logement, pas seulement le nom de la station. Plusieurs « stations » sont en réalité deux ou trois villages distants de plusieurs kilomètres — Crans et Montana, Recoin et Roche-Béranger à Chamrousse, Le Fayet et le village à Saint-Gervais, les quatre niveaux des Arcs. Et certaines ne se rejoignent pas du tout en voiture : Zermatt, Wengen et Mürren se terminent à une gare.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Un opérateur qui vous demande l’adresse avant de chiffrer est un opérateur qui y a déjà conduit.",
+        },
 
-      { type: "titre2", texte: "8. L’annulation, et ce qui est réellement promis" },
-      {
-        type: "paragraphe",
-        texte:
-          "Lisez les conditions d’annulation avant de payer, et vérifiez ce que dit la confirmation : catégorie de véhicule, nombre de passagers, heure de prise en charge, adresse, prix et ce qu’il comprend. Une confirmation qui dit seulement « transfert vers les Alpes » est un litige en préparation.",
-      },
+        { type: "titre2", texte: "8. L’annulation, et ce qui est réellement promis" },
+        {
+          type: "paragraphe",
+          texte:
+            "Lisez les conditions d’annulation avant de payer, et vérifiez ce que dit la confirmation : catégorie de véhicule, nombre de passagers, heure de prise en charge, adresse, prix et ce qu’il comprend. Une confirmation qui dit seulement « transfert vers les Alpes » est un litige en préparation.",
+        },
 
-      { type: "titre2", texte: "Quand réserver" },
-      {
-        type: "paragraphe",
-        texte:
-          "Dès que les vols sont confirmés. En février, les véhicules manquent avant les hébergements, surtout pour les arrivées du samedi, et les réservations précoces coûtent moins cher. Si vos dates sont souples, arriver en semaine économise une heure de trafic dans chaque sens sur les deux axes qui comptent — l’A40 vers Chamonix et la Tarentaise sous Moûtiers — et souvent le prix du billet.",
-      },
+        { type: "titre2", texte: "Quand réserver" },
+        {
+          type: "paragraphe",
+          texte:
+            "Dès que les vols sont confirmés. En février, les véhicules manquent avant les hébergements, surtout pour les arrivées du samedi, et les réservations précoces coûtent moins cher. Si vos dates sont souples, arriver en semaine économise une heure de trafic dans chaque sens sur les deux axes qui comptent — l’A40 vers Chamonix et la Tarentaise sous Moûtiers — et souvent le prix du billet.",
+        },
 
-      { type: "titre2", texte: "En une ligne" },
-      {
-        type: "paragraphe",
-        texte:
-          "Comparez des prix par véhicule, péages, skis, sièges enfants et attente compris, donnez l’adresse exacte, et réservez en même temps que le vol. Le reste est du détail — mais ces cinq points font la différence entre un transfert qui fonctionne et des vacances qui commencent mal.",
-      },
-    ],
+        { type: "titre2", texte: "En une ligne" },
+        {
+          type: "paragraphe",
+          texte:
+            "Comparez des prix par véhicule, péages, skis, sièges enfants et attente compris, donnez l’adresse exacte, et réservez en même temps que le vol. Le reste est du détail — mais ces cinq points font la différence entre un transfert qui fonctionne et des vacances qui commencent mal.",
+        },
+      ],
+    },
   },
 };

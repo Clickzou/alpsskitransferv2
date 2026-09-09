@@ -4,10 +4,12 @@ import { CHEMINS_NOINDEX } from "@/data/redirections";
 import { AIRPORTS } from "@/lib/airports";
 import { articlesPublies } from "@/lib/articles";
 import { PAGES } from "@/lib/pages";
-import { PAGES_FR } from "@/lib/pages/fr";
+import { pagesDeLaLangue } from "@/lib/pages/intl";
 import { PAYS } from "@/lib/pays";
-import { RESORTS_MIGRES, SLUG_PAYS, resortsFr } from "@/lib/resorts";
-import { SEGMENTS_FR, segmentTrajet, TRANSFERS, trajetsFr } from "@/lib/transfers";
+import { LANGS_SECONDAIRES } from "@/lib/i18n";
+import { cheminStation, cheminTrajet } from "@/lib/intl/liens";
+import { RESORTS_MIGRES, SLUG_PAYS, resortsTraduits } from "@/lib/resorts";
+import { segmentTrajet, TRANSFERS, trajetsTraduits } from "@/lib/transfers";
 import { resortParSlug } from "@/lib/resorts";
 
 /**
@@ -85,66 +87,79 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  // Français : uniquement les pages qui existent réellement.
-  const francais = [
-    ...(resortsFr().length > 0
-      ? [
+  /*
+    Les langues traduites : uniquement les pages qui existent réellement.
+
+    Tout est dérivé des registres, y compris la présence de l'accueil et de
+    l'index du blog. Une langue dont aucune station n'est traduite n'apparaît
+    pas ici — et le sitemap du site actuel, qui liste des 404 et des pages de
+    tunnel, est précisément ce que cette dérivation empêche.
+  */
+  const traduites = LANGS_SECONDAIRES.flatMap((lang) => {
+    const stationsTraduites = resortsTraduits(lang);
+    const articlesTraduits = articlesPublies().filter((a) => a.traductions?.[lang]);
+    const pagesTraduites = pagesDeLaLangue(lang);
+
+    // Une langue sans aucune page n'a pas d'accueil à annoncer.
+    if (
+      stationsTraduites.length === 0 &&
+      pagesTraduites.length === 0 &&
+      articlesTraduits.length === 0
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        url: absoluteUrl(`/${lang}/`),
+        lastModified: modifie,
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      },
+      ...pagesTraduites.map((page) => ({
+        url: absoluteUrl(`/${lang}/${page.slug}/`),
+        lastModified: modifie,
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })),
+      // L'index du blog n'existe que s'il y a au moins un article traduit.
+      ...(articlesTraduits.length > 0
+        ? [
+            {
+              url: absoluteUrl(`/${lang}/blog/`),
+              lastModified: modifie,
+              changeFrequency: "weekly" as const,
+              priority: 0.6,
+            },
+          ]
+        : []),
+      ...stationsTraduites.map((r) => ({
+        url: absoluteUrl(cheminStation(r, lang)!),
+        lastModified: modifie,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      })),
+      // Trajets : uniquement ceux dont la station ET le trajet sont traduits.
+      ...trajetsTraduits(lang).flatMap((trajet) => {
+        const station = stationsTraduites.find((r) => r.slug === trajet.resort);
+        if (!station) return [];
+        return [
           {
-            url: absoluteUrl("/fr/"),
+            url: absoluteUrl(cheminTrajet(station, trajet.airport, lang)!),
             lastModified: modifie,
-            changeFrequency: "weekly" as const,
-            priority: 0.8,
-          },
-        ]
-      : []),
-    // Les pages de conversion francaises.
-    ...PAGES_FR.map((page) => ({
-      url: absoluteUrl(`/fr/${page.slug}/`),
-      lastModified: modifie,
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-    // La liste du blog francais : elle n'existe que s'il y a des articles traduits.
-    ...(articlesPublies().some((a) => a.fr)
-      ? [
-          {
-            url: absoluteUrl("/fr/blog/"),
-            lastModified: modifie,
-            changeFrequency: "weekly" as const,
+            changeFrequency: "monthly" as const,
             priority: 0.6,
           },
-        ]
-      : []),
-    ...resortsFr().map((r) => ({
-      url: absoluteUrl(`/fr/transferts-ski/${r.fr!.slug}/`),
-      lastModified: modifie,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
-    // Trajets francais : uniquement ceux dont la station ET le trajet sont traduits.
-    ...trajetsFr().flatMap((trajet) => {
-      const station = resortsFr().find((r) => r.slug === trajet.resort);
-      if (!station) return [];
-      return [
-        {
-          url: absoluteUrl(
-            `/fr/transferts-ski/${station.fr!.slug}/${SEGMENTS_FR[trajet.airport].segment}/`,
-          ),
-          lastModified: modifie,
-          changeFrequency: "monthly" as const,
-          priority: 0.6,
-        },
-      ];
-    }),
-    ...articlesPublies()
-      .filter((a) => a.fr)
-      .map((a) => ({
-        url: absoluteUrl(`/fr/blog/${a.fr!.slug}/`),
+        ];
+      }),
+      ...articlesTraduits.map((a) => ({
+        url: absoluteUrl(`/${lang}/blog/${a.traductions![lang]!.slug}/`),
         lastModified: new Date(a.dateModification ?? a.datePublication),
         changeFrequency: "yearly" as const,
         priority: 0.5,
       })),
-  ];
+    ];
+  });
 
   const pages = racines
     .filter((p) => !CHEMINS_NOINDEX.includes(p.path.replace(/\/$/, "")))
@@ -163,6 +178,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...hubsAeroport,
     ...fonctionnelles,
     ...articles,
-    ...francais,
+    ...traduites,
   ];
 }

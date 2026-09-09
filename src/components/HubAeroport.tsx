@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Contenu from "@/components/Contenu";
+import Visuel from "@/components/Visuel";
 import Faq from "@/components/Faq";
 import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
@@ -95,7 +96,24 @@ export default function HubAeroport({ silo, slug }: { silo: string; slug: string
 
         {redige ? (
           <Section fond="blanc">
-            <Contenu blocs={redige.contenu} />
+            {/*
+              Texte à gauche, photo à droite sur la hauteur du texte. Le visuel
+              est celui du **pays**, pas de l'aéroport : le bandeau porte déjà la
+              photo de l'aéroport, et la répéter ici ne montrerait rien de
+              nouveau. Ce qui se joue dans cette section, ce sont les stations
+              qu'on rejoint.
+            */}
+            <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+              <Contenu blocs={redige.contenu} />
+              {pays?.visuel ? (
+                <Visuel
+                  nom={pays.visuel.nom}
+                  alt={pays.visuel.alt}
+                  sizes="(min-width: 1024px) 24rem, 100vw"
+                  className="h-full min-h-[16rem] w-full rounded-xl object-cover shadow-carte"
+                />
+              ) : null}
+            </div>
           </Section>
         ) : null}
 
@@ -148,7 +166,7 @@ export default function HubAeroport({ silo, slug }: { silo: string; slug: string
                     <td className="px-4 py-3">
                       <Link
                         className="font-medium text-alpine hover:text-marque"
-                        href={d.cheminStation}
+                        href={d.cheminTrajet ?? d.cheminStation}
                       >
                         {d.nom}
                       </Link>
@@ -158,16 +176,20 @@ export default function HubAeroport({ silo, slug }: { silo: string; slug: string
                       {duree(d.minutes)}
                     </td>
                     <td className="px-4 py-3">
-                      {d.cheminTrajet ? (
-                        <Link
-                          className="font-medium text-marque underline underline-offset-4"
-                          href={d.cheminTrajet}
-                        >
-                          Book this route
-                        </Link>
-                      ) : (
-                        <span className="text-alpine-600">On request</span>
-                      )}
+                      {/*
+                        Toutes les lignes sont réservables, pas seulement celles
+                        qui ont leur page de trajet. Le moteur chiffre n'importe
+                        quelle paire dont la distance est calculée — et elles le
+                        sont toutes ici, puisque `dessertes` écarte les autres.
+                        Afficher « On request » revenait à refuser une vente que
+                        le site sait conclure en trois clics.
+                      */}
+                      <Link
+                        className="font-medium text-marque underline underline-offset-4"
+                        href={lienReservation({ airport: aeroport.slug, resort: d.resort })}
+                      >
+                        Book this route
+                      </Link>
                     </td>
                   </tr>
                 ))}

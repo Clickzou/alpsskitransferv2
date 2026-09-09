@@ -2,7 +2,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import Visuel, { type NomVisuel } from "@/components/Visuel";
 import { ETAPES, REASSURANCES } from "@/data/accueil";
-import { lienReservation } from "@/lib/reservation/config";
+import type { Lang, LangueSecondaire } from "@/lib/i18n";
+import { CHEMIN_PAGE_RESERVATION, lienReservation } from "@/lib/reservation/config";
 
 /**
  * Le vocabulaire visuel de la home, disponible pour les pages du silo.
@@ -65,18 +66,65 @@ export function BoutonAction({
   href,
   children,
   className = "",
+  sur = "clair",
 }: {
   href: string;
   children: ReactNode;
   className?: string;
+  /**
+   * Le fond sur lequel le bouton est posé.
+   *
+   * Sur un fond clair, le vert d'action se détache franchement. Sur le bleu
+   * nuit des grands bandeaux, il ne s'en détache qu'à 3:1 — le bouton se voit,
+   * mais il ne saute pas aux yeux, ce qui est précisément son travail. L'or
+   * clair y monte à 7:1, avec du texte bleu nuit.
+   */
+  sur?: "clair" | "sombre";
 }) {
+  const couleurs =
+    sur === "sombre"
+      ? "bg-alpes-300 text-alpine hover:bg-alpes-300/90"
+      : "bg-marque text-white hover:bg-marque-600";
+
   return (
     <Link
       href={href}
-      className={`inline-block rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 ${className}`}
+      className={`inline-block rounded px-6 py-2.5 text-sm font-semibold transition ${couleurs} ${className}`}
     >
       {children}
     </Link>
+  );
+}
+
+/**
+ * Le lien éditorial vers la page de réservation, en ancre exacte.
+ *
+ * Il existe parce que **le bouton « Book now » ne suffit pas** à mailler cette
+ * page. Le bouton passe par `lienReservation()`, dont la destination change avec
+ * la variable d'environnement : le jour où le moteur maison est armé, tous ces
+ * boutons partent vers `/booking/` et `/book-ski-transfer-tickets/` — qui porte
+ * l'antériorité de la requête « book ski transfer tickets » — perd d'un coup ses
+ * liens entrants. Ce lien-ci vise la page éditoriale en dur, et ne bouge pas.
+ *
+ * L'ancre est le mot-clé de la page cible, ce qui n'a d'intérêt que si le lien
+ * est réellement utile au lecteur : il l'est ici, posé sous le bloc de
+ * réservation d'une page de station ou de trajet, là où le visiteur se demande
+ * comment cela se passe.
+ */
+export function LienBillets({ clair = false }: { clair?: boolean }) {
+  return (
+    <p className={`mt-3 text-xs ${clair ? "text-glacier-300" : "text-alpine-600"}`}>
+      First time with us? See how to{" "}
+      <Link
+        href={CHEMIN_PAGE_RESERVATION}
+        className={`underline underline-offset-2 ${
+          clair ? "hover:text-white" : "hover:text-marque"
+        }`}
+      >
+        book ski transfer tickets
+      </Link>
+      .
+    </p>
   );
 }
 
@@ -93,12 +141,22 @@ export function BoutonAction({
 export function HeroInterieur({
   image,
   children,
+  debordant = false,
 }: {
   image?: { nom: NomVisuel; alt: string };
   children: ReactNode;
+  /**
+   * Laisse un enfant dépasser du bandeau. `overflow-clip` rogne l'image de fond
+   * exactement comme `overflow-hidden`, mais sans créer de conteneur de
+   * défilement — c'est ce qui permet à la liste de suggestions du formulaire de
+   * recherche de descendre sous le bandeau au lieu d'y être coupée.
+   */
+  debordant?: boolean;
 }) {
   return (
-    <section className="relative isolate overflow-hidden bg-alpine text-white">
+    <section
+      className={`relative isolate ${debordant ? "overflow-clip" : "overflow-hidden"} bg-alpine text-white`}
+    >
       {image ? (
         <>
           <Visuel
@@ -139,13 +197,19 @@ export function Section({
   fond = "blanc",
   children,
   className = "",
+  id,
 }: {
   fond?: keyof typeof FONDS;
   children: ReactNode;
   className?: string;
+  /**
+   * Ancre de section, pour un lien interne à la page. `scroll-mt` évite que
+   * l'en-tête collant ne recouvre le haut de la section une fois arrivé.
+   */
+  id?: string;
 }) {
   return (
-    <section className={FONDS[fond]}>
+    <section id={id} className={`${FONDS[fond]}${id ? " scroll-mt-24" : ""}`}>
       {/* `data-anime` ici couvre tout le site : chaque section d'une page de
           station, de trajet ou de hub apparaît au défilement sans que le
           gabarit ait à s'en occuper. */}
@@ -277,38 +341,82 @@ export function CarteLien({
  * à part entière ; `p` sur les pages du silo, où le plan de titres appartient au
  * contenu éditorial et ne doit pas être dilué par trois titres d'interface.
  */
-const REASSURANCES_FR = [
-  {
-    titre: "Prix garanti",
-    texte:
-      "Le prix est fixe, annoncé par véhicule avant la réservation, péages et housses à skis compris. Rien ne s'ajoute à l'arrivée.",
-  },
-  {
-    titre: "Véhicules équipés hiver",
-    texte:
-      "Pneus et chaînes à bord toute la saison, comme la loi l'impose en Savoie et Haute-Savoie du 1ᵉʳ novembre au 31 mars.",
-  },
-  {
-    titre: "Vol suivi",
-    texte:
-      "Votre chauffeur suit votre vol : un retard décale la prise en charge, sans supplément et sans démarche de votre part.",
-  },
-] as const;
+const REASSURANCES_TRADUITES: Record<LangueSecondaire, ReadonlyArray<{ titre: string; texte: string }>> = {
+  fr: [
+    {
+      titre: "Prix garanti",
+      texte:
+        "Le prix est fixe, annoncé par véhicule avant la réservation, péages et housses à skis compris. Rien ne s'ajoute à l'arrivée.",
+    },
+    {
+      titre: "Véhicules équipés hiver",
+      texte:
+        "Pneus et chaînes à bord toute la saison, comme la loi l'impose en Savoie et Haute-Savoie du 1ᵉʳ novembre au 31 mars.",
+    },
+    {
+      titre: "Vol suivi",
+      texte:
+        "Votre chauffeur suit votre vol : un retard décale la prise en charge, sans supplément et sans démarche de votre part.",
+    },
+  ],
+  de: [
+    {
+      titre: "Garantierter Festpreis",
+      texte:
+        "Der Preis steht vor der Buchung fest, pro Fahrzeug, Maut und Skisäcke inklusive. Bei der Ankunft kommt nichts hinzu.",
+    },
+    {
+      titre: "Winterausrüstung an Bord",
+      texte:
+        "Winterreifen und Ketten die ganze Saison — in Österreich vom 1. November bis 15. April Pflicht, in der Schweiz je nach Straßenzustand.",
+    },
+    {
+      titre: "Flug überwacht",
+      texte:
+        "Ihr Fahrer verfolgt Ihren Flug: Eine Verspätung verschiebt die Abholung, ohne Aufpreis und ohne Ihr Zutun.",
+    },
+  ],
+  it: [
+    {
+      titre: "Prezzo garantito",
+      texte:
+        "Il prezzo è fisso, indicato per veicolo prima della prenotazione, pedaggi e sacche da sci compresi. All'arrivo non si aggiunge nulla.",
+    },
+    {
+      titre: "Veicoli attrezzati per l'inverno",
+      texte:
+        "Pneumatici invernali e catene a bordo per tutta la stagione, come impongono le ordinanze in Italia, Francia e Svizzera.",
+    },
+    {
+      titre: "Volo monitorato",
+      texte:
+        "Il tuo autista segue il volo: un ritardo sposta la presa in carico, senza supplemento e senza che tu debba fare nulla.",
+    },
+  ],
+};
 
 export function BandeauReassurance({
   niveau = "p",
   langue = "en",
 }: {
   niveau?: "h2" | "p";
-  langue?: "en" | "fr";
+  langue?: Lang;
 }) {
   const Titre = niveau;
-  const promesses = langue === "fr" ? REASSURANCES_FR : REASSURANCES;
+  const promesses = langue === "en" ? REASSURANCES : REASSURANCES_TRADUITES[langue];
   return (
     <section className="border-b border-glacier-200 bg-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
         {promesses.map((r) => (
-          <div key={r.titre} className="flex gap-4">
+          /*
+            Un liseré bleu léger : il pose chacune des trois promesses comme un
+            bloc à part entière. Sans lui, les trois colonnes flottaient sur le
+            blanc et se lisaient comme un seul paragraphe en trois morceaux.
+          */
+          <div
+            key={r.titre}
+            className="flex gap-4 rounded-lg border border-alpine/15 p-5 transition hover:border-alpine/30"
+          >
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-alpes-50 text-alpes">
               <Coche />
             </span>
@@ -344,12 +452,12 @@ export function AppelAction({
 }) {
   const destination = lien ?? lienReservation();
   return (
-    <section className="bg-alpes text-white">
+    <section className="bg-alpine text-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2" data-anime>
         <div>
           <h2 className="font-display text-titre-section">{titre}</h2>
           <p className="mt-3 text-sm text-white/90">{texte ?? ETAPES.chapo}</p>
-          <BoutonAction href={destination} className="mt-6">
+          <BoutonAction sur="sombre" href={destination} className="mt-6">
             {action}
           </BoutonAction>
         </div>

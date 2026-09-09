@@ -1,4 +1,4 @@
-import type { Resort } from "./types";
+import type { TraductionStation } from "./types";
 
 /**
  * Traductions françaises des pages de station.
@@ -12,8 +12,6 @@ import type { Resort } from "./types";
  * côté francophone, et leurs trajets au départ de Genève et de Lyon. Le français
  * n'est pas un miroir de l'anglais ; il est écrit, pas traduit mot à mot.
  */
-export type TraductionStation = NonNullable<Resort["fr"]>;
-
 export const TRADUCTIONS_FR: Record<string, TraductionStation> = {
   "val-thorens": {
     slug: "val-thorens",

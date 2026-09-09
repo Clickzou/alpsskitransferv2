@@ -56,6 +56,55 @@ const IMAGES = [
   { source: "geneve-airport.jpg", nom: "aeroport-geneve", largeur: 800 },
   { source: "alps-ski-transfers-from-paris.jpg", nom: "aeroport-paris-milan-turin", largeur: 800 },
   { source: "frequently-asked-questions-alps-ski-transfers.jpg", nom: "faq", largeur: 800 },
+  /*
+   * L'illustration de l'introduction de `/book-ski-transfer-tickets/`. Elle
+   * occupe une colonne d'environ 500 px sur écran large, jamais la pleine
+   * largeur : 1 000 px suffisent pour la servir nette en écran dense.
+   */
+  {
+    source: "popular-alps-ski-transfer.jpg",
+    nom: "popular-alps-ski-transfer",
+    largeur: 1000,
+  },
+  /* Le bandeau de `/private-airport-transfers-to-alps-ski-resort/`, à fond perdu. */
+  {
+    source: "private-airport-ski-transfer.jpg",
+    nom: "transfert-prive",
+    largeur: 1400,
+    qualite: 68,
+  },
+  /* L'illustration de son introduction, en colonne. */
+  {
+    source: "private-ski-transfers.jpg",
+    nom: "transfert-prive-detail",
+    largeur: 1000,
+  },
+  /* L'illustration de l'introduction de l'index des destinations. */
+  {
+    source: "ski-resort-transfers.jpg",
+    nom: "stations-index",
+    largeur: 1000,
+  },
+  /*
+   * Route enneigée et pneu hiver, pour la page des groupes. Le visuel que le
+   * WordPress y employait — une limousine Hummer de mariage immatriculée en
+   * Russie — ne montrait rien de la flotte réelle : une photo qui ment sur le
+   * service vaut moins que pas de photo du tout.
+   */
+  {
+    source: "compare-ski-transfers.jpg",
+    nom: "route-hiver",
+    largeur: 1000,
+  },
+  /*
+   * Un visuel par hub pays, à droite de son introduction. Chaque pays a le sien :
+   * illustrer la France avec une photo autrichienne serait le genre de mensonge
+   * visuel que le registre des stations s'interdit déjà.
+   */
+  { source: "french-ski-resort.jpg", nom: "pays-france", largeur: 1000 },
+  { source: "swiss-ski-resorts.jpg", nom: "pays-switzerland", largeur: 1000 },
+  { source: "italy-ski-resorts.jpg", nom: "pays-italy", largeur: 1000 },
+  { source: "austria-ski-resorts.jpg", nom: "pays-austria", largeur: 1000 },
 ];
 
 /**

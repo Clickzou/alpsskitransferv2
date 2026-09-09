@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
+import { usePanier } from "@/components/panier/PanierProvider";
 import { DEVISES, convertir, type CodeDevise } from "@/lib/reservation/devises";
 import type { Lieu } from "@/lib/reservation/lieux";
 import { TEXTES, type LangueTunnel } from "@/lib/reservation/textes";
@@ -121,6 +122,9 @@ export default function Tunnel({
   const [devise, setDevise] = useState<CodeDevise>("EUR");
 
   const [devis, setDevis] = useState<Devis | null>(null);
+  const { ajouter } = usePanier();
+  /** Retour d'ajout, par catégorie : « ajouté », « déjà là », « panier plein ». */
+  const [ajout, setAjout] = useState<{ categorie: string; etat: string } | null>(null);
   const [choix, setChoix] = useState<OptionVehicule | null>(null);
   const [surMesure, setSurMesure] = useState<string | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -500,6 +504,51 @@ export default function Tunnel({
                     ) : null}
                   </span>
                 </button>
+
+                {/*
+                  Ajouter plutôt que réserver : un séjour se compose souvent d'un
+                  aller et d'un retour, parfois de deux véhicules.
+                  La condition porte sur le **prix calculé**, pas sur
+                  `encaissable` : ce dernier reste faux tant que le client n'a pas
+                  validé le barème, ce qui rendait le panier inatteignable. Une
+                  course chiffrée se met dans la liste ; que le paiement en ligne
+                  soit ouvert ou non se tranche au moment de payer, et
+                  `/api/panier` sait faire les deux.
+                */}
+                {option.total > 0 ? (
+                  <div className="mt-2 flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const etat = ajouter({
+                          from: de.slug ?? de.texte,
+                          to: vers.slug ?? vers.texte,
+                          when,
+                          passengers,
+                          categorie: option.categorie,
+                          bags,
+                          skis,
+                          libelleDepart: devis.trajet.aeroport,
+                          libelleArrivee: devis.trajet.station,
+                          prixIndicatif: option.total,
+                        });
+                        setAjout({ categorie: option.categorie, etat });
+                      }}
+                      className="text-xs font-semibold text-marque underline underline-offset-2 hover:text-marque-600"
+                    >
+                      Add to my transfers
+                    </button>
+                    {ajout?.categorie === option.categorie ? (
+                      <span className="text-xs text-alpine-600">
+                        {ajout.etat === "ajoute"
+                          ? "Added — see your list in the menu."
+                          : ajout.etat === "deja-present"
+                            ? "Already in your list."
+                            : "Your list is full."}
+                      </span>
+                    ) : null}
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>

@@ -15,6 +15,7 @@ export const stationsSansVoitures: Article = {
     "Zermatt, Wengen, Mürren, Avoriaz, Saas-Fee: where the road stops, what happens to your luggage, and how to time the last stretch of the journey.",
   chapo:
     "Some of the best resorts in the Alps cannot be reached by car, and the transfer companies that drive you there are not always keen to mention it. Here is where the road actually stops for each of them, what happens to your skis and your suitcases at that point, and how to plan the last twenty minutes so they are the pleasant part of the journey rather than the moment it goes wrong.",
+  visuel: { nom: "station-avoriaz", alt: "Avoriaz, a car-free resort reached on foot from the drop-off" },
   datePublication: "2026-09-08",
   auteur: "Alps Ski Transfers",
 

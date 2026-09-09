@@ -13,70 +13,25 @@ export const genevaAirportToSestriere: Transfer = {
     "Sestriere is 242 km from Geneva Airport, about 3 hours 10 minutes: down the Maurienne, through the Fréjus tunnel, then up from Oulx to the pass the resort is built on, at 2,035 m. It is the highest village of the Milky Way and one of the highest in Italy — an Olympic resort with snow to match. Turin is closer, but Geneva flies all week. Price fixed per vehicle with the tunnel toll included, ski bags and child seats included, flight tracked.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "Motorway past Annecy and Chambéry, up the Maurienne to Modane, and through the 12.9 km Fréjus tunnel to Bardonecchia. From Oulx the road climbs 20 km to the Sestriere pass at 2,035 m — the last stretch is a mountain road, cleared and gritted, and the reason a proper vehicle matters on this run.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The Fréjus toll is included in the price we quote, as are all motorway tolls on both sides of the border.",
-    },
-
-    { type: "titre2", texte: "Winter timings" },
-    {
-      type: "paragraphe",
-      texte:
-        "3 h 10 on a clear road, and up to 45 minutes more on a February Saturday when the Maurienne and the tunnel are busy. Sestriere’s altitude means the last climb holds snow: winter tyres and chains are on board, as both French and Italian law require.",
-    },
-
-    { type: "titre2", texte: "Sestriere and the Milky Way" },
-    {
-      type: "paragraphe",
-      texte:
-        "Sestriere was built in the 1930s by the Agnelli family as Italy’s first purpose-built ski resort, and it hosted the alpine events of the 2006 Turin Olympics. It sits at the centre of the Via Lattea — around 400 km of piste linked with Sauze d’Oulx, Sansicario, Cesana, Claviere and Montgenèvre across the French border, all on one pass.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Sestriere runs 242 km and takes about 3 h 11 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "paragraphe", texte: "This transfer crosses a border: you land in Switzerland and finish in Italy. There is nothing for you to arrange — our vehicles carry what each country requires in winter, and the crossing itself rarely costs more than a few minutes." },
+    { type: "titre2", texte: "The drive from Geneva to Sestriere" },
+    { type: "paragraphe", texte: "At 3 h 11, this is a long transfer. Your driver plans a comfort stop, and it is worth telling us if you are travelling with young children so we build the journey around them. Motorway covers most of it; the climb at the end is the slow part." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Geneva the best airport for Sestriere?" },
+    { type: "paragraphe", texte: "Not the closest: Turin reaches Sestriere in 1 h 38, 1 h 33 less than from Geneva. That said, Geneva carries more flights on many routes, and an earlier arrival with a longer drive often beats a late landing with a short one." },
+    { type: "liste", items: ["Turin — 107 km, 1 h 38", "Geneva — 242 km, 3 h 11 (this route)"] },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "The Fréjus tunnel toll and all motorway tolls.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door in Sestriere, Borgata, Sansicario or Cesana.",
-      ],
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Sestriere transfer?",
-      reponse:
-        "About 3 hours 10 minutes for 242 km through the Fréjus tunnel, including the 20 km climb from Oulx. Allow 45 minutes more on a busy Saturday.",
-    },
-    {
-      question: "Would Turin be quicker?",
-      reponse:
-        "Yes — around an hour and a half. Geneva is the alternative when Turin has no flight that suits your dates.",
-    },
-    {
-      question: "Can we ski to Montgenèvre from Sestriere?",
-      reponse:
-        "Yes, on the Via Lattea pass — around 400 km of piste linked across the French-Italian border, including Sauze d’Oulx, Cesana and Claviere.",
-    },
-    {
-      question: "Are the tunnel toll and ski bags included?",
-      reponse:
-        "Both, along with child seats and all motorway tolls. Nothing is payable on the day.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Sestriere?", reponse: "About 3 h 11 for 242 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Sestriere cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Sestriere?", reponse: "Turin, at 1 h 38 for 107 km. From Geneva it is 3 h 11. We serve Sestriere from 2 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

@@ -144,9 +144,18 @@ d'où une forme plus courte.
   back-office des courses) — le module étant inclus au forfait, elles ne changent pas
   le prix mais toute la charge : arbitrer au plus simple. La solution technique est
   tranchée : Next + Stripe Checkout + Supabase.
-- **Les coordonnées de l'entreprise** (`src/data/site.ts`) et la fiche Google, dont
-  le traitement dépend d'un préalable juridique — quelle entité opère réellement les
-  transferts.
+- ~~Les coordonnées de l'entreprise et le préalable juridique~~ — **réglé le
+  9 septembre 2026**. L'exploitant est **NM Transports 73** (Nassim Matmati,
+  entreprise individuelle, SIREN 889 065 165), 317 rue de la Bionne, 73000 Chambéry,
+  `contact@alpsskitransfers.com`, +33 7 69 78 91 89. Activité déclarée : transport de
+  voyageurs par taxi et VTC — ce qui légitime le balisage `TaxiService`. Tout est dans
+  `src/data/site.ts` et émis par le `LocalBusiness`.
+- **La fiche Google** doit maintenant porter **les mêmes** nom, adresse et téléphone :
+  elle pointe encore l'adresse londonienne, et une divergence site / fiche est le
+  signal qui coûte le plus cher en référencement local.
+- **Les mentions légales** — un site édité depuis la France doit publier l'identité de
+  son éditeur. Les données sont réunies, la page reste à écrire. `cookie-policy-uk`
+  est par ailleurs à revoir : l'éditeur est français, le RGPD s'applique.
 
 ## Calendrier
 

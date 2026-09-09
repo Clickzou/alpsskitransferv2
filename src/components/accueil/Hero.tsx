@@ -1,8 +1,6 @@
 import Visuel from "@/components/Visuel";
 import { HERO } from "@/data/accueil";
-import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
 import { LIEUX } from "@/lib/reservation/lieux";
-import { TRANSFERS, segmentTrajet } from "@/lib/transfers";
 import FormulaireRecherche from "./FormulaireRecherche";
 
 /**
@@ -13,24 +11,6 @@ import FormulaireRecherche from "./FormulaireRecherche";
  * to Alpine Resorts ».
  */
 export default function Hero() {
-  /*
-   * Le catalogue de lieux est construit ici, côté serveur, et passé au champ
-   * sous sa forme réduite : `RESORTS_MIGRES` contient le contenu complet des
-   * 68 pages de station, plusieurs centaines de kilo-octets qui n'ont rien à
-   * faire dans le navigateur.
-   */
-  const liaisons = TRANSFERS.flatMap((t) => {
-    const station = RESORTS_MIGRES.find((r) => r.slug === t.resort);
-    if (!station) return [];
-    return [
-      {
-        airport: t.airport,
-        resort: t.resort,
-        chemin: `/${SLUG_PAYS[station.country]}/${station.slug}/${segmentTrajet(t.airport)}/`,
-      },
-    ];
-  });
-
   // `overflow-clip` plutôt que `overflow-hidden` : il rogne l'image de fond comme
   // avant, mais laisse la liste de suggestions déborder du bandeau.
   return (
@@ -52,20 +32,22 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="mx-auto max-w-6xl px-4 py-section sm:py-section-lg">
+      {/*
+        Le bandeau gagne 100 px sur grand écran (demande du 10 septembre 2026) :
+        50 px de plus en haut et en bas. Le supplément est porté par le padding
+        et non par une hauteur fixe — la photo est un fond, et un bandeau qui ne
+        s'adapte plus à son contenu finit par le tronquer sur les écrans courts.
+        Sur mobile, le rythme reste celui du reste du site.
+      */}
+      <div className="mx-auto max-w-6xl px-4 py-section sm:py-[calc(theme(spacing.section-lg)+50px)]">
         <div className="text-center">
           {/*
-            Composition validée par le client : l'accroche verte, puis le titre
-            sur le bandeau magenta. Ce qui change ici est l'exécution — le titre
-            passe à la serif du site et à une taille lisible, et le bandeau ne
-            court plus sur toute la largeur.
+            L'accroche « Need a ride ? » a été retirée le 10 septembre 2026 : le
+            titre dit déjà ce que fait l'entreprise, et deux aplats de couleur
+            empilés au-dessus du formulaire retardaient l'accès à ce que le
+            visiteur vient faire.
           */}
-          <p className="inline-block rounded-full bg-alpes px-8 py-3 font-display text-titre-section font-semibold text-white shadow-carte">
-            {HERO.accroche}
-          </p>
-          {/* Le titre passe à la ligne sous l'accroche : côte à côte, les deux
-              aplats de couleur se touchaient et formaient un seul bloc confus. */}
-          <div className="mt-4">
+          <div>
             <h1 className="mx-auto inline-block max-w-3xl text-balance rounded-2xl bg-marque px-7 py-3 font-display text-lg leading-snug text-white shadow-carte sm:text-xl">
               {HERO.titre}
             </h1>
@@ -79,7 +61,7 @@ export default function Hero() {
           les suggestions passaient sous les tuiles de chiffres qui le suivent.
         */}
         <div className="relative z-20 mt-10">
-          <FormulaireRecherche lieux={LIEUX} liaisons={liaisons} />
+          <FormulaireRecherche lieux={LIEUX} />
         </div>
 
         {/* Les trois chiffres qui répondent à « est-ce que ça me concerne ? » */}

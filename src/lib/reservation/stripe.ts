@@ -15,14 +15,25 @@ export function stripeConfigure(): boolean {
   return Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
+/** Une course sur la page de paiement. Montant en euros, converti en centimes ici. */
+export interface LigneCheckout {
+  intitule: string;
+  description: string;
+  montant: number;
+}
+
 export interface DemandeCheckout {
   /** Notre référence de réservation, retrouvée telle quelle dans le webhook. */
   reference: string;
-  /** Libellé affiché sur la page de paiement. */
-  intitule: string;
-  description: string;
-  /** Montant en euros. Converti en centimes ici, une seule fois. */
-  montant: number;
+  /**
+   * Les courses à payer, une ligne par transfert.
+   *
+   * Un séjour se paie souvent en deux courses — l'aller et le retour — et le
+   * panier peut en réunir davantage. Stripe les affiche alors une par une sur
+   * la page de paiement, ce qui vaut mieux qu'un total opaque : le client
+   * vérifie ce qu'il paie avant de payer.
+   */
+  lignes: LigneCheckout[];
   email: string;
   urlSucces: string;
   urlAnnulation: string;
@@ -46,12 +57,18 @@ export async function creerSessionCheckout(
     cancel_url: demande.urlAnnulation,
     customer_email: demande.email,
     client_reference_id: demande.reference,
-    "line_items[0][quantity]": "1",
-    "line_items[0][price_data][currency]": "eur",
-    "line_items[0][price_data][product_data][name]": demande.intitule,
-    "line_items[0][price_data][product_data][description]": demande.description,
+  });
+
+  demande.lignes.forEach((ligne, i) => {
+    corps.set(`line_items[${i}][quantity]`, "1");
+    corps.set(`line_items[${i}][price_data][currency]`, "eur");
+    corps.set(`line_items[${i}][price_data][product_data][name]`, ligne.intitule);
+    corps.set(`line_items[${i}][price_data][product_data][description]`, ligne.description);
     // Stripe raisonne en centimes : la conversion se fait ici et nulle part ailleurs.
-    "line_items[0][price_data][unit_amount]": String(Math.round(demande.montant * 100)),
+    corps.set(
+      `line_items[${i}][price_data][unit_amount]`,
+      String(Math.round(ligne.montant * 100)),
+    );
   });
   corps.set("metadata[reference]", demande.reference);
   for (const [cle, valeur] of Object.entries(demande.metadonnees ?? {})) {

@@ -34,6 +34,33 @@ const apercu = args.includes("--apercu") ? args[args.indexOf("--apercu") + 1] : 
 /** Pages servies mais hors index : elles n'ont rien à faire dans les résultats. */
 const NOINDEX = new Set(["thanks-for-your-inquiry", "cookie-policy-uk", "privacy"]);
 
+/**
+ * Pages refondues à la main, que ce script ne doit plus écraser.
+ *
+ * `book-ski-transfer-tickets` est la page de conversion du silo,
+ * `private-airport-transfers-to-alps-ski-resort` sa page de service : chacune a
+ * son gabarit et son contenu structuré dans `data/`. Leur module de `lib/pages/`
+ * ne porte plus que les metas, le H1 et la FAQ, réécrits — les régénérer depuis
+ * le WordPress y réintroduirait les mentions de transfert partagé, que le site ne
+ * vend pas, et pour la seconde le bloc d'aéroports publié deux fois.
+ */
+const REFONDUES = new Set([
+  "book-ski-transfer-tickets",
+  "private-airport-transfers-to-alps-ski-resort",
+  // La politique de cookies reprise faisait trois mots : il n'y a rien à
+  // reprendre, et la réécrire depuis le WordPress effacerait le texte RGPD.
+  "cookie-policy-uk",
+  // L'index des destinations : sa liste est générée depuis le registre des
+  // stations, pas reprise du WordPress qui n'en montrait que onze sur soixante-huit.
+  "ski-resort-transfers",
+  // Groupes et professionnels : le mot-clé du WordPress — « special inquiry
+  // ski transfer » — n'existe pas dans les moteurs de recherche.
+  "inquiry",
+  // La FAQ : ses questions vivaient dans des accordéons Elementor, donc hors
+  // du texte repris. Les régénérer redonnerait des réponses sans questions.
+  "general-questions",
+]);
+
 const migration = await readFile(
   path.join(RACINE, "src", "data", "redirections-migration.ts"),
   "utf8",
@@ -126,6 +153,7 @@ if (apercu) {
 }
 
 for (const r of resultats) {
+  if (REFONDUES.has(r.slug)) continue;
   await writeFile(
     path.join(RACINE, "src", "lib", "pages", `${r.slug}.ts`),
     moduleTs(r.slug, r.page, r.donnees),

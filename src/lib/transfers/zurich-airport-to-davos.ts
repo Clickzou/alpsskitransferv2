@@ -10,23 +10,25 @@ export const zurichAirportToDavos: Transfer = {
   resort: "davos",
 
   metaTitre: "Zurich to Davos Transfer | Book Now for Best Prices",
-  metaDescription: "Secure your Zurich to Davos transfer today! Private & shared options available. Fast, reliable, and comfortable ski transfers – Book now!",
+  metaDescription: "Secure your Zurich to Davos transfer today! Private transfers, door to door. Fast, reliable, and comfortable ski transfers – Book now!",
   h1: "Zurich to Davos Transfers",
-  chapo: "Planning your Zurich to Davos transfer? Whether you choose a private or shared transfer, we ensure a smooth, stress-free journey from Zurich Airport or city center to Davos, one of Switzerland’s most prestigious ski resorts. Our door-to-door transfer service guarantees comfort and reliability, taking you directly to your ski accommodation without hassle.",
+  chapo: "Planning your Zurich to Davos transfer? We ensure a smooth, stress-free journey from Zurich Airport or city center to Davos, one of Switzerland’s most prestigious ski resorts. Our door-to-door transfer service guarantees comfort and reliability, taking you directly to your ski accommodation without hassle.",
 
   contenu: [
-    { type: "paragraphe", texte: "Avoid the complications of public transport and long waits at the train station. Our Zurich to Davos transfers offer flexible departure times, spacious vehicles, and the convenience of luggage space for ski equipment. With professional English-speaking drivers, real-time flight tracking, and a commitment to safety, we ensure your trip is efficient and relaxing. Whether you are traveling solo, as a family, or in a group, our Zurich to Davos ski transfer is designed to meet your needs." },
-    { type: "paragraphe", texte: "Booking in advance allows you to secure the best price, avoid last-minute availability issues, and enjoy a premium travel experience tailored to your schedule. Choose between affordable shared shuttles or luxury private transfers, and let us handle the logistics while you focus on your ski adventure in Davos." },
-    { type: "titre2", texte: "Zurich to Davos – Route Details & Pricing" },
-    { type: "paragraphe", texte: "The Zurich to Davos route covers approximately 150 km, with a travel time of 1h 50min to 2h 15min, depending on weather and traffic conditions. The drive takes you through the picturesque Swiss countryside, passing through scenic valleys and Alpine landscapes before reaching the world-famous ski resort of Davos." },
-    { type: "paragraphe", texte: "Our Zurich to Davos transfers provide safe, direct transportation, navigating through Switzerland’s well-maintained mountain roads. Unlike trains or public transport, our transfers eliminate the need for multiple connections, ensuring a comfortable journey in winter conditions." },
-    { type: "titre3", texte: "💰 Price Range:" },
-    { type: "liste", items: ["Shared Transfer: Starting from €65 per person", "Private Transfer: Starting from €320 per vehicle (up to 4 passengers)"] },
-    { type: "paragraphe", texte: "For larger groups or VIP options, contact us for a custom quote." },
-    { type: "titre3", texte: "Our vehicles" },
+    { type: "paragraphe", texte: "The road from Zurich Airport to Davos runs 166 km and takes about 2 h 36 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "titre2", texte: "The drive from Zurich to Davos" },
+    { type: "paragraphe", texte: "2 h 36 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "What the price includes" },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    { question: "How to Book Your Ski Transfer from Zurich to Davos?", reponse: "Booking your Zurich to Davos transfer is simple and ensures a hassle-free start to your ski trip. Follow these steps to secure your ride: ✅ 1. Enter your travel details – Select your pick-up point (Zurich Airport or Zurich city) and Davos accommodation. ✅ 2. Choose your transfer type – Pick between a shared shuttle or a private transfer for your group. ✅ 3. Confirm your booking – Get instant confirmation and secure payment options. ✅ 4. Meet your driver – Your professional driver will be waiting at the designated spot for a seamless pickup. Book early to secure the best price and guarantee availability during peak ski season!" },
+    { question: "How long is the transfer from Zurich Airport to Davos?", reponse: "About 2 h 36 for 166 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Zurich to Davos cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

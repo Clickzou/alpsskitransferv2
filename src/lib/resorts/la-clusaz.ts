@@ -85,11 +85,11 @@ export const laClusaz: Resort = {
         "Ski and snowboard bags travel free, and the vehicle is sized to the equipment you declare rather than to the head count. Child and booster seats are free too, fitted before departure — French law requires an approved restraint for every child under 10.",
     },
 
-    { type: "titre2", texte: "Private or shared, and when to book" },
+    { type: "titre2", texte: "Which vehicle, and when to book" },
     {
       type: "paragraphe",
       texte:
-        "On a transfer this short, a private vehicle is often barely more than the seats it replaces, and it leaves the moment you land. A shared transfer is cheaper per person with flexible timings. Book as soon as your flights are confirmed: the Aravis fill for the French and Belgian school holidays, and vehicles go early.",
+        "On a transfer this short, a private vehicle is often barely more than the seats it replaces, and it leaves the moment you land. The vehicle category is set by your group and your luggage — in winter the boot fills before the seats do. Book as soon as your flights are confirmed: the Aravis fill for the French and Belgian school holidays, and vehicles go early.",
     },
   ],
 

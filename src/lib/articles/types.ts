@@ -1,3 +1,5 @@
+import type { NomVisuel } from "@/components/Visuel";
+import type { LangueSecondaire } from "@/lib/i18n";
 import type { BlocContenu } from "@/lib/resorts/types";
 
 /**
@@ -17,6 +19,15 @@ export interface Article {
   dateModification?: string;
   auteur: string;
   image?: { src: string; alt: string };
+  /**
+   * Visuel de tête, préparé par `npm run images:preparer`.
+   *
+   * Distinct de `image`, qui sert l'aperçu des réseaux sociaux : celui-ci est
+   * affiché par le site, en AVIF avec ses dimensions, donc sans décalage de
+   * mise en page. Un article sans visuel reste lisible — la carte tombe alors
+   * sur une composition typographique.
+   */
+  visuel?: { nom: NomVisuel; alt: string };
   contenu: BlocContenu[];
   /**
    * Maillage sortant explicite : slugs de stations et de trajets que l'article
@@ -25,12 +36,16 @@ export interface Article {
    */
   stationsLiees?: string[];
   brouillon?: boolean;
-  fr?: {
-    slug: string;
-    titre: string;
-    metaTitre: string;
-    metaDescription: string;
-    chapo: string;
-    contenu: BlocContenu[];
-  };
+  /** Les traductions de l'article, par langue. Absente = pas de version. */
+  traductions?: Partial<Record<LangueSecondaire, TraductionArticle>>;
+}
+
+/** Un article dans une autre langue. */
+export interface TraductionArticle {
+  slug: string;
+  titre: string;
+  metaTitre: string;
+  metaDescription: string;
+  chapo: string;
+  contenu: BlocContenu[];
 }

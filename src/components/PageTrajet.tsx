@@ -12,12 +12,14 @@ import {
   CarteLien,
   EnTeteSection,
   HeroInterieur,
+  LienBillets,
   Reperes,
   Section,
 } from "@/components/gabarit/Sections";
 import { DISTANCES } from "@/data/distances";
 import { airportParSlug } from "@/lib/airports";
 import { duree } from "@/lib/airports/dessertes";
+import { alternativesTrajet } from "@/lib/intl/liens";
 import { PAYS } from "@/lib/pays";
 import { lienReservation } from "@/lib/reservation/config";
 import { SLUG_PAYS, resortParSlug } from "@/lib/resorts";
@@ -81,7 +83,7 @@ export default function PageTrajet({
 
   return (
     <>
-      <Header lang="en" />
+      <Header lang="en" alternatives={alternativesTrajet(trajet, station, "en")} />
       <main id="contenu">
         <HeroInterieur
           image={{ nom: "route-alpine", alt: "Route de montagne enneigée au coucher du soleil" }}
@@ -164,6 +166,7 @@ export default function PageTrajet({
                 <BoutonAction href={lienReservation({ airport, resort })} className="mt-4">
                   Book now
                 </BoutonAction>
+                <LienBillets clair />
               </div>
             </aside>
           </div>

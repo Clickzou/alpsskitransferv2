@@ -1,105 +1,77 @@
 import type { PageFonctionnelle } from "./types";
 
 /**
- * Repris de /private-airport-transfers-to-alps-ski-resort/ (WordPress, 2157 mots) par `npm run migrer:pages`.
+ * `/private-airport-transfers-to-alps-ski-resort/` — page de service du silo.
  * URL conservée par le plan de migration : ne pas la déplacer.
+ *
+ * **Ce module n'est plus produit par `npm run migrer:pages`.** La page a été
+ * refondue le 9 septembre 2026 : gabarit `components/PageTransfertsPrives`,
+ * contenu structuré dans `data/page-transferts-prives.ts`. Ne reste ici que ce
+ * que la route et le contrôle SEO lisent — metas, H1, chapô, FAQ.
+ *
+ * Mot-clé propriétaire : **« private airport ski transfer »**. La carte
+ * d'intention et le détail de la refonte sont dans l'en-tête du fichier de
+ * données ; en deux mots, la reprise WordPress publiait le bloc des dix
+ * aéroports **deux fois**, des listes de stations tronquées à une ligne, des
+ * réponses de FAQ amputées des listes qui les complétaient, et sept mentions de
+ * transfert partagé.
+ *
+ * La FAQ ci-dessous est **recomposée** : chaque réponse récupère la liste qui
+ * lui appartenait et qui traînait dans le corps de page.
  */
 export const privateAirportTransfersToAlpsSkiResort: PageFonctionnelle = {
   slug: "private-airport-transfers-to-alps-ski-resort",
-  metaTitre: "Private Airport Ski Transfer | Fast Booking, Best Price",
-  metaDescription: "Book your Private Airport Ski Transfer for a fast, reliable, and door-to-door ride to top ski resorts. Comfort & flexibility – Book online now!",
-  h1: "Book Your Private Airport Ski Transfer – Fast, Reliable & Stress-Free",
-  chapo: "Looking for a Private Airport Ski Transfer that guarantees a quick, comfortable, and reliable journey to your ski resort in the French Alps? Our airport transfers provide a door-to-door solution, ensuring that you reach your destination without waiting, extra stops, or shared transfers.",
+  metaTitre: "Private Airport Ski Transfers | Door to Door to the Alps",
+  metaDescription: "Private airport ski transfers to the Alps. Fixed price per vehicle, no waiting and no stops, with drive times from Geneva, Lyon, Chambéry and Zurich.",
+  h1: "Private Airport Ski Transfers — Direct, Door to Door, to Your Resort",
+  chapo: "Looking for a private airport ski transfer that gets you to your resort quickly and comfortably? Our transfers are door to door: no waiting, no extra stops, and one fixed price for the whole vehicle.",
 
-  contenu: [
-    { type: "paragraphe", texte: "With private transfers, you avoid the hassle of public transport and enjoy a safe, luxury, and stress-free travel experience. Our experienced drivers provide direct transport from transfers from Geneva, Lyon Airport, Grenoble Airport, and Chambéry Airport to the most popular ski resorts, including Val Thorens, Tignes, Chamonix, and Morzine." },
-    { type: "paragraphe", texte: "Our transfer service includes child seats, extra luggage space, and flexible passenger requirements. Whether you're traveling as a family, a group, or a solo skier, we have the private transfer category premium you need. Book your airport transfer online today, compare options, and save money with our competitive prices." },
-    { type: "titre3", texte: "Enjoy Comfort, Flexibility & Time-Saving Benefits" },
-    { type: "paragraphe", texte: "No waiting times – Your trusted driver is ready upon arrival." },
-    { type: "paragraphe", texte: "Direct route – No multiple stops or shared transfers." },
-    { type: "paragraphe", texte: "Private, safe, and reliable – Enjoy flexibility with your booking." },
-    { type: "paragraphe", texte: "Plenty of space for passengers & ski equipment." },
-    { type: "titre3", texte: "Private Airport transfers" },
-    { type: "titre3", texte: "Our vehicles" },
-    { type: "paragraphe", texte: "Volkswagen Transporter (T5/T6, Combi or Shuttle type)Up to 8 passengers" },
-    { type: "paragraphe", texte: "Mercedes V-Class (or Vito Tourer) Up to 7 passengers" },
-    { type: "paragraphe", texte: "Mercedes E-Class SedanUp to 4 passengers" },
-    { type: "titre3", texte: "Door-to-Door Service From Airport to Ski Resort" },
-    { type: "liste", items: ["Meet your driver at the airport ski terminal.", "Luxury vehicle options: standard, private coach transfer, or road transport.", "Personalized journey – Stop for groceries or a scenic break if needed."] },
-    { type: "titre3", texte: "Avoid the Hassle of Public Transport & Shared Transfers" },
-    { type: "liste", items: ["No crowded buses – Your private ski transfer ensures peace & comfort.", "No additional waiting – Get on the road immediately.", "Transparent prices – No hidden fees."] },
-    { type: "titre2", texte: "Private Transfer Options to Suit Your Needs" },
-    { type: "paragraphe", texte: "Our private transfers are tailored to meet every customer's needs, ensuring the best travel experience for individuals, families, and groups." },
-    { type: "titre3", texte: "Choose Your Private Ski Transfer Option" },
-    { type: "paragraphe", texte: "✅ Spacious Minivans – Ideal for solo travelers or couples.✅ Spacious Minivans – Great for families and passengers with extra luggage.✅ Luxury Sedans – Great for families or couple looking for a premium private transfer category" },
-    { type: "titre3", texte: "Additional Services for a Comfortable Journey" },
-    { type: "paragraphe", texte: "✅ Child seats included – Available on request.✅ Flexible pick-up times – Adjust based on your flight.✅ Ski equipment transport – No extra charge." },
-    { type: "paragraphe", texte: "We offer airport transfers from the most strategic international airports serving the French Alps, Swiss Alps, Italian Alps, and Austrian ski regions. Whether you're arriving from Geneva Airport, Paris Airport, Milan Airport, Turin Airport, Zurich Airport, Salzburg Airport, Lyon Airport, Grenoble Airport, Chambéry Airport, or Nice Airport, we ensure a comfortable, direct, and hassle-free journey to your ski resort." },
-    { type: "paragraphe", texte: "Geneva Airport is the most popular choice for travelers heading to the French Alps, thanks to its proximity to major ski resorts:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 3h"] },
-    { type: "paragraphe", texte: "Chambéry Airport is the closest airport to the Three Valleys and other popular ski resorts:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 2h30"] },
-    { type: "paragraphe", texte: "Grenoble Airport is a great choice for budget-friendly ski transfers, providing access to:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 3h15", "Méribel & Courchevel – 2h30"] },
-    { type: "paragraphe", texte: "Lyon Airport is another popular choice for accessing French ski resorts, especially for those looking to avoid Geneva’s busier airport:" },
-    { type: "liste", items: ["Val d’Isère & Tignes – 3h15"] },
-    { type: "paragraphe", texte: "For international travelers arriving from outside Europe, Paris Charles de Gaulle (CDG) and Orly (ORY) offer ski transfers via private coach transfer or high-speed TGV train connections. Transfer times vary:" },
-    { type: "liste", items: ["Chamonix – 6h (by car), 5h (by train)", "Val Thorens – 6h45 (by car)", "Tignes & Val d’Isère – 7h"] },
-    { type: "paragraphe", texte: "For those heading to the Austrian Alps, Salzburg Airport provides quick, direct transfers to some of Austria’s best ski resorts:" },
-    { type: "liste", items: ["Saalbach-Hinterglemm – 1h30"] },
-    { type: "paragraphe", texte: "For those skiing in Switzerland or even France, Zurich Airport transfers provide seamless access to world-class ski resorts:" },
-    { type: "liste", items: ["Verbier (Switzerland) – 2h40", "Val d’Isère (France) – 5h"] },
-    { type: "paragraphe", texte: "Torino is the closest airport for those skiing in the Italian Alps and offers convenient access to the French Alps:" },
-    { type: "liste", items: ["Sauze d’Oulx (Italy) – 1h30", "Montgenèvre (France) – 1h40", "Serre Chevalier (France) – 2h15", "Tignes & Val d’Isère (France) – 3h30"] },
-    { type: "paragraphe", texte: "Milano is a great gateway to both French and Italian ski resorts, providing fast and direct transfers to top destinations:" },
-    { type: "liste", items: ["Tignes & Val d’Isère (France) – 5h"] },
-    { type: "paragraphe", texte: "Although further south, Nice Airport is a key hub for those heading to southern Alpine ski resorts:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 5h30"] },
-    { type: "paragraphe", texte: "Geneva Airport is the most popular choice for travelers heading to the French Alps, thanks to its proximity to major ski resorts:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 3h"] },
-    { type: "paragraphe", texte: "Chambéry Airport is the closest airport to the Three Valleys and other popular ski resorts:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 2h30"] },
-    { type: "paragraphe", texte: "Grenoble Airport is a great choice for budget-friendly ski transfers, providing access to:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 3h15", "Méribel & Courchevel – 2h30"] },
-    { type: "paragraphe", texte: "Lyon Airport is another popular choice for accessing French ski resorts, especially for those looking to avoid Geneva’s busier airport:" },
-    { type: "liste", items: ["Val d’Isère & Tignes – 3h15"] },
-    { type: "paragraphe", texte: "For international travelers arriving from outside Europe, Paris Charles de Gaulle (CDG) and Orly (ORY) offer ski transfers via private coach transfer or high-speed TGV train connections. Transfer times vary:" },
-    { type: "liste", items: ["Chamonix – 6h (by car), 5h (by train)", "Val Thorens – 6h45 (by car)", "Tignes & Val d’Isère – 7h"] },
-    { type: "paragraphe", texte: "For those heading to the Austrian Alps, Salzburg Airport provides quick, direct transfers to some of Austria’s best ski resorts:" },
-    { type: "liste", items: ["Saalbach-Hinterglemm – 1h30"] },
-    { type: "paragraphe", texte: "For those skiing in Switzerland or even France, Zurich Airport transfers provide seamless access to world-class ski resorts:" },
-    { type: "liste", items: ["Verbier (Switzerland) – 2h40", "Val d’Isère (France) – 5h"] },
-    { type: "paragraphe", texte: "Torino is the closest airport for those skiing in the Italian Alps and offers convenient access to the French Alps:" },
-    { type: "liste", items: ["Sauze d’Oulx (Italy) – 1h30", "Montgenèvre (France) – 1h40", "Serre Chevalier (France) – 2h15", "Tignes & Val d’Isère (France) – 3h30"] },
-    { type: "paragraphe", texte: "Milano is a great gateway to both French and Italian ski resorts, providing fast and direct transfers to top destinations:" },
-    { type: "liste", items: ["Tignes & Val d’Isère (France) – 5h"] },
-    { type: "paragraphe", texte: "Although further south, Nice Airport is a key hub for those heading to southern Alpine ski resorts:" },
-    { type: "liste", items: ["Tignes & Val d’Isère – 5h30"] },
-    { type: "titre2", texte: "How to Book Your Private Airport Ski Transfer" },
-    { type: "paragraphe", texte: "We make booking a private airport ski transfer simple." },
-    { type: "titre3", texte: "Follow These Easy Steps" },
-    { type: "paragraphe", texte: "1️⃣ Book your airport transfer online.2️⃣ Compare prices and choose your private ski transfer.3️⃣ Confirm booking & availability.4️⃣ Meet your trusted driver upon arrival.5️⃣ Enjoy a direct and stress-free journey." },
-    { type: "paragraphe", texte: "With our competitive prices, you get the best value while ensuring a quick and reliable transfer to your ski resort." },
-    { type: "titre2", texte: "Frequently Asked Questions About Private Airport Ski Transfers" },
-    { type: "liste", items: ["Child seats included – Available upon request, with no extra charge.", "Extra space – For family luggage and ski equipment.", "Passenger requirements met – Let us know in advance to customize your transfer."] },
-    { type: "paragraphe", texte: "We make family ski transfers easy, ensuring all passengers travel safely and comfortably." },
-    { type: "liste", items: ["Competitive prices – We offer affordable ski transfers with transparent pricing.", "Budget-friendly options – Choose from standard, private transfer category premium, or luxury vehicles.", "Great value – Enjoy comfortable, direct transport at the best cost."] },
-    { type: "paragraphe", texte: "For a personalized quote, simply enter your travel details on our website to see the best prices for your ski transfer." },
-    { type: "liste", items: ["Reliable and direct transport – No waiting for other passengers, no detours.", "Comfortable and spacious vehicles – Travel with extra legroom and dedicated ski storage.", "Door-to-door service – Pick-up at the airport, drop-off at your accommodation.", "Flexibility – Adjust pick-up times according to your flight schedule."] },
-    { type: "paragraphe", texte: "A private transfer provides the ultimate stress-free travel experience for individuals, families, and groups." },
-    { type: "liste", items: ["Shared transfers vs. private transfers – Shared transfers are more affordable but involve waiting and multiple stops, while private transfers offer direct and comfortable travel.", "Vehicle options – Select from standard, premium, or private coach transfers based on your group size and passenger requirements.", "Use a ski transfer finder – Compare costs, flexibility, and travel times."] },
-    { type: "paragraphe", texte: "By using a reliable ski transfer company, you ensure a hassle-free and enjoyable journey to the mountains." },
-    { type: "liste", items: ["Val Thorens – The highest ski resort in Europe.", "Chamonix – A legendary destination at the foot of Mont Blanc.", "Tignes & Val d’Isère – Part of the Espace Killy ski area.", "Morzine – A top choice for families, located in the Portes du Soleil."] },
-    { type: "paragraphe", texte: "With our private airport ski transfers, you can reach these and many more top ski resorts with convenience and comfort." },
-  ],
+  /*
+   * Vide, et c'est voulu : le contenu est structuré en sections dans
+   * `data/page-transferts-prives.ts`, mis en page par `PageTransfertsPrives`.
+   */
+  contenu: [],
 
   faq: [
-    { question: "Why Choose a Private Ski Transfer?", reponse: "A private ski transfer is the most convenient, direct, and efficient way to reach your ski resort. Whether you’re landing at Geneva Airport, Lyon Airport, Grenoble Airport, or Chambéry Airport..., our private coach transfer ensures a comfortable and seamless journey to your accommodation." },
-    { question: "What are private airport ski transfers?", reponse: "A private airport ski transfer is a premium transportation service that provides private transfers from major airports directly to your ski resort. Unlike shared transfers or public transport, a private ski transfer offers a direct, comfortable, and flexible journey to your accommodation in the French Alps or other European ski regions. With our private airport transfers, you avoid long waits, unnecessary stops, and crowded buses. Instead, you travel in a luxury vehicle with an experienced driver, ensuring a smooth, door-to-door service from the airport ski terminal to your ski resort." },
-    { question: "Are child seats available in transfers?", reponse: "Yes! We ensure safe and comfortable travel for families by providing:" },
-    { question: "What are the costs of ski transfers?", reponse: "The cost of a ski transfer depends on several factors, including the airport, distance to the ski resort, vehicle type, and seasonality." },
-    { question: "What are the benefits of private transfers?", reponse: "Choosing a private transfer category premium over a shared transfer comes with multiple advantages:" },
-    { question: "How to compare ski transfer services?", reponse: "To find the best private ski transfer, it’s important to compare different options and transfer companies:" },
-    { question: "What ski resorts are accessible by transfer?", reponse: "We provide transfers to the most popular ski resorts in the French Alps, including:" },
+    {
+      question: "What is a private airport ski transfer?",
+      reponse:
+        "It is a vehicle booked for you alone, from the airport to your accommodation. Unlike public transport, it leaves when you land rather than on a timetable, takes the direct road with no stops at other resorts, and drops you at your door rather than at a bus station in the village. You travel with an experienced driver who knows these mountain roads in winter.",
+    },
+    {
+      question: "Are child seats available?",
+      reponse:
+        "Yes, and at no extra charge. Baby seats and booster seats are fitted before your driver leaves for the airport, so tell us the ages of your children when you book rather than on the day. We also allow for family luggage and ski equipment when we choose the vehicle, and any specific requirement is easier to meet if we know it in advance.",
+    },
+    {
+      question: "How much does a private ski transfer cost?",
+      reponse:
+        "The price depends on the airport, the distance to your resort, the vehicle category and the time of year. It is quoted per vehicle and not per seat, so a group of six pays the same as a couple — which usually makes a private transfer cheaper per person than it first appears. Enter your journey on the site to see your price before you commit; tolls are included and nothing is added on arrival.",
+    },
+    {
+      question: "What are the benefits of a private transfer?",
+      reponse:
+        "Direct transport with no waiting for other passengers and no detours. Comfortable, spacious vehicles with dedicated space for skis and boards. Door-to-door service, from the arrivals hall to your accommodation. And flexibility: your pick-up time follows your flight, so a delayed landing costs you nothing and requires nothing from you.",
+    },
+    {
+      question: "How long does the transfer take?",
+      reponse:
+        "From Geneva, count roughly 1 h 25 to Chamonix, 1 h 30 to Morzine, 2 h 25 to Méribel and 3 h 05 to Tignes. From Chambéry, the Three Valleys are closer still. The table above gives the measured road distance and drive time for every airport we serve — without traffic. Snow, chain controls and Saturday changeover traffic add to these times, and your driver plans for them.",
+    },
+    {
+      question: "Which airports do you transfer from?",
+      reponse:
+        "Geneva, Lyon, Chambéry-Savoie, Grenoble-Isère, Turin, Milan Malpensa, Zurich, Salzburg, Nice and Paris Charles de Gaulle, among others. Geneva is the most used gateway to the French Alps; Chambéry is the closest airport to the Three Valleys. Each airport has its own page listing the resorts it serves and the drive time to each.",
+    },
+    {
+      question: "Which ski resorts can I reach by transfer?",
+      reponse:
+        "The main resorts of the French, Swiss, Italian and Austrian Alps — among them Val Thorens, the highest resort in Europe; Chamonix, at the foot of Mont Blanc; Tignes and Val d'Isère in the Espace Killy; and Morzine, in the Portes du Soleil. Each resort has its own page with the transfer times from every airport that serves it.",
+    },
+    {
+      question: "Can I book for a group or through an agency?",
+      reponse:
+        "Yes. Groups, travel agencies, chalet companies and anything that does not fit the standard booking form go through a special inquiry: tell us the numbers, the dates and the pick-up points, and we build the quote around them.",
+    },
   ],
 };

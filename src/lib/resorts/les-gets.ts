@@ -90,11 +90,11 @@ export const lesGets: Resort = {
         "Child and booster seats are free too, fitted before we leave the airport; French law requires an approved restraint for every child under 10. Give us their ages when you book.",
     },
 
-    { type: "titre2", texte: "Private or shared transfer" },
+    { type: "titre2", texte: "Vehicle category" },
     {
       type: "paragraphe",
       texte:
-        "A private transfer leaves when you land, goes straight to your chalet or hotel, and is priced per vehicle: for a family or a group of four and up, it is usually cheaper than buying seats, as well as faster. A shared transfer costs less per person and suits couples and solo travellers with flexible timings, at the price of waiting for other passengers and stopping on the way.",
+        "A private transfer leaves when you land, goes straight to your chalet or hotel, and is priced per vehicle: for a family or a group of four and up, it is usually cheaper than buying seats, as well as faster. The category is set by your group and your luggage: in winter the boot fills up before the seats do, so tell us how many bags and ski carriers you have.",
     },
 
     { type: "titre2", texte: "When to book" },

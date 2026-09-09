@@ -13,70 +13,25 @@ export const genevaAirportToSauzeDoulx: Transfer = {
     "Sauze d’Oulx is 227 km from Geneva Airport, about 3 hours: motorway south through Chambéry and down the Maurienne, through the Fréjus tunnel into Italy, and up the last 6 km from Oulx to the village at 1,509 m. Turin is much closer, but Geneva flies all week from across Europe — and this is the route to take when the Turin timetable does not fit. Price fixed per vehicle with the Fréjus toll included, quoted before you book, ski bags and child seats included, flight tracked.",
 
   contenu: [
-    { type: "titre2", texte: "The route" },
-    {
-      type: "paragraphe",
-      texte:
-        "Motorway from the airport past Annecy and Chambéry, then up the Maurienne valley to Modane and the Fréjus road tunnel — 12.9 km under the border, with an enforced speed limit and a compulsory gap between vehicles. You come out at Bardonecchia in Italy, and Oulx is fifteen minutes further; the village sits 6 km above it.",
-    },
-    {
-      type: "paragraphe",
-      texte:
-        "The Fréjus toll is included in what we quote. On a minibus it is a significant sum, and it belongs in the price rather than as an extra at the end.",
-    },
-
-    { type: "titre2", texte: "Is Geneva the right airport?" },
-    {
-      type: "paragraphe",
-      texte:
-        "Turin is 85 km from Sauze d’Oulx, a little over an hour, and usually the cheaper flight from the UK. Geneva makes sense when your dates, your airline or a combined trip point that way — and it avoids the Turin ring road on a Saturday, which is not nothing.",
-    },
-
-    { type: "titre2", texte: "Winter timings and the border" },
-    {
-      type: "paragraphe",
-      texte:
-        "3 hours on a clear road; add 45 minutes on a February Saturday, when both the Maurienne and the tunnel queue. France and Italy are both in the Schengen area so there are no routine checks, but carry your passport or identity card — spot checks happen at the tunnel. Our vehicles are insured for both countries and carry winter tyres and chains.",
-    },
-
+    { type: "paragraphe", texte: "The road from Geneva Airport to Sauze d’Oulx runs 227 km and takes about 2 h 58 without traffic. Your driver meets you in the arrivals hall, takes you straight to your accommodation, and the price is fixed per vehicle before you book." },
+    { type: "paragraphe", texte: "This transfer crosses a border: you land in Switzerland and finish in Italy. There is nothing for you to arrange — our vehicles carry what each country requires in winter, and the crossing itself rarely costs more than a few minutes." },
+    { type: "titre2", texte: "The drive from Geneva to Sauze d’Oulx" },
+    { type: "paragraphe", texte: "2 h 58 is the drive on clear roads. Most of it is motorway, and the final climb into the resort is where the time is really spent — that section does not get faster, whatever the traffic below." },
+    { type: "paragraphe", texte: "Three things lengthen it: snow, chain controls, and Saturday. Saturday is changeover day across the Alps and the busiest of the week on every mountain road — in February it can add an hour to this journey. We track your flight and plan for the day you actually travel." },
+    { type: "titre2", texte: "Is Geneva the best airport for Sauze d’Oulx?" },
+    { type: "paragraphe", texte: "Not the closest: Turin reaches Sauze d’Oulx in 1 h 25, 1 h 33 less than from Geneva. That said, Geneva carries more flights on many routes, and an earlier arrival with a longer drive often beats a late landing with a short one." },
+    { type: "liste", items: ["Turin — 91 km, 1 h 25", "Chambéry-Savoie — 142 km, 1 h 53", "Geneva — 227 km, 2 h 58 (this route)"] },
     { type: "titre2", texte: "What the price includes" },
-    {
-      type: "liste",
-      items: [
-        "The Fréjus tunnel toll and all motorway tolls.",
-        "Ski and snowboard bags, at no extra charge.",
-        "Child and booster seats, fitted before departure.",
-        "Flight tracking and waiting time if you land late.",
-        "Door-to-door in Sauze d’Oulx, Oulx, Sportinia or Jouvenceaux.",
-      ],
-    },
+    { type: "liste", items: ["One fixed price for the whole vehicle, tolls and motorway fees included — it does not change with the number of passengers.", "Flight tracking: a delayed landing moves your pick-up, at no extra cost and with nothing for you to do.", "Winter tyres and snow chains on board all season, as the law requires in the Alps.", "Skis, snowboards and boot bags carried at no extra charge.", "Child and booster seats on request, fitted before your driver leaves for the airport."] },
+    { type: "titre2", texte: "When to book" },
+    { type: "paragraphe", texte: "As early as you can. Availability on this route tightens as the school holidays approach, and the February weeks go first. Booking early also keeps the vehicle category you want free — which matters more than it sounds when you travel with skis." },
   ],
 
   faq: [
-    {
-      question: "How long is the Geneva to Sauze d’Oulx transfer?",
-      reponse:
-        "About 3 hours for 227 km through the Fréjus tunnel. Allow 45 minutes more on a Saturday in February.",
-    },
-    {
-      question: "Would Turin be quicker?",
-      reponse:
-        "Considerably — around an hour and a quarter for 85 km. Geneva is the alternative when Turin has no flight on your dates.",
-    },
-    {
-      question: "Is the Fréjus tunnel toll included?",
-      reponse:
-        "Yes, along with all motorway tolls. Nothing is payable on the day.",
-    },
-    {
-      question: "Can you drop us in Sestriere or Claviere on the same run?",
-      reponse:
-        "Yes — both are on the Milky Way circuit and within half an hour of Oulx. Tell us the address at booking.",
-    },
-    {
-      question: "What if my flight is delayed?",
-      reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time; waiting time is included.",
-    },
+    { question: "How long is the transfer from Geneva Airport to Sauze d’Oulx?", reponse: "About 2 h 58 for 227 km on clear roads. Snow, chain controls and Saturday changeover traffic add to it — in high season a Saturday transfer can take an hour longer than the same drive midweek. Your driver plans for the day you travel." },
+    { question: "How much does a transfer from Geneva to Sauze d’Oulx cost?", reponse: "The price depends on the vehicle category and the time of year, and it is quoted per vehicle rather than per seat — a group of six pays what a couple pays. Enter your journey to see your price before you book: tolls are included and nothing is added on arrival." },
+    { question: "Which airport is closest to Sauze d’Oulx?", reponse: "Turin, at 1 h 25 for 91 km. From Geneva it is 2 h 58. We serve Sauze d’Oulx from 3 airports in all, so the right one is usually decided by the flights available on your dates." },
+    { question: "What happens if my flight is delayed?", reponse: "Nothing you need to do. We track your flight number and move the pick-up to your actual landing time. Your driver waits for you in the arrivals hall, and a delay does not change the price you were quoted." },
+    { question: "Can you take our ski equipment?", reponse: "Yes, at no extra charge. Tell us how many bags and ski or board carriers you have when you book: in winter the boot fills up before the seats do, and the count is what decides the vehicle category we send." },
   ],
 };

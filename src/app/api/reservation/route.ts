@@ -224,12 +224,16 @@ export async function POST(requete: Request) {
   if (devis.encaissable && stripeConfigure()) {
     const session = await creerSessionCheckout({
       reference: ref,
-      intitule,
-      description: `${heure(demande.aller)} · ${demande.passagers} passenger(s)`,
-      montant: devis.total,
+      lignes: [
+        {
+          intitule,
+          description: `${heure(demande.aller)} · ${demande.passagers} passenger(s)`,
+          montant: devis.total,
+        },
+      ],
       email,
       urlSucces: `${SITE.url}/booking/confirmed/?ref=${ref}`,
-      urlAnnulation: `${SITE.url}/booking/?from=${demande.airport}&to=${demande.resort}`,
+      urlAnnulation: `${SITE.url}/book-ski-transfer-tickets/?from=${demande.airport}&to=${demande.resort}`,
       metadonnees: { airport: demande.airport, resort: demande.resort },
     });
 

@@ -105,7 +105,10 @@ for (const fichier of [...pages, ...(await fichiers(LIB, (n) => n.endsWith(".ts"
 // --- 5. Données structurées : pas de champ vide ------------------------------
 const site = await readFile(path.join(RACINE, "src", "data", "site.ts"), "utf8");
 for (const champ of ["telephone", "email"]) {
-  if (new RegExp(`${champ}:\\s*""`).test(site)) {
+  // Ancré en début de ligne : sans cela le contrôle se déclenchait sur le
+  // `telephone: ""` cité dans le commentaire du fichier, et signalait vide un
+  // champ qui ne l'était plus.
+  if (new RegExp(`^\\s*${champ}:\\s*""`, "m").test(site)) {
     avertissements.push(
       `data/site.ts — ${champ} vide : le schéma TaxiService ne l'émettra pas (voulu tant que le client n'a pas répondu).`,
     );

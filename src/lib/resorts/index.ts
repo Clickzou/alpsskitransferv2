@@ -36,9 +36,19 @@ import { villarsSurOllon } from "./villars-sur-ollon";
 import { zellAmSee } from "./zell-am-see";
 import { RESORTS_REDIGES } from "./rediges";
 import { TRADUCTIONS_FR } from "./traductions-fr";
-import type { Resort } from "./types";
+import { TRADUCTIONS_DE } from "./traductions-de";
+import { TRADUCTIONS_IT } from "./traductions-it";
+import type { Resort, TraductionStation } from "./types";
+import { LANGS_SECONDAIRES, type LangueSecondaire } from "@/lib/i18n";
 
-export type { Resort, ResortStub, BlocContenu, Faq, StatutMigration } from "./types";
+export type {
+  Resort,
+  ResortStub,
+  BlocContenu,
+  Faq,
+  StatutMigration,
+  TraductionStation,
+} from "./types";
 export { RESORTS, RESORTS_REDIGES };
 
 /**
@@ -83,6 +93,13 @@ const STATIONS_MIGREES: Resort[] = [
   zellAmSee,
 ];
 
+/** Les registres de traduction, par langue — la clé est le slug anglais. */
+const REGISTRES: Record<LangueSecondaire, Record<string, TraductionStation>> = {
+  fr: TRADUCTIONS_FR,
+  de: TRADUCTIONS_DE,
+  it: TRADUCTIONS_IT,
+};
+
 /**
  * Les stations qui ont réellement une page : celles reprises du WordPress et
  * celles rédigées à la main. Une station qui n'est pas ici n'a pas de page —
@@ -91,18 +108,33 @@ const STATIONS_MIGREES: Resort[] = [
 export const RESORTS_MIGRES: Resort[] = [...STATIONS_MIGREES, ...RESORTS_REDIGES]
   // Les traductions vivent à part pour survivre à `migrer:stations`, qui réécrit
   // les modules repris du WordPress. On les recolle ici.
-  .map((station) =>
-    TRADUCTIONS_FR[station.slug] ? { ...station, fr: TRADUCTIONS_FR[station.slug] } : station,
-  )
+  .map((station) => {
+    const traductions: Partial<Record<LangueSecondaire, TraductionStation>> = {};
+    for (const lang of LANGS_SECONDAIRES) {
+      const traduction = REGISTRES[lang][station.slug];
+      if (traduction) traductions[lang] = traduction;
+    }
+    return Object.keys(traductions).length > 0 ? { ...station, traductions } : station;
+  })
   .sort((a, b) => a.slug.localeCompare(b.slug));
 
 export function resortParSlug(slug: string) {
   return RESORTS_MIGRES.find((r) => r.slug === slug);
 }
 
-/** Les stations qui portent une traduction française complète. */
-export function resortsFr() {
-  return RESORTS_MIGRES.filter((r) => r.fr);
+/** Les stations qui portent une traduction complète dans cette langue. */
+export function resortsTraduits(lang: LangueSecondaire) {
+  return RESORTS_MIGRES.filter((r) => r.traductions?.[lang]);
+}
+
+/**
+ * La station qui porte ce slug **dans cette langue**.
+ *
+ * Le slug traduit est propre à la langue — `soelden` en allemand contre
+ * `solden` en anglais — donc on ne peut pas chercher sur le slug canonique.
+ */
+export function resortParSlugTraduit(lang: LangueSecondaire, slug: string) {
+  return RESORTS_MIGRES.find((r) => r.traductions?.[lang]?.slug === slug);
 }
 
 /** Slug de pays utilisé dans l'URL anglaise : `/france-ski-transfers/…`. */
