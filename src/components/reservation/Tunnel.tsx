@@ -796,31 +796,49 @@ export default function Tunnel({
                 required
               />
             </div>
-            <div className="min-w-0">
-              <label className={ETIQUETTE} htmlFor="enfants">
-                {t.enfants}
-              </label>
-              <input
-                id="enfants"
-                className={CHAMP}
-                placeholder={t.enfantsIndice}
-                value={client.enfants}
-                onChange={(e) => setClient({ ...client, enfants: e.target.value })}
-              />
-            </div>
-            <div className="min-w-0 sm:col-span-2">
-              <label className={ETIQUETTE} htmlFor="message">
-                {t.message}
-              </label>
-              <textarea
-                id="message"
-                rows={3}
-                className={CHAMP}
-                value={client.message}
-                onChange={(e) => setClient({ ...client, message: e.target.value })}
-              />
-            </div>
           </div>
+
+          {/*
+            Ce qui ne concerne pas tout le monde ne s'impose pas à tout le monde.
+
+            Les sièges enfants et la note libre servent une minorité de courses,
+            et allongeaient un écran que le visiteur atteint carte en main. Ils
+            restent à un clic, dans un `details` natif : pas de script, ouvrable
+            au clavier, et la recherche du navigateur trouve leur contenu même
+            replié. Aucun champ obligatoire n'y entre — on ne cache pas ce qu'il
+            faut remplir.
+          */}
+          <details className="rounded border border-glacier-200 bg-glacier-50 px-4 py-3">
+            <summary className="cursor-pointer text-sm font-medium text-alpine-700">
+              {t.precisions}
+            </summary>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="min-w-0">
+                <label className={ETIQUETTE} htmlFor="enfants">
+                  {t.enfants}
+                </label>
+                <input
+                  id="enfants"
+                  className={CHAMP}
+                  placeholder={t.enfantsIndice}
+                  value={client.enfants}
+                  onChange={(e) => setClient({ ...client, enfants: e.target.value })}
+                />
+              </div>
+              <div className="min-w-0 sm:col-span-2">
+                <label className={ETIQUETTE} htmlFor="message">
+                  {t.message}
+                </label>
+                <textarea
+                  id="message"
+                  rows={3}
+                  className={CHAMP}
+                  value={client.message}
+                  onChange={(e) => setClient({ ...client, message: e.target.value })}
+                />
+              </div>
+            </div>
+          </details>
 
           {devis?.encaissable ? null : (
             <p className="rounded border border-glacier-200 bg-glacier-50 px-4 py-3 text-sm text-alpine-700">
@@ -836,9 +854,22 @@ export default function Tunnel({
             ajouter, et l'écrire ici plutôt que dans les conditions générales
             évite la conversation de trop, au comptoir, à minuit.
           */}
-          <p className="rounded border border-or/40 bg-or-50 px-4 py-3 text-xs leading-relaxed text-alpine-700">
-            {TEXTES_ATTENTE[langue].long}
-          </p>
+          <div className="rounded border border-or/40 bg-or-50 px-4 py-3 text-xs leading-relaxed text-alpine-700">
+            {/*
+              Le résumé porte le chiffre, pas seulement la promesse : « une heure
+              comprise » sans le tarif au-delà serait la moitié rassurante d'une
+              règle qui coûte de l'argent. Ce qui peut s'ajouter au prix reste
+              donc visible sans rien ouvrir ; c'est le détail — le vol retardé,
+              le préavis de 24 heures — qui attend le clic.
+            */}
+            <p>{TEXTES_ATTENTE[langue].resume}</p>
+            <details className="mt-1">
+              <summary className="cursor-pointer font-medium underline">
+                {t.detailAttente}
+              </summary>
+              <p className="mt-2">{TEXTES_ATTENTE[langue].long}</p>
+            </details>
+          </div>
 
           <button
             type="submit"

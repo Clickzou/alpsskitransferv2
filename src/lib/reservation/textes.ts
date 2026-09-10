@@ -49,6 +49,8 @@ export interface TextesTunnel {
   adresseIndice: string;
   enfants: string;
   enfantsIndice: string;
+  precisions: string;
+  detailAttente: string;
   message: string;
   sansPaiement: string;
   payer: (prix: string) => string;
@@ -105,6 +107,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, hotel or residence",
     enfants: "Children’s ages, for the right seats",
     enfantsIndice: "e.g. 3 and 7",
+    precisions: "Add child seats or a note (optional)",
+    detailAttente: "Read the full waiting rule",
     message: "Anything else we should know",
     sansPaiement:
       "We confirm this transfer by email rather than taking payment online: you will have the price in writing, and nothing is charged until you accept it.",
@@ -163,6 +167,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, hôtel ou résidence",
     enfants: "Âge des enfants, pour les bons sièges",
     enfantsIndice: "par exemple 3 et 7",
+    precisions: "Ajouter des sièges enfants ou une précision (facultatif)",
+    detailAttente: "Lire la règle d’attente en entier",
     message: "Autre chose à nous signaler",
     sansPaiement:
       "Nous confirmons ce transfert par e-mail plutôt que d’encaisser en ligne : vous aurez le prix par écrit, et rien n’est débité avant votre accord.",
@@ -226,6 +232,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, Hotel oder Appartement",
     enfants: "Alter der Kinder, für die richtigen Sitze",
     enfantsIndice: "zum Beispiel 3 und 7",
+    precisions: "Kindersitze oder Hinweis hinzufügen (optional)",
+    detailAttente: "Die vollständige Warteregel lesen",
     message: "Sonstige Hinweise",
     sansPaiement:
       "Wir bestätigen diesen Transfer per E-Mail, statt online abzubuchen: Sie erhalten den Preis schriftlich, und vor Ihrer Zustimmung wird nichts belastet.",
@@ -288,6 +296,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, hotel o residence",
     enfants: "Età dei bambini, per i seggiolini giusti",
     enfantsIndice: "per esempio 3 e 7",
+    precisions: "Aggiungi seggiolini o una nota (facoltativo)",
+    detailAttente: "Leggere per intero la regola di attesa",
     message: "Altro da segnalarci",
     sansPaiement:
       "Confermiamo questo trasferimento via e-mail invece di incassare online: avrai il prezzo per iscritto, e nulla viene addebitato prima del tuo accordo.",
@@ -896,9 +906,10 @@ export const ATTENTE = {
   prixHeure: 100,
 } as const;
 
-export const TEXTES_ATTENTE: Record<Lang, { court: string; long: string }> = {
+export const TEXTES_ATTENTE: Record<Lang, { court: string; resume: string; long: string }> = {
   en: {
     court: "one hour of waiting time included",
+    resume: "One hour of waiting is included — then €25 per quarter of an hour started.",
     long:
       "One hour of waiting is included. If your flight is delayed, the hour starts " +
       "from the actual landing time — a delay is not your doing and costs you nothing. " +
@@ -908,6 +919,7 @@ export const TEXTES_ATTENTE: Record<Lang, { court: string; long: string }> = {
   },
   fr: {
     court: "une heure d’attente comprise",
+    resume: "Une heure d’attente comprise — ensuite 25 € par quart d’heure entamé.",
     long:
       "Une heure d’attente est comprise. Si votre vol a du retard, cette heure court " +
       "à partir de l’atterrissage réel : le retard n’est pas de votre fait et ne vous " +
@@ -917,6 +929,7 @@ export const TEXTES_ATTENTE: Record<Lang, { court: string; long: string }> = {
   },
   de: {
     court: "eine Stunde Wartezeit inklusive",
+    resume: "Eine Stunde Wartezeit inklusive — danach 25 € je angefangene Viertelstunde.",
     long:
       "Eine Stunde Wartezeit ist inklusive. Bei Flugverspätung beginnt diese Stunde mit " +
       "der tatsächlichen Landung — die Verspätung ist nicht Ihr Verschulden und kostet " +
@@ -926,6 +939,7 @@ export const TEXTES_ATTENTE: Record<Lang, { court: string; long: string }> = {
   },
   it: {
     court: "un’ora di attesa inclusa",
+    resume: "Un’ora di attesa inclusa — poi 25 € per ogni quarto d’ora iniziato.",
     long:
       "È inclusa un’ora di attesa. Se il volo è in ritardo, l’ora decorre dall’atterraggio " +
       "effettivo: il ritardo non dipende da te e non ti costa nulla. Oltre, l’attesa è " +
