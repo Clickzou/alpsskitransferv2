@@ -108,7 +108,7 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
       {
         type: "paragraphe",
         texte:
-          "The terminal is small and there is one exit: your driver waits there with your name. On busy Saturdays the baggage hall can take a while — waiting time is included, and the flight is tracked.",
+          "The terminal is small and there is one exit: your driver waits there with your name. On busy Saturdays the baggage hall can take a while — one hour of waiting time is included, and the flight is tracked.",
       },
     ],
     faq: [
@@ -124,7 +124,7 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
       },
       {
         question: "Does the driver wait if the flight is late?",
-        reponse: "Yes. The flight is tracked and waiting time is included.",
+        reponse: "Yes. The flight is tracked, and one hour of waiting time is included from the actual pick-up.",
       },
     ],
   },
@@ -435,7 +435,7 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
       {
         type: "paragraphe",
         texte:
-          "Italian and Swiss tolls, the Swiss vignette, ski bags, child seats, flight tracking and waiting time. Winter equipment is compulsory on Italian Alpine roads from mid-November to mid-April, and our vehicles carry it.",
+          "Italian and Swiss tolls, the Swiss vignette, ski bags, child seats, flight tracking and one hour of waiting time. Winter equipment is compulsory on Italian Alpine roads from mid-November to mid-April, and our vehicles carry it.",
       },
     ],
     faq: [
@@ -481,7 +481,7 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
       {
         type: "paragraphe",
         texte:
-          "Tolls, ski bags, child seats, flight tracking and waiting time. Winter equipment is compulsory on Italian Alpine roads from mid-November to mid-April, and our vehicles carry it.",
+          "Tolls, ski bags, child seats, flight tracking and one hour of waiting time. Winter equipment is compulsory on Italian Alpine roads from mid-November to mid-April, and our vehicles carry it.",
       },
     ],
     faq: [

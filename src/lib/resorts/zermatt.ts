@@ -129,7 +129,7 @@ export const zermatt: Resort = {
     {
       question: "What if my flight is delayed?",
       reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the actual landing time. Waiting time is included, and the shuttle train runs late into the evening.",
+        "Your driver tracks the flight and adjusts the pick-up to the actual landing time. One hour of waiting time is included, and the shuttle train runs late into the evening.",
     },
   ],
 };

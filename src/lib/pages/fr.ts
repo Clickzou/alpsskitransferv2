@@ -57,7 +57,7 @@ export const PAGES_FR: PageIntl[] = [
           "Le prix comprend les péages, les tunnels et la vignette suisse le cas échéant.",
           "Les housses à skis et à snowboard voyagent gratuitement.",
           "Les sièges enfants et rehausseurs sont fournis et installés avant le départ.",
-          "Le suivi du vol et le temps d’attente sont compris.",
+          "Le suivi du vol est compris, ainsi qu’une heure d’attente à la prise en charge.",
           "Rien ne s’ajoute à l’arrivée : le prix annoncé est le prix payé.",
         ],
       },
@@ -491,7 +491,7 @@ export const PAGES_FR: PageIntl[] = [
       {
         question: "Le chauffeur attend-il pendant la déclaration de bagage ?",
         reponse:
-          "Oui. Le temps d’attente compris dans le prix couvre cette démarche : prévenez simplement le chauffeur en le rejoignant, il patiente au point de rendez-vous.",
+          "Oui. Le une heure d’attente comprise dans le prix couvre cette démarche : prévenez simplement le chauffeur en le rejoignant, il patiente au point de rendez-vous.",
       },
       {
         question: "Combien de temps gardez-vous un objet retrouvé ?",

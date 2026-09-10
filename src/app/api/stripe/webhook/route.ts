@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
+import { airportParSlug } from "@/lib/airports";
+import { resortParSlug } from "@/lib/resorts";
 import { SITE } from "@/data/site";
 import { envoyer } from "@/lib/reservation/email";
 import { signatureValide } from "@/lib/reservation/stripe";
-import { inserer, mettreAJour } from "@/lib/reservation/supabase";
+import { corpsAvis, sujetAvis, textesEmail } from "@/lib/reservation/textes";
+import { inserer, lire, mettreAJour } from "@/lib/reservation/supabase";
 
 /**
  * Webhook Stripe — c'est **ici** qu'une réservation devient payée, et nulle part
@@ -49,6 +52,26 @@ export async function POST(requete: Request) {
   }
 
   const session = evenement.data.object;
+
+  /*
+    Stripe rejoue un événement tant qu'il n'a pas reçu de 2xx — sur un délai
+    réseau, un redémarrage, une erreur passagère. Sans ce garde-fou, un rejeu
+    écrivait une deuxième ligne de paiement et renvoyait au client un second
+    e-mail de confirmation : la comptabilité fausse et le client inquiet.
+
+    La session Stripe est l'identifiant naturel de l'événement : si elle est
+    déjà enregistrée, il n'y a rien à refaire. On acquitte, et Stripe cesse de
+    rejouer.
+  */
+  const dejaTraite = await lire<{ id: string }>("paiements", {
+    colonnes: "id",
+    filtres: [{ colonne: "session_stripe", operateur: "eq", valeur: session.id }],
+    limite: 1,
+  });
+  if (dejaTraite.length > 0) {
+    return NextResponse.json({ recu: true, deja: session.id });
+  }
+
   const reference = session.client_reference_id ?? session.metadata?.reference ?? null;
   const montant = session.amount_total != null ? session.amount_total / 100 : null;
   const email = session.customer_details?.email ?? session.customer_email ?? null;
@@ -71,26 +94,78 @@ export async function POST(requete: Request) {
     statut: "paye",
   });
 
+  /*
+    La réservation complète est en base : nom, téléphone, adresse exacte, vol,
+    âge des enfants. Stripe n'en connaît rien — il ne renvoie que ce qu'on lui
+    a confié. Une lecture évite d'envoyer à l'exploitant un avis qui l'oblige à
+    ouvrir un ordinateur pour savoir qui appeler.
+  */
+  const [reservation] = reference
+    ? await lire<{
+        client_nom: string;
+        client_telephone: string;
+        client_email: string;
+        adresse: string;
+        vol: string | null;
+        aller: string;
+        retour: string | null;
+        vehicule: string;
+        passagers: number;
+        bagages_ski: number;
+        enfants: string | null;
+        message: string | null;
+      }>("reservations", {
+        filtres: [{ colonne: "reference", operateur: "eq", valeur: reference }],
+        limite: 1,
+      })
+    : [];
+
+  /** Les slugs du registre deviennent des noms : le client ne lit pas « geneva-airport ». */
+  const nomAeroport = session.metadata?.airport
+    ? (airportParSlug(session.metadata.airport)?.name ?? session.metadata.airport)
+    : null;
+  const nomStation = session.metadata?.resort
+    ? (resortParSlug(session.metadata.resort)?.name ?? session.metadata.resort)
+    : null;
+  const trajetLisible = nomAeroport && nomStation ? `${nomAeroport} → ${nomStation}` : undefined;
+
+  const quand = (iso: string | null | undefined) =>
+    iso
+      ? new Date(iso).toLocaleString("fr-FR", {
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "";
+
   const recapitulatif = [
     `Reference: ${reference ?? "unknown"}`,
     montant != null ? `Amount paid: €${montant}` : null,
-    session.metadata?.airport && session.metadata?.resort
-      ? `Journey: ${session.metadata.airport} → ${session.metadata.resort}`
-      : null,
+    trajetLisible ? `Journey: ${trajetLisible}` : null,
   ]
     .filter(Boolean)
     .join("\n");
 
   if (email) {
+    /*
+      La langue vient des métadonnées de la session, posées par la route de
+      réservation : le webhook ne sait rien d'autre de la commande, et un
+      client qui a réservé en italien ne doit pas être confirmé en anglais.
+    */
+    const mots = textesEmail(session.metadata?.langue);
+    const trajet = trajetLisible;
+
     await envoyer({
       destinataire: email,
-      sujet: `Your transfer is confirmed — ${reference ?? ""}`.trim(),
+      sujet: mots.sujet(reference ?? ""),
       texte: [
-        "Your transfer is booked and paid.",
-        "",
-        recapitulatif,
-        "",
-        "Your driver will track your flight and meet you in arrivals with your name.",
+        mots.corps({
+          reference: reference ?? "",
+          trajet,
+          montant: montant != null ? `${montant} €` : undefined,
+        }),
         "",
         `${SITE.nom} — ${SITE.url}`,
       ].join("\n"),
@@ -99,10 +174,36 @@ export async function POST(requete: Request) {
 
   const exploitant = process.env.EMAIL_EXPLOITANT;
   if (exploitant) {
+    /*
+      L'avis porte tout ce qu'il faut pour conduire la course sans ouvrir un
+      ordinateur : quand, où, quel numéro. Les données viennent de la ligne
+      relue en base, pas des métadonnées Stripe qui n'en portent qu'une part.
+    */
+    const avis = {
+      reference: reference ?? session.id,
+      trajet: trajetLisible ?? "trajet en base",
+      aller: quand(reservation?.aller) || "voir le tableau de bord",
+      retour: reservation?.retour ? quand(reservation.retour) : null,
+      adresse: reservation?.adresse ?? "",
+      client: {
+        nom: reservation?.client_nom ?? "",
+        email: reservation?.client_email ?? email ?? "",
+        telephone: reservation?.client_telephone ?? "",
+      },
+      vehicule: reservation?.vehicule ?? "",
+      passagers: reservation?.passagers ?? 0,
+      vol: reservation?.vol ?? null,
+      bagagesSki: reservation?.bagages_ski ?? null,
+      enfants: reservation?.enfants ?? null,
+      message: reservation?.message ?? null,
+      montant,
+      paye: true,
+    };
+
     await envoyer({
       destinataire: exploitant,
-      sujet: `Paid booking ${reference ?? session.id}`,
-      texte: [recapitulatif, email ? `Client: ${email}` : null].filter(Boolean).join("\n"),
+      sujet: sujetAvis(avis),
+      texte: corpsAvis(avis),
     });
   }
 

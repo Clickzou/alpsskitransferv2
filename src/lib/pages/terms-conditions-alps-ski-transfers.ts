@@ -37,10 +37,23 @@ export const termsConditionsAlpsSkiTransfers: PageFonctionnelle = {
     { type: "titre3", texte: "5.2 Passenger Conduct" },
     { type: "liste", items: ["Passengers must wear seat belts at all times.", "Smoking and alcohol consumption are strictly prohibited in all vehicles.", "Unruly behavior that endangers the driver or other passengers will result in the immediate termination of the transfer without a refund."] },
     { type: "titre2", texte: "6. Delays & Waiting Time" },
-    { type: "titre3", texte: "6.1 Flight Delays" },
-    { type: "liste", items: ["We monitor flight arrivals and adjust pick-up times accordingly.", "Free waiting time is provided for up to 60 minutes after your scheduled landing time.", "Beyond this, extra waiting charges may apply."] },
-    { type: "titre3", texte: "6.2 Passenger Delays" },
-    { type: "liste", items: ["If a passenger is late for pick-up, drivers will wait for a maximum of 15 minutes for private transfers.", "Your driver waits for you in the arrivals hall, whatever time you actually land."] },
+    { type: "titre3", texte: "6.1 Flight delays" },
+    {
+      type: "paragraphe",
+      texte:
+        "We track your flight. If it lands late, the pick-up moves with it and the delay itself costs you nothing: the included hour of waiting is counted from the actual landing time, not from the time you booked.",
+    },
+    { type: "titre3", texte: "6.2 Waiting time" },
+    {
+      type: "liste",
+      items: [
+        "One hour of waiting is included: from the actual landing time when the flight is delayed, from the booked pick-up time otherwise.",
+        "Beyond that hour, waiting is charged at €25 per quarter of an hour started, or €100 an hour.",
+        "Beyond that hour it applies whatever the reason: a slow baggage hall, a passport queue, or a passenger late to the meeting point.",
+        "If you want to change the pick-up time yourself, tell us at least 24 hours ahead: the driver can then rearrange the day, and no charge applies.",
+        "Your driver will not leave without telling you: we call the number given at booking before any decision.",
+      ],
+    },
     { type: "titre2", texte: "7. Liability & Force Majeure" },
     { type: "titre3", texte: "7.1 Service Liability" },
     { type: "liste", items: ["Alps Ski Transfers is not responsible for delays due to weather conditions, traffic, strikes, or unforeseen events.", "We will make every effort to transport passengers on time but cannot guarantee exact arrival times."] },

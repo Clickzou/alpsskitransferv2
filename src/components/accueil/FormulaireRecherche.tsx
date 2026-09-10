@@ -6,7 +6,9 @@ import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
 import type { Lang } from "@/lib/i18n";
 import { ANCRE_TUNNEL, CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import type { Lieu } from "@/lib/reservation/lieux";
-import { TEXTES_RECHERCHE } from "@/lib/reservation/textes";
+import { ENTREPRISE } from "@/data/site";
+import { departImminent } from "@/lib/reservation/gestion";
+import { TEXTES_IMMINENT, TEXTES_RECHERCHE } from "@/lib/reservation/textes";
 
 /**
  * Recherche de transfert.
@@ -44,6 +46,7 @@ export default function FormulaireRecherche({
   tunnel?: string;
 }) {
   const mots = TEXTES_RECHERCHE[langue];
+  const alerte = TEXTES_IMMINENT[langue];
   const router = useRouter();
   const [de, setDe] = useState<ValeurLieu>({ slug: null, texte: "" });
   const [vers, setVers] = useState<ValeurLieu>({ slug: null, texte: "" });
@@ -51,8 +54,17 @@ export default function FormulaireRecherche({
   const [passagers, setPassagers] = useState(2);
   const [allerRetour, setAllerRetour] = useState(false);
 
+  /* Recalculé à chaque rendu : la valeur dépend de l'heure qu'il est. */
+  const imminent = (() => {
+    const m = quand.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (!m) return false;
+    return departImminent(new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]));
+  })();
+
   function rechercher(evenement: React.FormEvent) {
     evenement.preventDefault();
+    // Le bouton est déjà désactivé ; ce garde-fou couvre la soumission au clavier.
+    if (imminent) return;
 
     const parametres = new URLSearchParams({
       passengers: String(passagers),
@@ -102,6 +114,28 @@ export default function FormulaireRecherche({
             onChange={(e) => setQuand(e.target.value)}
             className={champ}
           />
+
+          {/*
+            Départ très proche : l'avertissement paraît ici aussi, sous le champ
+            qui vient de le produire. Le dire seulement dans le tunnel, trois
+            écrans plus loin, laisserait le visiteur bâtir toute sa recherche
+            avant d'apprendre qu'elle demande un appel.
+          */}
+          {imminent ? (
+            <div
+              role="status"
+              className="mt-2 rounded border border-or/60 bg-or-50 px-3 py-2 text-xs leading-relaxed text-alpine-700"
+            >
+              <strong className="block text-sm text-alpine">{alerte.titre}</strong>
+              <span className="mt-1 block">{alerte.texte}</span>
+              <a
+                className="mt-1 inline-block font-semibold text-marque underline"
+                href={`tel:${ENTREPRISE.telephone}`}
+              >
+                {ENTREPRISE.telephoneAffiche}
+              </a>
+            </div>
+          ) : null}
         </div>
 
         <ChampLieu
@@ -171,7 +205,8 @@ export default function FormulaireRecherche({
 
         <button
           type="submit"
-          className="w-full rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 sm:ml-auto sm:w-auto"
+          disabled={imminent}
+          className="w-full rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:cursor-not-allowed disabled:opacity-50 sm:ml-auto sm:w-auto"
         >
           {mots.action}
         </button>

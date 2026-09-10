@@ -12,7 +12,7 @@ export const laClusaz: Resort = {
     "Private transfers to La Clusaz from Geneva (59 km, 1 h 10), Annecy, Chambéry and Lyon. Fixed price per vehicle, flight tracking, ski bags included.",
   h1: "La Clusaz Ski Transfers – Private Airport Transfers to the Aravis",
   chapo:
-    "La Clusaz is 59 km from Geneva, about 1 hour 10 minutes by road — one of the shortest airport transfers in the Alps. Annecy is closer still at 34 km (40 minutes) but has few winter flights; Chambéry is 83 km away (1 h 10) and Lyon 160 km (2 h). The village sits at 1,100 m at the foot of the Aravis range, reached by a valley road from Annecy rather than by a long climb. We drive all of them door to door, with a price fixed per vehicle and quoted before you book, ski and board bags included, and a driver who tracks your flight so a delay costs you nothing.",
+    "La Clusaz is 59 km from Geneva, about 1 hour 10 minutes by road — one of the shortest airport transfers in the Alps. Annecy is closer still at 34 km (40 minutes) but has few winter flights; Chambéry is 83 km away (1 h 10) and Lyon 160 km (2 h). The village sits at 1,100 m at the foot of the Aravis range, reached by a valley road from Annecy rather than by a long climb. We drive all of them door to door, with a price fixed per vehicle and quoted before you book, ski and board bags included, and a driver who tracks your flight and is there when you land.",
 
   airports: ["geneva-airport", "chambery-savoie-airport", "lyon-airport", "annecy-airport"],
 
@@ -117,7 +117,7 @@ export const laClusaz: Resort = {
     {
       question: "What if my flight is delayed?",
       reponse:
-        "Your driver tracks the flight and adjusts the pick-up to the real landing time. Waiting time is included and there is no surcharge.",
+        "Your driver tracks the flight and adjusts the pick-up to the real landing time. One hour of one hour of waiting time is included and there is no surcharge.",
     },
   ],
 };

@@ -5,7 +5,14 @@ import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
 import { usePanier } from "@/components/panier/PanierProvider";
 import { DEVISES, convertir, type CodeDevise } from "@/lib/reservation/devises";
 import type { Lieu } from "@/lib/reservation/lieux";
-import { TEXTES, type LangueTunnel } from "@/lib/reservation/textes";
+import { ENTREPRISE } from "@/data/site";
+import { departImminent } from "@/lib/reservation/gestion";
+import {
+  TEXTES,
+  TEXTES_ATTENTE,
+  TEXTES_IMMINENT,
+  type LangueTunnel,
+} from "@/lib/reservation/textes";
 
 /**
  * Le tunnel de réservation.
@@ -111,6 +118,17 @@ export default function Tunnel({
   const [de, setDe] = useState<ValeurLieu>(lieuDe(depart));
   const [vers, setVers] = useState<ValeurLieu>(lieuDe(arrivee));
   const [when, setWhen] = useState(quand ?? "");
+
+  /*
+    Recalculé à chaque rendu plutôt que mémorisé : la valeur dépend de l'heure
+    qu'il est, et une réservation ouverte une heure dans un onglet doit finir
+    par afficher l'avertissement.
+  */
+  const imminent = (() => {
+    const m = when.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (!m) return false;
+    return departImminent(new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]));
+  })();
   const [allerRetour, setAllerRetour] = useState(false);
   const [returnWhen, setReturnWhen] = useState("");
   const [retourAilleurs, setRetourAilleurs] = useState(false);
@@ -205,6 +223,7 @@ export default function Tunnel({
 
   async function envoyer(evenement: React.FormEvent) {
     evenement.preventDefault();
+    if (imminent) return;
     setErreur(null);
     setEnCours(true);
     try {
@@ -214,6 +233,9 @@ export default function Tunnel({
         body: JSON.stringify({
           ...corpsDemande,
           vehicle: choix?.categorie,
+          // La langue voyage avec la demande : elle décide de la page de retour
+          // après paiement et de la langue de l'e-mail de confirmation.
+          langue,
           client: { ...client, skis },
         }),
       });
@@ -323,6 +345,29 @@ export default function Tunnel({
                 onChange={(e) => setWhen(e.target.value)}
                 required
               />
+
+              {/*
+                Départ à moins d'une heure : on le dit ici, sous le champ qui vient de
+                le produire, et non trois étapes plus loin. Le numéro est
+                cliquable — sur un téléphone, c'est un appel, pas une note.
+              */}
+              {imminent ? (
+                <div
+                  role="status"
+                  className="mt-2 rounded border border-or/50 bg-or-50 px-3 py-2 text-xs leading-relaxed text-alpine-700"
+                >
+                  <strong className="block text-sm text-alpine">
+                    {TEXTES_IMMINENT[langue].titre}
+                  </strong>
+                  <span className="mt-1 block">{TEXTES_IMMINENT[langue].texte}</span>
+                  <a
+                    className="mt-1 inline-block font-semibold text-marque underline"
+                    href={`tel:${ENTREPRISE.telephone}`}
+                  >
+                    {ENTREPRISE.telephoneAffiche}
+                  </a>
+                </div>
+              ) : null}
             </div>
             <div className="min-w-0">
               <label className={ETIQUETTE} htmlFor="passengers">
@@ -442,7 +487,7 @@ export default function Tunnel({
 
           <button
             type="submit"
-            disabled={enCours}
+            disabled={enCours || imminent}
             className="w-full rounded bg-marque px-6 py-3 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:opacity-60 sm:w-auto"
           >
             {enCours ? t.calculEnCours : t.voirPrix}
@@ -676,6 +721,18 @@ export default function Tunnel({
               {t.sansPaiement}
             </p>
           )}
+
+          {/*
+            La règle d'attente, juste au-dessus du bouton qui débite.
+
+            C'est le seul endroit du parcours où elle doit figurer sans faute :
+            un client qui accepte un prix a le droit de savoir ce qui peut s'y
+            ajouter, et l'écrire ici plutôt que dans les conditions générales
+            évite la conversation de trop, au comptoir, à minuit.
+          */}
+          <p className="rounded border border-or/40 bg-or-50 px-4 py-3 text-xs leading-relaxed text-alpine-700">
+            {TEXTES_ATTENTE[langue].long}
+          </p>
 
           <button
             type="submit"

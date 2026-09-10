@@ -1,3 +1,5 @@
+import { SITE } from "@/data/site";
+
 /**
  * Où va le bouton « Book now ».
  *
@@ -83,4 +85,54 @@ export function lienReservation(pre: PreRemplissage = {}): string {
   return requete
     ? `${CHEMIN_TUNNEL}?${requete}${ANCRE_TUNNEL}`
     : `${CHEMIN_TUNNEL}${ANCRE_TUNNEL}`;
+}
+
+/**
+ * L'adresse à laquelle ce site est **réellement** servi.
+ *
+ * Stripe a besoin d'une URL absolue pour ramener le client après le paiement.
+ * Elle était construite sur `SITE.url` — le domaine définitif — ce qui donnait
+ * un résultat absurde partout ailleurs : après un paiement de test en local, le
+ * client atterrissait sur `alpsskitransfers.com/booking/confirmed/`, c'est-à-dire
+ * sur le WordPress encore en ligne, qui répond 404. Le paiement était pourtant
+ * bien passé : seul le retour se perdait.
+ *
+ * **On ne lit pas l'en-tête `Origin` ni `Host` en production.** Ils viennent du
+ * client et se falsifient : une requête forgée ferait rediriger un vrai payeur
+ * vers le domaine de son choix, juste après avoir saisi sa carte. L'ordre est
+ * donc : une variable d'environnement explicite, puis l'URL que Vercel fournit
+ * lui-même, puis le domaine du registre — et l'origine de la requête seulement
+ * en développement, où il n'y a rien à voler.
+ */
+export function origineSite(requete?: Request): string {
+  const explicite = process.env.NEXT_PUBLIC_URL_BASE?.trim();
+  if (explicite) return explicite.replace(/\/$/, "");
+
+  if (process.env.NODE_ENV !== "production" && requete) {
+    return new URL(requete.url).origin;
+  }
+
+  // Posée par Vercel, hors de portée du client : elle vaut pour la
+  // préproduction, où le domaine définitif ne répond pas encore.
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+
+  return SITE.url;
+}
+
+/**
+ * La page de retour après paiement, dans la langue du client.
+ *
+ * Le slug est un mot de la langue, comme le reste du silo : personne ne revient
+ * d'un paiement sur une URL anglaise quand tout le parcours était en italien.
+ */
+export const CHEMIN_CONFIRMATION: Record<string, string> = {
+  en: "/booking/confirmed/",
+  fr: "/fr/reservation-confirmee/",
+  de: "/de/buchung-bestaetigt/",
+  it: "/it/prenotazione-confermata/",
+};
+
+/** Le chemin de confirmation d'une langue, l'anglais si elle est inconnue. */
+export function cheminConfirmation(langue: string | undefined): string {
+  return CHEMIN_CONFIRMATION[langue ?? "en"] ?? CHEMIN_CONFIRMATION.en;
 }

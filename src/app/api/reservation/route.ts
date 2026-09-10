@@ -1,12 +1,15 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import { SITE } from "@/data/site";
+import { ENTREPRISE, SITE } from "@/data/site";
 import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 import { validerDemande } from "@/lib/reservation/demande";
 import { devisReservation } from "@/lib/reservation/devis";
+import { cheminConfirmation, origineSite } from "@/lib/reservation/config";
+import { departImminent } from "@/lib/reservation/gestion";
 import { creerSessionCheckout, stripeConfigure } from "@/lib/reservation/stripe";
+import { corpsAvis, sujetAvis } from "@/lib/reservation/textes";
 import { inserer, mettreAJour, supabaseConfigure } from "@/lib/reservation/supabase";
 
 /**
@@ -152,6 +155,26 @@ export async function POST(requete: Request) {
   }
 
   const { demande } = valide;
+  /*
+    Le vrai garde-fou.
+
+    Les deux boutons désactivés côté navigateur protègent le client d'une erreur,
+    pas le site d'une requête forgée : la console suffit à les contourner. La
+    règle est donc vérifiée ici, là où elle décide vraiment — une heure avant
+    la prise en charge, on ne vend plus en ligne.
+  */
+  if (departImminent(demande.aller)) {
+    return NextResponse.json(
+      {
+        erreur:
+          "Online booking closes one hour before pick-up — please call us to check availability.",
+        appelRequis: true,
+        telephone: ENTREPRISE.telephoneAffiche,
+      },
+      { status: 409 },
+    );
+  }
+
   const resultat = devisReservation(demande);
   if (!resultat.ok) {
     return NextResponse.json(
@@ -204,6 +227,24 @@ export async function POST(requete: Request) {
     );
   }
 
+  /* Ce que l'exploitant lit, dans son ordre — voir `corpsAvis`. */
+  const avis = {
+    reference: ref,
+    trajet: intitule,
+    aller: heure(demande.aller),
+    retour: demande.retour ? heure(demande.retour) : null,
+    adresse,
+    client: { nom, email, telephone },
+    vehicule: demande.categorie,
+    passagers: demande.passagers,
+    vol: ligne.vol,
+    bagagesSki: ligne.bagages_ski,
+    enfants: ligne.enfants,
+    message: ligne.message,
+    montant: devis.total,
+    paye: false,
+  };
+
   const recapitulatif = [
     `Reference: ${ref}`,
     `Journey: ${intitule}`,
@@ -222,6 +263,15 @@ export async function POST(requete: Request) {
 
   // --- Paiement, quand le barème est validé ---------------------------------
   if (devis.encaissable && stripeConfigure()) {
+    const origine = origineSite(requete);
+    /*
+      La langue vient du tunnel ; elle n'est pas un identifiant, seulement un
+      aiguillage d'affichage — d'où la liste blanche plutôt qu'une confiance
+      accordée à ce qui arrive.
+    */
+    const langue = ["en", "fr", "de", "it"].includes(String(corps.langue))
+      ? String(corps.langue)
+      : "en";
     const session = await creerSessionCheckout({
       reference: ref,
       lignes: [
@@ -232,9 +282,9 @@ export async function POST(requete: Request) {
         },
       ],
       email,
-      urlSucces: `${SITE.url}/booking/confirmed/?ref=${ref}`,
-      urlAnnulation: `${SITE.url}/book-ski-transfer-tickets/?from=${demande.airport}&to=${demande.resort}`,
-      metadonnees: { airport: demande.airport, resort: demande.resort },
+      urlSucces: `${origine}${cheminConfirmation(langue)}?ref=${ref}`,
+      urlAnnulation: `${origine}/book-ski-transfer-tickets/?from=${demande.airport}&to=${demande.resort}`,
+      metadonnees: { airport: demande.airport, resort: demande.resort, langue },
     });
 
     if (session) {
@@ -266,8 +316,14 @@ export async function POST(requete: Request) {
     exploitant
       ? envoyer({
           destinataire: exploitant,
-          sujet: `New transfer request ${ref} — ${intitule}`,
-          texte: [recapitulatif, "", `Client: ${nom} · ${email} · ${telephone}`].join("\n"),
+          /*
+            Une course dans moins d'une heure se repère dans une liste de
+            notifications, pas en ouvrant l'e-mail : le sujet le dit.
+          */
+          sujet: departImminent(demande.aller)
+            ? `URGENT — ${sujetAvis(avis)}`
+            : sujetAvis(avis),
+          texte: corpsAvis(avis),
         })
       : Promise.resolve(false),
   ]);

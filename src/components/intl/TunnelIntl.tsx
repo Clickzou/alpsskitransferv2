@@ -100,7 +100,7 @@ export const TEXTES_PAGE: Record<
     fil: "Réserver",
     h1: "Réservez votre transfert",
     chapo:
-      "Un prix par véhicule, annoncé avant tout engagement. Housses à skis, sièges enfants, péages, suivi du vol et temps d’attente compris.",
+      "Un prix par véhicule, annoncé avant tout engagement. Housses à skis, sièges enfants, péages, suivi du vol et une heure d’attente comprise.",
     apercu:
       "Aperçu : la réservation en ligne est en cours de finalisation. Envoyez-nous votre trajet par ce formulaire, nous confirmons par e-mail.",
     metaTitre: "Réserver un transfert vers les Alpes",
@@ -111,7 +111,7 @@ export const TEXTES_PAGE: Record<
     fil: "Buchen",
     h1: "Buchen Sie Ihren Transfer",
     chapo:
-      "Ein Preis pro Fahrzeug, genannt bevor Sie sich binden. Skisäcke, Kindersitze, Maut, Flugüberwachung und Wartezeit inklusive.",
+      "Ein Preis pro Fahrzeug, genannt bevor Sie sich binden. Skisäcke, Kindersitze, Maut, Flugüberwachung und eine Stunde Wartezeit inklusive.",
     apercu:
       "Vorschau: Die Online-Buchung wird gerade fertiggestellt. Schicken Sie uns Ihre Fahrt über dieses Formular — wir bestätigen per E-Mail.",
     metaTitre: "Skitransfer in die Alpen buchen",
@@ -122,7 +122,7 @@ export const TEXTES_PAGE: Record<
     fil: "Prenota",
     h1: "Prenota il tuo trasferimento",
     chapo:
-      "Un prezzo per veicolo, indicato prima di qualsiasi impegno. Sacche da sci, seggiolini, pedaggi, monitoraggio del volo e tempo di attesa inclusi.",
+      "Un prezzo per veicolo, indicato prima di qualsiasi impegno. Sacche da sci, seggiolini, pedaggi, monitoraggio del volo e un’ora di attesa inclusa.",
     apercu:
       "Anteprima: la prenotazione online è in fase di completamento. Inviaci il tuo tragitto con questo modulo, confermiamo via e-mail.",
     metaTitre: "Prenota un transfer per le Alpi",

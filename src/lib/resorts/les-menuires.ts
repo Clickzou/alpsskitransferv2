@@ -137,7 +137,7 @@ export const lesMenuires: Resort = {
     {
       question: "What happens if my flight is delayed?",
       reponse:
-        "Your driver tracks it and adjusts the pick-up to the actual landing time; waiting time is included and there is no surcharge.",
+        "Your driver tracks it and adjusts the pick-up to the actual landing time; one hour of waiting time is included and there is no surcharge.",
     },
   ],
 };

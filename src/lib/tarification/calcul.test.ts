@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { BAREME_DEFAUT } from "./bareme";
 import { calculer, estDeNuit, type DemandeTransfert } from "./calcul";
 
@@ -189,5 +189,39 @@ describe("garde-fou d'encaissement", () => {
 
   it("autorise l'encaissement sur un prix fixe convenu", () => {
     expect(calculer({ ...base, prixFixe: 180 }).encaissable).toBe(true);
+  });
+});
+
+/**
+ * L'interrupteur d'encaissement.
+ *
+ * `BAREME_VALIDE` était une constante du code ; c'est une variable
+ * d'environnement depuis le 10 septembre 2026, pour qu'un test de paiement ne
+ * demande plus de modifier le code — et surtout de penser à le remettre après.
+ *
+ * Le défaut est fermé : c'est ce que ces trois cas verrouillent.
+ */
+describe("interrupteur d'encaissement", () => {
+  const initial = process.env.BAREME_VALIDE;
+  afterEach(() => {
+    if (initial === undefined) delete process.env.BAREME_VALIDE;
+    else process.env.BAREME_VALIDE = initial;
+  });
+
+  it("n'encaisse pas quand la variable est absente", () => {
+    delete process.env.BAREME_VALIDE;
+    expect(calculer(base).encaissable).toBe(false);
+  });
+
+  it("n'encaisse pas sur une valeur approchante — seul « oui » ouvre", () => {
+    for (const valeur of ["true", "1", "OUI", "yes", ""]) {
+      process.env.BAREME_VALIDE = valeur;
+      expect(calculer(base).encaissable).toBe(false);
+    }
+  });
+
+  it("encaisse quand la variable vaut « oui »", () => {
+    process.env.BAREME_VALIDE = "oui";
+    expect(calculer(base).encaissable).toBe(true);
   });
 });

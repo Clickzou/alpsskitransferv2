@@ -58,8 +58,8 @@ export default async function PageConfirmation({
               </p>
             ) : null}
             <p>
-              Your driver tracks your flight, so a delay costs you nothing. They will
-              meet you in arrivals with your name, and waiting time is included.
+              Your driver tracks your flight and will be there when you land. They will
+              meet you in arrivals with your name; one hour of waiting time is included.
             </p>
             <p>
               If anything changes — a new flight, an extra passenger, a different

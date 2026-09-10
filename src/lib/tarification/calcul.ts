@@ -1,6 +1,6 @@
 import {
   BAREME_DEFAUT,
-  BAREME_VALIDE,
+  baremeValide,
   type Bareme,
   type CategorieVehicule,
 } from "./bareme";
@@ -129,7 +129,7 @@ export function calculer(demande: DemandeTransfert, bareme: Bareme = BAREME_DEFA
       aller,
     },
     prixFixe,
-    encaissable: BAREME_VALIDE || prixFixe,
+    encaissable: baremeValide() || prixFixe,
   };
 }
 

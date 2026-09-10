@@ -152,7 +152,7 @@ export const TRADUCTIONS_FR: Record<string, TraductionStation> = {
         items: [
           "Housses à skis, snowboards et matériel de randonnée, sans supplément.",
           "Sièges enfants et rehausseurs, installés avant le départ.",
-          "Suivi du vol et temps d’attente en cas de retard.",
+          "Suivi du vol, et une heure d’attente comprise à la prise en charge.",
           "Péages d’autoroute.",
           "Dépose à l’adresse exacte, des Houches à Vallorcine.",
         ],
@@ -306,7 +306,7 @@ export const TRADUCTIONS_FR: Record<string, TraductionStation> = {
         items: [
           "Housses à skis et snowboards, sans supplément.",
           "Sièges enfants et rehausseurs, installés avant le départ.",
-          "Suivi du vol et temps d’attente en cas de retard.",
+          "Suivi du vol, et une heure d’attente comprise à la prise en charge.",
           "Péages d’autoroute.",
           "Dépose à l’adresse exacte, de La Daille au Fornet.",
         ],
@@ -383,7 +383,7 @@ export const TRADUCTIONS_FR: Record<string, TraductionStation> = {
         items: [
           "Housses à skis et snowboards, sans supplément.",
           "Sièges enfants et rehausseurs, installés avant le départ.",
-          "Suivi du vol et temps d'attente en cas de retard.",
+          "Suivi du vol, et une heure d’attente comprise à la prise en charge.",
           "Péages d'autoroute.",
           "Dépose à l'adresse exacte, dans les quatre villages.",
         ],
@@ -460,7 +460,7 @@ export const TRADUCTIONS_FR: Record<string, TraductionStation> = {
         items: [
           "Housses à skis et snowboards, sans supplément.",
           "Sièges enfants et rehausseurs, installés avant le départ.",
-          "Suivi du vol et temps d’attente en cas de retard.",
+          "Suivi du vol, et une heure d’attente comprise à la prise en charge.",
           "Péages d’autoroute.",
           "Dépose à l’adresse exacte, dans les onze villages.",
         ],
@@ -618,7 +618,7 @@ export const TRADUCTIONS_FR: Record<string, TraductionStation> = {
         items: [
           "Housses à skis et snowboards, sans supplément.",
           "Sièges enfants et rehausseurs, installés avant le départ.",
-          "Suivi du vol et temps d’attente en cas de retard.",
+          "Suivi du vol, et une heure d’attente comprise à la prise en charge.",
           "Péages d’autoroute.",
           "Dépose à l’adresse exacte, à l’Alpe d’Huez comme à Vaujany, Oz ou Auris.",
         ],
@@ -772,7 +772,7 @@ export const TRADUCTIONS_FR: Record<string, TraductionStation> = {
         items: [
           "Housses à skis et snowboards, sans supplément.",
           "Sièges enfants et rehausseurs, installés avant le départ.",
-          "Suivi du vol, temps d'attente compris.",
+          "Suivi du vol, une heure d’attente comprise.",
           "Péages d'autoroute.",
           "Dépose à l'adresse exacte, de Les Allues à Mottaret.",
         ],

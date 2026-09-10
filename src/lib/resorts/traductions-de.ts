@@ -31,7 +31,7 @@ const inklusive = {
   items: [
     "Skisäcke und Snowboardtaschen, ohne Aufpreis.",
     "Kindersitze und Sitzerhöhungen, vor der Abfahrt eingebaut.",
-    "Flugüberwachung und Wartezeit bei Verspätung.",
+    "Flugüberwachung, und eine Stunde Wartezeit ab der Abholung.",
     "Maut, Tunnelgebühren und die Schweizer Vignette.",
     "Absetzen an der genauen Adresse Ihrer Unterkunft.",
   ],
@@ -329,7 +329,7 @@ export const TRADUCTIONS_DE: Record<string, TraductionStation> = {
       {
         question: "Was ist im Preis enthalten?",
         reponse:
-          "Der Festpreis pro Fahrzeug, Skisäcke, Kindersitze, Maut, die Schweizer Vignette, Flugüberwachung und Wartezeit bei Verspätung. Nach der Buchung ändert sich nichts mehr.",
+          "Der Festpreis pro Fahrzeug, Skisäcke, Kindersitze, Maut, die Schweizer Vignette, Flugüberwachung, und eine Stunde Wartezeit ab der Abholung. Nach der Buchung ändert sich nichts mehr.",
       },
     ],
   },

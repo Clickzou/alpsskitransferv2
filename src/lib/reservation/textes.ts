@@ -93,7 +93,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     jusqua: "Up to",
     pieces: "pieces of luggage",
     noteInclus:
-      "Prices are per vehicle, not per person, and include ski and snowboard bags, child seats, tolls, flight tracking and waiting time.",
+      "Prices are per vehicle, not per person, and include ski and snowboard bags, child seats, tolls and flight tracking. One hour of waiting is included — from the actual landing time if your flight is delayed; beyond that, €25 per quarter of an hour started.",
     noteDevise: (code) => ` Amounts in ${code} are indicative — the charge is made in euros.`,
     nom: "Lead passenger",
     email: "Email",
@@ -149,7 +149,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     jusqua: "Jusqu’à",
     pieces: "pièces de bagage",
     noteInclus:
-      "Les prix sont par véhicule et non par personne, housses à skis, sièges enfants, péages, suivi du vol et temps d’attente compris.",
+      "Les prix sont par véhicule et non par personne : housses à skis, sièges enfants, péages et suivi du vol compris. Une heure d’attente est comprise — décomptée de l’atterrissage réel si votre vol a du retard ; au-delà, 25 € par quart d’heure entamé.",
     noteDevise: (code) =>
       ` Les montants en ${code} sont indicatifs — la facturation se fait en euros.`,
     nom: "Passager principal",
@@ -211,7 +211,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     jusqua: "Bis zu",
     pieces: "Gepäckstücke",
     noteInclus:
-      "Die Preise gelten pro Fahrzeug und nicht pro Person — Skisäcke, Kindersitze, Maut, Flugüberwachung und Wartezeit inklusive.",
+      "Die Preise gelten pro Fahrzeug und nicht pro Person — Skisäcke, Kindersitze, Maut und Flugüberwachung inklusive. Eine Stunde Wartezeit ist enthalten — bei Verspätung ab der tatsächlichen Landung; danach 25 € je angefangene Viertelstunde.",
     noteDevise: (code) =>
       ` Beträge in ${code} sind Richtwerte — abgerechnet wird in Euro.`,
     nom: "Hauptreisender",
@@ -272,7 +272,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     jusqua: "Fino a",
     pieces: "colli",
     noteInclus:
-      "I prezzi sono per veicolo e non per persona: sacche da sci, seggiolini, pedaggi, monitoraggio del volo e tempo di attesa inclusi.",
+      "I prezzi sono per veicolo e non per persona: sacche da sci, seggiolini, pedaggi e monitoraggio del volo inclusi. È inclusa un’ora di attesa — dall’atterraggio effettivo se il volo è in ritardo; oltre, 25 € per ogni quarto d’ora iniziato.",
     noteDevise: (code) =>
       ` Gli importi in ${code} sono indicativi — la fattura è in euro.`,
     nom: "Passeggero principale",
@@ -654,4 +654,279 @@ export const CHEMIN_PANIER: Record<Lang, string> = {
   fr: "/fr/panier/",
   de: "/de/warenkorb/",
   it: "/it/carrello/",
+};
+
+/* ------------------------------------------------- e-mail de confirmation */
+
+/**
+ * L'e-mail envoyé au client quand son paiement est confirmé.
+ *
+ * Il était en anglais pour tout le monde, écrit en dur dans le webhook : un
+ * client italien réservait en italien, payait en italien, et recevait sa
+ * confirmation en anglais. C'est le message le plus lu de tout le parcours —
+ * celui qu'on ressort à l'aéroport.
+ *
+ * La langue voyage depuis le tunnel jusqu'ici, par les métadonnées de la
+ * session Stripe : le webhook ne connaît rien d'autre de la commande.
+ */
+export interface TextesEmail {
+  sujet: (reference: string) => string;
+  corps: (details: { reference: string; trajet?: string; montant?: string }) => string;
+}
+
+export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
+  en: {
+    sujet: (reference) => `Your transfer is confirmed — ${reference}`,
+    corps: ({ reference, trajet, montant }) =>
+      [
+        "Your transfer is booked and paid.",
+        "",
+        `Reference: ${reference}`,
+        trajet ? `Journey: ${trajet}` : null,
+        montant ? `Amount paid: ${montant}` : null,
+        "",
+        "Your driver tracks your flight and will be there when you land. They will",
+        "meet you in arrivals with your name. One hour of waiting is included,",
+        "then €25 per quarter of an hour started.",
+        "",
+        "If anything changes — a new flight, an extra passenger, a different",
+        "address in resort — tell us as early as you can.",
+      ]
+        .filter((l) => l !== null)
+        .join("\n"),
+  },
+
+  fr: {
+    sujet: (reference) => `Votre transfert est confirmé — ${reference}`,
+    corps: ({ reference, trajet, montant }) =>
+      [
+        "Votre transfert est réservé et payé.",
+        "",
+        `Référence : ${reference}`,
+        trajet ? `Trajet : ${trajet}` : null,
+        montant ? `Montant réglé : ${montant}` : null,
+        "",
+        "Votre chauffeur suit votre vol et sait quand vous atterrissez. Il vous",
+        "attend à la sortie des bagages avec votre nom. Une heure d’attente est",
+        "comprise, puis 25 € par quart d’heure entamé.",
+        "",
+        "Si quelque chose change — un autre vol, un passager de plus, une autre",
+        "adresse en station — dites-le-nous le plus tôt possible.",
+      ]
+        .filter((l) => l !== null)
+        .join("\n"),
+  },
+
+  de: {
+    sujet: (reference) => `Ihr Transfer ist bestätigt — ${reference}`,
+    corps: ({ reference, trajet, montant }) =>
+      [
+        "Ihr Transfer ist gebucht und bezahlt.",
+        "",
+        `Referenz: ${reference}`,
+        trajet ? `Strecke: ${trajet}` : null,
+        montant ? `Bezahlter Betrag: ${montant}` : null,
+        "",
+        "Ihr Fahrer verfolgt Ihren Flug und weiß, wann Sie landen. Er",
+        "erwartet Sie an der Gepäckausgabe mit Ihrem Namen. Eine Stunde Wartezeit",
+        "ist inklusive, danach 25 € je angefangene Viertelstunde.",
+        "",
+        "Ändert sich etwas — ein anderer Flug, eine Person mehr, eine andere",
+        "Adresse im Skiort —, sagen Sie uns so früh wie möglich Bescheid.",
+      ]
+        .filter((l) => l !== null)
+        .join("\n"),
+  },
+
+  it: {
+    sujet: (reference) => `Il tuo transfer è confermato — ${reference}`,
+    corps: ({ reference, trajet, montant }) =>
+      [
+        "Il tuo transfer è prenotato e pagato.",
+        "",
+        `Riferimento: ${reference}`,
+        trajet ? `Tragitto: ${trajet}` : null,
+        montant ? `Importo pagato: ${montant}` : null,
+        "",
+        "Il tuo autista segue il volo e sa quando atterri. Ti aspetta",
+        "all’uscita dei bagagli con il tuo nome. È inclusa un’ora di attesa,",
+        "poi 25 € per ogni quarto d’ora iniziato.",
+        "",
+        "Se qualcosa cambia — un altro volo, un passeggero in più, un altro",
+        "indirizzo in località — diccelo il prima possibile.",
+      ]
+        .filter((l) => l !== null)
+        .join("\n"),
+  },
+};
+
+/** Les textes d'e-mail d'une langue, l'anglais si elle est inconnue. */
+export function textesEmail(langue: string | undefined): TextesEmail {
+  return TEXTES_EMAIL[(langue ?? "en") as Lang] ?? TEXTES_EMAIL.en;
+}
+
+/* -------------------------------------------- avis de course à l'exploitant */
+
+/**
+ * Ce que l'exploitant reçoit quand une course tombe.
+ *
+ * **En français, et dans son ordre de lecture.** L'exploitant est francophone,
+ * et sa question à sept heures du matin n'est pas « quelle référence » : c'est
+ * quand, où, et à quel numéro joindre le client. La référence vient en dernier,
+ * là où on la cherche quand on répond à un e-mail — pas en premier, là où elle
+ * repousse l'essentiel sous la ligne de flottaison d'un écran de téléphone.
+ *
+ * C'est la même demande que celle qui a dicté l'ordre des colonnes du
+ * back-office, le 10 septembre 2026 : « avec l'ancien logiciel on ne voyait pas
+ * la destination de la course ».
+ */
+export interface CourseAvis {
+  reference: string;
+  trajet: string;
+  aller: string;
+  retour?: string | null;
+  adresse: string;
+  client: { nom: string; email: string; telephone: string };
+  vehicule: string;
+  passagers: number;
+  vol?: string | null;
+  bagagesSki?: number | null;
+  enfants?: string | null;
+  message?: string | null;
+  montant?: number | null;
+  paye: boolean;
+}
+
+export function sujetAvis(course: CourseAvis): string {
+  const etat = course.paye ? "Course payée" : "Nouvelle demande";
+  return `${etat} — ${course.aller} · ${course.trajet}`;
+}
+
+export function corpsAvis(course: CourseAvis): string {
+  return [
+    `PRISE EN CHARGE : ${course.aller}`,
+    `TRAJET          : ${course.trajet}`,
+    `ADRESSE         : ${course.adresse}`,
+    `TÉLÉPHONE       : ${course.client.telephone}`,
+    course.vol ? `VOL             : ${course.vol}` : null,
+    "",
+    `Passager   : ${course.client.nom} · ${course.client.email}`,
+    `Véhicule   : ${course.vehicule} · ${course.passagers} passager(s)`,
+    course.bagagesSki ? `Housses ski : ${course.bagagesSki}` : null,
+    course.enfants ? `Enfants    : ${course.enfants} (sièges à prévoir)` : null,
+    course.retour ? `Retour     : ${course.retour}` : "Aller simple",
+    course.montant != null
+      ? `Montant    : ${course.montant} € — ${course.paye ? "payé" : "non encaissé, à confirmer"}`
+      : null,
+    course.message ? `\nMessage du client :\n${course.message}` : null,
+    "",
+    `Référence  : ${course.reference}`,
+  ]
+    .filter((l) => l !== null)
+    .join("\n");
+}
+
+/* ------------------------------------------------------- temps d'attente */
+
+/**
+ * La règle d'attente, écrite une fois pour tout le site.
+ *
+ * Une heure comprise, puis 25 € par quart d'heure entamé — soit 90 € de
+ * l'heure. Le point de départ est la prise en charge **réelle** : le vol étant
+ * suivi, le créneau se décale avec l'avion. Dit dans cet ordre, les deux
+ * promesses se tiennent ; dans l'autre, elles se contredisent.
+ *
+ * Le site affirmait « temps d'attente compris » sans limite, sur une centaine de
+ * pages. Une promesse sans borne face à une facturation horaire, c'est un litige
+ * au premier vol très retardé — et un avis négatif qui coûte plus que l'heure
+ * facturée.
+ */
+export const ATTENTE = {
+  heuresIncluses: 1,
+  prixQuartHeure: 25,
+  prixHeure: 100,
+} as const;
+
+export const TEXTES_ATTENTE: Record<Lang, { court: string; long: string }> = {
+  en: {
+    court: "one hour of waiting time included",
+    long:
+      "One hour of waiting is included. If your flight is delayed, the hour starts " +
+      "from the actual landing time — a delay is not your doing and costs you nothing. " +
+      "Beyond that hour, waiting is charged at €25 per quarter of an hour started " +
+      "(€100 an hour). If you want to change the pick-up time yourself, tell us at " +
+      "least 24 hours ahead so the driver can rearrange the day.",
+  },
+  fr: {
+    court: "une heure d’attente comprise",
+    long:
+      "Une heure d’attente est comprise. Si votre vol a du retard, cette heure court " +
+      "à partir de l’atterrissage réel : le retard n’est pas de votre fait et ne vous " +
+      "coûte rien. Au-delà, l’attente est facturée 25 € par quart d’heure entamé " +
+      "(100 € l’heure). Pour changer vous-même l’heure de prise en charge, prévenez-nous " +
+      "au moins 24 heures à l’avance, le temps que le chauffeur réorganise sa journée.",
+  },
+  de: {
+    court: "eine Stunde Wartezeit inklusive",
+    long:
+      "Eine Stunde Wartezeit ist inklusive. Bei Flugverspätung beginnt diese Stunde mit " +
+      "der tatsächlichen Landung — die Verspätung ist nicht Ihr Verschulden und kostet " +
+      "Sie nichts. Danach werden 25 € je angefangene Viertelstunde berechnet (100 € pro " +
+      "Stunde). Möchten Sie die Abholzeit selbst ändern, sagen Sie uns mindestens " +
+      "24 Stunden vorher Bescheid, damit der Fahrer seinen Tag umplanen kann.",
+  },
+  it: {
+    court: "un’ora di attesa inclusa",
+    long:
+      "È inclusa un’ora di attesa. Se il volo è in ritardo, l’ora decorre dall’atterraggio " +
+      "effettivo: il ritardo non dipende da te e non ti costa nulla. Oltre, l’attesa è " +
+      "fatturata 25 € per ogni quarto d’ora iniziato (100 € l’ora). Per cambiare tu stesso " +
+      "l’orario di presa in carico, avvisaci almeno 24 ore prima, così l’autista può " +
+      "riorganizzare la giornata.",
+  },
+};
+
+/* --------------------------------------------------- départ très proche */
+
+/**
+ * L'avertissement affiché quand la prise en charge est dans moins de quatre
+ * heures.
+ *
+ * Il ne bloque rien : le client réserve s'il le souhaite. Il dit seulement ce
+ * qu'on ne peut pas promettre à cette échéance, et donne le numéro — parce que
+ * la réponse tient en trente secondes au téléphone et en plusieurs heures par
+ * e-mail.
+ */
+export const TEXTES_IMMINENT: Record<Lang, { titre: string; texte: string }> = {
+  en: {
+    titre: "Less than an hour ahead — please call us",
+    texte:
+      "Online booking closes one hour before pick-up: at that notice we cannot " +
+      "confirm from the website that a driver is free. Call us and we will tell you " +
+      "in thirty seconds — we often can, but we will not take your money before we know.",
+  },
+  fr: {
+    titre: "Moins d’une heure — appelez-nous",
+    texte:
+      "La réservation en ligne ferme une heure avant la prise en charge : à cette " +
+      "échéance, le site ne peut pas confirmer qu’un chauffeur est libre. Appelez-nous, " +
+      "la réponse tient en trente secondes — c’est souvent possible, mais nous " +
+      "n’encaissons pas avant d’en être sûrs.",
+  },
+  de: {
+    titre: "Weniger als eine Stunde — bitte rufen Sie an",
+    texte:
+      "Die Online-Buchung schließt eine Stunde vor der Abholung: so kurzfristig kann " +
+      "die Website nicht bestätigen, dass ein Fahrer frei ist. Rufen Sie uns an, die " +
+      "Antwort dauert dreißig Sekunden — oft geht es, aber wir kassieren nicht, bevor " +
+      "wir es wissen.",
+  },
+  it: {
+    titre: "Meno di un’ora — chiamaci",
+    texte:
+      "La prenotazione online chiude un’ora prima della presa in carico: con questo " +
+      "preavviso il sito non può confermare che un autista sia libero. Chiamaci, la " +
+      "risposta arriva in trenta secondi — spesso si può fare, ma non incassiamo prima " +
+      "di esserne certi.",
+  },
 };

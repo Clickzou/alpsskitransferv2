@@ -92,6 +92,20 @@ export const BAREME_DEFAUT: Bareme = {
  * **n'encaisse pas** : le parcours se termine en demande de devis. Mieux vaut un
  * devis qu'une réservation payée au mauvais prix.
  *
- * À passer à `true` uniquement quand le client a validé le barème.
+ * ## Pourquoi une variable d'environnement et non une constante
+ *
+ * C'était `const BAREME_VALIDE = false` dans ce fichier. Pour tester un
+ * paiement, il fallait donc modifier le code, et surtout **penser à le remettre
+ * après** — la seule ligne du projet qui décide si le site encaisse dépendait
+ * d'un aller-retour manuel dans un commit.
+ *
+ * `BAREME_VALIDE=oui` l'ouvre, tout le reste le laisse fermé. Le défaut est donc
+ * fermé, comme pour l'indexation et pour le moteur : un oubli de configuration
+ * fait un devis, jamais un débit.
+ *
+ * **À ouvrir en production le jour où le client a validé la grille tarifaire**,
+ * et pas avant. Un prix faux encaissé coûte plus qu'un prix juste non encaissé.
  */
-export const BAREME_VALIDE = false;
+export function baremeValide(): boolean {
+  return process.env.BAREME_VALIDE === "oui";
+}

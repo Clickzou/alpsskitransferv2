@@ -50,6 +50,14 @@ create table if not exists paiements (
   cree_le       timestamptz not null default now()
 );
 
+-- Une session Stripe ne paie qu'une fois. Le webhook vérifie déjà qu'il n'a pas
+-- traité l'événement, mais deux rejeux simultanés passeraient tous deux la
+-- vérification avant que l'un ait écrit : c'est la base qui tranche, et elle
+-- seule peut le faire sans condition de course.
+create unique index if not exists paiements_session_idx
+  on paiements (session_stripe)
+  where session_stripe is not null;
+
 -- Grille tarifaire éditable depuis le back-office : changer un prix ne doit
 -- jamais demander un déploiement. Tant que la table est vide, le site applique
 -- le barème de `src/lib/tarification/bareme.ts`.

@@ -15,7 +15,7 @@ const inclus = {
   items: [
     "Housses à skis et à snowboard, sans supplément.",
     "Sièges enfants et rehausseurs, installés avant le départ.",
-    "Suivi du vol et temps d’attente en cas de retard.",
+    "Suivi du vol, et une heure d’attente comprise à la prise en charge.",
     "Péages d’autoroute.",
     "Dépose à l’adresse exacte de votre logement.",
   ],

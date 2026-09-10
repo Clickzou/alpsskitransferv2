@@ -15,7 +15,7 @@ export const megeve: Resort = {
     "Private transfers to Megève from Geneva (79 km, 1 h 20), Chambéry, Lyon and Grenoble. Fixed price per vehicle, flight tracking, ski bags included.",
   h1: "Megève Ski Transfers – Private Airport Transfers to the Pays du Mont-Blanc",
   chapo:
-    "Megève is 79 km from Geneva, about 1 hour 20 minutes by road, and 94 km from Chambéry (1 h 20). Lyon is 172 km away (2 h 10) and Grenoble 160 km (2 h 05). The village sits at 1,113 m on a plateau facing Mont Blanc, and the approach — motorway to Sallanches, then the climb to the plateau — is one of the easier ones in the Alps in winter. We drive all four airports door to door, with a price fixed per vehicle and quoted before you book, ski and board bags included. Your driver tracks your flight, so a delay costs you nothing, and pick-up is at your chalet or hotel rather than at a drop-off point.",
+    "Megève is 79 km from Geneva, about 1 hour 20 minutes by road, and 94 km from Chambéry (1 h 20). Lyon is 172 km away (2 h 10) and Grenoble 160 km (2 h 05). The village sits at 1,113 m on a plateau facing Mont Blanc, and the approach — motorway to Sallanches, then the climb to the plateau — is one of the easier ones in the Alps in winter. We drive all four airports door to door, with a price fixed per vehicle and quoted before you book, ski and board bags included. Your driver tracks your flight and is there when you land, and pick-up is at your chalet or hotel rather than at a drop-off point.",
 
   airports: ["geneva-airport", "chambery-savoie-airport", "lyon-airport", "grenoble-isere-airport"],
 
@@ -125,7 +125,7 @@ export const megeve: Resort = {
     {
       question: "What if my flight lands late?",
       reponse:
-        "Your driver tracks the flight and shifts the pick-up to the real landing time. Waiting time is included and there is no surcharge.",
+        "Your driver tracks the flight and shifts the pick-up to the real landing time. One hour of one hour of waiting time is included and there is no surcharge.",
     },
   ],
 };

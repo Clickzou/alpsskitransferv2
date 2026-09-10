@@ -57,7 +57,7 @@ export const PAGES_DE: PageIntl[] = [
           "Maut, Tunnel und die Schweizer Vignette sind enthalten.",
           "Skisäcke und Snowboardtaschen reisen ohne Aufpreis mit.",
           "Kindersitze und Sitzerhöhungen werden gestellt und vor der Abfahrt eingebaut.",
-          "Der Flug wird überwacht; Wartezeit bei Verspätung wird nicht berechnet.",
+          "Der Flug wird überwacht; eine Stunde Wartezeit ab der Abholung ist inklusive.",
         ],
       },
 

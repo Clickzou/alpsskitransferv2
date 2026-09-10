@@ -12,7 +12,7 @@ export const cransMontana: Resort = {
     "Private transfers to Crans-Montana from Geneva (183 km, 2 h 25), Zurich, Milan and Sion. Fixed price per vehicle, ski and board bags included.",
   h1: "Crans-Montana Ski Transfers – Private Airport Transfers to the Valais",
   chapo:
-    "Crans-Montana sits on a sunny terrace at 1,500 m above the Rhône valley, reached by a 15 km climb from Sierre. Geneva is 183 km away, about 2 hours 25 minutes; Zurich around 280 km and 3 h 15; Milan Malpensa 206 km and 3 h 10 through the Simplon; Sion, in the valley below, only 28 km and 35 minutes. We drive all of them door to door, with winter tyres and chains on board, a price fixed per vehicle and quoted before you book, ski bags included, and a driver who tracks your flight so a delay costs you nothing.",
+    "Crans-Montana sits on a sunny terrace at 1,500 m above the Rhône valley, reached by a 15 km climb from Sierre. Geneva is 183 km away, about 2 hours 25 minutes; Zurich around 280 km and 3 h 15; Milan Malpensa 206 km and 3 h 10 through the Simplon; Sion, in the valley below, only 28 km and 35 minutes. We drive all of them door to door, with winter tyres and chains on board, a price fixed per vehicle and quoted before you book, ski bags included, and a driver who tracks your flight and is there when you land.",
 
   airports: ["geneva-airport", "zurich-airport", "milan-malpensa-airport", "bergamo-airport"],
 

@@ -18,8 +18,8 @@ qui n'appartiennent qu'au client.
 
 | | Où ça se voit | Bloquant ? |
 |---|---|---|
-| **Barème tarifaire validé** | `BAREME_VALIDE = false` dans `src/lib/tarification/bareme.ts` | **oui** — le moteur affiche des prix mais n'encaisse pas |
-| **Compte Stripe en production** | clés `sk_live` / `pk_live` / `whsec_` | **oui** pour encaisser |
+| **Barème tarifaire validé** | variable `BAREME_VALIDE` — absente = fermé | **oui** — le moteur affiche des prix mais n'encaisse pas |
+| **Compte Stripe en production** | voir la section 1 bis ci-dessous | **oui** pour encaisser |
 | **Supabase** | tables créées (`docs/supabase-schema.sql`), clés posées | **oui** pour enregistrer une réservation |
 | **Test de bout en bout** | une réservation réelle : session, carte, webhook signé, e-mails, ligne `payee` | **oui** |
 | **Taux de change** | `src/lib/reservation/devises.ts`, figés au 8 septembre 2026 | oui si GBP/USD affichés |
@@ -27,6 +27,39 @@ qui n'appartiennent qu'au client.
 | **Fiche Google Business** | doit porter les **mêmes** nom, adresse et téléphone que `src/data/site.ts` | non, mais c'est le premier levier de trafic local |
 | **Avis** | `GOOGLE_PLACE_ID` + `GOOGLE_MAPS_API_KEY` — sans eux, quatre témoignages non vérifiables | non |
 | **Tunnel WooCommerce de repli** | déplacé sur `book.alpsskitransfers.com`, sorti de l'index, joignable | oui — c'est le filet |
+
+---
+
+## 1 bis. Stripe — à finir quand le moteur est bouclé
+
+Le compte **« Alps Ski Transfers »** (`acct_1UE6LCAS15fy8zV6`) a été créé le
+10 septembre 2026 depuis le compte Stripe de Clickzou, en **compte distinct** —
+pas dans l'organisation clickzou.fr, pour qu'il vive sans son prestataire. Seul
+l'environnement de test est configuré : il sert aux essais et ne touche à aucun
+argent réel.
+
+Ce qui reste, dans cet ordre :
+
+1. **Inviter Nassim comme administrateur** — *Paramètres → Équipe et sécurité*,
+   avec son e-mail. **C'est le point qui compte le plus** : tant qu'il n'est pas
+   sur le compte, celui-ci dépend de Clickzou. C'est exactement ce qui s'est
+   passé avec le compte `51ETDm` de l'ancien site, dont le client ignore
+   l'existence.
+2. **La vérification d'entreprise**, par lui : NM Transports 73, SIREN
+   889 065 165, pièce d'identité du dirigeant, IBAN de l'entreprise. Stripe met
+   généralement quelques jours ouvrés — c'est le chemin critique.
+3. **L'IBAN doit être celui du client.** Le reste est de l'administration ; ça,
+   c'est l'endroit où arrive l'argent.
+4. **Les clés de production dans Vercel**, jamais dans un fichier du dépôt :
+   `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`.
+5. **Créer l'endpoint webhook de production** — *Développeurs → Webhooks*, sur
+   `https://www.alpsskitransfers.com/api/stripe/webhook`, événement
+   `checkout.session.completed` — et poser son `whsec_` dans Vercel. Celui du
+   test ne signe pas les événements de production.
+6. **Ouvrir l'encaissement** : `BAREME_VALIDE=oui`, une fois la grille validée
+   par le client et pas avant. Défaut fermé, comme l'indexation.
+7. **Faire tourner les clés de l'ancien compte** si le client en retrouve
+   l'accès : elles ont circulé dans une sauvegarde de 1,39 Go.
 
 ---
 

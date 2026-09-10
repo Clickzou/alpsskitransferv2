@@ -21,7 +21,7 @@ const inklusive = {
   items: [
     "Skisäcke und Snowboardtaschen, ohne Aufpreis.",
     "Kindersitze und Sitzerhöhungen, vor der Abfahrt eingebaut.",
-    "Flugüberwachung und Wartezeit bei Verspätung.",
+    "Flugüberwachung, und eine Stunde Wartezeit ab der Abholung.",
     "Maut, Tunnelgebühren und die Schweizer Vignette.",
     "Absetzen an der genauen Adresse Ihrer Unterkunft.",
   ],

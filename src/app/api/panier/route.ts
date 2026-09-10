@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { SITE } from "@/data/site";
 import { airportParSlug } from "@/lib/airports";
+import { origineSite } from "@/lib/reservation/config";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 import { devisReservation } from "@/lib/reservation/devis";
 import { creerSessionCheckout, stripeConfigure, type LigneCheckout } from "@/lib/reservation/stripe";
@@ -141,12 +142,13 @@ export async function POST(requete: Request) {
       montant: c.total,
     }));
 
+    const origine = origineSite(requete);
     const session = await creerSessionCheckout({
       reference,
       lignes,
       email,
-      urlSucces: `${SITE.url}/booking/confirmed/?ref=${reference}`,
-      urlAnnulation: `${SITE.url}/cart/`,
+      urlSucces: `${origine}/booking/confirmed/?ref=${reference}`,
+      urlAnnulation: `${origine}/cart/`,
       metadonnees: { courses: String(chiffrees.length), nom },
     });
 

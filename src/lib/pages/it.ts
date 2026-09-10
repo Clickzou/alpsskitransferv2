@@ -511,7 +511,7 @@ export const PAGES_IT: PageIntl[] = [
       {
         question: "L’autista aspetta durante la denuncia del bagaglio?",
         reponse:
-          "Sì. Il tempo di attesa compreso nel prezzo copre questa pratica: avvisa l’autista quando lo raggiungi, ti aspetta al punto d’incontro.",
+          "Sì. Il un’ora di attesa compresa nel prezzo copre questa pratica: avvisa l’autista quando lo raggiungi, ti aspetta al punto d’incontro.",
       },
       {
         question: "Per quanto tempo conservate un oggetto ritrovato?",

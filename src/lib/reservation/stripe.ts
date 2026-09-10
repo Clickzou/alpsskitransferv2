@@ -41,6 +41,11 @@ export interface DemandeCheckout {
   metadonnees?: Record<string, string>;
 }
 
+/** Le total en centimes — sert la clé d'idempotence, et rien d'autre. */
+function total(lignes: LigneCheckout[]): number {
+  return lignes.reduce((somme, ligne) => somme + Math.round(ligne.montant * 100), 0);
+}
+
 /**
  * Crée une session Stripe Checkout et renvoie son URL, ou `null` si Stripe n'est
  * pas configuré ou refuse la session. Un échec ne doit pas faire perdre la
@@ -81,9 +86,18 @@ export async function creerSessionCheckout(
       headers: {
         Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
         "Content-Type": "application/x-www-form-urlencoded",
-        // Une même demande rejouée ne crée qu'une session : un double clic ne
-        // doit pas produire deux paiements.
-        "Idempotency-Key": demande.reference,
+        /*
+          Une même demande rejouée ne crée qu'une session : un double clic ne
+          doit pas produire deux paiements.
+
+          La clé porte le montant en plus de la référence, et c'est nécessaire :
+          un client qui revient changer de véhicule garde sa référence mais pas
+          son total. Avec la seule référence, Stripe refuserait la requête — même
+          clé, paramètres différents — et le paiement échouerait sans explication
+          lisible. Avec le montant, un changement produit une nouvelle session et
+          un double clic n'en produit toujours qu'une.
+        */
+        "Idempotency-Key": `${demande.reference}-${total(demande.lignes)}`,
       },
       body: corps,
       cache: "no-store",

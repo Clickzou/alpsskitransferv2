@@ -14,13 +14,31 @@ export function emailConfigure(): boolean {
 }
 
 export interface Message {
-  destinataire: string;
+  /**
+   * Un destinataire, ou plusieurs séparés par des virgules.
+   *
+   * L'avis de réservation part à l'exploitant, et celui-ci n'a pas qu'une
+   * adresse : l'officielle du site et celle qu'il relève réellement sur son
+   * téléphone. Plutôt que de dupliquer l'envoi chez les cinq appelants,
+   * `EMAIL_EXPLOITANT` accepte une liste — « contact@…,nm…@gmail.com » — et le
+   * découpage se fait ici, une fois.
+   */
+  destinataire: string | string[];
   sujet: string;
   texte: string;
 }
 
+/** « a@x.fr, b@y.fr » → ["a@x.fr", "b@y.fr"]. Les vides sautent. */
+function destinataires(valeur: string | string[]): string[] {
+  const liste = Array.isArray(valeur) ? valeur : valeur.split(",");
+  return liste.map((a) => a.trim()).filter(Boolean);
+}
+
 export async function envoyer(message: Message): Promise<boolean> {
   if (!emailConfigure()) return false;
+
+  const to = destinataires(message.destinataire);
+  if (to.length === 0) return false;
 
   try {
     const reponse = await fetch("https://api.resend.com/emails", {
@@ -31,7 +49,7 @@ export async function envoyer(message: Message): Promise<boolean> {
       },
       body: JSON.stringify({
         from: process.env.EMAIL_EXPEDITEUR,
-        to: [message.destinataire],
+        to,
         subject: message.sujet,
         text: message.texte,
       }),
