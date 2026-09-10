@@ -91,6 +91,28 @@ export interface TextesTunnel {
    */
   enfantsNombre: string;
   enfantsNombreIndice: string;
+  /**
+   * Les enfants du retour, quand le groupe change d'un sens à l'autre.
+   *
+   * Un seul champ ne pouvait pas les décrire : sur un aller à deux et un retour
+   * à sept, « sept enfants » est vrai du retour et faux de l'aller. On avait
+   * d'abord posé un avertissement, puis une boîte de dialogue avant le
+   * paiement ; c'était traiter le symptôme. Chaque sens a son compte, borné par
+   * son propre groupe, et l'incohérence n'existe plus.
+   */
+  enfantsNombreRetour: string;
+  /**
+   * Pourquoi la liste s'arrête là, et quoi faire pour aller plus loin.
+   *
+   * Chaque compte est borné par le groupe de son trajet, ce qui rend
+   * l'incohérence impossible à saisir. Mais une liste qui s'arrête sans rien
+   * dire est un mur : le visiteur qui voyage avec trois enfants et n'en trouve
+   * que deux dans la liste ne devine pas qu'il a réservé pour deux personnes,
+   * ni qu'il doit remonter à l'étape du trajet pour le corriger. On le lui dit,
+   * et on l'y ramène d'un clic.
+   */
+  enfantsBorne: (places: number) => string;
+  enfantsChangerGroupe: string;
   enfants: string;
   enfantsIndice: string;
   precisions: string;
@@ -171,6 +193,10 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, hotel or residence",
     enfantsNombre: "How many children",
     enfantsNombreIndice: "Car seats are included",
+    enfantsNombreRetour: "Children on the return",
+    enfantsBorne: (places) =>
+      `The list stops at ${places} because this journey is booked for ${places} people, children included. Travelling with more?`,
+    enfantsChangerGroupe: "Change the number of passengers",
     enfants: "Children’s ages, for the right seats",
     enfantsIndice: "e.g. 3 and 7",
     precisions: "Add child seats or a note (optional)",
@@ -254,6 +280,10 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, hôtel ou résidence",
     enfantsNombre: "Combien d'enfants",
     enfantsNombreIndice: "Les sièges sont compris",
+    enfantsNombreRetour: "Enfants au retour",
+    enfantsBorne: (places) =>
+      `La liste s'arrête à ${places} parce que ce trajet est réservé pour ${places} personnes, enfants compris. Vous êtes plus nombreux ?`,
+    enfantsChangerGroupe: "Modifier le nombre de passagers",
     enfants: "Âge des enfants, pour les bons sièges",
     enfantsIndice: "par exemple 3 et 7",
     precisions: "Ajouter des sièges enfants ou une précision (facultatif)",
@@ -342,6 +372,10 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, Hotel oder Appartement",
     enfantsNombre: "Wie viele Kinder",
     enfantsNombreIndice: "Kindersitze sind inbegriffen",
+    enfantsNombreRetour: "Kinder auf der Rückfahrt",
+    enfantsBorne: (places) =>
+      `Die Liste endet bei ${places}, weil diese Fahrt für ${places} Personen gebucht ist, Kinder eingeschlossen. Sind Sie mehr?`,
+    enfantsChangerGroupe: "Personenzahl ändern",
     enfants: "Alter der Kinder, für die richtigen Sitze",
     enfantsIndice: "zum Beispiel 3 und 7",
     precisions: "Kindersitze oder Hinweis hinzufügen (optional)",
@@ -429,6 +463,10 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     adresseIndice: "Chalet, hotel o residence",
     enfantsNombre: "Quanti bambini",
     enfantsNombreIndice: "I seggiolini sono inclusi",
+    enfantsNombreRetour: "Bambini al ritorno",
+    enfantsBorne: (places) =>
+      `L'elenco si ferma a ${places} perché questo tragitto è prenotato per ${places} persone, bambini compresi. Siete di più?`,
+    enfantsChangerGroupe: "Modifica il numero di passeggeri",
     enfants: "Età dei bambini, per i seggiolini giusti",
     enfantsIndice: "per esempio 3 e 7",
     precisions: "Aggiungi seggiolini o una nota (facoltativo)",

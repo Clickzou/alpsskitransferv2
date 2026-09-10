@@ -235,15 +235,24 @@ export default function Tunnel({
     telephone: "",
     vol: "",
     enfantsNombre: "0",
+    enfantsNombreRetour: "0",
     enfants: "",
     message: "",
   });
   const [reference, setReference] = useState<string | null>(null);
 
+
   // Changer la demande invalide le prix affiché : on ne garde jamais à l'écran un
   // devis qui ne correspond plus à la saisie.
-  /* Le trajet le plus chargé borne le nombre d'enfants — voir `/api/reservation`. */
-  const maxEnfants = Math.max(passengers, retourPassagers ?? 0);
+  /*
+    Une borne par sens : un enfant est un passager de son propre trajet.
+
+    Une borne unique — le trajet le plus chargé — laissait annoncer sept enfants
+    sur un aller qui n'emmène que deux personnes. Chaque compte est maintenant
+    borné par le groupe de son sens, et l'incohérence ne peut plus se saisir.
+  */
+  const maxEnfants = passengers;
+  const maxEnfantsRetour = retourPassagers ?? passengers;
 
   /*
     Réduire le groupe après avoir annoncé des enfants laissait la valeur en
@@ -252,12 +261,15 @@ export default function Tunnel({
     pourquoi. Elle est ramenée à la nouvelle borne.
   */
   useEffect(() => {
-    setClient((precedent) =>
-      Number(precedent.enfantsNombre) > maxEnfants
-        ? { ...precedent, enfantsNombre: String(maxEnfants) }
-        : precedent,
-    );
-  }, [maxEnfants]);
+    setClient((precedent) => {
+      const aller = Math.min(Number(precedent.enfantsNombre) || 0, maxEnfants);
+      const retour = Math.min(Number(precedent.enfantsNombreRetour) || 0, maxEnfantsRetour);
+      if (aller === Number(precedent.enfantsNombre) && retour === Number(precedent.enfantsNombreRetour)) {
+        return precedent;
+      }
+      return { ...precedent, enfantsNombre: String(aller), enfantsNombreRetour: String(retour) };
+    });
+  }, [maxEnfants, maxEnfantsRetour]);
 
   useEffect(() => {
     setDevis(null);
@@ -367,6 +379,7 @@ export default function Tunnel({
   async function envoyer(evenement: React.FormEvent) {
     evenement.preventDefault();
     if (imminent) return;
+
     setErreur(null);
     setEnCours(true);
     try {
@@ -1024,9 +1037,20 @@ export default function Tunnel({
                 taper : c'est un petit nombre, et une liste ne se remplit pas de
                 travers.
               */}
+              {/*
+                Combien à l'aller, combien au retour, puis quel âge.
+
+                Le nombre décide de ce que le chauffeur charge — un siège par
+                enfant, pris avant de partir —, l'âge décide du type : nacelle,
+                siège-auto ou rehausseur. Et le compte se fait par sens, comme
+                les passagers et le véhicule : un groupe peut repartir sans les
+                enfants, ou n'être que cela. Chaque liste s'arrête au groupe de
+                son trajet, ce qui rend l'incohérence impossible à saisir plutôt
+                qu'à signaler après coup.
+              */}
               <div className="min-w-0">
                 <label className={ETIQUETTE} htmlFor="enfantsNombre">
-                  {t.enfantsNombre}
+                  {allerRetourChiffre ? `${t.enfantsNombre} — ${t.aller}` : t.enfantsNombre}
                 </label>
                 <select
                   id="enfantsNombre"
@@ -1034,20 +1058,69 @@ export default function Tunnel({
                   value={client.enfantsNombre}
                   onChange={(e) => setClient({ ...client, enfantsNombre: e.target.value })}
                 >
-                  {/*
-                    La liste s'arrête au groupe : un enfant est un passager, et
-                    le champ du haut demande « combien de personnes, enfants
-                    compris ». Proposer plus d'enfants que de sièges vendus
-                    invite à une saisie que le serveur refusera.
-                  */}
                   {Array.from({ length: maxEnfants + 1 }, (_, n) => (
                     <option key={n} value={String(n)}>
                       {n}
                     </option>
                   ))}
                 </select>
-                <p className="mt-1 text-xs text-alpine-600">{t.enfantsNombreIndice}</p>
+                {/*
+                  À la borne, on explique le mur plutôt que de le laisser muet.
+
+                  Le visiteur qui voyage avec trois enfants et n'en trouve que
+                  deux dans la liste ne devine pas qu'il a réservé pour deux
+                  personnes, ni où le corriger. Le lien le ramène à l'étape du
+                  trajet, où le nombre de passagers se change.
+                */}
+                {Number(client.enfantsNombre) >= maxEnfants ? (
+                  <p className="mt-1 text-xs text-alpine-600">
+                    {t.enfantsBorne(maxEnfants)}{" "}
+                    <button
+                      type="button"
+                      onClick={() => setEtape("trajet")}
+                      className="font-medium text-marque underline underline-offset-2 hover:text-marque-600"
+                    >
+                      {t.enfantsChangerGroupe}
+                    </button>
+                  </p>
+                ) : (
+                  <p className="mt-1 text-xs text-alpine-600">{t.enfantsNombreIndice}</p>
+                )}
               </div>
+
+              {allerRetourChiffre ? (
+                <div className="min-w-0">
+                  <label className={ETIQUETTE} htmlFor="enfantsNombreRetour">
+                    {t.enfantsNombreRetour}
+                  </label>
+                  <select
+                    id="enfantsNombreRetour"
+                    className={CHAMP}
+                    value={client.enfantsNombreRetour}
+                    onChange={(e) =>
+                      setClient({ ...client, enfantsNombreRetour: e.target.value })
+                    }
+                  >
+                    {Array.from({ length: maxEnfantsRetour + 1 }, (_, n) => (
+                      <option key={n} value={String(n)}>
+                        {n}
+                      </option>
+                    ))}
+                  </select>
+                  {Number(client.enfantsNombreRetour) >= maxEnfantsRetour ? (
+                    <p className="mt-1 text-xs text-alpine-600">
+                      {t.enfantsBorne(maxEnfantsRetour)}{" "}
+                      <button
+                        type="button"
+                        onClick={() => setEtape("trajet")}
+                        className="font-medium text-marque underline underline-offset-2 hover:text-marque-600"
+                      >
+                        {t.enfantsChangerGroupe}
+                      </button>
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
               <div className="min-w-0">
                 <label className={ETIQUETTE} htmlFor="enfants">
                   {t.enfants}

@@ -35,8 +35,10 @@ interface Coordonnees {
   vol?: string;
   adresse?: string;
   skis?: number;
-  /** Combien d'enfants voyagent — un siège chacun à charger. */
+  /** Combien d'enfants à l'aller — un siège chacun à charger. */
   enfantsNombre?: string;
+  /** Combien au retour, quand le groupe change de sens en sens. */
+  enfantsNombreRetour?: string;
   /** Leurs âges, qui décident du type de siège. */
   enfants?: string;
   message?: string;
@@ -50,16 +52,25 @@ interface Coordonnees {
  * ce qu'il faut charger, l'âge ce qu'il faut charger exactement ; l'un sans
  * l'autre laisse partir sans le bon siège.
  */
-function phraseEnfants(client: Coordonnees): string {
-  const nombre = nombreEnfants(client);
+function phraseEnfants(client: Coordonnees, allerRetour: boolean): string {
+  const aller = nombreEnfants(client.enfantsNombre);
+  const retour = nombreEnfants(client.enfantsNombreRetour);
   const ages = propre(client.enfants, 120);
-  if (nombre < 1) return ages;
-  return ages ? `${nombre} (${ages})` : `${nombre}`;
+  const suffixe = ages ? ` (${ages})` : "";
+
+  if (aller === 0 && retour === 0) return ages;
+  /*
+    On ne répète les deux comptes que lorsqu'ils diffèrent : « aller 2 · retour 1 »
+    dit quelque chose, « aller 2 · retour 2 » fait relire deux fois la même
+    information à quelqu'un qui prépare sa journée.
+  */
+  if (!allerRetour || aller === retour) return `${Math.max(aller, retour)}${suffixe}`;
+  return `aller ${aller} · retour ${retour}${suffixe}`;
 }
 
-/** Le nombre d'enfants annoncé, ramené à un entier positif. */
-function nombreEnfants(client: Coordonnees): number {
-  const n = Number(client.enfantsNombre);
+/** Un compte d'enfants annoncé, ramené à un entier positif. */
+function nombreEnfants(valeur: unknown): number {
+  const n = Number(valeur);
   return Number.isInteger(n) && n > 0 ? n : 0;
 }
 
@@ -146,25 +157,26 @@ export async function POST(requete: Request) {
   }
 
   /*
-    Un enfant est un passager.
+    Un enfant est un passager de son propre trajet.
 
     Le champ du groupe demande « combien de personnes, enfants compris » ; celui
     des sièges demande combien d'entre elles sont des enfants. Rien n'empêchait
-    d'annoncer six enfants dans un groupe de deux — la liste du navigateur allait
-    jusqu'à six quel qu'il soit. C'est incohérent à lire pour le chauffeur, et
-    c'est surtout le genre de saisie qui fait partir un véhicule trop petit,
-    puisque le nombre de sièges à installer prend de la place.
+    d'en annoncer six dans un groupe de deux. C'est incohérent à lire pour le
+    chauffeur, et c'est surtout le genre de saisie qui fait partir un véhicule
+    trop petit, puisqu'un siège enfant occupe une place.
 
-    Le contrôle est ici, où il décide vraiment : la liste du navigateur ne
-    protège que d'une faute d'inattention, la console suffit à la contourner.
-    Sur un aller-retour, la borne est le trajet le plus chargé — un enfant qui ne
-    fait qu'un des deux sens reste un enfant à asseoir.
+    Chaque sens est borné par son propre groupe, et non par le plus chargé des
+    deux : sur un aller à deux et un retour à sept, « sept enfants » est vrai du
+    retour et faux de l'aller. Le contrôle est ici, où il décide vraiment — les
+    listes du navigateur ne protègent que d'une faute d'inattention, la console
+    suffit à les contourner.
   */
-  const groupePlusCharge = Math.max(
-    Number(corps.passengers) || 0,
-    Number(corps.returnPassengers) || 0,
-  );
-  if (nombreEnfants(client) > groupePlusCharge) {
+  const groupeAller = Number(corps.passengers) || 0;
+  const groupeRetour = Number(corps.returnPassengers) || groupeAller;
+  if (
+    nombreEnfants(client.enfantsNombre) > groupeAller ||
+    nombreEnfants(client.enfantsNombreRetour) > groupeRetour
+  ) {
     return NextResponse.json(
       { erreur: "There are more children than passengers — check the number of people." },
       { status: 400 },
@@ -193,7 +205,7 @@ export async function POST(requete: Request) {
       vol: propre(client.vol, 20),
       adresse,
       bagages_ski: s.skis,
-      enfants: phraseEnfants(client),
+      enfants: phraseEnfants(client, Boolean(s.retour)),
       message: propre(client.message, 2000),
     };
     const enregistreeSurMesure = await inserer("reservations", ligneSurMesure);
@@ -332,7 +344,7 @@ export async function POST(requete: Request) {
     vol: propre(client.vol, 20),
     adresse,
     bagages_ski: Number.isInteger(client.skis) ? client.skis : 0,
-    enfants: phraseEnfants(client),
+    enfants: phraseEnfants(client, Boolean(demande.retour)),
     message: propre(client.message, 2000),
   };
 
