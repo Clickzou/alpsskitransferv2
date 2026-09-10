@@ -15,8 +15,13 @@ import { T } from "@/lib/intl/textes";
  *
  * Les libellés viennent de `lib/intl` : à quatre langues, les garder en ligne
  * ferait de chaque ligne une échelle de ternaires.
+ *
+ * `appel` commande la bannière « Un prix ferme, avant de vous engager », qui
+ * porte le bouton « Demander un prix ». Elle a sa place partout où le visiteur
+ * lit — pas sur la page où il est en train de demander ce prix : lui proposer
+ * de commencer ce qu'il a commencé le renvoie au début de son propre parcours.
  */
-export default function Footer({ lang }: { lang: Lang }) {
+export default function Footer({ lang, appel = true }: { lang: Lang; appel?: boolean }) {
   const t = T(lang);
   const colonnes = colonnesPied(lang);
   const transportsPar: Record<Lang, string> = {
@@ -35,18 +40,20 @@ export default function Footer({ lang }: { lang: Lang }) {
   return (
     <footer className="bg-alpine-900 text-glacier-200">
       <div className="mx-auto max-w-6xl px-4 py-section">
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-6 border-b border-white/10 pb-10">
-          <div>
-            <p className="font-display text-titre-carte text-white">{t.pied.accroche}</p>
-            <p className="mt-1 text-sm text-glacier-300">{t.pied.accrocheSuite}</p>
+        {appel ? (
+          <div className="mb-10 flex flex-wrap items-center justify-between gap-6 border-b border-white/10 pb-10">
+            <div>
+              <p className="font-display text-titre-carte text-white">{t.pied.accroche}</p>
+              <p className="mt-1 text-sm text-glacier-300">{t.pied.accrocheSuite}</p>
+            </div>
+            <Link
+              href={lienTunnelLangue(lang)}
+              className="rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
+            >
+              {t.demanderPrix}
+            </Link>
           </div>
-          <Link
-            href={lienTunnelLangue(lang)}
-            className="rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
-          >
-            {t.demanderPrix}
-          </Link>
-        </div>
+        ) : null}
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>

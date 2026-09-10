@@ -2,7 +2,7 @@ import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Tunnel from "@/components/reservation/Tunnel";
-import { BandeauReassurance, HeroInterieur, Section } from "@/components/gabarit/Sections";
+import { HeroInterieur, Section } from "@/components/gabarit/Sections";
 import type { LangueSecondaire } from "@/lib/i18n";
 import { T, lienReserver } from "@/lib/intl/textes";
 import { moteurInterne } from "@/lib/reservation/config";
@@ -47,6 +47,18 @@ export default function TunnelIntl({
     <>
       <Header lang={lang} />
       <main id="contenu">
+        {/*
+          Une page de conversion, pas d'acquisition — elle est en `noindex`
+          explicite, contrairement à `/book-ski-transfer-tickets/` qui porte le
+          mot-clé anglais et l'antériorité du WordPress.
+
+          D'où le dépouillement décidé le 10 septembre 2026 : le chapô, le
+          bandeau de réassurance et l'appel du pied de page répétaient, au-dessus
+          et au-dessous du formulaire, ce que le formulaire dit lui-même — et
+          proposaient de « demander un prix » à quelqu'un occupé à le demander.
+          Restent le fil d'Ariane et le titre : une page sans titre n'est pas une
+          page, ni pour un lecteur d'écran ni pour le contrôle de prebuild.
+        */}
         <HeroInterieur>
           <FilAriane
             clair
@@ -58,15 +70,12 @@ export default function TunnelIntl({
           <h1 className="mt-4 max-w-3xl text-balance font-display text-titre-page">
             {textes.h1}
           </h1>
-          <p className="mt-4 max-w-2xl text-chapo text-glacier-200">{textes.chapo}</p>
           {moteurInterne() ? null : (
             <p className="mt-4 max-w-2xl rounded border border-white/20 bg-white/10 px-4 py-3 text-sm text-glacier-200">
               {textes.apercu}
             </p>
           )}
         </HeroInterieur>
-
-        <BandeauReassurance langue={lang} />
 
         {/*
           `id="reserver"` n'est pas décoratif : le formulaire de recherche de la
@@ -86,7 +95,7 @@ export default function TunnelIntl({
           />
         </Section>
       </main>
-      <Footer lang={lang} />
+      <Footer lang={lang} appel={false} />
     </>
   );
 }
@@ -94,13 +103,11 @@ export default function TunnelIntl({
 /** Les textes propres à la page du tunnel — distincts des libellés du formulaire. */
 export const TEXTES_PAGE: Record<
   LangueSecondaire,
-  { fil: string; h1: string; chapo: string; apercu: string; metaTitre: string; metaDescription: string }
+  { fil: string; h1: string; apercu: string; metaTitre: string; metaDescription: string }
 > = {
   fr: {
     fil: "Réserver",
     h1: "Réservez votre transfert",
-    chapo:
-      "Un prix par véhicule, annoncé avant tout engagement. Housses à skis, sièges enfants, péages, suivi du vol et une heure d’attente comprise.",
     apercu:
       "Aperçu : la réservation en ligne est en cours de finalisation. Envoyez-nous votre trajet par ce formulaire, nous confirmons par e-mail.",
     metaTitre: "Réserver un transfert vers les Alpes",
@@ -110,8 +117,6 @@ export const TEXTES_PAGE: Record<
   de: {
     fil: "Buchen",
     h1: "Buchen Sie Ihren Transfer",
-    chapo:
-      "Ein Preis pro Fahrzeug, genannt bevor Sie sich binden. Skisäcke, Kindersitze, Maut, Flugüberwachung und eine Stunde Wartezeit inklusive.",
     apercu:
       "Vorschau: Die Online-Buchung wird gerade fertiggestellt. Schicken Sie uns Ihre Fahrt über dieses Formular — wir bestätigen per E-Mail.",
     metaTitre: "Skitransfer in die Alpen buchen",
@@ -121,8 +126,6 @@ export const TEXTES_PAGE: Record<
   it: {
     fil: "Prenota",
     h1: "Prenota il tuo trasferimento",
-    chapo:
-      "Un prezzo per veicolo, indicato prima di qualsiasi impegno. Sacche da sci, seggiolini, pedaggi, monitoraggio del volo e un’ora di attesa inclusa.",
     apercu:
       "Anteprima: la prenotazione online è in fase di completamento. Inviaci il tuo tragitto con questo modulo, confermiamo via e-mail.",
     metaTitre: "Prenota un transfer per le Alpi",
