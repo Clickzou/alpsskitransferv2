@@ -82,7 +82,7 @@ un enseignement en soi : **les prix actuels ne suivent aucune règle** — de 1,
 | Majoration dimanche | +8 % | nouveau — n'existait pas |
 | Majoration nuit (22 h-6 h) | +20 % | nouveau — n'existait pas |
 | Part par personne en partagé | 21,4 % | médiane observée sur les prix publiés |
-| Remise aller-retour | −5 % sur le retour | nouveau |
+| Remise aller-retour | **aucune** — proposée à −5 % sur le retour, retirée le 10 septembre 2026 faute de validation | à trancher |
 
 **Garde-fou : `BAREME_VALIDE = false`.** Tant que le client n'a pas confirmé, le
 moteur calcule et affiche, mais **n'encaisse pas** — le parcours se termine en

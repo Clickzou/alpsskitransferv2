@@ -129,8 +129,24 @@ describe("plage de nuit", () => {
 });
 
 describe("aller-retour", () => {
-  it("applique la remise sur le seul retour", () => {
+  /*
+    La remise du barème par défaut est à zéro depuis le 10 septembre 2026 : elle
+    n'a jamais été validée par l'exploitant, et un rabais que personne n'a
+    consenti ne s'affiche pas à un client. La mécanique, elle, reste juste et
+    testée — sur un barème explicite, pour que ce test dise ce qu'il vérifie
+    plutôt que de dépendre d'une valeur qui bouge.
+  */
+  it("ne remise rien tant que le barème n'en prévoit pas", () => {
     const devis = calculer({ ...base, allerRetour: true });
+    expect(devis.total).toBe(420);
+    expect(devis.detail.remises).toEqual([]);
+  });
+
+  it("applique la remise sur le seul retour, quand le barème en porte une", () => {
+    const devis = calculer(
+      { ...base, allerRetour: true },
+      { ...BAREME_DEFAUT, remiseAllerRetour: 5 },
+    );
     // 210 aller + 200 retour (−5 %)
     expect(devis.total).toBe(410);
     expect(devis.detail.aller).toBe(210);

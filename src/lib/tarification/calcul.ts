@@ -105,10 +105,20 @@ export function calculer(demande: DemandeTransfert, bareme: Bareme = BAREME_DEFA
   let total = aller;
   if (demande.allerRetour) {
     const retour = arrondi(aller * (1 - bareme.remiseAllerRetour / 100));
-    remises.push({
-      libelle: `Aller-retour (−${bareme.remiseAllerRetour} % sur le retour)`,
-      montant: aller - retour,
-    });
+    /*
+      Une remise nulle n'est pas une remise.
+
+      Le barème n'en porte plus depuis qu'elle attend la validation de
+      l'exploitant, et la ligne partait quand même : « Aller-retour (−0 % sur le
+      retour) — 0 € ». Annoncer un rabais de zéro euro est pire que n'en annoncer
+      aucun.
+    */
+    if (aller - retour > 0) {
+      remises.push({
+        libelle: `Aller-retour (−${bareme.remiseAllerRetour} % sur le retour)`,
+        montant: aller - retour,
+      });
+    }
     total = aller + retour;
   }
 

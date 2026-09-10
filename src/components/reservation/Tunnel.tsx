@@ -1126,7 +1126,10 @@ function ListeVehicules({
   return (
     <section className="mt-4">
       {titre ? (
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-alpine-600">{titre}</h3>
+        /* Le vert de la marque — `marque`, l'or étant `alpes` depuis la
+           refonte de la palette. Ces deux intertitres découpent l'écran en deux
+           choix distincts, et c'est ce qu'on doit y voir d'abord. */
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-marque-600">{titre}</h3>
       ) : null}
       <ul className="mt-2 space-y-3">
         {options.map((option) => {
@@ -1138,7 +1141,9 @@ function ListeVehicules({
                 aria-pressed={actif}
                 onClick={() => onChoisir(option)}
                 className={`flex w-full flex-col gap-0 overflow-hidden rounded border bg-white text-left transition hover:shadow-carte sm:flex-row sm:items-stretch ${
-                  actif ? "border-alpes ring-2 ring-alpes/30" : "border-glacier-200 hover:border-alpes"
+                  actif
+                    ? "border-marque ring-2 ring-marque/30"
+                    : "border-glacier-200 hover:border-marque"
                 }`}
               >
                 {/*
@@ -1165,7 +1170,7 @@ function ListeVehicules({
                   <span>
                     <span className="font-display text-lg text-alpine">{option.nom}</span>
                     {actif ? (
-                      <span className="ml-2 rounded-full bg-alpes-50 px-2 py-0.5 text-xs font-semibold text-alpes-700">
+                      <span className="ml-2 rounded-full bg-marque/10 px-2 py-0.5 text-xs font-semibold text-marque-600">
                         {libelleChoisi}
                       </span>
                     ) : null}

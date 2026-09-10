@@ -83,7 +83,20 @@ export const BAREME_DEFAUT: Bareme = {
   plageNuit: { debut: 22, fin: 6 },
   // Médiane observée sur les prix publiés : 0,214.
   ratioPartage: 0.214,
-  remiseAllerRetour: 5,
+  /*
+    Aucune remise d'aller-retour tant qu'elle n'est pas validée.
+
+    Elle valait 5 % du retour, et c'était une invention de ce barème : le
+    WordPress n'en pratiquait aucune, et Nassim ne l'a jamais acceptée. Une
+    remise s'affiche pourtant au client comme une promesse chiffrée — « return
+    discount −22 € » sous le prix — et elle sort de la poche de l'exploitant.
+    On ne promet pas un rabais que personne n'a consenti.
+
+    La remettre est une seule ligne, le jour où elle est validée avec le reste du
+    barème (`wp-export/tarifs-a-valider.csv`) : les deux sens sont chiffrés
+    séparément et la remise s'applique au second, l'écran l'affiche déjà.
+  */
+  remiseAllerRetour: 0,
   devise: "EUR",
 };
 
