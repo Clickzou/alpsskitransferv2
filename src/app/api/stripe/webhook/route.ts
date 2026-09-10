@@ -110,6 +110,8 @@ export async function POST(requete: Request) {
         vol: string | null;
         aller: string;
         retour: string | null;
+        retour_airport: string | null;
+        retour_resort: string | null;
         vehicule: string;
         passagers: number;
         passagers_retour: number | null;
@@ -131,6 +133,28 @@ export async function POST(requete: Request) {
     : null;
   const trajetLisible = nomAeroport && nomStation ? `${nomAeroport} → ${nomStation}` : undefined;
 
+  /*
+    Le retour, quand il ne reprend pas l'aller inversé.
+
+    Les métadonnées de la session ne portent que les lieux de l'aller ; ceux du
+    retour sont en base, écrits par la route de réservation. L'avis de course
+    annonçait donc une date de retour sans point de prise en charge — le
+    chauffeur serait allé chercher le client à la station de l'aller, à cent
+    cinquante kilomètres de là.
+  */
+  const trajetRetour = (() => {
+    const slugStation = reservation?.retour_resort ?? null;
+    const slugAeroport = reservation?.retour_airport ?? null;
+    if (!slugStation && !slugAeroport) return null;
+    const station = slugStation
+      ? (resortParSlug(slugStation)?.name ?? slugStation)
+      : (nomStation ?? "");
+    const aeroport = slugAeroport
+      ? (airportParSlug(slugAeroport)?.name ?? slugAeroport)
+      : (nomAeroport ?? "");
+    return station && aeroport ? `${station} → ${aeroport}` : null;
+  })();
+
   const quand = (iso: string | null | undefined) =>
     iso
       ? new Date(iso).toLocaleString("fr-FR", {
@@ -147,6 +171,7 @@ export async function POST(requete: Request) {
     `Reference: ${reference ?? "unknown"}`,
     montant != null ? `Amount paid: €${montant}` : null,
     trajetLisible ? `Journey: ${trajetLisible}` : null,
+    trajetRetour ? `Return journey: ${trajetRetour}` : null,
   ]
     .filter(Boolean)
     .join("\n");
@@ -187,6 +212,7 @@ export async function POST(requete: Request) {
       trajet: trajetLisible ?? "trajet en base",
       aller: quand(reservation?.aller) || "voir le tableau de bord",
       retour: reservation?.retour ? quand(reservation.retour) : null,
+      trajetRetour,
       adresse: reservation?.adresse ?? "",
       client: {
         nom: reservation?.client_nom ?? "",

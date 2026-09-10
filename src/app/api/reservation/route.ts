@@ -59,6 +59,30 @@ const heure = (date: Date) =>
     minute: "2-digit",
   });
 
+/**
+ * Le trajet du retour, quand il ne reprend pas l'aller inversé.
+ *
+ * Renvoie `null` sur un retour symétrique : le répéter alourdirait l'avis sans
+ * rien apprendre au chauffeur, et c'est justement la ligne qu'il doit remarquer
+ * quand elle est là.
+ */
+function trajetRetour(demande: {
+  airport: string;
+  resort: string;
+  retourAirport?: string | null;
+  retourResort?: string | null;
+  retour?: Date | null;
+}): string | null {
+  if (!demande.retour) return null;
+  const memeAeroport = !demande.retourAirport || demande.retourAirport === demande.airport;
+  const memeStation = !demande.retourResort || demande.retourResort === demande.resort;
+  if (memeAeroport && memeStation) return null;
+
+  const station = resortParSlug(demande.retourResort ?? demande.resort);
+  const aeroport = airportParSlug(demande.retourAirport ?? demande.airport);
+  return `${station?.name ?? demande.resort} → ${aeroport?.name ?? demande.airport}`;
+}
+
 export async function POST(requete: Request) {
   let corps: Record<string, unknown>;
   try {
@@ -213,6 +237,17 @@ export async function POST(requete: Request) {
     passagers_retour: demande.passagersRetour ?? null,
     aller: demande.aller.toISOString(),
     retour: demande.retour ? demande.retour.toISOString() : null,
+    /*
+      D'où repart le client, et vers quel aéroport.
+
+      La course ne gardait du retour que sa date : un aller-retour saisi depuis
+      une autre station — arriver aux Gets, repartir de l'Alpe d'Huez — était
+      chiffré, encaissé, puis annoncé au chauffeur sans son point de prise en
+      charge. Nuls quand le retour reprend l'aller inversé, ce qui est le cas
+      courant : l'absence dit alors exactement cela.
+    */
+    retour_airport: demande.retourAirport ?? null,
+    retour_resort: demande.retourResort ?? null,
     montant: devis.total,
     devise: devis.devise,
     client_nom: nom,
@@ -245,6 +280,8 @@ export async function POST(requete: Request) {
     trajet: intitule,
     aller: heure(demande.aller),
     retour: demande.retour ? heure(demande.retour) : null,
+    trajetRetour: trajetRetour(demande),
+    passagersRetour: demande.passagersRetour ?? null,
     adresse,
     client: { nom, email, telephone },
     vehicule: demande.categorie,
@@ -261,7 +298,11 @@ export async function POST(requete: Request) {
     `Reference: ${ref}`,
     `Journey: ${intitule}`,
     `Outbound: ${heure(demande.aller)}`,
-    demande.retour ? `Return: ${heure(demande.retour)}` : null,
+    demande.retour
+      ? `Return: ${heure(demande.retour)}${
+          trajetRetour(demande) ? ` — ${trajetRetour(demande)}` : ""
+        }`
+      : null,
     `Vehicle: ${demande.categorie} — ${demande.passagers} passenger(s)`,
     demande.passagersRetour && demande.passagersRetour !== demande.passagers
       ? `Return journey: ${demande.passagersRetour} passenger(s)`

@@ -34,8 +34,11 @@ interface Ligne {
   resort: string;
   aller: string;
   retour: string | null;
+  retour_airport: string | null;
+  retour_resort: string | null;
   vehicule: string;
   passagers: number;
+  passagers_retour: number | null;
   adresse: string;
   vol: string | null;
   bagages_ski: number;
@@ -172,6 +175,20 @@ export async function POST(requete: Request) {
       trajet: trajetLisible,
       aller: quand(nouvelleHeure),
       retour: reservation.retour ? quand(new Date(reservation.retour)) : null,
+      /*
+        L'avis d'horaire modifié suit la même règle que celui de la course : il
+        dit d'où repart le client quand ce n'est pas d'où il est arrivé. C'est
+        précisément le message qu'on lit en refaisant sa journée.
+      */
+      trajetRetour:
+        reservation.retour && (reservation.retour_resort || reservation.retour_airport)
+          ? `${resortParSlug(reservation.retour_resort ?? reservation.resort)?.name ?? reservation.retour_resort ?? reservation.resort} → ${
+              airportParSlug(reservation.retour_airport ?? reservation.airport)?.name ??
+              reservation.retour_airport ??
+              reservation.airport
+            }`
+          : null,
+      passagersRetour: reservation.passagers_retour ?? null,
       adresse: reservation.adresse,
       client: {
         nom: reservation.client_nom,

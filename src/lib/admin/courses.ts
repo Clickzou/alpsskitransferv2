@@ -36,6 +36,8 @@ interface LigneBase {
   passagers_retour: number | null;
   aller: string;
   retour: string | null;
+  retour_airport: string | null;
+  retour_resort: string | null;
   montant: string | number;
   devise: string;
   client_nom: string;
@@ -63,6 +65,11 @@ export interface Course {
   passagers: number;
   /** Le groupe du retour quand il diffère — `null` s'il est le même. */
   passagersRetour: number | null;
+  /**
+   * « Alpe d'Huez → Geneva Airport », quand le retour ne reprend pas l'aller
+   * inversé. `null` autrement : l'écran n'a alors rien à ajouter.
+   */
+  trajetRetour: string | null;
   vehicule: string;
   bagagesSki: number;
   vol: string | null;
@@ -102,6 +109,20 @@ function versCourse(ligne: LigneBase): Course {
     passagersRetour:
       ligne.passagers_retour && ligne.passagers_retour !== ligne.passagers
         ? ligne.passagers_retour
+        : null,
+    /*
+      Où repart le client, quand ce n'est pas d'où il est arrivé.
+
+      Sans cette ligne, l'écran affichait « Retour : mar. 22 déc., 23:36 » et
+      laissait supposer un départ de la station de l'aller. Sur un aller-retour
+      asymétrique — arriver aux Gets, repartir de l'Alpe d'Huez — c'est cent
+      cinquante kilomètres d'écart au moment d'organiser la journée.
+    */
+    trajetRetour:
+      ligne.retour && (ligne.retour_resort || ligne.retour_airport)
+        ? `${nomStation(ligne.retour_resort ?? ligne.resort)} → ${nomAeroport(
+            ligne.retour_airport ?? ligne.airport,
+          )}`
         : null,
     vehicule: ligne.vehicule,
     bagagesSki: ligne.bagages_ski,

@@ -21,6 +21,8 @@ create table if not exists reservations (
                 check (passagers_retour is null or passagers_retour between 1 and 16),
   aller         timestamptz not null,
   retour        timestamptz,                       -- null = aller simple
+  retour_airport text,                             -- slug, null = même qu'à l'aller
+  retour_resort  text,                             -- slug, null = même qu'à l'aller
   montant       numeric(10, 2) not null,
   devise        text not null default 'EUR',
   client_nom    text not null,

@@ -54,6 +54,11 @@ function LigneCourse({ course }: { course: Course }) {
           {course.passagersRetour ? ` (${course.passagersRetour} au retour)` : ""} ·{" "}
           {course.vehicule}
           {course.bagagesSki > 0 ? ` · ${course.bagagesSki} ski` : ""}
+          {/* Une course qui repart d'ailleurs se prépare autrement : on le voit
+              sans déplier la ligne. */}
+          {course.trajetRetour ? (
+            <span className="mt-0.5 block text-xs text-or-700">retour d’un autre lieu</span>
+          ) : null}
         </span>
 
         <span className="flex items-center gap-2">
@@ -87,6 +92,10 @@ function LigneCourse({ course }: { course: Course }) {
           <p className="mt-1">{course.vol ?? "—"}</p>
           <p className="mt-3 text-xs uppercase tracking-wide text-alpine-600">Retour</p>
           <p className="mt-1">{course.retour ? heure(course.retour) : "Aller simple"}</p>
+          {/* Le trajet du retour ne s'écrit que s'il diffère de l'aller inversé. */}
+          {course.trajetRetour ? (
+            <p className="font-medium text-alpine">{course.trajetRetour}</p>
+          ) : null}
         </div>
 
         <div>

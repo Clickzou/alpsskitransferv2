@@ -889,6 +889,8 @@ export interface CourseAvis {
   trajet: string;
   aller: string;
   retour?: string | null;
+  /** Le trajet du retour, seulement s'il ne reprend pas l'aller inversé. */
+  trajetRetour?: string | null;
   adresse: string;
   client: { nom: string; email: string; telephone: string };
   vehicule: string;
@@ -905,37 +907,79 @@ export interface CourseAvis {
 
 export function sujetAvis(course: CourseAvis): string {
   const etat = course.paye ? "Course payée" : "Nouvelle demande";
-  return `${etat} — ${course.aller} · ${course.trajet}`;
+  /* L'aller-retour se voit dès la liste des messages : il occupe deux créneaux. */
+  const forme = course.retour ? " A/R" : "";
+  return `${etat}${forme} — ${course.aller} · ${course.trajet}`;
 }
 
+/**
+ * L'avis de course, tel qu'on le lit sur un téléphone.
+ *
+ * Écrit d'abord comme une suite d'étiquettes — prise en charge, trajet, adresse,
+ * téléphone, puis passager, véhicule, retour — il obligeait à recomposer la
+ * course de tête : le nom du client se perdait au milieu, son téléphone était
+ * quatre lignes plus haut, et un aller-retour ne se distinguait d'un aller
+ * simple que par une ligne « Retour » sans point de prise en charge.
+ *
+ * Il est maintenant rangé par ce qu'on en fait : ce qu'il faut conduire — un
+ * bloc par sens, chacun complet et exécutable seul —, puis qui appeler, puis le
+ * reste. Le chauffeur qui ouvre ce message sur le parking doit pouvoir partir
+ * sans rien ouvrir d'autre.
+ */
 export function corpsAvis(course: CourseAvis): string {
-  return [
-    `PRISE EN CHARGE : ${course.aller}`,
-    `TRAJET          : ${course.trajet}`,
-    `ADRESSE         : ${course.adresse}`,
-    `TÉLÉPHONE       : ${course.client.telephone}`,
-    course.vol ? `VOL             : ${course.vol}` : null,
+  const lignes: (string | null)[] = [
+    `${course.paye ? "COURSE PAYÉE" : "DEMANDE À CONFIRMER"}${
+      course.montant != null ? ` — ${course.montant} €` : ""
+    }`,
     "",
-    `Passager   : ${course.client.nom} · ${course.client.email}`,
-    `Véhicule   : ${course.vehicule} · ${course.passagers} passager(s)`,
-    course.bagagesSki ? `Housses ski : ${course.bagagesSki}` : null,
-    course.enfants ? `Enfants    : ${course.enfants} (sièges à prévoir)` : null,
-    course.retour
-      ? `Retour     : ${course.retour}${
-          course.passagersRetour && course.passagersRetour !== course.passagers
-            ? ` · ${course.passagersRetour} passager(s)`
-            : ""
-        }`
-      : "Aller simple",
-    course.montant != null
-      ? `Montant    : ${course.montant} € — ${course.paye ? "payé" : "non encaissé, à confirmer"}`
-      : null,
-    course.message ? `\nMessage du client :\n${course.message}` : null,
+    course.retour ? "ALLER" : "PRISE EN CHARGE",
+    `  ${course.aller}`,
+    `  ${course.trajet}`,
+    `  ${course.adresse}`,
+    `  ${course.passagers} passager(s) · ${course.vehicule}`,
+    course.vol ? `  Vol ${course.vol}` : null,
+  ];
+
+  if (course.retour) {
+    lignes.push(
+      "",
+      "RETOUR",
+      `  ${course.retour}`,
+      /*
+        Le trajet du retour n'est écrit que s'il diffère ; sinon on le rappelle
+        inversé, plutôt que de laisser deviner. Dans les deux cas, le bloc dit
+        où aller — c'est tout l'objet de la refonte de cet avis.
+      */
+      `  ${course.trajetRetour ?? inverse(course.trajet)}`,
+      `  ${course.passagersRetour ?? course.passagers} passager(s)`,
+    );
+  }
+
+  lignes.push(
     "",
-    `Référence  : ${course.reference}`,
-  ]
-    .filter((l) => l !== null)
-    .join("\n");
+    "CLIENT",
+    `  ${course.client.nom}`,
+    `  ${course.client.telephone}`,
+    `  ${course.client.email}`,
+  );
+
+  const complements = [
+    course.bagagesSki ? `Housses à skis : ${course.bagagesSki}` : null,
+    course.enfants ? `Enfants : ${course.enfants} (sièges à prévoir)` : null,
+  ].filter((l) => l !== null);
+  if (complements.length > 0) lignes.push("", ...complements);
+
+  if (course.message) lignes.push("", "MESSAGE DU CLIENT", `  ${course.message}`);
+
+  lignes.push("", `Référence : ${course.reference}`);
+
+  return lignes.filter((l) => l !== null).join("\n");
+}
+
+/** « Geneva Airport → Les Gets » devient « Les Gets → Geneva Airport ». */
+function inverse(trajet: string): string {
+  const parts = trajet.split("→").map((p) => p.trim());
+  return parts.length === 2 ? `${parts[1]} → ${parts[0]}` : trajet;
 }
 
 /* ------------------------------------------------------- temps d'attente */
