@@ -234,7 +234,6 @@ export default function Tunnel({
     email: "",
     telephone: "",
     vol: "",
-    adresse: "",
     enfants: "",
     message: "",
   });
@@ -962,20 +961,25 @@ export default function Tunnel({
                 onChange={(e) => setClient({ ...client, vol: e.target.value })}
               />
             </div>
-            <div className="min-w-0 sm:col-span-2">
-              <Etiquette pour="adresse" obligatoire={t.obligatoire}>
-                {t.adresse}
-              </Etiquette>
-              <input
-                id="adresse"
-                className={CHAMP}
-                placeholder={t.adresseIndice}
-                value={client.adresse}
-                onChange={(e) => setClient({ ...client, adresse: e.target.value })}
-                required
-              />
-            </div>
           </div>
+
+          {/*
+            Plus d'adresse exacte dans le tunnel — décision du client, le
+            10 septembre 2026.
+
+            Un seul champ ne pouvait pas décrire un aller-retour dont les deux
+            bouts diffèrent : on descend aux Gets et on repart de l'Alpe d'Huez,
+            et l'adresse saisie ne disait pas laquelle des deux elle désignait.
+            La course est déjà décrite par ses lieux — aéroport et station, dans
+            chaque sens — et le dernier kilomètre se règle au téléphone.
+
+            Ce qui reste en place pour le jour où on y reviendra : la colonne
+            `adresse` en base, le champ accepté par `/api/reservation/`, et les
+            libellés `adresse` / `adresseIndice` des quatre langues. L'avis de
+            course écrit « ADRESSE À OBTENIR PAR TÉLÉPHONE » quand elle manque,
+            ce qui est désormais le cas de toutes les courses : c'est une chose à
+            faire, pas un défaut d'affichage.
+          */}
 
           {/*
             Ce qui ne concerne pas tout le monde ne s'impose pas à tout le monde.

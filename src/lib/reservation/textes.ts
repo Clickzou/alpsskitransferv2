@@ -993,7 +993,12 @@ export function corpsAvis(course: CourseAvis): string {
     course.retour ? "ALLER" : "PRISE EN CHARGE",
     `  ${course.aller}`,
     `  ${course.trajet}`,
-    `  ${course.adresse}`,
+    /*
+      L'adresse en station est facultative : quand elle manque, on l'écrit. Une
+      ligne vide se lit comme un défaut d'affichage ; « À OBTENIR PAR TÉLÉPHONE »
+      se lit comme une chose à faire.
+    */
+    course.adresse ? `  ${course.adresse}` : "  ADRESSE À OBTENIR PAR TÉLÉPHONE",
     `  ${course.passagers} passager(s) · ${course.vehicule}`,
     course.vol ? `  Vol ${course.vol}` : null,
   ];

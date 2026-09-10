@@ -98,10 +98,25 @@ export async function POST(requete: Request) {
   const nom = propre(client.nom, 120);
   const email = propre(client.email, 160);
   const telephone = propre(client.telephone, 40);
+  /*
+    L'adresse en station est facultative depuis le 10 septembre 2026.
+
+    Elle était exigée parce que c'est elle qui dit où déposer le client. Mais
+    beaucoup de voyageurs réservent leur transfert avant d'avoir arrêté leur
+    logement, et un champ obligatoire qu'on ne peut pas remplir fait abandonner
+    la réservation — alors qu'une adresse manquante se règle par un appel, et
+    que le client la donne de lui-même en recevant sa confirmation.
+
+    Ce qui reste exigé est ce sans quoi la course ne peut pas se faire : un nom,
+    une adresse e-mail pour la confirmation, un numéro pour joindre le client le
+    jour même. L'avis de course dit explicitement quand l'adresse manque, plutôt
+    que d'afficher une ligne vide que le chauffeur prendrait pour un oubli
+    d'affichage.
+  */
   const adresse = propre(client.adresse, 300);
-  if (!nom || !email.includes("@") || !telephone || !adresse) {
+  if (!nom || !email.includes("@") || !telephone) {
     return NextResponse.json(
-      { erreur: "Name, email, mobile number and address in resort are required." },
+      { erreur: "Name, email and mobile number are required." },
       { status: 400 },
     );
   }
@@ -147,7 +162,7 @@ export async function POST(requete: Request) {
       `Outbound: ${heure(s.aller)}`,
       s.retour ? `Return: ${heure(s.retour)}` : null,
       `${s.passagers} passenger(s), ${s.bagages} bag(s), ${s.skis} ski bag(s)`,
-      `Address in resort: ${adresse}`,
+      adresse ? `Address in resort: ${adresse}` : "Address in resort: to be confirmed",
       ligneSurMesure.message ? `Notes: ${ligneSurMesure.message}` : null,
     ]
       .filter(Boolean)
@@ -323,7 +338,7 @@ export async function POST(requete: Request) {
       ? `Return journey: ${demande.passagersRetour} passenger(s)`
       : null,
     `Total: €${devis.total}${demande.retour ? " for both journeys" : ""}`,
-    `Address in resort: ${adresse}`,
+    adresse ? `Address in resort: ${adresse}` : "Address in resort: to be confirmed",
     ligne.vol ? `Flight: ${ligne.vol}` : null,
     ligne.bagages_ski ? `Ski or board bags: ${ligne.bagages_ski}` : null,
     ligne.enfants ? `Children: ${ligne.enfants}` : null,
