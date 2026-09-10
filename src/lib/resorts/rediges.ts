@@ -12,7 +12,6 @@ import { madonnaDiCampiglio } from "./madonna-di-campiglio";
 import { saintGervais } from "./saint-gervais";
 import { valDiFiemme } from "./val-di-fiemme";
 import { argentiere } from "./argentiere";
-import { badGastein } from "./bad-gastein";
 import { champery } from "./champery";
 import { cransMontana } from "./crans-montana";
 import { chamrousse } from "./chamrousse";
@@ -20,7 +19,6 @@ import { flaine } from "./flaine";
 import { interlaken } from "./interlaken";
 import { laClusaz } from "./la-clusaz";
 import { lauterbrunnen } from "./lauterbrunnen";
-import { lech } from "./lech";
 import { leGrandBornand } from "./le-grand-bornand";
 import { lesCarrozGrandMassif } from "./les-carroz-grand-massif";
 import { lesGets } from "./les-gets";
@@ -51,7 +49,6 @@ export const RESORTS_REDIGES: Resort[] = [
   annecy,
   argentiere,
   arosa,
-  badGastein,
   champery,
   champoluc,
   chamrousse,
@@ -65,7 +62,6 @@ export const RESORTS_REDIGES: Resort[] = [
   laax,
   laClusaz,
   lauterbrunnen,
-  lech,
   leGrandBornand,
   lesCarrozGrandMassif,
   lesGets,

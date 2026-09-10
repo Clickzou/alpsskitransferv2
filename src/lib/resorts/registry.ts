@@ -17,18 +17,24 @@ import type { ResortStub } from "./types";
  * `/{pays}-ski-transfers/{station}/` avant d'écrire le plan de redirections —
  * un slug qui diffère d'un caractère, c'est une 301 de plus ou une page perdue.
  */
+/*
+ * **L'Autriche est hors périmètre depuis le 10 septembre 2026** — décision du
+ * client, pour l'anglais comme pour l'allemand. Les dix stations autrichiennes
+ * (Ischgl, Sölden, Kitzbühel, St. Anton, Obergurgl, Mayrhofen, Zell am See,
+ * Lech, Serfaus, Bad Gastein) et leurs dix-sept trajets ont été retirés.
+ *
+ * Ne pas les réintroduire ici sans décision contraire : ce registre est la
+ * source dont partent `migrer:stations`, `migrer:trajets`, le générateur de
+ * redirections et le contrôle de prebuild. Une ligne remise ici, et les pages
+ * reviennent au prochain passage des scripts.
+ *
+ * Les quatre aéroports autrichiens restent, eux, dans le registre des
+ * aéroports : Innsbruck dessert Selva Val Gardena, et le hub pays
+ * `/austria-ski-transfers/` devient une porte d'entrée d'aéroports — le même
+ * traitement que l'Allemagne, qui n'a jamais eu de station.
+ */
 export const RESORTS: ResortStub[] = [
   // AT
-  { slug: "bad-gastein", name: "Bad Gastein", country: "AT", status: "migre" },
-  { slug: "ischgl", name: "Ischgl", country: "AT", status: "migre" },
-  { slug: "kitzbuhel", name: "Kitzbühel", country: "AT", status: "migre" },
-  { slug: "lech", name: "Lech", country: "AT", status: "migre" },
-  { slug: "mayrhofen", name: "Mayrhofen", country: "AT", status: "migre" },
-  { slug: "obergurgl", name: "Obergurgl", country: "AT", status: "migre" },
-  { slug: "serfaus", name: "Serfaus", country: "AT", status: "migre" },
-  { slug: "solden", name: "Sölden", country: "AT", status: "migre" },
-  { slug: "st-anton-am-arlberg", name: "St. Anton am Arlberg", country: "AT", status: "migre" },
-  { slug: "zell-am-see", name: "Zell am See", country: "AT", status: "migre" },
   // FR
   { slug: "alpe-dhuez", name: "Alpe d’Huez", country: "FR", status: "migre" },
   { slug: "annecy", name: "Annecy", country: "FR", status: "migre" },

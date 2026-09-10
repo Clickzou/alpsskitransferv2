@@ -6,7 +6,6 @@ import { chamberySavoieAirportToChamrousse } from "./chambery-savoie-airport-to-
 import { chamberySavoieAirportToLesCarrozGrandMassif } from "./chambery-savoie-airport-to-les-carroz-grand-massif";
 import { turinAirportToSauzeDoulx } from "./turin-airport-to-sauze-doulx";
 import { grenobleIsereAirportToAnnecy } from "./grenoble-isere-airport-to-annecy";
-import { innsbruckAirportToObergurgl } from "./innsbruck-airport-to-obergurgl";
 import { lyonAirportToAnnecy } from "./lyon-airport-to-annecy";
 import { chamberySavoieAirportToSaintGervais } from "./chambery-savoie-airport-to-saint-gervais";
 import { niceAirportToIsola2000 } from "./nice-airport-to-isola-2000";
@@ -75,12 +74,6 @@ import { grenobleIsereAirportToMeribel } from "./grenoble-isere-airport-to-merib
 import { grenobleIsereAirportToSerreChevalier } from "./grenoble-isere-airport-to-serre-chevalier";
 import { grenobleIsereAirportToTignes } from "./grenoble-isere-airport-to-tignes";
 import { grenobleIsereAirportToValThorens } from "./grenoble-isere-airport-to-val-thorens";
-import { innsbruckAirportToIschgl } from "./innsbruck-airport-to-ischgl";
-import { innsbruckAirportToKitzbuhel } from "./innsbruck-airport-to-kitzbuhel";
-import { innsbruckAirportToMayrhofen } from "./innsbruck-airport-to-mayrhofen";
-import { innsbruckAirportToSerfaus } from "./innsbruck-airport-to-serfaus";
-import { innsbruckAirportToSolden } from "./innsbruck-airport-to-solden";
-import { innsbruckAirportToStAntonAmArlberg } from "./innsbruck-airport-to-st-anton-am-arlberg";
 import { lyonAirportToAlpeDhuez } from "./lyon-airport-to-alpe-dhuez";
 import { lyonAirportToCourchevel } from "./lyon-airport-to-courchevel";
 import { lyonAirportToLaPlagne } from "./lyon-airport-to-la-plagne";
@@ -90,12 +83,6 @@ import { lyonAirportToMeribel } from "./lyon-airport-to-meribel";
 import { lyonAirportToMorzine } from "./lyon-airport-to-morzine";
 import { lyonAirportToValDisere } from "./lyon-airport-to-val-disere";
 import { lyonAirportToValThorens } from "./lyon-airport-to-val-thorens";
-import { salzburgAirportToBadGastein } from "./salzburg-airport-to-bad-gastein";
-import { salzburgAirportToIschgl } from "./salzburg-airport-to-ischgl";
-import { salzburgAirportToKitzbuhel } from "./salzburg-airport-to-kitzbuhel";
-import { salzburgAirportToObergurgl } from "./salzburg-airport-to-obergurgl";
-import { salzburgAirportToSolden } from "./salzburg-airport-to-solden";
-import { salzburgAirportToZellAmSee } from "./salzburg-airport-to-zell-am-see";
 import { turinAirportToCervinia } from "./turin-airport-to-cervinia";
 import { turinAirportToMontgenevre } from "./turin-airport-to-montgenevre";
 import { turinAirportToSerreChevalier } from "./turin-airport-to-serre-chevalier";
@@ -106,10 +93,6 @@ import { zurichAirportToCransMontana } from "./zurich-airport-to-crans-montana";
 import { zurichAirportToDavos } from "./zurich-airport-to-davos";
 import { zurichAirportToGrindelwald } from "./zurich-airport-to-grindelwald";
 import { zurichAirportToInterlaken } from "./zurich-airport-to-interlaken";
-import { zurichAirportToIschgl } from "./zurich-airport-to-ischgl";
-import { zurichAirportToLech } from "./zurich-airport-to-lech";
-import { zurichAirportToSolden } from "./zurich-airport-to-solden";
-import { zurichAirportToStAntonAmArlberg } from "./zurich-airport-to-st-anton-am-arlberg";
 import { zurichAirportToStMoritz } from "./zurich-airport-to-st-moritz";
 import { zurichAirportToVerbier } from "./zurich-airport-to-verbier";
 import { zurichAirportToWengen } from "./zurich-airport-to-wengen";
@@ -135,7 +118,6 @@ const TRAJETS_MIGRES: Transfer[] = [
   chamberySavoieAirportToLesCarrozGrandMassif,
   turinAirportToSauzeDoulx,
   grenobleIsereAirportToAnnecy,
-  innsbruckAirportToObergurgl,
   lyonAirportToAnnecy,
   chamberySavoieAirportToSaintGervais,
   niceAirportToIsola2000,
@@ -204,12 +186,6 @@ const TRAJETS_MIGRES: Transfer[] = [
   grenobleIsereAirportToSerreChevalier,
   grenobleIsereAirportToTignes,
   grenobleIsereAirportToValThorens,
-  innsbruckAirportToIschgl,
-  innsbruckAirportToKitzbuhel,
-  innsbruckAirportToMayrhofen,
-  innsbruckAirportToSerfaus,
-  innsbruckAirportToSolden,
-  innsbruckAirportToStAntonAmArlberg,
   lyonAirportToAlpeDhuez,
   lyonAirportToCourchevel,
   lyonAirportToLaPlagne,
@@ -219,12 +195,6 @@ const TRAJETS_MIGRES: Transfer[] = [
   lyonAirportToMorzine,
   lyonAirportToValDisere,
   lyonAirportToValThorens,
-  salzburgAirportToBadGastein,
-  salzburgAirportToIschgl,
-  salzburgAirportToKitzbuhel,
-  salzburgAirportToObergurgl,
-  salzburgAirportToSolden,
-  salzburgAirportToZellAmSee,
   turinAirportToCervinia,
   turinAirportToMontgenevre,
   turinAirportToSerreChevalier,
@@ -235,10 +205,6 @@ const TRAJETS_MIGRES: Transfer[] = [
   zurichAirportToDavos,
   zurichAirportToGrindelwald,
   zurichAirportToInterlaken,
-  zurichAirportToIschgl,
-  zurichAirportToLech,
-  zurichAirportToSolden,
-  zurichAirportToStAntonAmArlberg,
   zurichAirportToStMoritz,
   zurichAirportToVerbier,
   zurichAirportToWengen,

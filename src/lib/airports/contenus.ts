@@ -318,7 +318,7 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
 
   "innsbruck-airport": {
     chapo:
-      "Innsbruck sits in the middle of the Tyrol: the runway is fifteen minutes from the city centre and under two hours from most Austrian resorts. Ischgl, Sölden, Mayrhofen and St. Anton are one to two hours away; Lech is 127 km (2 h 15). Winter flights — largely British and Dutch — are concentrated at weekends.",
+      "Innsbruck sits in the Inn valley, ten minutes from the city centre. We no longer serve Austrian resorts, but the airport keeps one real use: the Brenner is half an hour away, and Selva Val Gardena is an hour and three quarters from the terminal — often for a lower fare than Milan or Verona. Its approach is hemmed in by mountains and diversions to Munich or Salzburg are more frequent than elsewhere: tell us where you actually land and we drive from there.",
     contenu: [
       { type: "titre2", texte: "What Innsbruck serves best" },
       {
@@ -365,7 +365,7 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
 
   "salzburg-airport": {
     chapo:
-      "Salzburg serves the Salzburgerland and part of the Tyrol: Zell am See is about 1 h 20 away, Bad Gastein 104 km (2 h), Kitzbühel a little over an hour, with Sölden and Ischgl further west. Like Innsbruck, its winter schedule is dense on Saturdays and thin midweek.",
+      "Salzburg is a comfortable, well-connected airport, and since we stopped serving Austrian resorts its interest lies south: the eastern Dolomites are within reach, and the fare is frequently below Milan or Venice. Like Innsbruck, its winter schedule is dense on Saturdays — book the transfer as soon as you have the flight.",
     contenu: [
       { type: "titre2", texte: "What Salzburg serves best" },
       {

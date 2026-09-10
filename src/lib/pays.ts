@@ -28,9 +28,16 @@ export const PAYS: Record<string, Pays> = {
     code: "AT",
     nom: "Austria",
     adjectif: "Austrian",
+    /*
+     * **Nous ne desservons plus les stations autrichiennes** — décision du
+     * client, 10 septembre 2026. Ce hub devient ce qu'est celui de l'Allemagne :
+     * une porte d'entrée d'aéroports, utile parce qu'Innsbruck et Salzbourg
+     * ouvrent le Sud-Tyrol italien et les Dolomites, souvent pour moins cher
+     * qu'un vol sur Milan ou Vérone.
+     */
     intro: [
-      "Austrian resorts sit lower than the French ones and make up for it with north-facing terrain and a season built around the Christmas and February weeks. The transfers are correspondingly short: Innsbruck is under two hours from most of the Tyrol, and Salzburg an hour from Kitzbuhel and Zell am See.",
-      "Two things shape a winter transfer here. Innsbruck's approach is hemmed in by mountains and the airport diverts more often than most, usually to Munich or Salzburg — tell us if that happens and we drive from wherever you actually land. And winter tyres are compulsory across the country from 1 November to 15 April in wintry conditions; our vehicles carry chains as well.",
+      "We no longer run transfers to Austrian resorts. What Austria still gives you is airports — and two of them are genuinely useful for the Italian side of the Alps: Innsbruck sits an hour and three quarters from Selva Val Gardena over the Brenner, and Salzburg opens the eastern Dolomites when the fare beats Milan or Verona.",
+      "Innsbruck's approach is hemmed in by mountains and the airport diverts more often than most, usually to Munich or Salzburg — tell us if that happens and we drive from wherever you actually land, without a second booking. Winter tyres are compulsory across the country from 1 November to 15 April in wintry conditions, and our vehicles carry chains as well.",
     ],
   },
   "france-ski-transfers": {

@@ -6,22 +6,22 @@
  * wp-export/redirections-a-arbitrer.csv et se traitent à la main dans
  * `redirections.ts`.
  *
- * 188 règles générées le 2026-09-09.
+ * 188 règles générées le 2026-09-10.
  */
 export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/airport-ski-transfers/austria": "/austria-ski-transfers/", // hub pays
-  "/airport-ski-transfers/austria/innsbruck-to-ischgl-transfers": "/austria-ski-transfers/ischgl/innsbruck-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/innsbruck-to-kitzbuhel": "/austria-ski-transfers/kitzbuhel/innsbruck-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/innsbruck-to-mayrhofen": "/austria-ski-transfers/mayrhofen/innsbruck-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/innsbruck-to-serfaus": "/austria-ski-transfers/serfaus/innsbruck-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/innsbruck-to-solden": "/austria-ski-transfers/solden/innsbruck-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/innsbruck-to-st-anton": "/austria-ski-transfers/st-anton-am-arlberg/innsbruck-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/salzburg-to-bad-gastein": "/austria-ski-transfers/bad-gastein/salzburg-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/salzburg-to-ischgl": "/austria-ski-transfers/ischgl/salzburg-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/salzburg-to-kitzbuhel": "/austria-ski-transfers/kitzbuhel/salzburg-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/salzburg-to-obergurgl": "/austria-ski-transfers/obergurgl/salzburg-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/salzburg-to-solden": "/austria-ski-transfers/solden/salzburg-airport-transfers/", // trajet
-  "/airport-ski-transfers/austria/salzburg-to-zell-am-see": "/austria-ski-transfers/zell-am-see/salzburg-airport-transfers/", // trajet
+  "/airport-ski-transfers/austria/innsbruck-to-ischgl-transfers": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/innsbruck-to-kitzbuhel": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/innsbruck-to-mayrhofen": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/innsbruck-to-serfaus": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/innsbruck-to-solden": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/innsbruck-to-st-anton": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/salzburg-to-bad-gastein": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/salzburg-to-ischgl": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/salzburg-to-kitzbuhel": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/salzburg-to-obergurgl": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/salzburg-to-solden": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/austria/salzburg-to-zell-am-see": "/austria-ski-transfers/", // station hors périmètre
   "/airport-ski-transfers/france": "/france-ski-transfers/", // hub pays
   "/airport-ski-transfers/france/chambery-to-chamonix-transfers": "/france-ski-transfers/chamonix/chambery-savoie-airport-transfers/", // trajet
   "/airport-ski-transfers/france/chambery-to-courchevel-transfers": "/france-ski-transfers/courchevel/chambery-savoie-airport-transfers/", // trajet
@@ -97,10 +97,10 @@ export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/airport-ski-transfers/swiss/zurich-to-davos-transfers": "/switzerland-ski-transfers/davos/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-grindelwald-transfers": "/switzerland-ski-transfers/grindelwald/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-interlaken-transfers": "/switzerland-ski-transfers/interlaken/zurich-airport-transfers/", // trajet
-  "/airport-ski-transfers/swiss/zurich-to-ischgl-transfer": "/austria-ski-transfers/ischgl/zurich-airport-transfers/", // trajet
-  "/airport-ski-transfers/swiss/zurich-to-lech-am-arlberg-transfers": "/austria-ski-transfers/lech/zurich-airport-transfers/", // trajet
-  "/airport-ski-transfers/swiss/zurich-to-solden-transfers": "/austria-ski-transfers/solden/zurich-airport-transfers/", // trajet
-  "/airport-ski-transfers/swiss/zurich-to-st-anton-am-arlberg-transfers": "/austria-ski-transfers/st-anton-am-arlberg/zurich-airport-transfers/", // trajet
+  "/airport-ski-transfers/swiss/zurich-to-ischgl-transfer": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/swiss/zurich-to-lech-am-arlberg-transfers": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/swiss/zurich-to-solden-transfers": "/austria-ski-transfers/", // station hors périmètre
+  "/airport-ski-transfers/swiss/zurich-to-st-anton-am-arlberg-transfers": "/austria-ski-transfers/", // station hors périmètre
   "/airport-ski-transfers/swiss/zurich-to-st-moritz-transfers": "/switzerland-ski-transfers/st-moritz/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-verbier-transfers": "/switzerland-ski-transfers/verbier/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-wengen-transfers": "/switzerland-ski-transfers/wengen/zurich-airport-transfers/", // trajet
@@ -137,16 +137,16 @@ export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/destination/italy/venice-airport": "/italy-ski-transfers/venice-airport/", // hub aéroport
   "/destination/italy/verona-airport": "/italy-ski-transfers/verona-airport/", // hub aéroport
   "/destination/ski-resorts-in-austria": "/austria-ski-transfers/", // hub pays
-  "/destination/ski-resorts-in-austria/bad-gastein": "/austria-ski-transfers/bad-gastein/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/ischgl": "/austria-ski-transfers/ischgl/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/kitzbuhel": "/austria-ski-transfers/kitzbuhel/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/lech": "/austria-ski-transfers/lech/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/mayrhofen": "/austria-ski-transfers/mayrhofen/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/obergurgl": "/austria-ski-transfers/obergurgl/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/serfaus": "/austria-ski-transfers/serfaus/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/solden": "/austria-ski-transfers/solden/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/st-anton-am-arlberg": "/austria-ski-transfers/st-anton-am-arlberg/", // doublon de page de station
-  "/destination/ski-resorts-in-austria/zell-am-see": "/austria-ski-transfers/zell-am-see/", // doublon de page de station
+  "/destination/ski-resorts-in-austria/bad-gastein": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/ischgl": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/kitzbuhel": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/lech": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/mayrhofen": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/obergurgl": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/serfaus": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/solden": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/st-anton-am-arlberg": "/austria-ski-transfers/", // station hors périmètre
+  "/destination/ski-resorts-in-austria/zell-am-see": "/austria-ski-transfers/", // station hors périmètre
   "/destination/ski-resorts-in-france": "/france-ski-transfers/", // hub pays
   "/destination/ski-resorts-in-france/alpe-dhuez": "/france-ski-transfers/alpe-dhuez/", // doublon de page de station
   "/destination/ski-resorts-in-france/annecy": "/france-ski-transfers/annecy/", // doublon de page de station

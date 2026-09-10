@@ -20,9 +20,13 @@ export interface SegmentAeroport {
  *    filtre qui empêche de publier un trajet Grenoble → Chamrousse en italien
  *    au motif que le texte serait traduisible.
  *
- * Le périmètre suit le marché de chaque langue : l'allemand part d'Innsbruck,
- * Salzbourg, Zurich et Munich ; l'italien de Turin, Milan, Bergame et Genève ;
- * le français des quatre aéroports français et suisse romand.
+ * Le périmètre suit le marché de chaque langue : l'italien part de Turin,
+ * Milan, Bergame et Genève ; le français des quatre aéroports français et du
+ * suisse romand. L'allemand partait d'Innsbruck, Salzbourg, Zurich et Munich —
+ * depuis la sortie de l'Autriche du périmètre (10 septembre 2026), seuls Zurich
+ * et Genève portent encore des trajets allemands. Les autres restent dans la
+ * table : ils n'engendrent aucune page tant qu'aucun trajet ne les cite, et ils
+ * seront prêts le jour où l'allemand couvrira plus de Suisse.
  */
 export const SEGMENTS_AEROPORT: Record<
   LangueSecondaire,

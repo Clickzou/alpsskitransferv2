@@ -57,6 +57,38 @@ const PAYS_ANCIEN = {
 };
 
 /**
+ * Les stations **retirées du périmètre**, avec la page qui les remplace.
+ *
+ * Ce n'est pas la même chose qu'une station inconnue : celle-là part à
+ * l'arbitrage parce qu'on ne sait pas quoi en faire, celles-ci ont une
+ * destination décidée. Les dix stations autrichiennes sont sorties le
+ * 10 septembre 2026 sur décision du client — pour l'anglais comme pour
+ * l'allemand.
+ *
+ * **Pourquoi le hub pays et non une 410.** La page existe toujours et parle du
+ * même sujet : l'Autriche, ses aéroports, ce qu'on y fait encore. Un visiteur
+ * qui cherchait « transfert Innsbruck Ischgl » y trouve une réponse — nous n'y
+ * allons plus, voici ce que nous desservons depuis Innsbruck — là où une 410
+ * lui ferme la porte au nez. Ces vingt-six URL avaient des liens entrants et de
+ * l'antériorité ; les jeter serait s'appauvrir deux fois.
+ */
+const STATIONS_HORS_PERIMETRE = {
+  "bad-gastein": "/austria-ski-transfers/",
+  ischgl: "/austria-ski-transfers/",
+  "ischgl-transfer": "/austria-ski-transfers/",
+  kitzbuhel: "/austria-ski-transfers/",
+  lech: "/austria-ski-transfers/",
+  "lech-am-arlberg": "/austria-ski-transfers/",
+  mayrhofen: "/austria-ski-transfers/",
+  obergurgl: "/austria-ski-transfers/",
+  serfaus: "/austria-ski-transfers/",
+  solden: "/austria-ski-transfers/",
+  "st-anton": "/austria-ski-transfers/",
+  "st-anton-am-arlberg": "/austria-ski-transfers/",
+  "zell-am-see": "/austria-ski-transfers/",
+};
+
+/**
  * Variantes de slug rencontrées dans les anciennes URL. Le site nomme la même
  * station de plusieurs façons — parfois avec le nom du domaine skiable accolé.
  * Sans cette table, ces URL partiraient à l'arbitrage alors que leur cible ne
@@ -228,6 +260,11 @@ for (const entree of inventaire) {
     const s = station(slugStation);
 
     if (!s) {
+      const horsPerimetre = STATIONS_HORS_PERIMETRE[slugStation];
+      if (horsPerimetre) {
+        poser(url, horsPerimetre, "station hors périmètre");
+        continue;
+      }
       stationsInconnues.add(slugStation);
       aArbitrer(url, `station « ${slugStation} » absente du registre`, "ajouter la station");
       continue;
@@ -253,6 +290,11 @@ for (const entree of inventaire) {
   if (segments[0] === "destination" && segments[1]?.startsWith("ski-resorts-in-")) {
     const s = station(segments[2]);
     if (!s) {
+      const horsPerimetre = STATIONS_HORS_PERIMETRE[segments[2]];
+      if (horsPerimetre) {
+        poser(url, horsPerimetre, "station hors périmètre");
+        continue;
+      }
       stationsInconnues.add(segments[2]);
       aArbitrer(url, `station « ${segments[2] }» absente du registre`, "ajouter la station");
       continue;
