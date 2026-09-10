@@ -753,6 +753,7 @@ export default function Tunnel({
           {allerRetourChiffre ? (
             <>
               <ListeVehicules
+                detache
                 titre={t.vehiculeRetour}
                 options={devis.optionsRetour}
                 choisi={choixRetour}
@@ -1111,6 +1112,7 @@ function ListeVehicules({
   surAjout,
   ajout,
   allerRetour,
+  detache = false,
 }: {
   titre: string | null;
   options: OptionVehicule[];
@@ -1122,14 +1124,23 @@ function ListeVehicules({
   surAjout?: (option: OptionVehicule) => void;
   ajout?: { categorie: string; etat: string } | null;
   allerRetour: boolean;
+  /*
+    Le second bloc respire, et se sépare d'un filet.
+
+    Les deux listes se suivaient au même écart que deux cartes de la même liste :
+    on lisait une seule liste de cinq véhicules, alors que ce sont deux choix
+    distincts. Du blanc et un trait suffisent à le dire.
+  */
+  detache?: boolean;
 }) {
   return (
-    <section className="mt-4">
+    <section className={detache ? "mt-10 border-t border-glacier-200 pt-8" : "mt-4"}>
       {titre ? (
         /* Le vert de la marque — `marque`, l'or étant `alpes` depuis la
            refonte de la palette. Ces deux intertitres découpent l'écran en deux
-           choix distincts, et c'est ce qu'on doit y voir d'abord. */
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-marque-600">{titre}</h3>
+           choix distincts : ils se lisent avant les cartes, d'où le corps de
+           titre plutôt qu'une étiquette en petites majuscules. */
+        <h3 className="font-display text-xl font-bold text-marque-600">{titre}</h3>
       ) : null}
       <ul className="mt-2 space-y-3">
         {options.map((option) => {
