@@ -15,6 +15,7 @@ import {
   TEXTES_ATTENTE,
   TEXTES_IMMINENT,
   type LangueTunnel,
+  type TextesTunnel,
 } from "@/lib/reservation/textes";
 
 /**
@@ -67,6 +68,8 @@ interface Devis {
     passagersRetour: number | null;
   };
   options: OptionVehicule[];
+  /** Les véhicules possibles au retour. Vide sur un aller simple. */
+  optionsRetour: OptionVehicule[];
   encaissable: boolean;
 }
 
@@ -176,6 +179,8 @@ export default function Tunnel({
   /** Retour d'ajout, par catégorie : « ajouté », « déjà là », « panier plein ». */
   const [ajout, setAjout] = useState<{ categorie: string; etat: string } | null>(null);
   const [choix, setChoix] = useState<OptionVehicule | null>(null);
+  /* Le véhicule du retour. `null` sur un aller simple, ou tant qu'il manque. */
+  const [choixRetour, setChoixRetour] = useState<OptionVehicule | null>(null);
   const [surMesure, setSurMesure] = useState<string | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
   const [enCours, setEnCours] = useState(false);
@@ -196,6 +201,7 @@ export default function Tunnel({
   useEffect(() => {
     setDevis(null);
     setChoix(null);
+    setChoixRetour(null);
     setSurMesure(null);
   }, [de, vers, when, returnWhen, allerRetour, retourDe, retourVers, passengers, retourPassagers, bags, skis]);
 
@@ -309,6 +315,9 @@ export default function Tunnel({
         body: JSON.stringify({
           ...corpsDemande,
           vehicle: choix?.categorie,
+          /* Le véhicule du retour, quand il diffère : le serveur recalcule les
+             deux sens et n'en croit aucun sur parole. */
+          vehicleReturn: choixRetour?.categorie,
           // La langue voyage avec la demande : elle décide de la page de retour
           // après paiement et de la langue de l'e-mail de confirmation.
           langue,
@@ -343,6 +352,34 @@ export default function Tunnel({
     l'espace insécable de chaque langue — mieux vaut la lui demander que la
     coder. Les montants restent entiers : on ne vend pas de demi-euro.
   */
+  /*
+    Un aller-retour, du point de vue du prix.
+
+    `devis.trajet.allerRetour` dit ce que le visiteur a demandé ; ce booléen dit
+    ce que le devis a effectivement chiffré des deux côtés. Les deux ne
+    coïncident pas quand aucun véhicule ne convient au retour, et proposer alors
+    une liste vide serait pire que ne rien proposer.
+  */
+  const allerRetourChiffre = Boolean(devis?.trajet.allerRetour && devis.optionsRetour.length > 0);
+
+  /** Met une course chiffrée dans la liste du visiteur — la porte du panier. */
+  const ajouterAuPanier = (option: OptionVehicule) => {
+    if (!devis) return;
+    const etat = ajouter({
+      from: de.slug ?? de.texte,
+      to: vers.slug ?? vers.texte,
+      when,
+      passengers,
+      categorie: option.categorie,
+      bags,
+      skis,
+      libelleDepart: devis.trajet.aeroport,
+      libelleArrivee: devis.trajet.station,
+      prixIndicatif: option.total,
+    });
+    setAjout({ categorie: option.categorie, etat });
+  };
+
   const prix = (montantEuros: number) => {
     const { montant } = convertir(montantEuros, devise);
     return new Intl.NumberFormat(LOCALE[langue], {
@@ -637,7 +674,7 @@ export default function Tunnel({
             pied={t.recapBagages(bags, skis)}
             trajets={[
               {
-                sens: devis.trajet.allerRetour ? t.aller : null,
+                sens: allerRetourChiffre ? t.aller : null,
                 lieux: `${devis.trajet.aeroport} → ${devis.trajet.station}`,
                 details: [
                   quandLisible(when, langue),
@@ -646,7 +683,7 @@ export default function Tunnel({
                   t.recapPassagers(passengers),
                 ],
               },
-              devis.trajet.allerRetour
+              allerRetourChiffre
                 ? {
                     sens: t.retour,
                     lieux: `${devis.trajet.retourDepart ?? devis.trajet.station} → ${
@@ -663,115 +700,95 @@ export default function Tunnel({
             ]}
           />
 
-          <h2 className="mt-8 font-display text-2xl text-alpine">{t.titreVehicule}</h2>
-          <p className="mt-1 text-sm text-alpine-600">{t.sousTitreVehicule}</p>
+          <h2 className="mt-8 font-display text-2xl text-alpine">
+            {allerRetourChiffre ? t.titreVehiculeDeuxSens : t.titreVehicule}
+          </h2>
+          <p className="mt-1 text-sm text-alpine-600">
+            {allerRetourChiffre ? t.sousTitreVehiculeDeuxSens : t.sousTitreVehicule}
+          </p>
 
-          <ul className="mt-4 space-y-3">
-            {devis.options.map((option) => (
-              <li key={option.categorie}>
+          {/*
+            Un aller-retour se choisit sens par sens.
+
+            Le tunnel n'offrait qu'une liste, pour un véhicule unique qui servait
+            les deux trajets : la capacité retenue était celle du groupe le plus
+            nombreux, et arriver à deux pour repartir à six faisait payer un huit
+            places sur les deux trajets, dont l'un à vide. Chaque sens a
+            maintenant sa liste, filtrée sur son propre effectif.
+
+            Sur un aller simple, le clic conclut l'étape comme avant : y ajouter
+            un bouton de confirmation coûterait un clic à tout le monde pour un
+            cas qui n'a rien à confirmer.
+          */}
+          <ListeVehicules
+            titre={allerRetourChiffre ? t.vehiculeAller : null}
+            options={devis.options}
+            choisi={choix}
+            libelleChoisi={t.choisi}
+            allerRetour={false}
+            textes={t}
+            prix={prix}
+            /* Le panier sert à composer plusieurs courses. Pendant un
+               aller-retour, on est déjà en train d'en composer une : la porte du
+               panier n'y ajouterait qu'un lien de plus entre chaque carte. */
+            surAjout={allerRetourChiffre ? undefined : ajouterAuPanier}
+            ajout={ajout}
+            onChoisir={(option) => {
+              setChoix(option);
+              if (!allerRetourChiffre) {
+                setEtape("details");
+                return;
+              }
+              /*
+                Le retour se présélectionne sur la même catégorie quand elle
+                existe : c'est le cas courant, et le visiteur n'a plus qu'à le
+                confirmer ou en changer.
+              */
+              setChoixRetour(
+                devis.optionsRetour.find((o) => o.categorie === option.categorie) ?? choixRetour,
+              );
+            }}
+          />
+
+          {allerRetourChiffre ? (
+            <>
+              <ListeVehicules
+                titre={t.vehiculeRetour}
+                options={devis.optionsRetour}
+                choisi={choixRetour}
+                libelleChoisi={t.choisi}
+                allerRetour={false}
+                textes={t}
+                prix={prix}
+                onChoisir={setChoixRetour}
+              />
+
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded border border-glacier-200 bg-glacier-50 p-4">
+                <p className="text-sm text-alpine-700">
+                  {choix && choixRetour ? (
+                    <>
+                      <span className="block text-xs uppercase tracking-wide text-alpine-600">
+                        {t.totalDeuxSens}
+                      </span>
+                      <span className="font-display text-2xl text-alpine">
+                        {prix(choix.total + choixRetour.total)}
+                      </span>
+                    </>
+                  ) : (
+                    t.choisirRetour
+                  )}
+                </p>
                 <button
                   type="button"
-                  onClick={() => {
-                    setChoix(option);
-                    setEtape("details");
-                  }}
-                  className="flex w-full flex-col gap-0 overflow-hidden rounded border border-glacier-200 bg-white text-left transition hover:border-alpes hover:shadow-carte sm:flex-row sm:items-stretch"
+                  disabled={!choix || !choixRetour}
+                  onClick={() => setEtape("details")}
+                  className="rounded bg-marque px-6 py-3 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:opacity-50"
                 >
-                  {/*
-                    La photo du véhicule ouvre la carte.
-
-                    Les trois visuels n'ont pas le même cadrage — 640×333, 640×302,
-                    604×236 — d'où le cadre à proportions imposées et le
-                    recadrage : trois cartes de hauteurs différentes se liraient
-                    comme trois offres de nature différente.
-                  */}
-                  <span className="relative block aspect-[16/9] w-full shrink-0 overflow-hidden bg-glacier-100 sm:aspect-auto sm:w-44">
-                    <Visuel
-                      nom={VISUEL_VEHICULE[option.categorie]}
-                      alt={option.modele}
-                      sizes="(min-width: 640px) 11rem, 100vw"
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                  </span>
-
-                  <span className="flex flex-1 items-center justify-between gap-4 p-4">
-                    <span>
-                      <span className="font-display text-lg text-alpine">{option.nom}</span>
-                      <span className="block text-xs text-alpine-600">{option.modele}</span>
-                      <span className="block text-xs text-alpine-600">
-                        {t.jusqua} {option.capacite} · {option.capaciteBagages} {t.pieces}
-                      </span>
-                    </span>
-                    <span className="text-right">
-                      <span className="font-display text-2xl text-alpine">
-                        {prix(option.total)}
-                      </span>
-                      <span className="block text-xs text-alpine-600">
-                        {devis.trajet.allerRetour ? t.parVehiculeAllerRetour : t.parVehicule}
-                      </span>
-                      {option.remiseAllerRetour > 0 ? (
-                        <span className="block text-xs text-alpes-700">
-                          {t.remiseRetour} −{prix(option.remiseAllerRetour)}
-                        </span>
-                      ) : null}
-                    </span>
-                  </span>
+                  {t.continuerVehicule}
                 </button>
-
-                {/*
-                  Ajouter plutôt que réserver : un séjour se compose souvent d'un
-                  aller et d'un retour, parfois de deux véhicules.
-
-                  Le libellé disait « Add to my transfers », en anglais dans les
-                  quatre langues et souligné comme l'action principale, alors
-                  qu'il n'est que la porte du panier : on comprenait mal qu'il
-                  suffit de cliquer la carte pour continuer. Il dit maintenant à
-                  quoi il sert, dans la langue de la page, et reste discret.
-
-                  La condition porte sur le **prix calculé**, pas sur
-                  `encaissable` : ce dernier reste faux tant que le client n'a pas
-                  validé le barème, ce qui rendait le panier inatteignable. Une
-                  course chiffrée se met dans la liste ; que le paiement en ligne
-                  soit ouvert ou non se tranche au moment de payer, et
-                  `/api/panier` sait faire les deux.
-                */}
-                {option.total > 0 ? (
-                  <div className="mt-2 flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const etat = ajouter({
-                          from: de.slug ?? de.texte,
-                          to: vers.slug ?? vers.texte,
-                          when,
-                          passengers,
-                          categorie: option.categorie,
-                          bags,
-                          skis,
-                          libelleDepart: devis.trajet.aeroport,
-                          libelleArrivee: devis.trajet.station,
-                          prixIndicatif: option.total,
-                        });
-                        setAjout({ categorie: option.categorie, etat });
-                      }}
-                      className="text-xs text-alpine-600 underline underline-offset-2 hover:text-marque"
-                    >
-                      {t.ajouterListe}
-                    </button>
-                    {ajout?.categorie === option.categorie ? (
-                      <span className="text-xs text-alpine-600">
-                        {ajout.etat === "ajoute"
-                          ? t.ajoutFait
-                          : ajout.etat === "deja-present"
-                            ? t.ajoutDeja
-                            : t.ajoutPlein}
-                      </span>
-                    ) : null}
-                  </div>
-                ) : null}
-              </li>
-            ))}
-          </ul>
+              </div>
+            </>
+          ) : null}
 
           <p className="mt-4 text-xs leading-relaxed text-alpine-600">
             {t.noteInclus}
@@ -793,14 +810,23 @@ export default function Tunnel({
             <Recapitulatif
               libelleModifier={t.modifier}
               onModifier={() => setEtape("vehicule")}
-              pied={`${choix.nom} · ${t.recapBagages(bags, skis)} · ${prix(choix.total)}`}
+              pied={`${t.recapBagages(bags, skis)} · ${prix(
+                choix.total + (choixRetour?.total ?? 0),
+              )}`}
               trajets={[
                 {
-                  sens: devis.trajet.allerRetour ? t.aller : null,
+                  sens: allerRetourChiffre ? t.aller : null,
                   lieux: `${devis.trajet.aeroport} → ${devis.trajet.station}`,
-                  details: [quandLisible(when, langue), t.recapPassagers(passengers)],
+                  /* Le véhicule figure dans le bloc de son sens : c'est là qu'il
+                     se vérifie, maintenant qu'il peut différer d'un sens à
+                     l'autre. */
+                  details: [
+                    quandLisible(when, langue),
+                    t.recapPassagers(passengers),
+                    choix.nom,
+                  ],
                 },
-                devis.trajet.allerRetour
+                allerRetourChiffre
                   ? {
                       sens: t.retour,
                       lieux: `${devis.trajet.retourDepart ?? devis.trajet.station} → ${
@@ -809,6 +835,7 @@ export default function Tunnel({
                       details: [
                         quandLisible(returnWhen, langue),
                         t.recapPassagers(retourPassagers ?? passengers),
+                        choixRetour?.nom ?? null,
                       ],
                     }
                   : null,
@@ -963,7 +990,7 @@ export default function Tunnel({
             {enCours
               ? t.envoiEnCours
               : devis?.encaissable && choix
-                ? t.payer(prix(choix.total))
+                ? t.payer(prix(choix.total + (choixRetour?.total ?? 0)))
                 : t.demander}
           </button>
         </form>
@@ -1060,6 +1087,147 @@ function quandLisible(valeur: string, langue: LangueTunnel): string | null {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+/**
+ * Une liste de véhicules, pour un sens.
+ *
+ * Elle sert l'aller et le retour, qui ont chacun leur effectif et donc leur
+ * propre jeu de catégories possibles. Dupliquer le balisage pour le second sens
+ * aurait garanti que les deux divergent au premier correctif — c'est la règle
+ * du tunnel, celle qui a déjà évité deux calculs de prix.
+ *
+ * Le lien du panier n'est proposé qu'à l'aller : mettre de côté « le retour
+ * seul » d'un aller-retour en cours de réservation ne veut rien dire.
+ */
+function ListeVehicules({
+  titre,
+  options,
+  choisi,
+  libelleChoisi,
+  textes,
+  prix,
+  onChoisir,
+  surAjout,
+  ajout,
+  allerRetour,
+}: {
+  titre: string | null;
+  options: OptionVehicule[];
+  choisi: OptionVehicule | null;
+  libelleChoisi: string;
+  textes: TextesTunnel;
+  prix: (montant: number) => string;
+  onChoisir: (option: OptionVehicule) => void;
+  surAjout?: (option: OptionVehicule) => void;
+  ajout?: { categorie: string; etat: string } | null;
+  allerRetour: boolean;
+}) {
+  return (
+    <section className="mt-4">
+      {titre ? (
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-alpine-600">{titre}</h3>
+      ) : null}
+      <ul className="mt-2 space-y-3">
+        {options.map((option) => {
+          const actif = choisi?.categorie === option.categorie;
+          return (
+            <li key={option.categorie}>
+              <button
+                type="button"
+                aria-pressed={actif}
+                onClick={() => onChoisir(option)}
+                className={`flex w-full flex-col gap-0 overflow-hidden rounded border bg-white text-left transition hover:shadow-carte sm:flex-row sm:items-stretch ${
+                  actif ? "border-alpes ring-2 ring-alpes/30" : "border-glacier-200 hover:border-alpes"
+                }`}
+              >
+                {/*
+                  La photo du véhicule ouvre la carte.
+
+                  Les trois visuels n'ont pas le même cadrage — 640×333, 640×302,
+                  604×236 — d'où le cadre à proportions imposées : trois cartes de
+                  hauteurs différentes se liraient comme trois offres de nature
+                  différente. Mais le véhicule y est **contenu**, pas recadré :
+                  ces photos sont cadrées au plus juste, si bien qu'un
+                  `object-cover` dans un cadre étroit leur coupait le capot et le
+                  hayon. On montre une voiture entière ou rien.
+                */}
+                <span className="relative block aspect-[16/9] w-full shrink-0 overflow-hidden bg-white sm:aspect-auto sm:w-44">
+                  <Visuel
+                    nom={VISUEL_VEHICULE[option.categorie]}
+                    alt={option.modele}
+                    sizes="(min-width: 640px) 11rem, 100vw"
+                    className="absolute inset-0 h-full w-full object-contain p-2"
+                  />
+                </span>
+
+                <span className="flex flex-1 items-center justify-between gap-4 p-4">
+                  <span>
+                    <span className="font-display text-lg text-alpine">{option.nom}</span>
+                    {actif ? (
+                      <span className="ml-2 rounded-full bg-alpes-50 px-2 py-0.5 text-xs font-semibold text-alpes-700">
+                        {libelleChoisi}
+                      </span>
+                    ) : null}
+                    <span className="block text-xs text-alpine-600">{option.modele}</span>
+                    <span className="block text-xs text-alpine-600">
+                      {textes.jusqua} {option.capacite} · {option.capaciteBagages} {textes.pieces}
+                    </span>
+                  </span>
+                  <span className="text-right">
+                    <span className="font-display text-2xl text-alpine">{prix(option.total)}</span>
+                    <span className="block text-xs text-alpine-600">
+                      {allerRetour ? textes.parVehiculeAllerRetour : textes.parVehicule}
+                    </span>
+                    {option.remiseAllerRetour > 0 ? (
+                      <span className="block text-xs text-alpes-700">
+                        {textes.remiseRetour} −{prix(option.remiseAllerRetour)}
+                      </span>
+                    ) : null}
+                  </span>
+                </span>
+              </button>
+
+              {/*
+                Ajouter plutôt que réserver : un séjour se compose souvent d'un
+                aller et d'un retour, parfois de deux véhicules.
+
+                Le libellé disait « Add to my transfers », en anglais dans les
+                quatre langues et souligné comme l'action principale, alors qu'il
+                n'est que la porte du panier : on comprenait mal qu'il suffit de
+                cliquer la carte pour continuer. Il dit maintenant à quoi il sert,
+                dans la langue de la page, et reste discret.
+
+                La condition porte sur le **prix calculé**, pas sur `encaissable` :
+                ce dernier reste faux tant que le client n'a pas validé le barème,
+                ce qui rendait le panier inatteignable.
+              */}
+              {surAjout && option.total > 0 ? (
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => surAjout(option)}
+                    className="text-xs text-alpine-600 underline underline-offset-2 hover:text-marque"
+                  >
+                    {textes.ajouterListe}
+                  </button>
+                  {ajout?.categorie === option.categorie ? (
+                    <span className="text-xs text-alpine-600">
+                      {ajout.etat === "ajoute"
+                        ? textes.ajoutFait
+                        : ajout.etat === "deja-present"
+                          ? textes.ajoutDeja
+                          : textes.ajoutPlein}
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
 }
 
 function Recapitulatif({

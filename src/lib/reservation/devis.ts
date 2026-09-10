@@ -32,6 +32,16 @@ export interface DemandeReservation {
    * doit savoir en préparant sa journée. Absent, le retour reprend l'aller.
    */
   passagersRetour?: number | null;
+  /**
+   * Le véhicule du retour, quand il diffère de celui de l'aller.
+   *
+   * Un seul véhicule servait les deux sens, dimensionné sur le groupe le plus
+   * nombreux : arriver à deux et repartir à six faisait payer un huit places sur
+   * les deux trajets, dont l'un à vide. Les sens sont indépendants — deux dates,
+   * deux effectifs, parfois deux liaisons — et rien n'oblige à les confier au
+   * même véhicule. Absent, le retour reprend celui de l'aller.
+   */
+  categorieRetour?: CategorieVehicule | null;
   /** Départ de l'aller, heure locale. */
   aller: Date;
   /** Départ du retour. Absent = aller simple. */
@@ -140,15 +150,33 @@ function distanceDuTrajet(airport: string, resort: string) {
 export function devisReservation(
   demande: DemandeReservation,
 ): { ok: true; devis: DevisReservation } | { ok: false; echec: EchecDevis } {
+  /*
+    Chaque sens tient dans son propre véhicule.
+
+    La règle portait sur le groupe le plus nombreux des deux trajets, parce
+    qu'un seul véhicule les servait. Chacun ayant désormais le sien, c'est à
+    chacun de tenir son effectif : deux personnes à l'aller n'obligent plus à
+    réserver le huit places dont le retour a besoin.
+  */
+  const categorieRetour = demande.categorieRetour ?? demande.categorie;
+  const passagersRetour = demande.passagersRetour ?? demande.passagers;
   const maximum = CAPACITE[demande.categorie];
-  // Le véhicule doit tenir le trajet le plus chargé des deux.
-  const groupeMax = Math.max(demande.passagers, demande.passagersRetour ?? 0);
-  if (demande.passagers < 1 || groupeMax > maximum) {
+  if (demande.passagers < 1 || demande.passagers > maximum) {
     return { ok: false, echec: { raison: "trop-de-passagers", maximum } };
   }
+  if (demande.retour) {
+    const maxRetour = CAPACITE[categorieRetour];
+    if (passagersRetour < 1 || passagersRetour > maxRetour) {
+      return { ok: false, echec: { raison: "trop-de-passagers", maximum: maxRetour } };
+    }
+  }
 
+  // Les bagages, eux, voyagent dans les deux sens : les deux coffres les tiennent.
   const pieces = (demande.bagages ?? 0) + (demande.skis ?? 0);
-  const maxBagages = CAPACITE_BAGAGES[demande.categorie];
+  const maxBagages = Math.min(
+    CAPACITE_BAGAGES[demande.categorie],
+    demande.retour ? CAPACITE_BAGAGES[categorieRetour] : CAPACITE_BAGAGES[demande.categorie],
+  );
   if (pieces > maxBagages) {
     return { ok: false, echec: { raison: "trop-de-bagages", maximum: maxBagages } };
   }
@@ -187,9 +215,9 @@ export function devisReservation(
       sourceDistance: d.source,
       devis: calculer({
         km: d.km,
-        categorie: demande.categorie,
+        categorie: retour ? categorieRetour : demande.categorie,
         depart,
-        passagers: retour ? (demande.passagersRetour ?? demande.passagers) : demande.passagers,
+        passagers: retour ? passagersRetour : demande.passagers,
         partage: demande.partage ?? false,
         allerRetour: false,
         coefficient: retour ? coefficientDestination(resortRetour) : coefficient,

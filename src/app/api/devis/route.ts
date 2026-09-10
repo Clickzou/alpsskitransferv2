@@ -51,12 +51,21 @@ export async function POST(requete: Request) {
     distanceCalculee({ origine: demande.airport, destination: demande.resort }) ??
     distancePubliee({ origine: demande.airport, destination: demande.resort });
 
-  // Un devis par catégorie de véhicule : le visiteur choisit sur un prix, pas sur
-  // une promesse. Les catégories trop petites pour le groupe ou pour ses bagages
-  // sont écartées — le coffre décide avant les sièges.
-  const options = CATEGORIES.map((categorie) => {
-    const resultat = devisReservation({ ...demande, categorie });
-    if (!resultat.ok) return null;
+  /*
+    Un devis par catégorie **et par sens**.
+
+    Le calcul ne produisait qu'une liste, pour un véhicule unique qui servait
+    l'aller et le retour : la capacité retenue était celle du trajet le plus
+    chargé, si bien qu'arriver à deux et repartir à six faisait payer un huit
+    places sur les deux trajets, dont l'un à vide. Chaque sens a maintenant sa
+    liste, filtrée sur son propre effectif — le retour peut être plus grand, ou
+    plus petit, que l'aller.
+
+    Le prix annoncé pour chaque sens est celui de ce sens seul, remise
+    d'aller-retour déduite du retour : c'est ce qu'on additionne à l'écran, et
+    c'est ce que le serveur recalculera au moment d'encaisser.
+  */
+  const fiche = (categorie: (typeof CATEGORIES)[number]) => {
     const modele = VEHICULES.categories.find((v) => v.nom.toLowerCase() === categorie);
     return {
       categorie,
@@ -64,20 +73,53 @@ export async function POST(requete: Request) {
       modele: modele?.modele ?? "",
       capacite: CAPACITE[categorie],
       capaciteBagages: CAPACITE_BAGAGES[categorie],
-      total: resultat.devis.total,
-      devise: resultat.devis.devise,
-      remiseAllerRetour: resultat.devis.remiseAllerRetour,
-      lignes: resultat.devis.lignes.map((l) => ({
-        sens: l.sens,
-        km: l.km,
-        total: l.devis.total,
-        majorations: l.devis.detail.majorations.map((m) => m.libelle),
-      })),
-      encaissable: resultat.devis.encaissable,
     };
-  }).filter((option) => option !== null);
+  };
 
-  if (options.length === 0) {
+  /**
+   * Les véhicules possibles pour un sens, avec le prix de ce sens.
+   *
+   * Le sens se chiffre en demandant le devis complet avec cette catégorie des
+   * deux côtés, puis en ne lisant que sa ligne : les lignes sont indépendantes,
+   * et c'est le seul chemin qui passe par le calcul unique du prix. Une
+   * catégorie que le devis refuse — trop petite pour le groupe ou pour les
+   * bagages — disparaît de la liste plutôt que d'y figurer sans prix.
+   */
+  const optionsDuSens = (sens: "aller" | "retour") =>
+    CATEGORIES.map((categorie) => {
+      const resultat = devisReservation({
+        ...demande,
+        categorie,
+        categorieRetour: categorie,
+        /*
+          Pour chiffrer l'aller seul, on retire le retour : sa présence
+          n'ajoute rien au prix de l'aller, mais sa capacité ferait refuser une
+          catégorie qui convient parfaitement au trajet qu'on est en train de
+          chiffrer.
+        */
+        ...(sens === "aller" ? { retour: null, passagersRetour: null } : {}),
+      });
+      if (!resultat.ok) return null;
+
+      const ligne = resultat.devis.lignes.find((l) => l.sens === sens);
+      if (!ligne) return null;
+
+      const remise = sens === "retour" ? resultat.devis.remiseAllerRetour : 0;
+      return {
+        ...fiche(categorie),
+        total: ligne.devis.total - remise,
+        devise: resultat.devis.devise,
+        remiseAllerRetour: remise,
+        km: ligne.km,
+        majorations: ligne.devis.detail.majorations.map((m) => m.libelle),
+        encaissable: resultat.devis.encaissable,
+      };
+    }).filter((option) => option !== null);
+
+  const options = optionsDuSens("aller");
+  const optionsRetour = demande.retour ? optionsDuSens("retour") : [];
+
+  if (options.length === 0 || (demande.retour && optionsRetour.length === 0)) {
     const echec = devisReservation(demande);
     const raison = !echec.ok ? echec.echec.raison : "distance-inconnue";
     const message =
@@ -137,8 +179,10 @@ export async function POST(requete: Request) {
       passagersRetour: demande.passagersRetour ?? null,
     },
     options,
+    optionsRetour,
     // Tant que le barème n'est pas validé, le tunnel affiche le prix et se termine
-    // en demande de devis : mieux vaut un devis qu'un prix faux encaissé.
-    encaissable: options.every((option) => option.encaissable),
+    // en demande de devis : mieux vaut un devis qu'une réservation payée au
+    // mauvais prix.
+    encaissable: [...options, ...optionsRetour].every((option) => option.encaissable),
   });
 }

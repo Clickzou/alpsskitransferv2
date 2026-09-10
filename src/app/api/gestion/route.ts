@@ -37,6 +37,7 @@ interface Ligne {
   retour_airport: string | null;
   retour_resort: string | null;
   vehicule: string;
+  vehicule_retour: string | null;
   passagers: number;
   passagers_retour: number | null;
   adresse: string;
@@ -196,6 +197,7 @@ export async function POST(requete: Request) {
         telephone: reservation.client_telephone,
       },
       vehicule: reservation.vehicule,
+      vehiculeRetour: reservation.vehicule_retour,
       passagers: reservation.passagers,
       vol: vol || null,
       bagagesSki: reservation.bagages_ski,

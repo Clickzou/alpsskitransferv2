@@ -32,6 +32,7 @@ interface LigneBase {
   airport: string;
   resort: string;
   vehicule: string;
+  vehicule_retour: string | null;
   passagers: number;
   passagers_retour: number | null;
   aller: string;
@@ -71,6 +72,8 @@ export interface Course {
    */
   trajetRetour: string | null;
   vehicule: string;
+  /** Le véhicule du retour quand il diffère — `null` s'il est le même. */
+  vehiculeRetour: string | null;
   bagagesSki: number;
   vol: string | null;
   client: { nom: string; email: string; telephone: string };
@@ -125,6 +128,10 @@ function versCourse(ligne: LigneBase): Course {
           )}`
         : null,
     vehicule: ligne.vehicule,
+    vehiculeRetour:
+      ligne.vehicule_retour && ligne.vehicule_retour !== ligne.vehicule
+        ? ligne.vehicule_retour
+        : null,
     bagagesSki: ligne.bagages_ski,
     vol: ligne.vol,
     client: {

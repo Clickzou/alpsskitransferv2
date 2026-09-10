@@ -31,6 +31,8 @@ export interface EntreeBrute {
   bags?: unknown;
   skis?: unknown;
   vehicle?: unknown;
+  /** Le véhicule du retour, quand il diffère de celui de l'aller. */
+  vehicleReturn?: unknown;
   shared?: unknown;
   /** Textes libres, quand le lieu n'est pas au registre. */
   fromText?: unknown;
@@ -121,6 +123,17 @@ export function validerDemande(entree: EntreeBrute): Validation {
     ? (entree.vehicle as CategorieVehicule)
     : "standard";
 
+  /*
+    Le véhicule du retour. Inconnu ou absent, le retour reprend celui de
+    l'aller — et sur un aller simple il n'a aucun sens, on l'ignore plutôt que
+    de refuser la demande pour un paramètre d'URL oublié, comme pour l'effectif
+    du retour juste au-dessus.
+  */
+  const categorieRetour =
+    retour && CATEGORIES.includes(entree.vehicleReturn as CategorieVehicule)
+      ? (entree.vehicleReturn as CategorieVehicule)
+      : null;
+
   const from = texte(entree.from);
   const to = texte(entree.to);
   const departConnu = from ? airportParSlug(from) : null;
@@ -178,6 +191,7 @@ export function validerDemande(entree: EntreeBrute): Validation {
         airport: departConnu.slug,
         resort: arriveeConnue.slug,
         categorie,
+        categorieRetour,
         passagers,
         passagersRetour,
         aller,

@@ -96,6 +96,10 @@ function LigneCourse({ course }: { course: Course }) {
           {course.trajetRetour ? (
             <p className="font-medium text-alpine">{course.trajetRetour}</p>
           ) : null}
+          {/* Deux véhicules : le retour n'est pas toujours le même groupe. */}
+          {course.vehiculeRetour ? (
+            <p className="text-alpine-700">Véhicule : {course.vehiculeRetour}</p>
+          ) : null}
         </div>
 
         <div>

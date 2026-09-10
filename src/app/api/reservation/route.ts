@@ -224,6 +224,17 @@ export async function POST(requete: Request) {
     airport: demande.airport,
     resort: demande.resort,
     vehicule: demande.categorie,
+    /*
+      Le véhicule du retour, quand il diffère.
+
+      Nul le reste du temps : c'est la même règle que pour ses lieux et son
+      effectif — on n'écrit une valeur que lorsqu'elle apprend quelque chose au
+      chauffeur. Un retour sans véhicule propre reprend celui de l'aller.
+    */
+    vehicule_retour:
+      demande.categorieRetour && demande.categorieRetour !== demande.categorie
+        ? demande.categorieRetour
+        : null,
     passagers: demande.passagers,
     /*
       Le nom de la colonne, pas celui du champ.
@@ -285,6 +296,7 @@ export async function POST(requete: Request) {
     adresse,
     client: { nom, email, telephone },
     vehicule: demande.categorie,
+    vehiculeRetour: demande.categorieRetour ?? null,
     passagers: demande.passagers,
     vol: ligne.vol,
     bagagesSki: ligne.bagages_ski,
@@ -304,6 +316,9 @@ export async function POST(requete: Request) {
         }`
       : null,
     `Vehicle: ${demande.categorie} — ${demande.passagers} passenger(s)`,
+    demande.categorieRetour && demande.categorieRetour !== demande.categorie
+      ? `Return vehicle: ${demande.categorieRetour}`
+      : null,
     demande.passagersRetour && demande.passagersRetour !== demande.passagers
       ? `Return journey: ${demande.passagersRetour} passenger(s)`
       : null,

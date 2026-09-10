@@ -16,6 +16,7 @@ create table if not exists reservations (
   airport       text not null,                     -- slug du registre des aéroports
   resort        text not null,                     -- slug du registre des stations
   vehicule      text not null,                     -- standard · business · premium
+  vehicule_retour text,                            -- null = même véhicule qu'à l'aller
   passagers     smallint not null check (passagers between 1 and 16),
   passagers_retour smallint                        -- null = le groupe ne change pas
                 check (passagers_retour is null or passagers_retour between 1 and 16),

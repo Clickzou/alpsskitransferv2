@@ -16,13 +16,11 @@ import {
   Reperes,
   Section,
 } from "@/components/gabarit/Sections";
-import { VEHICULES } from "@/data/accueil";
 import { PAGE_RESERVATION } from "@/data/page-reservation";
 import { airportParSlug } from "@/lib/airports";
 import { dessertes, duree } from "@/lib/airports/dessertes";
 import type { PageFonctionnelle } from "@/lib/pages";
 import { PAYS } from "@/lib/pays";
-import { lienTunnel } from "@/lib/reservation/config";
 import { LIEUX } from "@/lib/reservation/lieux";
 import { RESORTS_MIGRES } from "@/lib/resorts";
 import { filArianeSchema, faqSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
@@ -139,110 +137,22 @@ export default function PageReservation({ page }: { page: PageFonctionnelle }) {
           </div>
         </Section>
 
-        {/* ------------------------------------------- liaisons mises en avant */}
-        <section className="bg-alpine-900 text-white">
-          <div className="mx-auto max-w-6xl px-4 py-section" data-anime>
-            <EnTeteSection
-              clair
-              surtitre={PAGE_RESERVATION.routes.surtitre}
-              titre={PAGE_RESERVATION.routes.titre}
-              chapo={PAGE_RESERVATION.routes.chapo}
-            />
+        {/*
+          Trois sections ont quitté cette page le 10 septembre 2026 : les
+          liaisons mises en avant, les véhicules et les trois étapes de la
+          réservation. Elles répétaient mot pour mot ce que le formulaire fait
+          au-dessus — il propose les liaisons, montre les véhicules avec leur
+          prix, et *est* les trois étapes. Un visiteur descendait donc de
+          l'outil vers sa description.
 
-            <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {routes.map((route) => (
-                <li key={route.cle}>
-                  <Link
-                    href={route.chemin}
-                    className="group flex h-full flex-col rounded border border-white/15 p-4 transition hover:border-alpes hover:bg-white/5"
-                  >
-                    <span className="font-display text-base font-semibold group-hover:text-alpes-300">
-                      {route.aeroport} → {route.station}
-                    </span>
-                    {route.km ? (
-                      <span className="mt-2 text-xs tabular-nums text-glacier-400">
-                        {route.km} km
-                        {route.minutes ? ` · ${duree(route.minutes)}` : ""}
-                      </span>
-                    ) : null}
-                    <span className="mt-3 text-sm font-medium text-alpes-300 group-hover:underline">
-                      See this transfer →
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          Ce qui reste travaille toujours pour le référencement sans se répéter :
+          l'introduction reprise du WordPress, ce que le billet comprend, et la
+          FAQ. La page perd environ 250 mots sur deux mille, et garde son
+          antériorité sur « book ski transfer tickets ».
 
-            {/* Le maillage montant : les têtes de silo, en ancre exacte. */}
-            <div className="mt-10 border-t border-white/15 pt-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-or-300">
-                {PAGE_RESERVATION.silo.titre}
-              </p>
-              <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-                {Object.entries(PAYS)
-                  .filter(([, pays]) => pays.code !== "DE")
-                  .map(([slug, pays]) => (
-                    <li key={slug}>
-                      <Link href={`/${slug}/`} className="transition hover:text-alpes-300">
-                        {pays.nom} ski transfers
-                      </Link>
-                    </li>
-                  ))}
-                <li>
-                  <Link
-                    href={PAGE_RESERVATION.silo.lien.chemin}
-                    className="transition hover:text-alpes-300"
-                  >
-                    {PAGE_RESERVATION.silo.lien.texte}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* --------------------------------------------------------- véhicules */}
-        <Section fond="blanc">
-          <EnTeteSection
-            surtitre={PAGE_RESERVATION.vehicules.surtitre}
-            titre={PAGE_RESERVATION.vehicules.titre}
-            chapo={PAGE_RESERVATION.vehicules.chapo}
-          />
-
-          <div className="mt-10 grid gap-8 sm:grid-cols-3" data-anime-decale>
-            {VEHICULES.categories.map((vehicule) => (
-              <article
-                key={vehicule.nom}
-                className="group flex flex-col overflow-hidden rounded-xl border border-glacier-200 bg-white shadow-carte transition duration-300 hover:-translate-y-1.5 hover:border-glacier-300 hover:shadow-flottant"
-              >
-                <div className="relative flex aspect-[16/10] items-center justify-center px-6 pb-8 pt-6">
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute bottom-6 left-1/2 h-4 w-3/5 -translate-x-1/2 rounded-[50%] bg-alpine/25 blur-md transition-all duration-500 group-hover:h-3 group-hover:w-2/3 group-hover:bg-alpine/20"
-                  />
-                  <Visuel
-                    nom={vehicule.image.nom}
-                    alt={vehicule.image.alt}
-                    sizes="(min-width: 640px) 32vw, 90vw"
-                    className="relative h-full w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.05]"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col border-t border-glacier-200 p-6">
-                  <h3 className="font-display text-titre-carte text-alpine">{vehicule.nom}</h3>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-alpine-600">
-                    {vehicule.modele}
-                  </p>
-                  <p className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-alpes-50 px-3 py-1.5 text-sm font-semibold text-alpes-700">
-                    <Coche className="h-3.5 w-3.5" />
-                    {vehicule.capacite}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </Section>
-
-        {/* ------------------------------------------- ce que le billet comprend */}
+          Le maillage n'y perd rien non plus : les liaisons restent atteignables
+          depuis la home, les hubs d'aéroport et le pied de page.
+        */}
         <Section fond="glacier">
           <EnTeteSection
             surtitre={PAGE_RESERVATION.inclus.surtitre}
@@ -267,39 +177,6 @@ export default function PageReservation({ page }: { page: PageFonctionnelle }) {
             ))}
           </ul>
         </Section>
-
-        {/* ------------------------------------------------ comment on réserve */}
-        <section className="bg-alpine text-white">
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2" data-anime>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-white/70">
-                {PAGE_RESERVATION.etapes.surtitre}
-              </p>
-              <h2 className="mt-3 font-display text-titre-section">
-                {PAGE_RESERVATION.etapes.titre}
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-white/90">
-                {PAGE_RESERVATION.etapes.chapo}
-              </p>
-              <BoutonAction sur="sombre" href={lienTunnel()} className="mt-6">
-                Book now
-              </BoutonAction>
-            </div>
-            <ol className="space-y-4">
-              {PAGE_RESERVATION.etapes.etapes.map((etape, i) => (
-                <li key={etape.titre} className="flex gap-3 text-sm">
-                  <span className="font-semibold tabular-nums">{i + 1}.</span>
-                  <span>
-                    <span className="font-semibold">{etape.titre}</span> — {etape.texte}
-                  </span>
-                </li>
-              ))}
-              <li className="pt-2 text-sm text-white/90">
-                {PAGE_RESERVATION.etapes.conclusion}
-              </li>
-            </ol>
-          </div>
-        </section>
 
         <Faq
           items={page.faq}

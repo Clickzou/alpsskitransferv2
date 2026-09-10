@@ -37,6 +37,15 @@ export interface TextesTunnel {
   /* L'ecran du choix du vehicule : un titre, et ce que le clic fait. */
   titreVehicule: string;
   sousTitreVehicule: string;
+  /* Un aller-retour se choisit sens par sens : deux listes, deux titres. */
+  titreVehiculeDeuxSens: string;
+  sousTitreVehiculeDeuxSens: string;
+  vehiculeAller: string;
+  vehiculeRetour: string;
+  choisi: string;
+  totalDeuxSens: string;
+  continuerVehicule: string;
+  choisirRetour: string;
   aller: string;
   recapPassagers: (n: number) => string;
   recapBagages: (sacs: number, housses: number) => string;
@@ -103,6 +112,15 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     calculEnCours: "Pricing your journey…",
     titreVehicule: "Choose your vehicle",
     sousTitreVehicule: "One price for the whole vehicle, not per seat. Tap a vehicle to continue.",
+    titreVehiculeDeuxSens: "Choose a vehicle for each journey",
+    sousTitreVehiculeDeuxSens:
+      "One price for the whole vehicle, not per seat. The two journeys are priced separately, so a smaller group on one of them pays for a smaller vehicle.",
+    vehiculeAller: "Vehicle for the outbound journey",
+    vehiculeRetour: "Vehicle for the return journey",
+    choisi: "Selected",
+    totalDeuxSens: "Total for both journeys",
+    continuerVehicule: "Continue",
+    choisirRetour: "Now choose the vehicle for your return.",
     aller: "Outbound",
     recapPassagers: (n) => `${n} passenger${n > 1 ? "s" : ""}`,
     recapBagages: (sacs, housses) =>
@@ -173,6 +191,15 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     titreVehicule: "Choisissez votre véhicule",
     sousTitreVehicule:
       "Un prix pour le véhicule entier, pas par place. Cliquez sur un véhicule pour continuer.",
+    titreVehiculeDeuxSens: "Choisissez un véhicule pour chaque trajet",
+    sousTitreVehiculeDeuxSens:
+      "Un prix pour le véhicule entier, pas par place. Les deux trajets sont chiffrés séparément : un groupe plus petit sur l'un des deux paie un véhicule plus petit.",
+    vehiculeAller: "Véhicule pour l'aller",
+    vehiculeRetour: "Véhicule pour le retour",
+    choisi: "Choisi",
+    totalDeuxSens: "Total pour les deux trajets",
+    continuerVehicule: "Continuer",
+    choisirRetour: "Choisissez maintenant le véhicule du retour.",
     aller: "Aller",
     recapPassagers: (n) => `${n} passager${n > 1 ? "s" : ""}`,
     recapBagages: (sacs, housses) =>
@@ -249,6 +276,15 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     titreVehicule: "Wählen Sie Ihr Fahrzeug",
     sousTitreVehicule:
       "Ein Preis für das ganze Fahrzeug, nicht pro Sitzplatz. Fahrzeug antippen, um fortzufahren.",
+    titreVehiculeDeuxSens: "Wählen Sie ein Fahrzeug für jede Fahrt",
+    sousTitreVehiculeDeuxSens:
+      "Ein Preis für das ganze Fahrzeug, nicht pro Sitzplatz. Beide Fahrten werden getrennt berechnet: Für eine kleinere Gruppe genügt ein kleineres Fahrzeug.",
+    vehiculeAller: "Fahrzeug für die Hinfahrt",
+    vehiculeRetour: "Fahrzeug für die Rückfahrt",
+    choisi: "Gewählt",
+    totalDeuxSens: "Gesamt für beide Fahrten",
+    continuerVehicule: "Weiter",
+    choisirRetour: "Wählen Sie nun das Fahrzeug für die Rückfahrt.",
     aller: "Hinfahrt",
     recapPassagers: (n) => `${n} Person${n > 1 ? "en" : ""}`,
     recapBagages: (sacs, housses) =>
@@ -324,6 +360,15 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     titreVehicule: "Scegli il tuo veicolo",
     sousTitreVehicule:
       "Un prezzo per l'intero veicolo, non a posto. Tocca un veicolo per continuare.",
+    titreVehiculeDeuxSens: "Scegli un veicolo per ogni tragitto",
+    sousTitreVehiculeDeuxSens:
+      "Un prezzo per l'intero veicolo, non a posto. I due tragitti sono calcolati separatamente: un gruppo più piccolo su uno dei due paga un veicolo più piccolo.",
+    vehiculeAller: "Veicolo per l'andata",
+    vehiculeRetour: "Veicolo per il ritorno",
+    choisi: "Scelto",
+    totalDeuxSens: "Totale per entrambi i tragitti",
+    continuerVehicule: "Continua",
+    choisirRetour: "Ora scegli il veicolo del ritorno.",
     aller: "Andata",
     recapPassagers: (n) => `${n} passegger${n > 1 ? "i" : "o"}`,
     recapBagages: (sacs, housses) =>
@@ -894,6 +939,8 @@ export interface CourseAvis {
   adresse: string;
   client: { nom: string; email: string; telephone: string };
   vehicule: string;
+  /** Le véhicule du retour quand il diffère — `null` s'il est le même. */
+  vehiculeRetour?: string | null;
   passagers: number;
   /** Le groupe du retour quand il diffère : le chauffeur prépare sa journée avec. */
   passagersRetour?: number | null;
@@ -951,7 +998,11 @@ export function corpsAvis(course: CourseAvis): string {
         où aller — c'est tout l'objet de la refonte de cet avis.
       */
       `  ${course.trajetRetour ?? inverse(course.trajet)}`,
-      `  ${course.passagersRetour ?? course.passagers} passager(s)`,
+      `  ${course.passagersRetour ?? course.passagers} passager(s)${
+        course.vehiculeRetour && course.vehiculeRetour !== course.vehicule
+          ? ` · ${course.vehiculeRetour}`
+          : ` · ${course.vehicule}`
+      }`,
     );
   }
 

@@ -20,3 +20,13 @@
 alter table reservations
   add column if not exists retour_airport text,   -- slug, null = même qu'à l'aller
   add column if not exists retour_resort  text;   -- slug, null = même qu'à l'aller
+
+-- Et le véhicule du retour, pour la même raison.
+--
+-- Un seul véhicule servait les deux sens, dimensionné sur le groupe le plus
+-- nombreux : arriver à deux et repartir à six faisait payer un huit places sur
+-- les deux trajets, dont l'un à vide. Chaque sens choisit désormais le sien.
+-- Null quand c'est le même qu'à l'aller, ce qui reste le cas courant.
+
+alter table reservations
+  add column if not exists vehicule_retour text;
