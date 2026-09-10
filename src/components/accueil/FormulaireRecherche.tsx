@@ -7,6 +7,7 @@ import type { Lang } from "@/lib/i18n";
 import { ANCRE_TUNNEL, CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import type { Lieu } from "@/lib/reservation/lieux";
 import { ENTREPRISE } from "@/data/site";
+import { ouvrirCalendrier } from "@/lib/reservation/calendrier";
 import { DELAI_APPEL_HEURES, departImminent } from "@/lib/reservation/gestion";
 import { instantAlpes, saisieAlpes } from "@/lib/temps";
 import { TEXTES_IMMINENT, TEXTES_RECHERCHE } from "@/lib/reservation/textes";
@@ -133,6 +134,7 @@ export default function FormulaireRecherche({
           <input
             id="quand"
             type="datetime-local"
+            onClick={ouvrirCalendrier}
             required
             min={premiereHeure}
             value={quand}

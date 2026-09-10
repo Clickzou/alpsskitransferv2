@@ -6,6 +6,7 @@ import { usePanier } from "@/components/panier/PanierProvider";
 import { DEVISES, convertir, type CodeDevise } from "@/lib/reservation/devises";
 import type { Lieu } from "@/lib/reservation/lieux";
 import { ENTREPRISE } from "@/data/site";
+import { ouvrirCalendrier } from "@/lib/reservation/calendrier";
 import { DELAI_APPEL_HEURES, departImminent } from "@/lib/reservation/gestion";
 import { instantAlpes, saisieAlpes } from "@/lib/temps";
 import {
@@ -402,6 +403,7 @@ export default function Tunnel({
               <input
                 id="when"
                 type="datetime-local"
+                onClick={ouvrirCalendrier}
                 className={CHAMP}
                 min={premiereHeure}
                 value={when}
@@ -505,6 +507,7 @@ export default function Tunnel({
                   <input
                     id="returnWhen"
                     type="datetime-local"
+                    onClick={ouvrirCalendrier}
                     className={CHAMP}
                     min={when || premiereHeure}
                     value={returnWhen}
