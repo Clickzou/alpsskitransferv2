@@ -116,6 +116,15 @@ export default function Tunnel({
   };
 
   const [etape, setEtape] = useState<Etape>("trajet");
+  /*
+    Vrai le temps que le prix demandé depuis l'accueil revienne. Sans lui,
+    l'écran montrerait le formulaire une fraction de seconde avant de basculer
+    sur les véhicules — un clignotement qui donne l'impression d'un faux départ.
+  */
+  const [prixAttendu, setPrixAttendu] = useState(() =>
+    Boolean(depart && arrivee && quand && lieux.some((l) => l.slug === depart) &&
+      lieux.some((l) => l.slug === arrivee)),
+  );
   const [de, setDe] = useState<ValeurLieu>(lieuDe(depart));
   const [vers, setVers] = useState<ValeurLieu>(lieuDe(arrivee));
   const [when, setWhen] = useState(quand ?? "");
@@ -189,13 +198,43 @@ export default function Tunnel({
     [de, vers, when, allerRetour, returnWhen, retourAilleurs, retourDe, retourVers, passengers, bags, skis],
   );
 
+  /*
+    « Voir mon prix » sur l'accueil doit montrer un prix.
+
+    Le tunnel s'ouvrait invariablement sur son étape « Trajet », si bien que le
+    visiteur qui venait de saisir départ, arrivée, date et nombre de personnes
+    retrouvait le même formulaire, prérempli, sans le prix qu'il avait demandé —
+    et devait cliquer une seconde fois sur un bouton qu'il croyait avoir déjà
+    actionné. La demande arrivant complète par l'URL, elle est chiffrée tout de
+    suite et l'écran s'ouvre sur les véhicules et leurs tarifs.
+
+    Une seule fois, au montage : les dépendances sont volontairement absentes,
+    la suite du parcours appartient au visiteur.
+  */
+  useEffect(() => {
+    const chiffrable = Boolean(lieuDe(depart).slug && lieuDe(arrivee).slug && quand);
+    if (chiffrable) void chercherPrix(true).finally(() => setPrixAttendu(false));
+    else setPrixAttendu(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function inverser() {
     setDe(vers);
     setVers(de);
   }
 
-  async function demanderDevis(evenement: React.FormEvent) {
-    evenement.preventDefault();
+  /**
+   * Demande le prix.
+   *
+   * `automatique` distingue les deux façons d'arriver ici. Au clic, le visiteur
+   * a demandé un résultat et on l'y emmène, même si ce résultat est « ce trajet
+   * se chiffre à la main ». Au chargement, il n'a rien demandé de plus que ce
+   * qu'il a déjà rempli sur l'accueil : une liaison que nous ne savons pas
+   * chiffrer le laisse alors sur le formulaire, où le champ dit lui-même ce
+   * qu'il manque — le projeter d'office sur un écran de devis serait le
+   * cueillir avec un problème qu'il n'a pas encore vu.
+   */
+  async function chercherPrix(automatique = false) {
     setErreur(null);
     setSurMesure(null);
     setEnCours(true);
@@ -207,10 +246,11 @@ export default function Tunnel({
       });
       const donnees = await reponse.json();
       if (!reponse.ok) {
-        setErreur(donnees.erreur ?? t.erreurPrix);
+        if (!automatique) setErreur(donnees.erreur ?? t.erreurPrix);
         return;
       }
       if (donnees.devisSurMesure) {
+        if (automatique) return;
         setSurMesure(donnees.message ?? "We will quote this journey by email.");
         setEtape("details");
         return;
@@ -218,10 +258,15 @@ export default function Tunnel({
       setDevis(donnees);
       setEtape("vehicule");
     } catch {
-      setErreur(t.erreurReseau);
+      if (!automatique) setErreur(t.erreurReseau);
     } finally {
       setEnCours(false);
     }
+  }
+
+  async function demanderDevis(evenement: React.FormEvent) {
+    evenement.preventDefault();
+    await chercherPrix();
   }
 
   async function envoyer(evenement: React.FormEvent) {
@@ -270,6 +315,14 @@ export default function Tunnel({
     <div className="mx-auto max-w-3xl">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Fil etape={etape} libelles={t.etapes} />
+        {prixAttendu ? (
+          <p
+            role="status"
+            className="mt-4 rounded border border-glacier-200 bg-glacier-50 px-4 py-3 text-sm text-alpine-700"
+          >
+            {t.calculEnCours}
+          </p>
+        ) : null}
         <label className="flex items-center gap-2 text-xs text-alpine-600">
           <span className="uppercase tracking-wide">{t.devise}</span>
           <select
