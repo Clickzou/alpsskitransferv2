@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import Animations, { SCRIPT_ANIMATIONS } from "@/components/Animations";
+import { PanierProvider } from "@/components/panier/PanierProvider";
 import { display, sans } from "../polices";
 import { SITE } from "@/data/site";
 
@@ -27,7 +28,13 @@ export default function RootLayoutDE({ children }: { children: React.ReactNode }
         {/* Avant tout rendu : sans lui, l'apparition au défilement masquerait du
             contenu chez qui n'a pas JavaScript. */}
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_ANIMATIONS }} />
-        {children}
+        {/*
+          Le panier enveloppe cette langue comme il enveloppe l'anglais : la
+          pastille de l'en-tête et la page du panier lisent le même état. Il y
+          manquait — l'icône était masquée hors anglais, et l'ajouter sans le
+          fournisseur aurait fait tomber toutes les pages de la langue.
+        */}
+        <PanierProvider>{children}</PanierProvider>
         <Animations />
       </body>
     </html>

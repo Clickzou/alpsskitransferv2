@@ -5,13 +5,20 @@ import { ACCUEIL } from "./accueil";
 import {
   alternativesAccueil,
   alternativesArticle,
+  alternativesHubPays,
+  alternativesIndexAeroports,
   alternativesIndexBlog,
+  alternativesIndexStations,
   alternativesPageIntl,
   alternativesStation,
   alternativesTrajet,
+  cheminHubPays,
+  cheminIndexAeroports,
+  cheminIndexStations,
   cheminStation,
   cheminTrajet,
 } from "./liens";
+import { hubPaysParSlug, hubsPaysDeLaLangue } from "@/lib/pays-intl";
 import { T } from "./textes";
 import { pageIntlParSlug, pagesDeLaLangue } from "@/lib/pages/intl";
 import { resortParSlugTraduit, resortsTraduits } from "@/lib/resorts";
@@ -61,17 +68,52 @@ export function metadataPage(lang: LangueSecondaire, slug: string): Metadata {
     description: page.metaDescription,
     path: `/${lang}/${page.slug}/`,
     lang,
+    noindex: page.noindex,
     alternatives: alternativesPageIntl(lang, page.equivalentEn),
   });
 }
 
 /* --------------------------------------------------------------- station */
 
+/**
+ * Les slugs servis par le segment `[station]` : les stations traduites **et**
+ * les hubs pays de la langue.
+ *
+ * Next n'accepte qu'un segment dynamique par niveau, et le silo traduit a besoin
+ * des deux — c'est le même aiguillage que `[silo]/[resort]` côté anglais, qui
+ * sert les stations et les hubs d'aéroport. Le contrôle de collision est fait
+ * ici : un hub dont le slug serait aussi celui d'une station masquerait la
+ * station, et la faute passerait inaperçue jusqu'à ce qu'un visiteur tombe sur
+ * la mauvaise page.
+ */
 export function paramsStations(lang: LangueSecondaire) {
-  return resortsTraduits(lang).map((r) => ({ station: r.traductions![lang]!.slug }));
+  const stations = resortsTraduits(lang).map((r) => r.traductions![lang]!.slug);
+  const hubs = hubsPaysDeLaLangue(lang).map((h) => h.slug);
+
+  const collision = hubs.find((slug) => stations.includes(slug));
+  if (collision) {
+    throw new Error(
+      `[${lang}] le hub pays « ${collision} » porte le slug d'une station : l'un des deux ne serait jamais servi.`,
+    );
+  }
+
+  return [...stations, ...hubs].map((station) => ({ station }));
 }
 
 export function metadataStation(lang: LangueSecondaire, slug: string): Metadata {
+  // Le segment sert aussi les hubs pays : ils passent en premier, ils sont peu
+  // nombreux et leur slug est réservé.
+  const hub = hubPaysParSlug(lang, slug);
+  if (hub) {
+    return pageMetadata({
+      title: hub.metaTitre,
+      description: hub.metaDescription,
+      path: cheminHubPays(lang, hub.slug),
+      lang,
+      alternatives: alternativesHubPays(lang, hub),
+    });
+  }
+
   const resort = resortParSlugTraduit(lang, slug);
   if (!resort) return {};
   const traduction = resort.traductions![lang]!;
@@ -172,5 +214,29 @@ export function metadataArticle(lang: LangueSecondaire, slug: string): Metadata 
     lang,
     alternatives: alternativesArticle(article, lang),
     image: article.image?.src,
+  });
+}
+
+/* ------------------------------------------------------------------ index */
+
+export function metadataIndexStations(lang: LangueSecondaire): Metadata {
+  const t = T(lang);
+  return pageMetadata({
+    title: t.index.stationsMeta,
+    description: t.index.stationsMetaDescription,
+    path: cheminIndexStations(lang),
+    lang,
+    alternatives: alternativesIndexStations(lang),
+  });
+}
+
+export function metadataIndexAeroports(lang: LangueSecondaire): Metadata {
+  const t = T(lang);
+  return pageMetadata({
+    title: t.index.aeroportsMeta,
+    description: t.index.aeroportsMetaDescription,
+    path: cheminIndexAeroports(lang),
+    lang,
+    alternatives: alternativesIndexAeroports(lang),
   });
 }

@@ -84,6 +84,34 @@ export interface TextesUI {
   publieLe: string;
   aLire: string;
   stationsCitees: string;
+
+  /* ------------------------------------------------- hubs pays et index */
+  hub: {
+    stationsDuPays: (pays: string) => string;
+    stationsChapo: string;
+    liaisons: string;
+    liaisonsChapo: string;
+    autresPays: string;
+    ailleurs: string;
+    reserverDans: (pays: string) => string;
+    pays: string;
+    aeroports: string;
+    liaisonsCourt: string;
+  };
+  index: {
+    stationsTitre: string;
+    stationsChapo: string;
+    stationsMeta: string;
+    stationsMetaDescription: string;
+    parPays: string;
+    aeroportsTitre: string;
+    aeroportsChapo: string;
+    aeroportsMeta: string;
+    aeroportsMetaDescription: string;
+    depuisCetAeroport: string;
+    stationsDesservies: (n: number) => string;
+    plusProche: (station: string, km: number) => string;
+  };
 }
 
 const EN: TextesUI = {
@@ -156,6 +184,39 @@ const EN: TextesUI = {
   publieLe: "Published",
   aLire: "More guides",
   stationsCitees: "Resorts mentioned",
+
+  hub: {
+    stationsDuPays: (pays) => `Ski resorts we serve in ${pays}`,
+    stationsChapo:
+      "Each resort page lists every airport we drive from, with distances and drive times.",
+    liaisons: "Most requested routes",
+    liaisonsChapo:
+      "Distances and drive times measured on the road network, without traffic. Allow more on a peak-season Saturday.",
+    autresPays: "Other countries we serve",
+    ailleurs: "Elsewhere in the Alps",
+    reserverDans: (pays) => `Book your ski transfer in ${pays}`,
+    pays: "Countries",
+    aeroports: "Airports",
+    liaisonsCourt: "Routes",
+  },
+  index: {
+    stationsTitre: "The resorts we serve",
+    stationsChapo:
+      "Every resort with a page in this language, by country, with the closest airport and the road distance.",
+    stationsMeta: "Ski resorts we serve",
+    stationsMetaDescription:
+      "All the Alpine ski resorts we drive to, by country, with the closest airport and the real road distance.",
+    parPays: "By country",
+    aeroportsTitre: "The airports we drive from",
+    aeroportsChapo:
+      "Every airport we serve, with the resorts reached from it and the drive time.",
+    aeroportsMeta: "Airports we drive from",
+    aeroportsMetaDescription:
+      "Every airport we run ski transfers from, with the resorts reached from each one and the real drive time.",
+    depuisCetAeroport: "Transfers from this airport",
+    stationsDesservies: (n) => `${n} resort${n > 1 ? "s" : ""} served`,
+    plusProche: (station, km) => `Closest: ${station}, ${km} km`,
+  },
 };
 
 const FR: TextesUI = {
@@ -227,6 +288,39 @@ const FR: TextesUI = {
   publieLe: "Publié le",
   aLire: "Autres guides",
   stationsCitees: "Stations citées",
+
+  hub: {
+    stationsDuPays: (pays) => `Les stations que nous desservons en ${pays}`,
+    stationsChapo:
+      "Chaque page de station indique les aéroports d’où nous partons, la distance réelle et le temps de route.",
+    liaisons: "Les liaisons les plus demandées",
+    liaisonsChapo:
+      "Distances et durées mesurées sur le réseau routier, hors trafic. Comptez davantage un samedi de haute saison.",
+    autresPays: "Les autres pays que nous desservons",
+    ailleurs: "Ailleurs dans les Alpes",
+    reserverDans: (pays) => `Réservez votre transfert en ${pays}`,
+    pays: "Pays",
+    aeroports: "Aéroports",
+    liaisonsCourt: "Trajets",
+  },
+  index: {
+    stationsTitre: "Les stations que nous desservons",
+    stationsChapo:
+      "Toutes les stations qui ont une page en français, par pays, avec l’aéroport le plus proche et la distance routière.",
+    stationsMeta: "Stations desservies | Transferts aéroport vers les Alpes",
+    stationsMetaDescription:
+      "Toutes les stations des Alpes que nous desservons, par pays, avec l’aéroport le plus proche et la distance routière réelle.",
+    parPays: "Par pays",
+    aeroportsTitre: "Les aéroports d’où nous partons",
+    aeroportsChapo:
+      "Chaque aéroport desservi en français, avec les stations atteintes depuis lui et le temps de route.",
+    aeroportsMeta: "Aéroports desservis | Transferts vers les stations des Alpes",
+    aeroportsMetaDescription:
+      "Tous les aéroports d’où nous assurons des transferts vers les stations des Alpes, avec les stations desservies et le temps de route réel.",
+    depuisCetAeroport: "Transferts depuis cet aéroport",
+    stationsDesservies: (n) => `${n} station${n > 1 ? "s" : ""} desservie${n > 1 ? "s" : ""}`,
+    plusProche: (station, km) => `La plus proche : ${station}, ${km} km`,
+  },
 };
 
 /**
@@ -306,6 +400,39 @@ const DE: TextesUI = {
   publieLe: "Veröffentlicht am",
   aLire: "Weitere Ratgeber",
   stationsCitees: "Erwähnte Skiorte",
+
+  hub: {
+    stationsDuPays: (pays) => `Unsere Skiorte in ${pays}`,
+    stationsChapo:
+      "Jede Skiort-Seite nennt die Flughäfen, von denen wir fahren, die reale Entfernung und die Fahrzeit.",
+    liaisons: "Die meistgefragten Strecken",
+    liaisonsChapo:
+      "Entfernungen und Fahrzeiten auf dem realen Straßennetz gemessen, ohne Verkehr. An einem Samstag in der Hochsaison rechnen Sie mehr ein.",
+    autresPays: "Weitere Länder, die wir bedienen",
+    ailleurs: "Anderswo in den Alpen",
+    reserverDans: (pays) => `Buchen Sie Ihren Transfer in ${pays}`,
+    pays: "Länder",
+    aeroports: "Flughäfen",
+    liaisonsCourt: "Strecken",
+  },
+  index: {
+    stationsTitre: "Die Skiorte, die wir bedienen",
+    stationsChapo:
+      "Alle Skiorte mit einer deutschen Seite, nach Ländern, mit dem nächsten Flughafen und der Straßenentfernung.",
+    stationsMeta: "Unsere Skiorte | Flughafentransfer in die Alpen",
+    stationsMetaDescription:
+      "Alle Skiorte der Alpen, die wir anfahren, nach Ländern, mit dem nächsten Flughafen und der realen Straßenentfernung.",
+    parPays: "Nach Ländern",
+    aeroportsTitre: "Die Flughäfen, von denen wir fahren",
+    aeroportsChapo:
+      "Jeder Flughafen mit deutschem Angebot, mit den von dort erreichten Skiorten und der Fahrzeit.",
+    aeroportsMeta: "Unsere Flughäfen | Skitransfer in die Alpen",
+    aeroportsMetaDescription:
+      "Alle Flughäfen, von denen wir Skitransfers fahren, mit den erreichten Skiorten und der realen Fahrzeit.",
+    depuisCetAeroport: "Transfers ab diesem Flughafen",
+    stationsDesservies: (n) => (n > 1 ? `${n} Skiorte` : "1 Skiort"),
+    plusProche: (station, km) => `Am nächsten: ${station}, ${km} km`,
+  },
 };
 
 /**
@@ -385,6 +512,39 @@ const IT: TextesUI = {
   publieLe: "Pubblicato il",
   aLire: "Altre guide",
   stationsCitees: "Località citate",
+
+  hub: {
+    stationsDuPays: (pays) => `Le località che serviamo in ${pays}`,
+    stationsChapo:
+      "Ogni pagina di località indica gli aeroporti da cui partiamo, la distanza reale e il tempo di percorrenza.",
+    liaisons: "I collegamenti più richiesti",
+    liaisonsChapo:
+      "Distanze e tempi misurati sulla rete stradale reale, senza traffico. Il sabato di alta stagione conta di più.",
+    autresPays: "Gli altri Paesi che serviamo",
+    ailleurs: "Altrove nelle Alpi",
+    reserverDans: (pays) => `Prenota il tuo transfer in ${pays}`,
+    pays: "Paesi",
+    aeroports: "Aeroporti",
+    liaisonsCourt: "Tragitti",
+  },
+  index: {
+    stationsTitre: "Le località che serviamo",
+    stationsChapo:
+      "Tutte le località con una pagina in italiano, per Paese, con l’aeroporto più vicino e la distanza stradale.",
+    stationsMeta: "Località servite | Transfer aeroporto per le Alpi",
+    stationsMetaDescription:
+      "Tutte le località sciistiche delle Alpi che serviamo, per Paese, con l’aeroporto più vicino e la distanza stradale reale.",
+    parPays: "Per Paese",
+    aeroportsTitre: "Gli aeroporti da cui partiamo",
+    aeroportsChapo:
+      "Ogni aeroporto servito in italiano, con le località raggiunte e il tempo di percorrenza.",
+    aeroportsMeta: "Aeroporti serviti | Transfer per le località delle Alpi",
+    aeroportsMetaDescription:
+      "Tutti gli aeroporti da cui effettuiamo transfer verso le località sciistiche delle Alpi, con le località servite e il tempo di percorrenza reale.",
+    depuisCetAeroport: "Transfer da questo aeroporto",
+    stationsDesservies: (n) => (n > 1 ? `${n} località servite` : "1 località servita"),
+    plusProche: (station, km) => `La più vicina: ${station}, ${km} km`,
+  },
 };
 
 const TABLE: Record<Lang, TextesUI> = { en: EN, fr: FR, de: DE, it: IT };

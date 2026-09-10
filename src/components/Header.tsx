@@ -64,12 +64,15 @@ export default function Header({
           <SelecteurLangue lang={lang} alternatives={alternatives} />
 
           {/*
-            Le panier vit avec le tunnel anglais : les lignes qu'il porte sont
-            re-chiffrées par `/api/panier/`, dont les libellés et la page `/cart/`
-            n'existent qu'en anglais. L'afficher ailleurs mènerait à une page
-            dans une autre langue que celle où le visiteur l'a rempli.
+            Le panier est visible dans les quatre langues depuis le
+            10 septembre 2026. Il ne l'était qu'en anglais — la page `/cart/` et
+            les libellés n'existaient que là — si bien qu'un visiteur français
+            pouvait mettre un transfert de côté depuis une page de trajet, puis
+            ne plus trouver où le retrouver. Chaque langue a maintenant sa page
+            (`/fr/panier/`, `/de/warenkorb/`, `/it/carrello/`) et ses mots ;
+            le re-chiffrage par `/api/panier/`, lui, reste le même pour tous.
           */}
-          {lang === "en" ? <IconePanier etiquette={t.panier} /> : null}
+          <IconePanier etiquette={t.panier} langue={lang} />
 
           <Link
             href={lienTunnelLangue(lang)}

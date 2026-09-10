@@ -431,6 +431,55 @@ export function BandeauReassurance({
   );
 }
 
+
+/* --------------------------------------------------- bandeau image + texte */
+
+/**
+ * Bandeau à fond perdu : l'image occupe la moitié gauche de l'écran d'un bord à
+ * l'autre, le texte la moitié droite sur le bleu nuit.
+ *
+ * C'est la composition de la home anglaise, et elle vaut mieux que du texte sur
+ * blanc : une photo enfermée dans la colonne de contenu n'est qu'une
+ * illustration, la même photo à fond perdu porte la section. Le texte, lui,
+ * reste aligné sur la grille du site — sa mesure de 36 rem est la demi-largeur
+ * d'une grille de 72 rem, donc son bord droit tombe exactement sur celui des
+ * sections centrées.
+ *
+ * Le gabarit vit ici depuis le 10 septembre 2026 : il ne servait que l'anglais,
+ * et les trois autres langues affichaient le même propos en prose sur fond
+ * blanc. Une seule mise en page, quatre contenus.
+ */
+export function BandeauImageTexte({
+  image,
+  children,
+}: {
+  image: { nom: NomVisuel; alt: string };
+  children: ReactNode;
+}) {
+  return (
+    <section className="bg-alpine text-white">
+      <div className="lg:grid lg:grid-cols-2">
+        {/* L'image se comporte comme un fond : elle prend toute la hauteur de la
+            colonne de texte, quelle que soit la longueur de celle-ci. */}
+        <div className="relative h-64 sm:h-80 lg:h-auto">
+          <Visuel
+            nom={image.nom}
+            alt={image.alt}
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="px-4 py-section-lg sm:px-6 lg:pl-12 xl:pl-16">
+          <div className="max-w-[36rem]" data-anime>
+            {children}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* -------------------------------------------------------- appel à l'action */
 
 /**

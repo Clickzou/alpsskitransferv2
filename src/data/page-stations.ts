@@ -50,7 +50,7 @@ export const PAGE_STATIONS = {
   },
 
   intro: [
-    "Our ski resort transfers run from the major airports of the Alps — Geneva, Lyon, Chambéry, Grenoble, Turin, Milan, Zurich and Salzburg — to the resorts of France, Switzerland, Italy and Austria. Every destination below has its own page, with the road distance and drive time from each airport that serves it.",
+    "Our ski resort transfers run from the major airports of the Alps — Geneva, Lyon, Chambéry, Grenoble, Turin, Milan and Zurich — to the resorts of France, Switzerland and Italy. Every destination below has its own page, with the road distance and drive time from each airport that serves it.",
     "Pick your resort to see the transfers available, or start from your airport if you already know where you land. Drive times are measured on the real routes and given without traffic.",
   ],
 

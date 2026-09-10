@@ -37,7 +37,23 @@ export default function ArticleIntl({ lang, article }: { lang: LangueSecondaire;
     <>
       <Header lang={lang} alternatives={alternativesArticle(article, lang)} />
       <main id="contenu">
-        <HeroInterieur>
+        {/*
+          Le visuel de tête, comme sur la version anglaise. Il manquait : les
+          articles traduits étaient les seules pages du site à ouvrir sur un
+          aplat bleu nu, alors que leur équivalent anglais portait une photo.
+          L'image est la même — c'est la même montagne — et seul son `alt`
+          change de langue.
+        */}
+        <HeroInterieur
+          image={
+            article.visuel
+              ? {
+                  nom: article.visuel.nom,
+                  alt: traduction.altVisuel ?? article.visuel.alt,
+                }
+              : undefined
+          }
+        >
           <FilAriane clair elements={filAriane} />
           <h1 className="mt-4 max-w-3xl text-balance font-display text-titre-page">
             {traduction.titre}

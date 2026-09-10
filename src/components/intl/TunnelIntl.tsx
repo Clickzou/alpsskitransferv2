@@ -68,7 +68,14 @@ export default function TunnelIntl({
 
         <BandeauReassurance langue={lang} />
 
-        <Section fond="blanc">
+        {/*
+          `id="reserver"` n'est pas décoratif : le formulaire de recherche de la
+          home traduite pousse vers `…?from=…#reserver`, la même ancre que la
+          page de réservation anglaise. Sans elle, le visiteur atterrit en haut
+          d'une page dont le formulaire est deux écrans plus bas — avec sa
+          saisie déjà reportée, mais invisible.
+        */}
+        <Section fond="blanc" id="reserver">
           <Tunnel
             langue={lang}
             lieux={lieux}

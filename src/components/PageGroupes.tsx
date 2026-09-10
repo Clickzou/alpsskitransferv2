@@ -3,6 +3,7 @@ import Faq from "@/components/Faq";
 import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { alternativesPageFonctionnelleEn } from "@/lib/intl/liens";
 import JsonLd from "@/components/JsonLd";
 import Visuel from "@/components/Visuel";
 import {
@@ -38,7 +39,7 @@ export default function PageGroupes({ page }: { page: PageFonctionnelle }) {
 
   return (
     <>
-      <Header lang="en" />
+      <Header lang="en" alternatives={alternativesPageFonctionnelleEn(page.slug)} />
       <main id="contenu">
         <HeroInterieur image={PAGE_GROUPES.heroImage}>
           <FilAriane clair elements={filAriane} />

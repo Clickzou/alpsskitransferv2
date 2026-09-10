@@ -71,6 +71,28 @@ export const ENTREPRISE = {
     creation: "2020-09-17",
     activite:
       "Transports de voyageurs par taxis et location de voiture avec chauffeur (VTC)",
+
+    /*
+     * Les identifiants réglementaires.
+     *
+     * Ils vivaient en dur dans le texte anglais des mentions légales. Depuis que
+     * la page existe aussi en français, en allemand et en italien, un numéro de
+     * licence recopié quatre fois est un numéro qui finira par différer d'une
+     * langue à l'autre — sur une mention légale, c'est la faute la plus bête et
+     * la plus coûteuse. Une seule source, quatre lectures.
+     */
+    siret: "889 065 165 00017",
+    tva: "FR87 889 065 165",
+    /** Inscription au registre national des exploitants de VTC. */
+    evtc: "EVTC073240010",
+    /** Licence de transport intérieur de personnes, registre 73 - Savoie. */
+    lti: {
+      numero: "2026 84 0000542",
+      /** Format ISO — la page les met en forme selon sa langue. */
+      debut: "2026-02-27",
+      fin: "2036-02-26",
+      gestionnaire: "Nassim Matmati",
+    },
   },
 
   /** Zones réellement desservies — sert `areaServed` du schéma TaxiService. */

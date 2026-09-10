@@ -1,4 +1,10 @@
+import { ENTREPRISE, SITE } from "@/data/site";
 import type { PageIntl } from "./intl";
+
+const { adresse, entite } = ENTREPRISE;
+const adressePostale = `${adresse.rue}, ${adresse.codePostal} ${adresse.ville}, France`;
+const sirenLisible = `SIREN ${entite.siren.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}`;
+
 
 /**
  * Die deutschsprachigen Conversion-Seiten.
@@ -17,6 +23,7 @@ import type { PageIntl } from "./intl";
 export const PAGES_DE: PageIntl[] = [
   {
     slug: "transfer-buchen",
+    visuel: { nom: "popular-alps-ski-transfer", alt: "Transferfahrzeug auf einer verschneiten Bergstraße" },
     metaTitre: "Skitransfer buchen — in drei Schritten zum Festpreis",
     metaDescription:
       "Flughafentransfer in die Alpen buchen: Strecke, Fahrzeug und Preis, Kontaktdaten. Festpreis pro Fahrzeug, Skisäcke und Kindersitze inklusive.",
@@ -70,7 +77,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Am besten gleichzeitig mit dem Flug. In den Weihnachts- und Februarferien sind die Fahrzeuge vor den Betten ausgebucht, und ein Samstagvormittag im Februar ist im Tiroler Unterland wie im Wallis der engste Moment der Saison.",
+          "Am besten gleichzeitig mit dem Flug. In den Weihnachts- und Februarferien sind die Fahrzeuge vor den Betten ausgebucht, und ein Samstagvormittag im Februar ist im Wallis wie in Graubünden der engste Moment der Saison.",
       },
     ],
     faq: [
@@ -99,9 +106,10 @@ export const PAGES_DE: PageIntl[] = [
 
   {
     slug: "privattransfer",
+    visuel: { nom: "transfert-prive", alt: "Privatfahrzeug vor einem Chalet im Skiort" },
     metaTitre: "Privattransfer in die Alpen | Festpreis pro Fahrzeug",
     metaDescription:
-      "Privater Flughafentransfer ab Innsbruck, Salzburg, Zürich und München in die Skiorte. Festpreis pro Fahrzeug, Abfahrt bei Ihrer Landung, Ski inklusive.",
+      "Privater Flughafentransfer ab Zürich und Genf in die Schweizer Skiorte. Festpreis pro Fahrzeug, Abfahrt bei Ihrer Landung, Ski inklusive.",
     h1: "Der Privattransfer in die Alpen",
     chapo:
       "Ein Fahrzeug nur für Ihre Gruppe, das losfährt, wenn Sie tatsächlich landen, und Sie vor Ihrer Unterkunft absetzt. Der Preis gilt pro Fahrzeug und steht vor der Buchung fest: zu acht zahlen Sie einmal. Skisäcke, Kindersitze, Maut und Flugüberwachung sind darin enthalten.",
@@ -194,6 +202,7 @@ export const PAGES_DE: PageIntl[] = [
 
   {
     slug: "haeufige-fragen",
+    visuel: { nom: "faq", alt: "Skifahrerin im Abendlicht oberhalb eines Skiorts" },
     metaTitre: "Häufige Fragen zum Skitransfer in die Alpen",
     metaDescription:
       "Preis, Gepäck, Kindersitze, Verspätung, Stornierung, Winterausrüstung: die Antworten auf die Fragen vor der Buchung eines Flughafentransfers.",
@@ -271,6 +280,7 @@ export const PAGES_DE: PageIntl[] = [
 
   {
     slug: "kontakt",
+    visuel: { nom: "route-alpine", alt: "Verschneites Alpendorf und Bergstraße in der Dämmerung" },
     metaTitre: "Kontakt — Alps Ski Transfers",
     metaDescription:
       "Schreiben Sie uns für ein Angebot, eine Gruppenfahrt oder eine Frage zu einer bestehenden Buchung. Antwort meist am selben Tag.",
@@ -329,6 +339,7 @@ export const PAGES_DE: PageIntl[] = [
 
   {
     slug: "agenturen-und-firmen",
+    visuel: { nom: "transfert-prive-detail", alt: "Innenraum eines Transferfahrzeugs mit Sitzen und Skifach" },
     metaTitre: "Agenturen, Chalet-Betreiber und Firmen | Skitransfer",
     metaDescription:
       "Transfers für Reisebüros, Chalet-Betreiber, Concierge-Dienste und Firmen: mehrere Fahrzeuge, ein Ansprechpartner, Sammelrechnung.",
@@ -377,5 +388,303 @@ export const PAGES_DE: PageIntl[] = [
           "Ja, mit mehreren koordinierten Fahrzeugen. Solche Anfragen kalkulieren wir individuell.",
       },
     ],
+  },
+
+  {
+    slug: "hilfe-unterwegs",
+    visuel: { nom: "route-hiver", alt: "Winterreifen auf einer verschneiten Straße zu einem Skiort" },
+    metaTitre: "Hilfe unterwegs — Fahrer finden, Flug verspätet",
+    metaDescription:
+      "Flug verspätet, Fahrer nicht auffindbar, neue Adresse im Skiort: wie Sie uns erreichen und was in jedem Fall passiert.",
+    h1: "Hilfe während Ihrer Fahrt",
+    chapo:
+      "Ein Transfer läuft fast immer ohne Anruf ab. Fast: hier steht, was in den vier Fällen zu tun ist, in denen es doch passiert.",
+    equivalentEn: "/help/",
+    contenu: [
+      { type: "titre2", texte: "Ihr Flug hat Verspätung" },
+      {
+        type: "paragraphe",
+        texte:
+          "Tun Sie nichts. Ihr Fahrer verfolgt die Flugnummer, die Sie bei der Buchung angegeben haben: die Abholung verschiebt sich von selbst, ohne Aufpreis und ohne dass Sie anrufen müssen. Genau dafür fragen wir die Flugnummer ab — und für nichts anderes.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Wird Ihr Flug umgeleitet — in Innsbruck kommt das häufiger vor als anderswo, meist nach München oder Salzburg — rufen Sie uns an: wir fahren von dem Flughafen ab, auf dem Sie gelandet sind, ohne neue Buchung.",
+      },
+
+      { type: "titre2", texte: "Sie finden Ihren Fahrer nicht" },
+      {
+        type: "paragraphe",
+        texte:
+          "Der Treffpunkt steht in Ihrer Bestätigungs-E-Mail: in der Regel die Gepäckausgabe, Schild mit Ihrem Namen. Warten Sie fünf Minuten genau dort, bevor Sie anrufen — ein Fahrer, der gerade parkt, ist kein fehlender Fahrer.",
+      },
+      {
+        type: "liste",
+        items: [
+          "Bleiben Sie am genannten Treffpunkt: dort sucht der Fahrer Sie.",
+          "Halten Sie Ihr Telefon eingeschaltet, auch im Roaming.",
+          "Wählen Sie die Nummer aus der Bestätigung, nicht die Zentrale: sie klingelt direkt beim Disponenten.",
+        ],
+      },
+
+      { type: "titre2", texte: "Ihre Adresse im Skiort hat sich geändert" },
+      {
+        type: "paragraphe",
+        texte:
+          "Schreiben Sie uns, sobald Sie es wissen, mit Ihrer Buchungsnummer. Eine andere Adresse im selben Ort ändert den Preis nicht. Ein anderer Ort schon: dann nennen wir Ihnen den neuen Betrag, bevor wir irgendetwas ändern.",
+      },
+
+      { type: "titre2", texte: "Sie haben etwas im Fahrzeug vergessen" },
+      {
+        type: "paragraphe",
+        texte:
+          "Dafür gibt es die Seite zum verlorenen Gepäck: wir fragen den Fahrer noch am selben Tag und bewahren Fundstücke dreißig Tage auf.",
+      },
+    ],
+    faq: [
+      {
+        question: "Muss ich bei Flugverspätung Bescheid geben?",
+        reponse:
+          "Nein. Der Flug wird überwacht, die Abholung verschiebt sich automatisch und ohne Aufpreis. Melden Sie sich nur, wenn Ihr Flug umgeleitet oder gestrichen wird.",
+      },
+      {
+        question: "Wie lange wartet der Fahrer?",
+        reponse:
+          "Die Wartezeit ist im Preis enthalten: eine Stunde nach der tatsächlichen Landung bei internationalen Flügen, fünfundvierzig Minuten bei Inlandsflügen. Danach rufen wir Sie an, bevor wir entscheiden.",
+      },
+      {
+        question: "Wie erreiche ich Sie am Tag des Transfers?",
+        reponse:
+          "Die Nummer steht in der Bestätigungs-E-Mail und klingelt beim diensthabenden Disponenten. Schriftlich bleibt contact@alpsskitransfers.com der Weg, der eine Spur hinterlässt.",
+      },
+      {
+        question: "Kann ich die Abholzeit ändern?",
+        reponse:
+          "Ja, solange das Fahrzeug nicht losgefahren ist. Schreiben Sie uns mit Ihrer Buchungsnummer: wir bestätigen den neuen Zeitpunkt per E-Mail, und der Preis bleibt gleich, wenn die Strecke dieselbe ist.",
+      },
+    ],
+  },
+  {
+    slug: "verlorenes-gepaeck",
+    visuel: { nom: "aeroport-lyon-airport", alt: "Flughafenterminal, Gepäckausgabe" },
+    metaTitre: "Verlorenes Gepäck, vergessener Gegenstand",
+    metaDescription:
+      "Gepäck von der Airline nicht geliefert oder etwas im Fahrzeug vergessen: was wir tun, in welcher Frist, und was wir nicht garantieren können.",
+    h1: "Verspätetes Gepäck, vergessene Gegenstände",
+    chapo:
+      "Zwei verschiedene Fälle, zwei verschiedene Antworten: Gepäck, das die Airline nicht ausgeliefert hat, und ein Gegenstand, der im Fahrzeug geblieben ist.",
+    equivalentEn: "/lost-luggage/",
+    contenu: [
+      { type: "titre2", texte: "Die Airline hat Ihr Gepäck nicht ausgeliefert" },
+      {
+        type: "paragraphe",
+        texte:
+          "Melden Sie es am Gepäckschalter, bevor Sie den Flughafen verlassen: ohne Schadensmeldung liefert die Airline nichts nach. Ihr Fahrer wartet währenddessen — das gehört zur Ankunft.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Lassen Sie das Gepäck an Ihre Adresse im Skiort liefern, nicht an den Flughafen. Die Rückfahrt ins Tal kostet einen halben Tag, und die Airline liefert in den Skiort wie überall hin.",
+      },
+
+      { type: "titre2", texte: "Sie haben etwas im Fahrzeug vergessen" },
+      {
+        type: "paragraphe",
+        texte:
+          "Schreiben Sie uns so früh wie möglich mit Buchungsnummer und Beschreibung: wir fragen den Fahrer noch am selben Tag. In einem Fahrzeug, das seither drei Fahrten gemacht hat, findet sich nicht mehr alles — die Stunde zählt.",
+      },
+      {
+        type: "liste",
+        items: [
+          "Fundstücke bewahren wir dreißig Tage auf.",
+          "Die Abholung in unserem Depot ist kostenlos.",
+          "Ein Versand ist möglich, auf Ihre Kosten, mit Sendungsverfolgung.",
+          "Wir halten Sie per E-Mail über jeden Schritt der Suche auf dem Laufenden.",
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Wir suchen ernsthaft, können ein Wiederauffinden aber nicht garantieren, und wir übernehmen keine Haftung für im Fahrzeug zurückgelassene persönliche Gegenstände. Das ist der Rahmen — besser vorher gesagt als nachher.",
+      },
+    ],
+    faq: [
+      {
+        question: "Wartet der Fahrer während der Schadensmeldung?",
+        reponse:
+          "Ja. Die im Preis enthaltene Wartezeit deckt das ab: sagen Sie dem Fahrer kurz Bescheid, er wartet am Treffpunkt.",
+      },
+      {
+        question: "Wie lange bewahren Sie Fundstücke auf?",
+        reponse:
+          "Dreißig Tage. Danach werden nicht abgeholte Gegenstände je nach Art gespendet oder entsorgt.",
+      },
+      {
+        question: "Können Sie mir den Gegenstand in den Skiort schicken?",
+        reponse:
+          "Ja, mit Sendungsverfolgung und auf Ihre Kosten. Die Abholung im Depot bleibt kostenlos, wenn Sie ohnehin durchs Tal fahren.",
+      },
+      {
+        question: "Darf jemand anderes den Gegenstand abholen?",
+        reponse:
+          "Ja, wenn Sie uns vorher Bescheid geben und den Namen nennen: wir geben nichts an jemanden heraus, den Sie nicht angekündigt haben.",
+      },
+    ],
+  },
+
+  {
+    slug: "impressum",
+    metaTitre: "Impressum | Alps Ski Transfers",
+    metaDescription:
+      "Anbieter, Hosting und rechtliche Angaben zur Website alpsskitransfers.com.",
+    h1: "Impressum",
+    chapo:
+      "Angaben gemäß Artikel 6-III des französischen Gesetzes vom 21. Juni 2004 über das Vertrauen in die digitale Wirtschaft (LCEN).",
+    equivalentEn: "/legal-notice/",
+    noindex: true,
+    contenu: [
+      { type: "titre2", texte: "Anbieter der Website" },
+      {
+        type: "paragraphe",
+        texte: `Diese Website wird betrieben von ${entite.nom}, handelnd unter der Bezeichnung ${entite.enseigne}, einem in Frankreich am 17. September 2020 eingetragenen Einzelunternehmen.`,
+      },
+      {
+        type: "liste",
+        items: [
+          `Sitz: ${adressePostale}`,
+          `Registernummer: ${sirenLisible}`,
+          "Geschäftstätigkeit: Personenbeförderung mit Taxi und Mietwagen mit Fahrer (VTC)",
+          `Telefon: ${ENTREPRISE.telephoneAffiche}`,
+          `E-Mail: ${ENTREPRISE.email}`,
+          `Eintragung im französischen Register der Mietwagenunternehmen (VTC): ${entite.evtc}`,
+          `Personenbeförderungslizenz (LTI) Nr. ${entite.lti.numero}, gültig vom 27. Februar 2026 bis 26. Februar 2036, eingetragen im nationalen Register der Straßenpersonenverkehrsunternehmen für das Departement Savoyen. Verkehrsleiter: ${entite.lti.gestionnaire}.`,
+          `SIRET: ${entite.siret}`,
+          `USt-IdNr.: ${entite.tva}`,
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte: `„Alps Ski Transfers“ ist eine Geschäftsbezeichnung. Die auf dieser Website angebotenen Beförderungsleistungen werden von ${entite.nom} unter den oben genannten Angaben erbracht.`,
+      },
+
+      { type: "titre2", texte: "Verantwortlich für den Inhalt" },
+      {
+        type: "paragraphe",
+        texte: `${entite.nom}, als Inhaber des Unternehmens.`,
+      },
+
+      { type: "titre2", texte: "Hosting" },
+      {
+        type: "paragraphe",
+        texte:
+          "Die Website wird gehostet von Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA — vercel.com.",
+      },
+
+      { type: "titre2", texte: "Urheberrecht" },
+      {
+        type: "paragraphe",
+        texte: `Aufbau, Texte, Bilder und Gestaltung von ${SITE.url} sind urheberrechtlich geschützt. Eine vollständige oder teilweise Vervielfältigung oder Weiterverwendung, gleich auf welchem Medium, bedarf der vorherigen schriftlichen Zustimmung des Anbieters. Die Fotografien der Skiorte und Fahrzeuge bleiben Eigentum ihrer Urheber.`,
+      },
+
+      { type: "titre2", texte: "Personenbezogene Daten" },
+      {
+        type: "paragraphe",
+        texte:
+          "Über diese Website erhobene personenbezogene Daten werden nach der Datenschutz-Grundverordnung (EU 2016/679) und dem französischen Datenschutzgesetz verarbeitet. Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch; wenden Sie sich dafür an die oben genannte E-Mail-Adresse. Welche Daten zu welchem Zweck erhoben werden, steht in unserer Datenschutzerklärung; die verwendeten Cookies sind in der Cookie-Richtlinie aufgeführt.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Sind Sie der Ansicht, dass Ihre Rechte nicht gewahrt wurden, können Sie sich bei der CNIL, der französischen Datenschutzaufsicht, beschweren — cnil.fr.",
+      },
+
+      { type: "titre2", texte: "Verkaufsbedingungen" },
+      {
+        type: "paragraphe",
+        texte:
+          "Über diese Website gebuchte Transfers unterliegen unseren Beförderungs- und Allgemeinen Geschäftsbedingungen, die Preise, Stornierung, Gepäck und Haftung regeln. Diese Dokumente liegen derzeit auf Englisch vor.",
+      },
+
+      { type: "titre2", texte: "Streitbeilegung" },
+      {
+        type: "paragraphe",
+        texte:
+          "Wenden Sie sich bei Beanstandungen zunächst an die oben genannte E-Mail-Adresse. Kommt keine Einigung zustande, können Verbraucher mit Wohnsitz in der Europäischen Union eine Verbraucherschlichtungsstelle anrufen und die Online-Streitbeilegungsplattform der Europäischen Kommission nutzen. [À REMPLACER — Name, Anschrift und Website der Schlichtungsstelle, der das Unternehmen angehört.]",
+      },
+    ],
+    faq: [],
+  },
+  {
+    slug: "cookie-richtlinie",
+    metaTitre: "Cookie-Richtlinie | Alps Ski Transfers",
+    metaDescription:
+      "Welche Cookies alpsskitransfers.com setzt, wozu sie dienen und wie Sie sie steuern.",
+    h1: "Cookie-Richtlinie",
+    chapo:
+      "Diese Seite erklärt, welche Cookies alpsskitransfers.com auf Ihrem Gerät speichert, wozu sie dienen und wie Sie sie steuern können.",
+    equivalentEn: "/cookie-policy-uk/",
+    noindex: true,
+    contenu: [
+      { type: "titre2", texte: "Was ein Cookie ist" },
+      {
+        type: "paragraphe",
+        texte:
+          "Ein Cookie ist eine kleine Textdatei, die beim Besuch einer Website auf Ihrem Gerät gespeichert wird. Sie erlaubt es der Website, Ihre Eingaben und Einstellungen von Seite zu Seite und von Besuch zu Besuch zu behalten. Vergleichbare Techniken — lokaler Speicher, Zählpixel, Tags — dienen demselben Zweck und fallen unter dieselbe Richtlinie.",
+      },
+
+      { type: "titre2", texte: "Welche Cookies wir setzen" },
+      {
+        type: "paragraphe",
+        texte:
+          "So wenige wie möglich. Die Website besteht aus statischen Seiten und führt keine Werbe- oder Profiling-Skripte aus: für das bloße Lesen ist keine Einwilligung nötig.",
+      },
+      {
+        type: "liste",
+        items: [
+          "Unbedingt erforderliche Cookies — sie halten Ihre Buchung über die einzelnen Schritte zusammen und sichern die Zahlungsseite. Ohne sie kann eine Buchung nicht abgeschlossen werden. Sie sind einwilligungsfrei.",
+          "Gespeicherte Eingaben — brechen Sie eine Suche ab, können Ihre Eingaben im Browser bleiben, damit Sie sie nicht erneut tippen müssen. Sie verbleiben auf Ihrem Gerät und werden nie an uns übertragen.",
+          "Cookies des Zahlungsdienstleisters — auf der Zahlungsseite setzt unser Dienstleister eigene Cookies zur Betrugserkennung und zur Absicherung der Transaktion. Sie sind für die Zahlung erforderlich.",
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Wir verwenden derzeit keine Cookies für Reichweitenmessung, Werbung oder soziale Netzwerke. Sollte sich das ändern, wird diese Seite aktualisiert und Ihre Einwilligung eingeholt, bevor ein solches Cookie gesetzt wird — eine Einwilligung, die sich ebenso leicht verweigern wie erteilen und jederzeit widerrufen lässt.",
+      },
+
+      { type: "titre2", texte: "Wie lange sie gelten" },
+      {
+        type: "paragraphe",
+        texte:
+          "Für eine Buchung erforderliche Cookies gelten für die Sitzung oder für die Dauer der Buchung. Wird ein einwilligungspflichtiges Cookie eingeführt, beträgt seine Laufzeit höchstens dreizehn Monate; danach wird die Einwilligung erneut eingeholt, entsprechend den Empfehlungen der CNIL.",
+      },
+
+      { type: "titre2", texte: "Cookies steuern" },
+      {
+        type: "paragraphe",
+        texte:
+          "Sie können Cookies in den Einstellungen Ihres Browsers annehmen oder ablehnen und bereits gespeicherte löschen. Chrome, Safari, Firefox und Edge bieten das jeweils in den Datenschutzeinstellungen an. Beachten Sie: Werden unbedingt erforderliche Cookies blockiert, lässt sich eine Buchung nicht abschließen.",
+      },
+
+      { type: "titre2", texte: "Ihre Rechte" },
+      {
+        type: "paragraphe",
+        texte: `Cookies, die Informationen auf Ihrem Gerät lesen oder schreiben, unterliegen der Datenschutz-Grundverordnung und Artikel 82 des französischen Datenschutzgesetzes. Ihre Rechte auf Auskunft, Berichtigung, Löschung und Widerspruch können Sie unter ${ENTREPRISE.email} ausüben; eine Beschwerde ist bei der CNIL, der französischen Aufsichtsbehörde, unter cnil.fr möglich.`,
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Alles Weitere zum Umgang mit Ihren Daten — Buchungen, Zahlungen, Fahrerzuteilung — steht in unserer Datenschutzerklärung.",
+      },
+
+      { type: "titre2", texte: "Änderungen" },
+      {
+        type: "paragraphe",
+        texte:
+          "Diese Richtlinie wird aktualisiert, sobald sich die von der Website gesetzten Cookies ändern. [À REMPLACER — Datum der Veröffentlichung und jeder Überarbeitung.]",
+      },
+    ],
+    faq: [],
   },
 ];

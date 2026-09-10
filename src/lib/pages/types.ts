@@ -1,3 +1,4 @@
+import type { NomVisuel } from "@/components/Visuel";
 import type { BlocContenu, Faq } from "@/lib/resorts/types";
 
 /**
@@ -19,4 +20,9 @@ export interface PageFonctionnelle {
   faq: Faq[];
   /** Pages de remerciement, de confirmation : servies, mais hors index. */
   noindex?: boolean;
+  /**
+   * Visuel de tête. Les pages juridiques et le panier n'en ont pas : elles sont
+   * en `noindex` et on y vient pour lire, pas pour se projeter en montagne.
+   */
+  visuel?: { nom: NomVisuel; alt: string };
 }

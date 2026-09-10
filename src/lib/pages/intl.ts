@@ -1,3 +1,4 @@
+import type { NomVisuel } from "@/components/Visuel";
 import type { LangueSecondaire } from "@/lib/i18n";
 import type { BlocContenu, Faq } from "@/lib/resorts/types";
 import { PAGES_FR } from "./fr";
@@ -26,6 +27,40 @@ export interface PageIntl {
   chapo: string;
   contenu: BlocContenu[];
   faq: Faq[];
+  /**
+   * Le visuel de tête.
+   *
+   * Les pages de conversion traduites ouvraient sur un aplat bleu nu quand les
+   * stations, les trajets et les hubs portaient une photo — un écart qui se
+   * voyait d'autant plus qu'elles sont les pages qui vendent. L'`alt` est
+   * rédigé dans la langue de la page : c'est le texte que lit un lecteur
+   * d'écran, et celui que Google associe à l'image.
+   *
+   * Les pages juridiques n'en ont pas : elles sont en `noindex`, on y vient
+   * pour lire une mention, pas pour se projeter en montagne.
+   */
+  visuel?: { nom: NomVisuel; alt: string };
+  /**
+   * Une page locale : elle vise une ville, pas un massif.
+   *
+   * Sa présence fait émettre un `TaxiService` dont la zone desservie est ce
+   * bassin de vie. Sans elle, la page n'a que le nœud national, qui ne dit rien
+   * à une requête du type « VTC Chambéry ».
+   */
+  zoneLocale?: {
+    /** Suffixe de l'`@id` du nœud : « vtc-chambery ». */
+    id: string;
+    /** Nom du service tel qu'il est rendu : « VTC et taxi à Chambéry ». */
+    nom: string;
+    communes: string[];
+    departement?: string;
+  };
+  /**
+   * Servie et suivie, mais hors index — mentions légales, politique de cookies.
+   * Ces pages ne captent aucune requête et diluent le silo ; leurs liens, eux,
+   * restent suivis, d'où `noindex` et non `noindex, nofollow`.
+   */
+  noindex?: boolean;
   /**
    * Chemin de la page anglaise équivalente, pour le `hreflang`.
    *

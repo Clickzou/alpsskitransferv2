@@ -43,7 +43,7 @@ export const bookSkiTransferTickets: PageFonctionnelle = {
     {
       question: "Which ski resorts do you serve?",
       reponse:
-        "We drive to the main resorts of the French, Swiss, Italian and Austrian Alps, including Val Thorens, Courchevel, Méribel, Chamonix, Morzine, Avoriaz, Tignes, Val d'Isère, La Plagne and Les Arcs. Each resort has its own page with the transfer times from every airport we serve.",
+        "We drive to the main resorts of the French, Swiss and Italian Alps, including Val Thorens, Courchevel, Méribel, Chamonix, Morzine, Avoriaz, Tignes, Val d'Isère, La Plagne and Les Arcs. Each resort has its own page with the transfer times from every airport we serve.",
     },
     {
       question: "How long is the transfer from Geneva Airport?",

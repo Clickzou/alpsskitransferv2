@@ -11,6 +11,7 @@ import type { PageFonctionnelle } from "./types";
  */
 export const contact: PageFonctionnelle = {
   slug: "contact",
+  visuel: { nom: "route-alpine", alt: "Snow-covered Alpine village and winding mountain road at dusk" },
   metaTitre: "Contact — Alps Ski Transfers",
   metaDescription:
     "Get in touch about an airport transfer to the Alps: quotes for groups, special requests, or a booking already made.",

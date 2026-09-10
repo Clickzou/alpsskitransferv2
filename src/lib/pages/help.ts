@@ -6,6 +6,7 @@ import type { PageFonctionnelle } from "./types";
  */
 export const help: PageFonctionnelle = {
   slug: "help",
+  visuel: { nom: "route-hiver", alt: "Winter tyres on a snow-covered road to a ski resort" },
   metaTitre: "Help",
   metaDescription:
     "Need a hand with a booking, a change of flight or an address in resort? Here is how to reach us and what we can do.",

@@ -14,14 +14,71 @@ import type { NomVisuel } from "@/components/Visuel";
  * `titre` est le H1 : il porte le mot-clé du marché, pas la traduction littérale
  * du H1 anglais.
  */
+/**
+ * Les trois catégories de véhicule, dans la langue.
+ *
+ * Les modèles ne se traduisent pas — un Volkswagen Transporter est un
+ * Volkswagen Transporter partout — mais la capacité et l'intitulé de section,
+ * si. Les clés sont celles de `VEHICULES.categories`, pas leur rang.
+ */
+export interface VehiculesTraduits {
+  surtitre: string;
+  titre: string;
+  capacites: Record<"standard" | "business" | "premium", string>;
+  /**
+   * Le texte alternatif de chaque photo.
+   *
+   * Les trois véhicules gardaient leur `alt` anglais sur les homes traduites —
+   * « Black Volkswagen Transporter minibus » au milieu d'une page allemande.
+   * Un lecteur d'écran allemand lisait donc de l'anglais, et Google recevait un
+   * texte dans une langue que la page ne déclare pas. La photo est la même, les
+   * mots non.
+   */
+  alts: Record<"standard" | "business" | "premium", string>;
+}
+
+/**
+ * L'habillage de la section des avis.
+ *
+ * **Les témoignages eux-mêmes ne sont pas traduits.** Ce sont des propos de
+ * clients, signés d'un nom et d'une ville : les réécrire en allemand
+ * fabriquerait une preuve sociale que personne n'a écrite. Ils restent donc
+ * dans leur langue d'origine, sous un intitulé qui, lui, est traduit — et le
+ * jour où la fiche Google est branchée, les avis arrivent dans la langue où ils
+ * ont été laissés, ce qui est le même principe.
+ */
+export interface AvisTraduits {
+  surtitre: string;
+  titre: string;
+  surtitreGoogle: string;
+  nombreSurGoogle: (total: number) => string;
+  noteSur5: (note: number) => string;
+}
+
 export interface ContenuAccueil {
   metaTitre: string;
   metaDescription: string;
   h1: string;
   chapo: string;
   visuel: { nom: NomVisuel; alt: string };
+  /**
+   * Le visuel du bandeau de présentation — celui qui porte le texte sur le bleu
+   * nuit, à mi-page. Distinct de `visuel`, qui est le fond du bandeau d'accueil :
+   * la même photo deux fois sur une page se remarque.
+   *
+   * **Il suit le périmètre de la langue, pas le hasard.** Les quatre langues ont
+   * d'abord partagé la même route alpine : ce n'était pas une faute de
+   * référencement — Google ne pénalise pas une image réutilisée d'une page à
+   * l'autre, et un fichier partagé arrive même déjà en cache — mais une photo
+   * générique ne dit rien du massif qu'on vend. L'allemand ne vend plus que la
+   * Suisse, l'italien le Piémont et la Vallée d'Aoste : la photo le dit
+   * maintenant, et l'`alt` avec elle.
+   */
+  visuelPresentation: { nom: NomVisuel; alt: string };
   reperes: { libelle: string; valeur: string }[];
   sections: { titre: string; paragraphes: string[] }[];
+  vehicules: VehiculesTraduits;
+  avis: AvisTraduits;
   listeStations: { surtitre: string; titre: string; chapo: string };
   listeTrajets: { surtitre: string; titre: string; chapo: string };
   appel: { titre: string; texte: string; lienContact: { texte: string; chemin: string } };
@@ -34,10 +91,14 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
       "Transferts privés depuis Genève, Lyon, Chambéry et Grenoble vers les stations des Alpes. Prix fixe par véhicule, suivi des vols, skis inclus.",
     h1: "Transferts aéroport vers les stations des Alpes",
     chapo:
-      "Un chauffeur vous attend à la sortie des bagages, votre vol est suivi, et le prix est fixé par véhicule avant la réservation — skis, snowboards et sièges enfants compris. Nous desservons les Alpes françaises, suisses, italiennes et autrichiennes depuis Genève, Lyon, Chambéry et Grenoble.",
+      "Un chauffeur vous attend à la sortie des bagages, votre vol est suivi, et le prix est fixé par véhicule avant la réservation — skis, snowboards et sièges enfants compris. Nous desservons les Alpes françaises, suisses et italiennes depuis Genève, Lyon, Chambéry et Grenoble.",
     visuel: {
       nom: "hero-alps-ski-transfers",
       alt: "Skieurs dans la poudreuse au-dessus d'une station des Alpes",
+    },
+    visuelPresentation: {
+      nom: "pays-france",
+      alt: "Station des Alpes françaises au-dessus de la limite des arbres",
     },
     reperes: [
       { libelle: "Stations desservies", valeur: "68" },
@@ -60,6 +121,27 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
         ],
       },
     ],
+    vehicules: {
+      surtitre: "Nos véhicules",
+      titre: "De la porte à la porte, dans un véhicule prévu pour la montagne",
+      capacites: {
+        standard: "Jusqu’à 8 passagers",
+        business: "Jusqu’à 7 passagers",
+        premium: "Jusqu’à 4 passagers",
+      },
+      alts: {
+        standard: "Minibus Volkswagen Transporter noir",
+        business: "Monospace Mercedes Classe V noir",
+        premium: "Berline Mercedes Classe E noire",
+      },
+    },
+    avis: {
+      surtitre: "Avis clients",
+      titre: "Ce que disent les passagers",
+      surtitreGoogle: "Avis Google",
+      nombreSurGoogle: (total) => `${total} avis sur Google`,
+      noteSur5: (note) => `${note} sur 5`,
+    },
     listeStations: {
       surtitre: "Stations",
       titre: "Les stations desservies, page par page",
@@ -81,15 +163,19 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
   },
 
   de: {
-    metaTitre: "Flughafentransfer in die Alpen | Festpreis pro Fahrzeug",
+    metaTitre: "Skitransfer in die Schweizer Alpen | Festpreis pro Fahrzeug",
     metaDescription:
-      "Privater Flughafentransfer ab Innsbruck, Salzburg, Zürich und München in die Skiorte Österreichs und der Schweiz. Festpreis pro Fahrzeug, Ski inklusive.",
-    h1: "Flughafentransfer in die Skiorte der Alpen",
+      "Privater Transfer ab Zürich und Genf nach Zermatt, Davos und St. Moritz. Festpreis pro Fahrzeug, Vignette und Maut inklusive, Ski und Kindersitze frei.",
+    h1: "Flughafentransfer in die Schweizer Skiorte",
     chapo:
-      "Ihr Fahrer wartet an der Gepäckausgabe, Ihr Flug wird überwacht, und der Preis steht vor der Buchung fest — pro Fahrzeug, mit Skisäcken, Kindersitzen und Maut. Wir fahren ab Innsbruck, Salzburg, Zürich und München in die Skiorte Tirols, Salzburgs, Vorarlbergs und der Schweiz.",
+      "Ihr Fahrer wartet an der Gepäckausgabe, Ihr Flug wird überwacht, und der Preis steht vor der Buchung fest — pro Fahrzeug, mit Skisäcken, Kindersitzen, Maut und Vignette. Wir fahren ab Zürich und Genf nach Zermatt, Davos und St. Moritz.",
     visuel: {
       nom: "hero-alps-ski-transfers",
       alt: "Skifahrer im Tiefschnee oberhalb eines Skiorts in den Alpen",
+    },
+    visuelPresentation: {
+      nom: "pays-switzerland",
+      alt: "Schweizer Skiort unterhalb der Gipfel",
     },
     reperes: [
       { libelle: "Skiorte", valeur: "68" },
@@ -101,14 +187,14 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
         titre: "Ein Fahrzeug nur für Sie, von Tür zu Tür",
         paragraphes: [
           "Das Fahrzeug fährt los, wenn Sie tatsächlich landen — der Fahrer verfolgt Ihre Flugnummer — und bringt Sie ohne Zwischenstopp bis vor Ihre Unterkunft. Auf einer Bergstraße im Februar zählt eine direkte Fahrt in gewonnenen Stunden, nicht in Minuten.",
-          "Der Preis gilt pro Fahrzeug, nicht pro Person: zu zweit wie zu acht ist es derselbe Betrag. Skisäcke, Kindersitze und Maut sind bereits enthalten, und nach der Buchung ändert er sich nicht.",
+          "Der Preis gilt pro Fahrzeug, nicht pro Person: zu zweit wie zu acht ist es derselbe Betrag. Skisäcke, Kindersitze, Maut und die Schweizer Vignette sind bereits enthalten, und nach der Buchung ändert er sich nicht.",
         ],
       },
       {
-        titre: "Winterausrüstung ist hier keine Option",
+        titre: "Wo die Straße endet, sagen wir es vorher",
         paragraphes: [
-          "In Österreich gilt die situative Winterausrüstungspflicht vom 1. November bis 15. April, in der Schweiz entscheidet der Straßenzustand statt des Datums. Unsere Fahrzeuge fahren mit Winterreifen und führen Ketten mit, und unsere Fahrer machen diese Anstiege die ganze Saison.",
-          "Innsbruck wird häufiger als andere Flughäfen umgeleitet, meist nach München oder Salzburg. Sagen Sie uns Bescheid, wenn es Sie trifft: wir fahren von dem Flughafen ab, auf dem Sie wirklich gelandet sind — ohne dass Sie zweimal buchen müssen.",
+          "Zermatt ist autofrei. Der Transfer endet in Täsch, und die letzten fünf Kilometer fährt der Zug im Zwanzig-Minuten-Takt: wir legen die Ankunft auf eine Abfahrt, statt Sie am Bahnhof rechnen zu lassen. Davos und St. Moritz erreichen Sie dagegen direkt vor der Unterkunft — 166 beziehungsweise 221 Kilometer ab Zürich, zweieinhalb bis dreieinhalb Stunden je nach Straßenzustand.",
+          "In der Schweiz entscheidet nicht das Datum über die Winterausrüstung, sondern der Zustand der Straße. Unsere Fahrzeuge fahren die ganze Saison mit Winterreifen und führen Ketten mit, und die Autobahnvignette ist im Preis enthalten — ein Angebot, das sie ausklammert, ist kein Angebot, sondern eine Schätzung.",
         ],
       },
     ],
@@ -123,6 +209,27 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
       titre: "Die meistgefragten Verbindungen",
       chapo:
         "Entfernungen und Fahrzeiten auf dem realen Straßennetz gemessen, ohne Verkehr. An einem Samstag in der Hochsaison rechnen Sie mehr ein.",
+    },
+    vehicules: {
+      surtitre: "Unsere Fahrzeuge",
+      titre: "Von Tür zu Tür, in einem Fahrzeug für den Bergwinter",
+      capacites: {
+        standard: "Bis zu 8 Personen",
+        business: "Bis zu 7 Personen",
+        premium: "Bis zu 4 Personen",
+      },
+      alts: {
+        standard: "Schwarzer Volkswagen Transporter Kleinbus",
+        business: "Schwarzer Mercedes V-Klasse Van",
+        premium: "Schwarze Mercedes E-Klasse Limousine",
+      },
+    },
+    avis: {
+      surtitre: "Kundenstimmen",
+      titre: "Was unsere Fahrgäste sagen",
+      surtitreGoogle: "Google-Bewertungen",
+      nombreSurGoogle: (total) => `${total} Bewertungen bei Google`,
+      noteSur5: (note) => `${note} von 5`,
     },
     appel: {
       titre: "Buchen Sie Ihren Transfer in die Alpen",
@@ -142,6 +249,10 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
     visuel: {
       nom: "hero-alps-ski-transfers",
       alt: "Sciatori nella neve fresca sopra una località sciistica delle Alpi",
+    },
+    visuelPresentation: {
+      nom: "pays-italy",
+      alt: "Località sciistica delle Alpi italiane in una giornata di sole",
     },
     reperes: [
       { libelle: "Località servite", valeur: "68" },
@@ -164,6 +275,27 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
         ],
       },
     ],
+    vehicules: {
+      surtitre: "I nostri veicoli",
+      titre: "Porta a porta, con un veicolo attrezzato per la montagna",
+      capacites: {
+        standard: "Fino a 8 passeggeri",
+        business: "Fino a 7 passeggeri",
+        premium: "Fino a 4 passeggeri",
+      },
+      alts: {
+        standard: "Minibus Volkswagen Transporter nero",
+        business: "Monovolume Mercedes Classe V nero",
+        premium: "Berlina Mercedes Classe E nera",
+      },
+    },
+    avis: {
+      surtitre: "Recensioni dei clienti",
+      titre: "Che cosa dicono i passeggeri",
+      surtitreGoogle: "Recensioni Google",
+      nombreSurGoogle: (total) => `${total} recensioni su Google`,
+      noteSur5: (note) => `${note} su 5`,
+    },
     listeStations: {
       surtitre: "Località",
       titre: "Le località servite, pagina per pagina",

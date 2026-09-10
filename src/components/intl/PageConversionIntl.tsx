@@ -9,7 +9,13 @@ import type { LangueSecondaire } from "@/lib/i18n";
 import { alternativesPageIntl } from "@/lib/intl/liens";
 import { T, lienReserver } from "@/lib/intl/textes";
 import type { PageIntl } from "@/lib/pages/intl";
-import { faqSchema, filArianeSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
+import {
+  faqSchema,
+  filArianeSchema,
+  grapheJsonLd,
+  organisationSchema,
+  serviceLocalSchema,
+} from "@/lib/schema";
 
 /**
  * Une page de conversion traduite : comment réserver, transfert privé, aide,
@@ -38,7 +44,7 @@ export default function PageConversionIntl({
     <>
       <Header lang={lang} alternatives={alternativesPageIntl(lang, page.equivalentEn)} />
       <main id="contenu">
-        <HeroInterieur>
+        <HeroInterieur image={page.visuel}>
           <FilAriane clair elements={filAriane} />
           <h1 className="mt-4 max-w-3xl text-balance font-display text-titre-page">{page.h1}</h1>
           <p className="mt-4 max-w-2xl text-chapo text-glacier-200">{page.chapo}</p>
@@ -69,6 +75,8 @@ export default function PageConversionIntl({
       <JsonLd
         data={grapheJsonLd(
           organisationSchema(),
+          // Une page locale porte en plus son service à l'échelle de son bassin.
+          page.zoneLocale ? serviceLocalSchema({ ...page.zoneLocale, chemin }) : null,
           filArianeSchema(filAriane.map((e) => ({ nom: e.nom, path: e.chemin }))),
           faqSchema(page.faq),
         )}

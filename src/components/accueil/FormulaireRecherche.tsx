@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
+import type { Lang } from "@/lib/i18n";
 import { ANCRE_TUNNEL, CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import type { Lieu } from "@/lib/reservation/lieux";
+import { TEXTES_RECHERCHE } from "@/lib/reservation/textes";
 
 /**
  * Recherche de transfert.
@@ -23,7 +25,25 @@ import type { Lieu } from "@/lib/reservation/lieux";
  *    sait demander un devis. Aucune de ces trois issues n'affiche un prix
  *    inventé, et la saisie est toujours transmise : le visiteur ne la refait pas.
  */
-export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
+export default function FormulaireRecherche({
+  lieux,
+  langue = "en",
+  tunnel = CHEMIN_TUNNEL,
+}: {
+  lieux: Lieu[];
+  langue?: Lang;
+  /**
+   * Le tunnel de la langue — `/fr/reserver/`, `/de/buchen/`, `/it/prenota/`.
+   *
+   * Il est passé par le parent, qui est un composant serveur : le calculer ici
+   * embarquerait le registre des articles et la navigation des quatre langues
+   * dans le paquet du navigateur, pour un seul chemin. Une recherche lancée en
+   * allemand doit finir dans le tunnel allemand — l'envoyer au tunnel anglais
+   * ferait perdre la langue au moment précis où le visiteur s'engage.
+   */
+  tunnel?: string;
+}) {
+  const mots = TEXTES_RECHERCHE[langue];
   const router = useRouter();
   const [de, setDe] = useState<ValeurLieu>({ slug: null, texte: "" });
   const [vers, setVers] = useState<ValeurLieu>({ slug: null, texte: "" });
@@ -55,7 +75,7 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
      */
     parametres.set("from", de.slug ?? de.texte);
     parametres.set("to", vers.slug ?? vers.texte);
-    router.push(`${CHEMIN_TUNNEL}?${parametres.toString()}${ANCRE_TUNNEL}`);
+    router.push(`${tunnel}?${parametres.toString()}${ANCRE_TUNNEL}`);
   }
 
   const etiquette = "block text-xs font-medium uppercase tracking-wide text-glacier-300";
@@ -68,12 +88,12 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
     <form
       onSubmit={rechercher}
       className="rounded-2xl bg-alpine/90 p-5 shadow-flottant backdrop-blur-sm sm:p-6"
-      aria-label="Search for a transfer"
+      aria-label={mots.titreAccessible}
     >
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="min-w-0">
           <label className={etiquette} htmlFor="quand">
-            Departure date and time
+            {mots.quand}
           </label>
           <input
             id="quand"
@@ -89,8 +109,9 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
           lieux={lieux}
           valeur={de}
           onChange={setDe}
-          etiquette="Pick-up location"
-          placeholder="Airport, resort, or address with postcode"
+          etiquette={mots.depart}
+          placeholder={mots.departIndice}
+          langue={langue}
           variante="sombre"
           requis
         />
@@ -100,8 +121,9 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
           lieux={lieux}
           valeur={vers}
           onChange={setVers}
-          etiquette="Drop-off location"
-          placeholder="Resort, or address with postcode and town"
+          etiquette={mots.arrivee}
+          placeholder={mots.arriveeIndice}
+          langue={langue}
           variante="sombre"
           requis
         />
@@ -110,7 +132,7 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
       <div className="mt-4 flex flex-wrap items-end gap-4 sm:gap-6">
         <div className="min-w-0">
           <label className={etiquette} htmlFor="passagers">
-            How many people (including children)
+            {mots.passagers}
           </label>
           <input
             id="passagers"
@@ -124,7 +146,7 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
         </div>
 
         <fieldset className="flex items-center gap-4 pb-2 text-sm text-white">
-          <legend className="sr-only">Trip type</legend>
+          <legend className="sr-only">{mots.typeTrajet}</legend>
           <label className="flex items-center gap-2">
             <input
               type="radio"
@@ -133,7 +155,7 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
               onChange={() => setAllerRetour(true)}
               className="accent-alpes"
             />
-            Return
+            {mots.allerRetour}
           </label>
           <label className="flex items-center gap-2">
             <input
@@ -143,7 +165,7 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
               onChange={() => setAllerRetour(false)}
               className="accent-alpes"
             />
-            One-way
+            {mots.allerSimple}
           </label>
         </fieldset>
 
@@ -151,7 +173,7 @@ export default function FormulaireRecherche({ lieux }: { lieux: Lieu[] }) {
           type="submit"
           className="w-full rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 sm:ml-auto sm:w-auto"
         >
-          Get my price
+          {mots.action}
         </button>
       </div>
     </form>

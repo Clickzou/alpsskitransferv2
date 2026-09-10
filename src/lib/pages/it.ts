@@ -1,4 +1,10 @@
+import { ENTREPRISE, SITE } from "@/data/site";
 import type { PageIntl } from "./intl";
+
+const { adresse, entite } = ENTREPRISE;
+const adressePostale = `${adresse.rue}, ${adresse.codePostal} ${adresse.ville}, France`;
+const sirenLisible = `SIREN ${entite.siren.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}`;
+
 
 /**
  * Le pagine di conversione in italiano.
@@ -15,6 +21,7 @@ import type { PageIntl } from "./intl";
 export const PAGES_IT: PageIntl[] = [
   {
     slug: "come-prenotare",
+    visuel: { nom: "popular-alps-ski-transfer", alt: "Minibus per transfer su una strada di montagna innevata" },
     metaTitre: "Come prenotare un transfer per le Alpi in tre passi",
     metaDescription:
       "Prenotare un trasferimento aeroporto per le Alpi: tragitto, veicolo e prezzo, dati di contatto. Prezzo fisso per veicolo, sci e seggiolini inclusi.",
@@ -97,6 +104,7 @@ export const PAGES_IT: PageIntl[] = [
 
   {
     slug: "transfer-privato",
+    visuel: { nom: "transfert-prive", alt: "Veicolo privato davanti a uno chalet in località" },
     metaTitre: "Transfer privato per le Alpi | Prezzo fisso per veicolo",
     metaDescription:
       "Transfer privato da Torino, Milano Malpensa, Bergamo e Ginevra verso le località sciistiche. Prezzo per veicolo, partenza al tuo atterraggio, sci inclusi.",
@@ -192,6 +200,7 @@ export const PAGES_IT: PageIntl[] = [
 
   {
     slug: "domande-frequenti",
+    visuel: { nom: "faq", alt: "Sciatore al tramonto sopra una località sciistica" },
     metaTitre: "Domande frequenti sui trasferimenti per le Alpi",
     metaDescription:
       "Prezzo, bagagli, seggiolini, ritardi, cancellazione, dotazioni invernali: le risposte alle domande prima di prenotare un transfer aeroporto.",
@@ -269,6 +278,7 @@ export const PAGES_IT: PageIntl[] = [
 
   {
     slug: "contatti",
+    visuel: { nom: "route-alpine", alt: "Villaggio alpino innevato e strada di montagna al crepuscolo" },
     metaTitre: "Contatti — Alps Ski Transfers",
     metaDescription:
       "Scrivici per un preventivo, un trasferimento di gruppo o una domanda su una prenotazione esistente. Rispondiamo di solito in giornata.",
@@ -327,6 +337,7 @@ export const PAGES_IT: PageIntl[] = [
 
   {
     slug: "agenzie-e-aziende",
+    visuel: { nom: "transfert-prive-detail", alt: "Interno di un minibus per transfer, sedili e vano sci" },
     metaTitre: "Agenzie, chalet e aziende | Trasferimenti sulla neve",
     metaDescription:
       "Trasferimenti per agenzie di viaggio, gestori di chalet, servizi di concierge e aziende: più veicoli, un solo referente, fattura unica.",
@@ -375,5 +386,303 @@ export const PAGES_IT: PageIntl[] = [
           "Sì, con più veicoli coordinati. Queste richieste si preventivano singolarmente.",
       },
     ],
+  },
+
+  {
+    slug: "assistenza-in-viaggio",
+    visuel: { nom: "route-hiver", alt: "Pneumatici invernali su una strada innevata verso una località" },
+    metaTitre: "Assistenza in viaggio — trovare l’autista, volo in ritardo",
+    metaDescription:
+      "Volo in ritardo, autista introvabile, indirizzo cambiato in località: come contattarci e che cosa succede in ogni caso.",
+    h1: "Assistenza durante il viaggio",
+    chapo:
+      "Un transfer si svolge quasi sempre senza bisogno di chiamarci. Quasi: ecco che cosa fare nei quattro casi in cui capita.",
+    equivalentEn: "/help/",
+    contenu: [
+      { type: "titre2", texte: "Il tuo volo è in ritardo" },
+      {
+        type: "paragraphe",
+        texte:
+          "Non fare nulla. L’autista segue il numero del volo che hai indicato in fase di prenotazione: la presa in carico slitta da sola, senza supplemento e senza che tu debba avvisare. È per questo che chiediamo il numero del volo, e solo per questo.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Se il volo viene dirottato su un altro aeroporto — succede più spesso a Innsbruck che altrove — chiamaci: partiamo dall’aeroporto dove sei atterrato davvero, senza una seconda prenotazione.",
+      },
+
+      { type: "titre2", texte: "Non trovi il tuo autista" },
+      {
+        type: "paragraphe",
+        texte:
+          "Il punto d’incontro è indicato nell’e-mail di conferma: di norma l’uscita bagagli, con un cartello con il tuo nome. Aspetta cinque minuti esattamente lì prima di chiamare — un autista che sta parcheggiando non è un autista assente.",
+      },
+      {
+        type: "liste",
+        items: [
+          "Resta nel punto indicato: è lì che l’autista ti cerca.",
+          "Tieni il telefono acceso e con la suoneria attiva, anche in roaming.",
+          "Chiama il numero della conferma, non il centralino: squilla direttamente dal referente di turno.",
+        ],
+      },
+
+      { type: "titre2", texte: "L’indirizzo in località è cambiato" },
+      {
+        type: "paragraphe",
+        texte:
+          "Scrivici appena lo sai, indicando il riferimento della prenotazione. Un indirizzo diverso nella stessa località non cambia il prezzo. Una località diversa sì: in quel caso ti comunichiamo il nuovo importo prima di modificare qualsiasi cosa.",
+      },
+
+      { type: "titre2", texte: "Hai dimenticato qualcosa nel veicolo" },
+      {
+        type: "paragraphe",
+        texte:
+          "C’è la pagina dedicata al bagaglio smarrito: verifichiamo con l’autista in giornata e conserviamo gli oggetti per trenta giorni.",
+      },
+    ],
+    faq: [
+      {
+        question: "Devo avvisare in caso di ritardo del volo?",
+        reponse:
+          "No. Il volo è monitorato e la presa in carico slitta automaticamente, senza supplemento. Avvisaci solo se il volo viene dirottato o cancellato.",
+      },
+      {
+        question: "Quanto aspetta l’autista?",
+        reponse:
+          "Il tempo di attesa è compreso nel prezzo: un’ora dall’atterraggio effettivo per i voli internazionali, quarantacinque minuti per i voli nazionali. Oltre, ti chiamiamo prima di prendere qualsiasi decisione.",
+      },
+      {
+        question: "Come vi contatto il giorno del transfer?",
+        reponse:
+          "Il numero è nell’e-mail di conferma e squilla dal referente di turno, non dal centralino. Per iscritto, contact@alpsskitransfers.com resta il canale che lascia traccia.",
+      },
+      {
+        question: "Posso cambiare l’orario della presa in carico?",
+        reponse:
+          "Sì, finché il veicolo non è partito. Scrivici con il tuo riferimento: confermiamo il nuovo orario via e-mail, e il prezzo non cambia se il tragitto resta lo stesso.",
+      },
+    ],
+  },
+  {
+    slug: "bagaglio-smarrito",
+    visuel: { nom: "aeroport-lyon-airport", alt: "Terminal aeroportuale, ritiro bagagli" },
+    metaTitre: "Bagaglio smarrito, oggetto dimenticato",
+    metaDescription:
+      "Bagaglio non consegnato dalla compagnia o oggetto dimenticato nel veicolo: che cosa facciamo, in quali tempi e che cosa non possiamo garantire.",
+    h1: "Bagaglio in ritardo, oggetto dimenticato",
+    chapo:
+      "Due situazioni diverse, due risposte diverse: un bagaglio che la compagnia non ha consegnato e un oggetto rimasto nel veicolo.",
+    equivalentEn: "/lost-luggage/",
+    contenu: [
+      { type: "titre2", texte: "La compagnia non ha consegnato il bagaglio" },
+      {
+        type: "paragraphe",
+        texte:
+          "Denuncialo al banco bagagli prima di uscire dall’aeroporto: senza il modulo di smarrimento la compagnia non consegna nulla. L’autista ti aspetta durante la pratica, fa parte dell’arrivo.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Fai consegnare il bagaglio al tuo indirizzo in località, non in aeroporto. Ridiscendere a prenderlo costa mezza giornata, e la compagnia consegna in località come ovunque.",
+      },
+
+      { type: "titre2", texte: "Hai dimenticato un oggetto nel veicolo" },
+      {
+        type: "paragraphe",
+        texte:
+          "Scrivici il prima possibile con il riferimento della prenotazione e la descrizione dell’oggetto: sentiamo l’autista in giornata. In un veicolo che ha fatto altre tre corse non si ritrova più tutto, e l’ora conta.",
+      },
+      {
+        type: "liste",
+        items: [
+          "Conserviamo gli oggetti ritrovati per trenta giorni.",
+          "Il ritiro presso il nostro deposito è gratuito.",
+          "La spedizione è possibile, a tue spese, con tracciamento.",
+          "Ti teniamo aggiornato via e-mail a ogni passo della ricerca.",
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Cerchiamo seriamente, ma non possiamo garantire di ritrovare un oggetto e non ci assumiamo la responsabilità degli effetti personali lasciati nel veicolo. È il quadro, meglio dirlo prima che dopo.",
+      },
+    ],
+    faq: [
+      {
+        question: "L’autista aspetta durante la denuncia del bagaglio?",
+        reponse:
+          "Sì. Il tempo di attesa compreso nel prezzo copre questa pratica: avvisa l’autista quando lo raggiungi, ti aspetta al punto d’incontro.",
+      },
+      {
+        question: "Per quanto tempo conservate un oggetto ritrovato?",
+        reponse:
+          "Trenta giorni. Trascorso il termine, gli oggetti non reclamati vengono donati o smaltiti secondo la loro natura.",
+      },
+      {
+        question: "Potete spedirmi l’oggetto in località?",
+        reponse:
+          "Sì, con tracciamento e a tue spese. Il ritiro in deposito resta gratuito se ripassi dalla valle.",
+      },
+      {
+        question: "Può ritirarlo un’altra persona?",
+        reponse:
+          "Sì, a condizione di avvisarci prima e di darci il suo nome: non consegniamo un oggetto a qualcuno che non ci hai annunciato.",
+      },
+    ],
+  },
+
+  {
+    slug: "note-legali",
+    metaTitre: "Note legali | Alps Ski Transfers",
+    metaDescription:
+      "Editore, hosting e informazioni legali del sito alpsskitransfers.com.",
+    h1: "Note legali",
+    chapo:
+      "Informazioni richieste dall’articolo 6-III della legge francese del 21 giugno 2004 sulla fiducia nell’economia digitale (LCEN).",
+    equivalentEn: "/legal-notice/",
+    noindex: true,
+    contenu: [
+      { type: "titre2", texte: "Editore del sito" },
+      {
+        type: "paragraphe",
+        texte: `Questo sito è pubblicato da ${entite.nom}, che opera con l’insegna ${entite.enseigne}, impresa individuale registrata in Francia il 17 settembre 2020.`,
+      },
+      {
+        type: "liste",
+        items: [
+          `Sede: ${adressePostale}`,
+          `Registrazione: ${sirenLisible}`,
+          "Attività dichiarata: trasporto di persone con taxi e noleggio con conducente (VTC)",
+          `Telefono: ${ENTREPRISE.telephoneAffiche}`,
+          `E-mail: ${ENTREPRISE.email}`,
+          `Iscrizione al registro francese degli operatori di noleggio con conducente (VTC): ${entite.evtc}`,
+          `Licenza di trasporto interno di persone (LTI) n. ${entite.lti.numero}, valida dal 27 febbraio 2026 al 26 febbraio 2036, iscritta al registro nazionale delle imprese di trasporto su strada di persone per la Savoia. Gestore dei trasporti: ${entite.lti.gestionnaire}.`,
+          `SIRET: ${entite.siret}`,
+          `Partita IVA intracomunitaria: ${entite.tva}`,
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte: `« Alps Ski Transfers » è un nome commerciale. I servizi di trasporto offerti su questo sito sono effettuati da ${entite.nom} alle condizioni sopra indicate.`,
+      },
+
+      { type: "titre2", texte: "Direttore della pubblicazione" },
+      {
+        type: "paragraphe",
+        texte: `${entite.nom}, in qualità di titolare dell’impresa.`,
+      },
+
+      { type: "titre2", texte: "Hosting" },
+      {
+        type: "paragraphe",
+        texte:
+          "Il sito è ospitato da Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, Stati Uniti — vercel.com.",
+      },
+
+      { type: "titre2", texte: "Proprietà intellettuale" },
+      {
+        type: "paragraphe",
+        texte: `La struttura, i testi, le immagini e la veste grafica di ${SITE.url} sono protetti dal diritto d’autore. Qualsiasi riproduzione o riutilizzo, totale o parziale, su qualunque supporto, richiede il consenso scritto preventivo dell’editore. Le fotografie delle località e dei veicoli restano di proprietà dei rispettivi autori.`,
+      },
+
+      { type: "titre2", texte: "Dati personali" },
+      {
+        type: "paragraphe",
+        texte:
+          "I dati personali raccolti tramite questo sito sono trattati nel rispetto del regolamento generale sulla protezione dei dati (UE 2016/679) e della legge francese sulla protezione dei dati. Hai diritto di accesso, rettifica, cancellazione, limitazione, portabilità e opposizione, esercitabili all’indirizzo e-mail sopra indicato. Il dettaglio dei dati raccolti e delle finalità è nella nostra informativa sulla privacy, e i cookie utilizzati sono elencati nell’informativa sui cookie.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Se ritieni che i tuoi diritti non siano stati rispettati, puoi rivolgerti alla CNIL, autorità francese per la protezione dei dati — cnil.fr.",
+      },
+
+      { type: "titre2", texte: "Condizioni di vendita" },
+      {
+        type: "paragraphe",
+        texte:
+          "I transfer prenotati su questo sito sono regolati dalle nostre condizioni di biglietteria e dalle condizioni generali, che disciplinano prezzi, cancellazione, bagagli e responsabilità. Questi documenti sono al momento pubblicati in inglese.",
+      },
+
+      { type: "titre2", texte: "Risoluzione delle controversie" },
+      {
+        type: "paragraphe",
+        texte:
+          "In caso di controversia, contattaci prima all’indirizzo e-mail sopra indicato. In mancanza di accordo, i consumatori residenti nell’Unione europea possono rivolgersi a un mediatore del consumo e utilizzare la piattaforma europea di risoluzione delle controversie online. [À REMPLACER — nome, indirizzo e sito del mediatore del consumo a cui l’impresa ha aderito.]",
+      },
+    ],
+    faq: [],
+  },
+  {
+    slug: "informativa-cookie",
+    metaTitre: "Informativa sui cookie | Alps Ski Transfers",
+    metaDescription:
+      "Quali cookie utilizza alpsskitransfers.com, a che cosa servono e come controllarli.",
+    h1: "Informativa sui cookie",
+    chapo:
+      "Questa pagina indica quali cookie alpsskitransfers.com salva sul tuo dispositivo, a che cosa servono e come puoi controllarli.",
+    equivalentEn: "/cookie-policy-uk/",
+    noindex: true,
+    contenu: [
+      { type: "titre2", texte: "Che cos’è un cookie" },
+      {
+        type: "paragraphe",
+        texte:
+          "Un cookie è un piccolo file di testo salvato sul tuo dispositivo quando visiti un sito. Permette al sito di ricordare le tue azioni e preferenze da una pagina all’altra e da una visita all’altra. Le tecnologie equivalenti — archiviazione locale, pixel, tag — hanno lo stesso scopo e rientrano in questa informativa.",
+      },
+
+      { type: "titre2", texte: "I cookie che utilizziamo" },
+      {
+        type: "paragraphe",
+        texte:
+          "Il meno possibile. Il sito è composto da pagine statiche e non esegue script pubblicitari o di profilazione: leggerlo non richiede alcun consenso.",
+      },
+      {
+        type: "liste",
+        items: [
+          "Cookie strettamente necessari — tengono insieme la tua prenotazione tra un passaggio e l’altro e proteggono la pagina di pagamento. Senza di essi la prenotazione non può concludersi. Non richiedono il tuo consenso.",
+          "Memorizzazione dei dati inseriti — se inizi una ricerca senza completarla, i dati possono restare nel browser per non doverli riscrivere. Restano sul tuo dispositivo e non ci vengono mai trasmessi.",
+          "Cookie del fornitore di pagamento — sulla pagina di pagamento il nostro fornitore imposta cookie propri per rilevare le frodi e proteggere la transazione. Sono necessari per incassare.",
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Oggi non utilizziamo cookie di misurazione, pubblicitari o di social network. Se cambiasse, questa pagina verrebbe aggiornata e il tuo consenso raccolto prima di qualsiasi installazione — un consenso facile da negare quanto da concedere, e revocabile in ogni momento.",
+      },
+
+      { type: "titre2", texte: "Quanto durano" },
+      {
+        type: "paragraphe",
+        texte:
+          "I cookie necessari a una prenotazione durano quanto la sessione o il tempo necessario a completarla. Se venisse introdotto un cookie soggetto a consenso, la sua durata non supererebbe i tredici mesi e il consenso verrebbe richiesto di nuovo alla scadenza, secondo le raccomandazioni della CNIL.",
+      },
+
+      { type: "titre2", texte: "Come controllarli" },
+      {
+        type: "paragraphe",
+        texte:
+          "Puoi accettare o rifiutare i cookie nelle impostazioni del browser e cancellare quelli già salvati. Chrome, Safari, Firefox ed Edge offrono questa possibilità nelle impostazioni sulla privacy. Attenzione: bloccando i cookie strettamente necessari non è possibile completare una prenotazione.",
+      },
+
+      { type: "titre2", texte: "I tuoi diritti" },
+      {
+        type: "paragraphe",
+        texte: `I cookie che leggono o scrivono informazioni sul tuo dispositivo sono regolati dal GDPR e dall’articolo 82 della legge francese sulla protezione dei dati. Puoi esercitare i diritti di accesso, rettifica, cancellazione e opposizione scrivendo a ${ENTREPRISE.email}, e presentare reclamo alla CNIL, autorità di controllo francese, su cnil.fr.`,
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Per tutto il resto di ciò che facciamo con i tuoi dati — prenotazioni, pagamenti, assegnazione degli autisti — vedi la nostra informativa sulla privacy.",
+      },
+
+      { type: "titre2", texte: "Modifiche" },
+      {
+        type: "paragraphe",
+        texte:
+          "Questa informativa viene aggiornata ogni volta che cambiano i cookie del sito. [À REMPLACER — datare la pubblicazione e ogni revisione.]",
+      },
+    ],
+    faq: [],
   },
 ];

@@ -6,6 +6,7 @@ import type { PageFonctionnelle } from "./types";
  */
 export const findYourStop: PageFonctionnelle = {
   slug: "find-your-stop",
+  visuel: { nom: "popular-alps-ski-transfer", alt: "Transfer minibus on a snow-covered mountain road" },
   metaTitre: "Find your stop",
   metaDescription:
     "Where your driver meets you at each airport, and how to find the pick-up point on arrival. Alps Ski Transfers.",

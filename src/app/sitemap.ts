@@ -7,7 +7,14 @@ import { PAGES } from "@/lib/pages";
 import { pagesDeLaLangue } from "@/lib/pages/intl";
 import { PAYS } from "@/lib/pays";
 import { LANGS_SECONDAIRES } from "@/lib/i18n";
-import { cheminStation, cheminTrajet } from "@/lib/intl/liens";
+import {
+  cheminHubPays,
+  cheminIndexAeroports,
+  cheminIndexStations,
+  cheminStation,
+  cheminTrajet,
+} from "@/lib/intl/liens";
+import { hubsPaysDeLaLangue } from "@/lib/pays-intl";
 import { RESORTS_MIGRES, SLUG_PAYS, resortsTraduits } from "@/lib/resorts";
 import { segmentTrajet, TRANSFERS, trajetsTraduits } from "@/lib/transfers";
 import { resortParSlug } from "@/lib/resorts";
@@ -116,12 +123,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "weekly" as const,
         priority: 0.8,
       },
-      ...pagesTraduites.map((page) => ({
-        url: absoluteUrl(`/${lang}/${page.slug}/`),
-        lastModified: modifie,
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      })),
+      // Même règle que côté anglais : une page en noindex n'entre pas au sitemap.
+      ...pagesTraduites
+        .filter((page) => !page.noindex)
+        .map((page) => ({
+          url: absoluteUrl(`/${lang}/${page.slug}/`),
+          lastModified: modifie,
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        })),
       // L'index du blog n'existe que s'il y a au moins un article traduit.
       ...(articlesTraduits.length > 0
         ? [
@@ -133,6 +143,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
             },
           ]
         : []),
+      /*
+        Les deux index et les hubs pays de la langue : la tête du silo traduit.
+        Ils n'existent que si la langue a des stations — la condition est déjà
+        posée plus haut, un index vide n'entrerait pas ici.
+      */
+      ...(stationsTraduites.length > 0
+        ? [
+            {
+              url: absoluteUrl(cheminIndexStations(lang)),
+              lastModified: modifie,
+              changeFrequency: "weekly" as const,
+              priority: 0.8,
+            },
+            {
+              url: absoluteUrl(cheminIndexAeroports(lang)),
+              lastModified: modifie,
+              changeFrequency: "weekly" as const,
+              priority: 0.7,
+            },
+          ]
+        : []),
+      ...hubsPaysDeLaLangue(lang)
+        // Un hub dont le pays n'a aucune station traduite n'a rien à montrer.
+        .filter((hub) => stationsTraduites.some((r) => r.country === hub.code))
+        .map((hub) => ({
+          url: absoluteUrl(cheminHubPays(lang, hub.slug)),
+          lastModified: modifie,
+          changeFrequency: "monthly" as const,
+          priority: 0.7,
+        })),
       ...stationsTraduites.map((r) => ({
         url: absoluteUrl(cheminStation(r, lang)!),
         lastModified: modifie,

@@ -1,5 +1,7 @@
 import { articlesPublies } from "@/lib/articles";
-import type { Lang } from "@/lib/i18n";
+import { SEGMENT_AEROPORTS, SEGMENT_STATIONS, type Lang, type LangueSecondaire } from "@/lib/i18n";
+import { HUBS_PAYS } from "@/lib/pays-intl";
+import { PAYS } from "@/lib/pays";
 import { CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import { lienReserver } from "./textes";
 
@@ -38,7 +40,8 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Contact", chemin: "/contact/" },
   ],
   fr: [
-    { texte: "Stations", chemin: "/fr/" },
+    { texte: "Stations", chemin: "/fr/transferts-ski/" },
+    { texte: "Aéroports", chemin: "/fr/aeroports/" },
     { texte: "Transferts privés", chemin: "/fr/transferts-prives/" },
     { texte: "Comment réserver", chemin: "/fr/comment-reserver/" },
     { texte: "Blog", chemin: "/fr/blog/" },
@@ -46,7 +49,8 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Contact", chemin: "/fr/contact/" },
   ],
   de: [
-    { texte: "Skiorte", chemin: "/de/" },
+    { texte: "Skiorte", chemin: "/de/skitransfer/" },
+    { texte: "Flughäfen", chemin: "/de/flughaefen/" },
     { texte: "Privattransfer", chemin: "/de/privattransfer/" },
     { texte: "So buchen Sie", chemin: "/de/transfer-buchen/" },
     { texte: "Blog", chemin: "/de/blog/" },
@@ -54,7 +58,8 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Kontakt", chemin: "/de/kontakt/" },
   ],
   it: [
-    { texte: "Località", chemin: "/it/" },
+    { texte: "Località", chemin: "/it/trasferimenti-sci/" },
+    { texte: "Aeroporti", chemin: "/it/aeroporti/" },
     { texte: "Transfer privato", chemin: "/it/transfer-privato/" },
     { texte: "Come prenotare", chemin: "/it/come-prenotare/" },
     { texte: "Blog", chemin: "/it/blog/" },
@@ -141,16 +146,51 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
     ];
   }
 
-  const juridiques = (titre: string): ColonnePied => ({
-    titre,
-    liens: [
-      { texte: en("Ticketing conditions"), chemin: "/ticketing-conditions/" },
-      { texte: en("Terms & conditions"), chemin: "/terms-conditions-alps-ski-transfers/" },
-      { texte: en("Privacy"), chemin: "/privacy/" },
-      { texte: "Cookies", chemin: "/cookie-policy-uk/" },
-      { texte: en("Legal notice"), chemin: "/legal-notice/" },
-    ],
-  });
+  /*
+    Deux natures de document, deux traitements.
+
+    Les mentions légales et la politique de cookies **décrivent** : qui édite le
+    site, ce qu'il dépose sur l'appareil du visiteur. Les publier en anglais
+    pour un lecteur allemand était le contraire de leur objet — un éditeur
+    français doit se faire comprendre de ceux à qui il vend, et le RGPD raisonne
+    en langue du destinataire. Elles sont donc traduites.
+
+    Les conditions de billetterie, les conditions générales et la politique de
+    confidentialité **engagent** : elles restent en anglais tant qu'un juriste
+    ne les a pas validées ailleurs, parce que deux versions divergentes d'un même
+    engagement sont un risque, pas un service. Le suffixe « (EN) » le dit.
+  */
+  const JURIDIQUES_TRADUITES: Record<
+    LangueSecondaire,
+    { cookies: LienNav; mentions: LienNav }
+  > = {
+    fr: {
+      cookies: { texte: "Cookies", chemin: "/fr/politique-cookies/" },
+      mentions: { texte: "Mentions légales", chemin: "/fr/mentions-legales/" },
+    },
+    de: {
+      cookies: { texte: "Cookie-Richtlinie", chemin: "/de/cookie-richtlinie/" },
+      mentions: { texte: "Impressum", chemin: "/de/impressum/" },
+    },
+    it: {
+      cookies: { texte: "Cookie", chemin: "/it/informativa-cookie/" },
+      mentions: { texte: "Note legali", chemin: "/it/note-legali/" },
+    },
+  };
+
+  const juridiques = (titre: string): ColonnePied => {
+    const traduites = JURIDIQUES_TRADUITES[lang as LangueSecondaire];
+    return {
+      titre,
+      liens: [
+        { texte: en("Ticketing conditions"), chemin: "/ticketing-conditions/" },
+        { texte: en("Terms & conditions"), chemin: "/terms-conditions-alps-ski-transfers/" },
+        { texte: en("Privacy"), chemin: "/privacy/" },
+        traduites.cookies,
+        traduites.mentions,
+      ],
+    };
+  };
 
   if (lang === "fr") {
     return [
@@ -168,9 +208,13 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
         liens: [
           { texte: "Transferts privés", chemin: "/fr/transferts-prives/" },
           { texte: "Agences et professionnels", chemin: "/fr/agences-et-professionnels/" },
-          { texte: en("Stations de ski"), chemin: "/ski-resort-transfers/" },
-          { texte: en("Assistance"), chemin: "/help/" },
-          { texte: en("Bagage perdu"), chemin: "/lost-luggage/" },
+          { texte: "Stations de ski", chemin: "/fr/transferts-ski/" },
+          { texte: "Aéroports desservis", chemin: "/fr/aeroports/" },
+          // La page locale : elle vit dans le pied, pas dans le menu, parce
+          // qu'elle vise un bassin de vie et non le silo.
+          { texte: "VTC à Chambéry", chemin: "/fr/vtc-chambery/" },
+          { texte: "Assistance", chemin: "/fr/assistance/" },
+          { texte: "Bagage perdu", chemin: "/fr/bagage-perdu/" },
         ],
       },
       juridiques("Ressources"),
@@ -193,9 +237,10 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
         liens: [
           { texte: "Privattransfer", chemin: "/de/privattransfer/" },
           { texte: "Agenturen und Firmen", chemin: "/de/agenturen-und-firmen/" },
-          { texte: en("Skiorte"), chemin: "/ski-resort-transfers/" },
-          { texte: en("Hilfe"), chemin: "/help/" },
-          { texte: en("Verlorenes Gepäck"), chemin: "/lost-luggage/" },
+          { texte: "Skiorte", chemin: "/de/skitransfer/" },
+          { texte: "Flughäfen", chemin: "/de/flughaefen/" },
+          { texte: "Hilfe unterwegs", chemin: "/de/hilfe-unterwegs/" },
+          { texte: "Verlorenes Gepäck", chemin: "/de/verlorenes-gepaeck/" },
         ],
       },
       juridiques("Rechtliches"),
@@ -217,11 +262,58 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
       liens: [
         { texte: "Transfer privato", chemin: "/it/transfer-privato/" },
         { texte: "Agenzie e aziende", chemin: "/it/agenzie-e-aziende/" },
-        { texte: en("Località sciistiche"), chemin: "/ski-resort-transfers/" },
-        { texte: en("Assistenza"), chemin: "/help/" },
-        { texte: en("Bagaglio smarrito"), chemin: "/lost-luggage/" },
+        { texte: "Località sciistiche", chemin: "/it/trasferimenti-sci/" },
+        { texte: "Aeroporti", chemin: "/it/aeroporti/" },
+        { texte: "Assistenza in viaggio", chemin: "/it/assistenza-in-viaggio/" },
+        { texte: "Bagaglio smarrito", chemin: "/it/bagaglio-smarrito/" },
       ],
     },
     juridiques("Informazioni legali"),
   ];
+}
+
+/* ---------------------------------------------------------- barre des pays */
+
+/**
+ * Les quatre hubs pays, vus depuis une langue.
+ *
+ * Le pied de page les listait en dur vers les hubs **anglais**, sans même le
+ * suffixe « (EN) » que portent les autres liens sortants : un visiteur allemand
+ * qui cliquait « Österreich » atterrissait sans prévenir sur une page anglaise.
+ * Depuis le 10 septembre 2026, le lien va vers le hub de la langue quand il
+ * existe — et le signale quand il n'existe pas.
+ *
+ * L'Allemagne reste hors liste : nous n'y desservons aucune station, son hub
+ * anglais n'est qu'une porte d'entrée d'aéroports.
+ */
+export function liensPays(lang: Lang): LienNav[] {
+  return Object.entries(PAYS)
+    .filter(([, pays]) => pays.code !== "DE")
+    .map(([slug, pays]) => {
+      if (lang === "en") return { texte: pays.nom, chemin: `/${slug}/` };
+
+      const hub = HUBS_PAYS[lang as LangueSecondaire].find(
+        (h) => h.equivalentEn === `/${slug}/`,
+      );
+      return hub
+        ? {
+            texte: hub.nom,
+            chemin: `/${lang}/${SEGMENT_STATIONS[lang as LangueSecondaire]}/${hub.slug}/`,
+          }
+        : { texte: `${pays.nom} (EN)`, chemin: `/${slug}/` };
+    });
+}
+
+/** L'index des stations de la langue — la racine de son silo. */
+export function lienIndexStations(lang: Lang): string {
+  return lang === "en"
+    ? "/ski-resort-transfers/"
+    : `/${lang}/${SEGMENT_STATIONS[lang as LangueSecondaire]}/`;
+}
+
+/** L'index des aéroports de la langue. */
+export function lienIndexAeroports(lang: Lang): string {
+  return lang === "en"
+    ? "/airport-ski-transfers/"
+    : `/${lang}/${SEGMENT_AEROPORTS[lang as LangueSecondaire]}/`;
 }

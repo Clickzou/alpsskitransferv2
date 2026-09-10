@@ -9,6 +9,7 @@ import PageContact from "@/components/PageContact";
 import PageGroupes from "@/components/PageGroupes";
 import PageStations from "@/components/PageStations";
 import PageTransfertsPrives from "@/components/PageTransfertsPrives";
+import { alternativesHubPaysEn, alternativesPageFonctionnelleEn } from "@/lib/intl/liens";
 import { PAGES, pageParSlug } from "@/lib/pages";
 import { PAYS } from "@/lib/pays";
 import { CHEMIN_PAGE_RESERVATION } from "@/lib/reservation/config";
@@ -49,6 +50,7 @@ export async function generateMetadata({
       description: `Private airport transfers to ${stations.length} ${pays.adjectif} ski resorts. Fixed price per vehicle, flight tracking, winter-equipped vehicles.`,
       path: `/${silo}/`,
       lang: "en",
+      alternatives: alternativesHubPaysEn(silo),
     });
   }
 
@@ -60,6 +62,7 @@ export async function generateMetadata({
       path: `/${silo}/`,
       lang: "en",
       noindex: page.noindex,
+      alternatives: alternativesPageFonctionnelleEn(silo),
     });
   }
 

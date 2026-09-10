@@ -2,13 +2,15 @@ import type { Article } from "@/lib/articles/types";
 import {
   LANGS,
   LANGS_SECONDAIRES,
+  SEGMENT_AEROPORTS,
   SEGMENT_STATIONS,
   type Alternative,
   type Lang,
   type LangueSecondaire,
 } from "@/lib/i18n";
 import { traductionsDeLaPageEn } from "@/lib/pages/intl";
-import { SLUG_PAYS, type Resort } from "@/lib/resorts";
+import { HUBS_PAYS, type HubPaysIntl } from "@/lib/pays-intl";
+import { SLUG_PAYS, resortsTraduits, type Resort } from "@/lib/resorts";
 import { SEGMENTS_AEROPORT, segmentTrajet, type Transfer } from "@/lib/transfers";
 
 /**
@@ -147,4 +149,102 @@ export function alternativesIndexBlog(articles: Article[], courante: Lang): Alte
       .filter((lang) => lang !== courante)
       .map((lang) => ({ lang: lang as Lang, path: `/${lang}/blog/` })),
   ];
+}
+
+/* -------------------------------------------------------- hub pays traduit */
+
+/** Le chemin d'un hub pays dans sa langue. */
+export function cheminHubPays(lang: LangueSecondaire, slug: string): string {
+  return `/${lang}/${SEGMENT_STATIONS[lang]}/${slug}/`;
+}
+
+/**
+ * Les autres langues d'un hub pays traduit.
+ *
+ * La correspondance passe par `equivalentEn` : deux hubs qui pointent le même
+ * hub anglais sont sœurs entre elles. C'est le mécanisme des pages de
+ * conversion, appliqué au silo — écrire la correspondance deux fois serait
+ * s'assurer qu'elle diverge.
+ */
+export function alternativesHubPays(
+  courante: LangueSecondaire,
+  hub: HubPaysIntl,
+): Alternative[] {
+  return [
+    { lang: "en" as Lang, path: hub.equivalentEn },
+    ...(Object.keys(HUBS_PAYS) as LangueSecondaire[]).flatMap((lang) =>
+      lang === courante
+        ? []
+        : HUBS_PAYS[lang]
+            .filter((autre) => autre.equivalentEn === hub.equivalentEn)
+            .map((autre) => ({ lang: lang as Lang, path: cheminHubPays(lang, autre.slug) })),
+    ),
+  ];
+}
+
+/** Les langues où ce hub pays anglais a une version traduite. */
+export function alternativesHubPaysEn(siloEn: string): Alternative[] {
+  return (Object.keys(HUBS_PAYS) as LangueSecondaire[]).flatMap((lang) =>
+    HUBS_PAYS[lang]
+      .filter((hub) => hub.equivalentEn === `/${siloEn}/`)
+      .map((hub) => ({ lang: lang as Lang, path: cheminHubPays(lang, hub.slug) })),
+  );
+}
+
+/* ------------------------------------------------------------------ index */
+
+/** L'index des stations d'une langue — la racine de son silo. */
+export function cheminIndexStations(lang: LangueSecondaire): string {
+  return `/${lang}/${SEGMENT_STATIONS[lang]}/`;
+}
+
+/** L'index des aéroports d'une langue. */
+export function cheminIndexAeroports(lang: LangueSecondaire): string {
+  return `/${lang}/${SEGMENT_AEROPORTS[lang]}/`;
+}
+
+/**
+ * Les langues qui ont un index — c'est-à-dire au moins une station traduite.
+ *
+ * Un index vide n'est pas une page : c'est la même règle que pour l'index du
+ * blog, et elle vaut ici pour la même raison.
+ */
+function languesAvecSilo(): LangueSecondaire[] {
+  return LANGS_SECONDAIRES.filter((lang) => resortsTraduits(lang).length > 0);
+}
+
+export function alternativesIndexStations(courante: Lang): Alternative[] {
+  return [
+    ...(courante === "en" ? [] : [{ lang: "en" as Lang, path: "/ski-resort-transfers/" }]),
+    ...languesAvecSilo()
+      .filter((lang) => lang !== courante)
+      .map((lang) => ({ lang: lang as Lang, path: cheminIndexStations(lang) })),
+  ];
+}
+
+export function alternativesIndexAeroports(courante: Lang): Alternative[] {
+  return [
+    ...(courante === "en" ? [] : [{ lang: "en" as Lang, path: "/airport-ski-transfers/" }]),
+    ...languesAvecSilo()
+      .filter((lang) => lang !== courante)
+      .map((lang) => ({ lang: lang as Lang, path: cheminIndexAeroports(lang) })),
+  ];
+}
+
+/**
+ * Les traductions d'une page fonctionnelle anglaise, quelle que soit leur forme.
+ *
+ * Trois cas, un seul point d'appel : les deux index du silo, dont le pendant
+ * traduit est une page dérivée et non une entrée de registre, et tout le reste,
+ * qui passe par `equivalentEn`.
+ *
+ * Sans cette fonction, le `hreflang` restait **unilatéral** : les pages
+ * traduites déclaraient l'anglais, l'anglais ne déclarait rien. Google demande
+ * la réciprocité — une déclaration qui ne revient pas est ignorée, et les
+ * traductions ne comptaient donc pas.
+ */
+export function alternativesPageFonctionnelleEn(slug: string): Alternative[] {
+  if (slug === "ski-resort-transfers") return alternativesIndexStations("en");
+  if (slug === "airport-ski-transfers") return alternativesIndexAeroports("en");
+  return alternativesPageEn(`/${slug}/`);
 }

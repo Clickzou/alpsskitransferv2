@@ -1,5 +1,7 @@
 import { AIRPORTS } from "@/lib/airports";
+import { LANGS_SECONDAIRES } from "@/lib/i18n";
 import { RESORTS_MIGRES } from "@/lib/resorts";
+import { SEGMENTS_AEROPORT } from "@/lib/transfers/segments";
 
 /**
  * Le catalogue de lieux du moteur de recherche.
@@ -69,20 +71,59 @@ function variantes(nom: string): string[] {
   return [...new Set([base, sansArticle, base.replace(/ /g, "")])];
 }
 
+/**
+ * Les noms d'un aéroport dans les autres langues.
+ *
+ * Le champ de recherche est traduit depuis le 10 septembre 2026, mais ses clés
+ * ne l'étaient pas : un Allemand qui tapait « Genf » dans un formulaire allemand
+ * n'obtenait aucune suggestion, et un Italien qui tapait « Torino » non plus.
+ * Les noms de marché sont donc versés dans les clés — ils ne changent pas ce qui
+ * s'affiche, seulement ce qui se trouve.
+ */
+function nomsTraduitsAeroport(slug: string): string[] {
+  return LANGS_SECONDAIRES.flatMap((lang) => {
+    const segment = SEGMENTS_AEROPORT[lang][slug];
+    return segment ? variantes(segment.nom) : [];
+  });
+}
+
 export const LIEUX: Lieu[] = [
   ...AIRPORTS.map((a) => ({
     slug: a.slug,
     nom: a.name,
     type: "aeroport" as const,
     detail: a.iata,
-    cles: [...variantes(a.name), normaliser(a.iata), ...variantes(a.name.replace(" Airport", ""))],
+    cles: [
+      ...new Set([
+        ...variantes(a.name),
+        normaliser(a.iata),
+        ...variantes(a.name.replace(" Airport", "")),
+        ...nomsTraduitsAeroport(a.slug),
+      ]),
+    ],
   })),
   ...RESORTS_MIGRES.map((r) => ({
     slug: r.slug,
     nom: r.name,
     type: "station" as const,
     detail: PAYS_LISIBLE[r.country] ?? r.country,
-    cles: [...variantes(r.name), normaliser(r.slug)],
+    /*
+      Le nom traduit d'une station est rarement différent du nom français —
+      « Val Thorens » se dit partout — mais quand il l'est (« Cortina
+      d'Ampezzo », « Sankt Anton »), c'est exactement le mot que le visiteur de
+      ce marché tape.
+    */
+    cles: [
+      ...new Set([
+        ...variantes(r.name),
+        normaliser(r.slug),
+        ...LANGS_SECONDAIRES.flatMap((lang) => {
+          const traduction = r.traductions?.[lang];
+          if (!traduction) return [];
+          return [...(traduction.nom ? variantes(traduction.nom) : []), normaliser(traduction.slug)];
+        }),
+      ]),
+    ],
   })),
 ];
 

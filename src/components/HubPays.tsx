@@ -15,6 +15,7 @@ import {
   Section,
 } from "@/components/gabarit/Sections";
 import { AIRPORTS } from "@/lib/airports";
+import { alternativesHubPaysEn } from "@/lib/intl/liens";
 import { dessertes } from "@/lib/airports/dessertes";
 import { PAYS } from "@/lib/pays";
 import { lienReservation } from "@/lib/reservation/config";
@@ -60,12 +61,12 @@ export default function HubPays({ silo }: { silo: string }) {
 
   return (
     <>
-      <Header lang="en" />
+      <Header lang="en" alternatives={alternativesHubPaysEn(silo)} />
       <main id="contenu">
         <HeroInterieur
           image={{
             nom: "hero-alps-ski-transfers",
-            alt: "Skieurs dans la poudreuse au-dessus d'une station des Alpes",
+            alt: "Skiers in fresh powder above an Alpine ski resort",
           }}
         >
           <FilAriane clair elements={filAriane} />

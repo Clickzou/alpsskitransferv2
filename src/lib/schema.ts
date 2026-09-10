@@ -67,6 +67,72 @@ export function organisationSchema() {
   return base;
 }
 
+/**
+ * Le service, vu depuis une ville.
+ *
+ * `organisationSchema()` déclare une activité qui dessert quatre pays : c'est
+ * vrai, et c'est inutilisable pour une requête locale — « VTC Chambéry » se
+ * joue sur un bassin de vie, pas sur un massif. Ce nœud dit la même activité
+ * avec une zone à l'échelle où la question se pose, et il pointe le même
+ * exploitant : c'est le rattachement à un lieu que Google attend pour rapprocher
+ * la page de la fiche d'établissement.
+ *
+ * Il ne remplace pas le nœud principal, il s'y ajoute — d'où un `@id` distinct.
+ * Le nom, l'adresse et le téléphone viennent de `data/site.ts` : **ils doivent
+ * être identiques à ceux de la fiche Google**, une divergence site / fiche étant
+ * le signal qui coûte le plus cher en référencement local.
+ */
+export function serviceLocalSchema({
+  id,
+  chemin,
+  nom,
+  communes,
+  departement,
+}: {
+  id: string;
+  chemin: string;
+  nom: string;
+  communes: string[];
+  departement?: string;
+}) {
+  const { adresse, entite } = ENTREPRISE;
+
+  const noeud: Record<string, unknown> = {
+    "@type": "TaxiService",
+    "@id": `${SITE.url}/#${id}`,
+    name: nom,
+    url: absoluteUrl(chemin),
+    areaServed: [
+      ...communes.map((commune) => ({
+        "@type": "City",
+        name: commune,
+        address: { "@type": "PostalAddress", addressCountry: adresse.pays },
+      })),
+      ...(departement
+        ? [{ "@type": "AdministrativeArea", name: departement }]
+        : []),
+    ],
+    provider: {
+      "@type": "LocalBusiness",
+      "@id": `${SITE.url}/#exploitant`,
+      name: ENTREPRISE.raisonSociale,
+      legalName: entite.nom,
+      alternateName: entite.enseigne,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: adresse.rue,
+        postalCode: adresse.codePostal,
+        addressLocality: adresse.ville,
+        addressRegion: adresse.region,
+        addressCountry: adresse.pays,
+      },
+    },
+  };
+  if (ENTREPRISE.telephone) noeud.telephone = ENTREPRISE.telephone;
+  if (ENTREPRISE.email) noeud.email = ENTREPRISE.email;
+  return noeud;
+}
+
 export function filArianeSchema(elements: { nom: string; path: string }[]) {
   return {
     "@type": "BreadcrumbList",

@@ -2,9 +2,8 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import { ENTREPRISE, SITE } from "@/data/site";
 import type { Lang } from "@/lib/i18n";
-import { colonnesPied, lienAccueil, lienTunnelLangue } from "@/lib/intl/navigation";
+import { colonnesPied, lienAccueil, lienTunnelLangue, liensPays } from "@/lib/intl/navigation";
 import { T } from "@/lib/intl/textes";
-import { PAYS } from "@/lib/pays";
 
 /**
  * Pied de page.
@@ -111,13 +110,11 @@ export default function Footer({ lang }: { lang: Lang }) {
           aria-label={t.pied.paysDesservis}
           className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-sm"
         >
-          {Object.entries(PAYS)
-            .filter(([, pays]) => pays.code !== "DE")
-            .map(([slug, pays]) => (
-              <Link key={slug} href={`/${slug}/`} className="hover:text-white">
-                {pays.nom}
-              </Link>
-            ))}
+          {liensPays(lang).map((pays) => (
+            <Link key={pays.chemin} href={pays.chemin} className="hover:text-white">
+              {pays.texte}
+            </Link>
+          ))}
         </nav>
 
         <p className="mt-8 text-xs text-glacier-400">

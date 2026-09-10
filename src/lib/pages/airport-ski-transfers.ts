@@ -36,7 +36,7 @@ export const airportSkiTransfers: PageFonctionnelle = {
     {
       question: "Which airport should I fly into for the Alps?",
       reponse:
-        "Geneva serves the widest range of French and Swiss resorts and has the most flights, which usually makes it the cheapest to reach. Chambéry is closest to the Three Valleys and to the Tarentaise. Grenoble suits the Isère resorts, Turin the Italian ones, Zurich the Swiss and the Arlberg, Salzburg the Austrian. Compare the drive time as well as the airfare: two hours saved on the road is worth a lot on a Saturday in February.",
+        "Geneva serves the widest range of French and Swiss resorts and has the most flights, which usually makes it the cheapest to reach. Chambéry is closest to the Three Valleys and to the Tarentaise. Grenoble suits the Isère resorts, Turin the Italian ones, Zurich the Swiss. Innsbruck and Salzburg are worth a look for the Dolomites. Compare the drive time as well as the airfare: two hours saved on the road is worth a lot on a Saturday in February.",
     },
     {
       question: "Do you cover every airport in this list?",

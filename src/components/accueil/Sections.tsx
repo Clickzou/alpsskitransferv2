@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Visuel from "@/components/Visuel";
-import { BandeauReassurance, Coche } from "@/components/gabarit/Sections";
+import { BandeauImageTexte, BandeauReassurance, Coche } from "@/components/gabarit/Sections";
 import { lienReservation } from "@/lib/reservation/config";
 import type { BlocAvis } from "@/lib/avis";
+import type { AvisTraduits, VehiculesTraduits } from "@/lib/intl/accueil";
 import { airportParSlug } from "@/lib/airports";
 import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
 import {
@@ -16,10 +17,16 @@ import {
   VEHICULES,
 } from "@/data/accueil";
 
-function Etoiles({ note = 5 }: { note?: number }) {
+function Etoiles({
+  note = 5,
+  libelle,
+}: {
+  note?: number;
+  libelle?: (note: number) => string;
+}) {
   const pleines = Math.round(note);
   return (
-    <div className="flex gap-0.5" aria-label={`${note} out of 5`}>
+    <div className="flex gap-0.5" aria-label={libelle ? libelle(note) : `${note} out of 5`}>
       {[0, 1, 2, 3, 4].map((i) => (
         <svg
           key={i}
@@ -73,49 +80,27 @@ export function Presentation() {
   const [chapo, ...suite] = PRESENTATION.paragraphes;
 
   return (
-    <section className="bg-alpine text-white">
-      <div className="lg:grid lg:grid-cols-2">
-        {/* L'image se comporte comme un fond : elle prend toute la hauteur de la
-            colonne de texte, quelle que soit la longueur de celle-ci. */}
-        <div className="relative h-64 sm:h-80 lg:h-auto">
-          <Visuel
-            nom={PRESENTATION.image.nom}
-            alt={PRESENTATION.image.alt}
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </div>
-
-        <div className="px-4 py-section-lg sm:px-6 lg:pl-12 xl:pl-16">
-          {/*
-            La demi-largeur d'une grille de 72 rem fait 36 rem : en contraignant
-            le texte à cette mesure, son bord droit tombe exactement sur celui
-            des sections centrées, sur un écran de 1152 px comme au-delà.
-          */}
-          <div className="max-w-[36rem]" data-anime>
-            <h2 className="font-display text-titre-section">{PRESENTATION.titre}</h2>
-            <p className="mt-5 text-chapo leading-relaxed text-white">{chapo}</p>
-            <div className="mt-5 space-y-4 text-sm leading-relaxed text-glacier-300">
-              {suite.map((p) => (
-                <p key={p.slice(0, 40)}>{p}</p>
-              ))}
-            </div>
-
-            <nav aria-label="Main departure airports" className="mt-7 flex flex-wrap gap-2">
-              {hubs.map((hub) => (
-                <Link
-                  key={hub.chemin}
-                  href={hub.chemin}
-                  className="rounded-full border border-white/20 px-4 py-1.5 text-sm transition hover:border-alpes hover:bg-alpes hover:text-white"
-                >
-                  {hub.nom}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
+    <BandeauImageTexte image={PRESENTATION.image}>
+      <h2 className="font-display text-titre-section">{PRESENTATION.titre}</h2>
+      <p className="mt-5 text-chapo leading-relaxed text-white">{chapo}</p>
+      <div className="mt-5 space-y-4 text-sm leading-relaxed text-glacier-300">
+        {suite.map((p) => (
+          <p key={p.slice(0, 40)}>{p}</p>
+        ))}
       </div>
-    </section>
+
+      <nav aria-label="Main departure airports" className="mt-7 flex flex-wrap gap-2">
+        {hubs.map((hub) => (
+          <Link
+            key={hub.chemin}
+            href={hub.chemin}
+            className="rounded-full border border-white/20 px-4 py-1.5 text-sm transition hover:border-alpes hover:bg-alpes hover:text-white"
+          >
+            {hub.nom}
+          </Link>
+        ))}
+      </nav>
+    </BandeauImageTexte>
   );
 }
 
@@ -135,15 +120,24 @@ export function Presentation() {
  *   proportion ni le même cadrage ; rognés au contenu et posés dans un cadre
  *   identique, les trois véhicules occupent enfin la même largeur.
  */
-export function Vehicules() {
+/**
+ * Les trois catégories de véhicule.
+ *
+ * `textes` traduit l'habillage — surtitre, titre, capacités — sans toucher aux
+ * photos ni aux modèles, qui sont les mêmes dans les quatre langues. Sans
+ * `textes`, c'est la version anglaise de la maquette.
+ */
+export function Vehicules({ textes }: { textes?: VehiculesTraduits }) {
   return (
     <section className="bg-white">
       <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
         <div className="mx-auto max-w-3xl text-center" data-anime>
           <p className="text-xs font-semibold uppercase tracking-widest text-or-700">
-            {VEHICULES.surtitre}
+            {textes?.surtitre ?? VEHICULES.surtitre}
           </p>
-          <h2 className="mt-3 font-display text-titre-page text-alpine">{VEHICULES.titre}</h2>
+          <h2 className="mt-3 font-display text-titre-page text-alpine">
+            {textes?.titre ?? VEHICULES.titre}
+          </h2>
         </div>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-3" data-anime data-anime-decale>
@@ -160,7 +154,7 @@ export function Vehicules() {
                 />
                 <Visuel
                   nom={v.image.nom}
-                  alt={v.image.alt}
+                  alt={textes?.alts[v.cle] ?? v.image.alt}
                   sizes="(min-width: 640px) 32vw, 90vw"
                   className="relative h-full w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.05]"
                 />
@@ -171,7 +165,7 @@ export function Vehicules() {
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-alpine-600">{v.modele}</p>
                 <p className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-alpes-50 px-3 py-1.5 text-sm font-semibold text-alpes-700">
                   <Coche className="h-3.5 w-3.5" />
-                  {v.capacite}
+                  {textes?.capacites[v.cle] ?? v.capacite}
                 </p>
               </div>
             </article>
@@ -541,7 +535,7 @@ function dureeCourte(minutes: number) {
  * pas d'étoiles, pas de note moyenne, rien qui laisse croire à une note
  * vérifiée qui n'existe pas.
  */
-export function Avis({ bloc }: { bloc: BlocAvis }) {
+export function Avis({ bloc, textes }: { bloc: BlocAvis; textes?: AvisTraduits }) {
   const google = bloc.source === "google";
   return (
     <section className="bg-white">
@@ -549,9 +543,13 @@ export function Avis({ bloc }: { bloc: BlocAvis }) {
         <div className="flex flex-wrap items-end justify-between gap-6" data-anime>
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-or-700">
-              {google ? "Google reviews" : AVIS.surtitre}
+              {google
+                ? textes?.surtitreGoogle ?? "Google reviews"
+                : textes?.surtitre ?? AVIS.surtitre}
             </p>
-            <h2 className="mt-3 font-display text-titre-page text-alpine">{AVIS.titre}</h2>
+            <h2 className="mt-3 font-display text-titre-page text-alpine">
+              {textes?.titre ?? AVIS.titre}
+            </h2>
           </div>
 
           {google && bloc.moyenne ? (
@@ -565,9 +563,11 @@ export function Avis({ bloc }: { bloc: BlocAvis }) {
                 {bloc.moyenne.toFixed(1)}
               </span>
               <span>
-                <Etoiles note={bloc.moyenne} />
+                <Etoiles note={bloc.moyenne} libelle={textes?.noteSur5} />
                 <span className="mt-1 block text-xs text-alpine-600">
-                  {bloc.total} reviews on Google
+                  {textes?.nombreSurGoogle
+                    ? textes.nombreSurGoogle(bloc.total ?? 0)
+                    : `${bloc.total} reviews on Google`}
                 </span>
               </span>
             </a>
@@ -584,7 +584,7 @@ export function Avis({ bloc }: { bloc: BlocAvis }) {
               key={avis.auteur + avis.detail}
               className="flex h-full flex-col rounded-xl border border-glacier-200 bg-white p-6 shadow-carte transition duration-300 hover:-translate-y-1 hover:shadow-flottant"
             >
-              {avis.note ? <Etoiles note={avis.note} /> : null}
+              {avis.note ? <Etoiles note={avis.note} libelle={textes?.noteSur5} /> : null}
               <blockquote
                 className={`flex-1 text-sm leading-relaxed text-alpine-700 ${avis.note ? "mt-4" : ""}`}
               >

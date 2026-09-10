@@ -22,9 +22,9 @@ import type { PageFonctionnelle } from "./types";
 export const skiResortTransfers: PageFonctionnelle = {
   slug: "ski-resort-transfers",
   metaTitre: "Ski Resort Transfers | All Our Alpine Destinations",
-  metaDescription: "Every ski resort we transfer to in France, Switzerland, Italy and Austria, with the drive time from the nearest airport. Private door-to-door transfers.",
+  metaDescription: "Every ski resort we transfer to in France, Switzerland and Italy, with the drive time from the nearest airport. Private door-to-door transfers.",
   h1: "Ski Resort Transfers — Every Destination We Drive To",
-  chapo: "Private airport transfers to the ski resorts of the French, Swiss, Italian and Austrian Alps. Find your resort below, with the drive time from the airport that serves it fastest.",
+  chapo: "Private airport transfers to the ski resorts of the French, Swiss and Italian Alps. Find your resort below, with the drive time from the airport that serves it fastest.",
 
   /*
    * Vide, et c'est voulu : la page est bâtie par `PageStations` à partir du
@@ -36,12 +36,12 @@ export const skiResortTransfers: PageFonctionnelle = {
     {
       question: "Which ski resorts do you transfer to?",
       reponse:
-        "Every resort listed on this page, across France, Switzerland, Italy and Austria — among them Val Thorens, Courchevel, Méribel, Chamonix, Morzine, Tignes, Val d'Isère, Verbier, Zermatt, Cervinia, St. Anton and Kitzbühel. If your resort is not listed, send us a special inquiry: the list covers the destinations we serve regularly, not the limits of where we can drive.",
+        "Every resort listed on this page, across France, Switzerland and Italy — among them Val Thorens, Courchevel, Méribel, Chamonix, Morzine, Tignes, Val d'Isère, Verbier, Zermatt, Cervinia, Courmayeur and Sestriere. If your resort is not listed, send us a special inquiry: the list covers the destinations we serve regularly, not the limits of where we can drive.",
     },
     {
       question: "How do I choose my departure airport?",
       reponse:
-        "Start from where the flights are, then compare the drive. Geneva serves the widest range of French resorts, Chambéry is closest to the Three Valleys, Grenoble suits the Isère valley, Zurich and Salzburg cover the Swiss and Austrian resorts. Each resort page lists every airport that serves it with the measured drive time, so the comparison takes a few seconds.",
+        "Start from where the flights are, then compare the drive. Geneva serves the widest range of French resorts, Chambéry is closest to the Three Valleys, Grenoble suits the Isère valley, Zurich covers the Swiss resorts. Each resort page lists every airport that serves it with the measured drive time, so the comparison takes a few seconds.",
     },
     {
       question: "What does a ski resort transfer cost?",

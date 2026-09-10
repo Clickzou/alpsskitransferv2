@@ -1,5 +1,7 @@
-import Visuel from "@/components/Visuel";
-import { HERO } from "@/data/accueil";
+import Visuel, { type NomVisuel } from "@/components/Visuel";
+import { HERO, REPERES_HERO } from "@/data/accueil";
+import type { Lang } from "@/lib/i18n";
+import { CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import { LIEUX } from "@/lib/reservation/lieux";
 import FormulaireRecherche from "./FormulaireRecherche";
 
@@ -9,15 +11,35 @@ import FormulaireRecherche from "./FormulaireRecherche";
  * Le H1 de la page vit ici. Il reprend le titre de la home actuelle, qui porte la
  * requête de marque et l'offre — « Alps Ski Transfers – Private Airport Transfers
  * to Alpine Resorts ».
+ *
+ * **Le même bandeau sert les quatre langues.** L'accueil français, allemand et
+ * italien utilisait jusqu'au 10 septembre 2026 le gabarit des pages
+ * intérieures : fil d'Ariane, pas de formulaire, un bouton à la place. Un
+ * visiteur allemand arrivait donc sur une page de contenu là où l'anglais
+ * trouvait de quoi réserver — c'est la première marche du tunnel qui manquait,
+ * pas une nuance de mise en page.
  */
-export default function Hero() {
+export default function Hero({
+  langue = "en",
+  titre = HERO.titre,
+  image = HERO.image,
+  reperes = REPERES_HERO,
+  tunnel = CHEMIN_TUNNEL,
+}: {
+  langue?: Lang;
+  titre?: string;
+  image?: { nom: NomVisuel; alt: string };
+  reperes?: readonly { valeur: string; libelle: string }[];
+  /** Le tunnel de la langue, vers lequel la recherche envoie. */
+  tunnel?: string;
+}) {
   // `overflow-clip` plutôt que `overflow-hidden` : il rogne l'image de fond comme
   // avant, mais laisse la liste de suggestions déborder du bandeau.
   return (
     <section className="relative isolate overflow-clip">
       <Visuel
-        nom={HERO.image.nom}
-        alt={HERO.image.alt}
+        nom={image.nom}
+        alt={image.alt}
         priority
         sizes="100vw"
         className="absolute inset-0 -z-10 h-full w-full object-cover"
@@ -49,7 +71,7 @@ export default function Hero() {
           */}
           <div>
             <h1 className="mx-auto inline-block max-w-3xl text-balance rounded-2xl bg-marque px-7 py-3 font-display text-lg leading-snug text-white shadow-carte sm:text-xl">
-              {HERO.titre}
+              {titre}
             </h1>
           </div>
         </div>
@@ -61,16 +83,12 @@ export default function Hero() {
           les suggestions passaient sous les tuiles de chiffres qui le suivent.
         */}
         <div className="relative z-20 mt-10">
-          <FormulaireRecherche lieux={LIEUX} />
+          <FormulaireRecherche lieux={LIEUX} langue={langue} tunnel={tunnel} />
         </div>
 
         {/* Les trois chiffres qui répondent à « est-ce que ça me concerne ? » */}
         <dl className="relative z-0 mt-10 grid gap-4 text-center sm:grid-cols-3">
-          {[
-            { valeur: "68", libelle: "Alpine resorts served" },
-            { valeur: "34", libelle: "Airports across four countries" },
-            { valeur: "Fixed", libelle: "Price per vehicle, quoted upfront" },
-          ].map((repere) => (
+          {reperes.map((repere) => (
             <div
               key={repere.libelle}
               className="rounded-xl border border-or/25 bg-alpine/40 px-4 py-3 backdrop-blur-sm"

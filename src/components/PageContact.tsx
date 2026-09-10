@@ -4,6 +4,7 @@ import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import FormulaireContact from "@/components/FormulaireContact";
 import Header from "@/components/Header";
+import { alternativesPageFonctionnelleEn } from "@/lib/intl/liens";
 import JsonLd from "@/components/JsonLd";
 import { EnTeteSection, HeroInterieur, Section } from "@/components/gabarit/Sections";
 import { ENTREPRISE } from "@/data/site";
@@ -34,9 +35,9 @@ export default function PageContact({ page }: { page: PageFonctionnelle }) {
 
   return (
     <>
-      <Header lang="en" />
+      <Header lang="en" alternatives={alternativesPageFonctionnelleEn(page.slug)} />
       <main id="contenu">
-        <HeroInterieur>
+        <HeroInterieur image={page.visuel}>
           <FilAriane clair elements={filAriane} />
           <h1 className="mt-4 max-w-3xl text-balance font-display text-titre-page">{page.h1}</h1>
           <p className="mt-4 max-w-2xl text-chapo text-glacier-200">{page.chapo}</p>

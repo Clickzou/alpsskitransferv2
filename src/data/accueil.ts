@@ -15,6 +15,19 @@ export const HERO = {
   },
 } as const;
 
+/**
+ * Les trois chiffres du bandeau d'accueil.
+ *
+ * Ils vivaient en dur dans `Hero` : les langues traduites en avaient donc une
+ * seconde copie, dans `ACCUEIL[lang].reperes`, et la première divergence aurait
+ * été silencieuse. Le hero les reçoit désormais, quelle que soit la langue.
+ */
+export const REPERES_HERO = [
+  { valeur: "68", libelle: "Alpine resorts served" },
+  { valeur: "34", libelle: "Airports across four countries" },
+  { valeur: "Fixed", libelle: "Price per vehicle, quoted upfront" },
+] as const;
+
 /** Les trois promesses affichées sous le formulaire de recherche. */
 export const REASSURANCES = [
   {
@@ -47,23 +60,34 @@ export const PRESENTATION = {
   ],
 } as const;
 
+/**
+ * Les trois catégories de véhicule.
+ *
+ * `cle` est l'identifiant stable de la catégorie : les libellés traduits s'y
+ * rattachent (`ACCUEIL[lang].vehicules`), pas à leur rang dans le tableau.
+ * Réordonner les cartes ne doit pas déplacer les traductions, et la photo reste
+ * ici — un Mercedes Classe V est le même en allemand.
+ */
 export const VEHICULES = {
   surtitre: "Our vehicles",
   titre: "Door to Door Service : Safe travel experience with a peace of mind",
   categories: [
     {
+      cle: "standard",
       nom: "Standard",
       modele: "Volkswagen Transporter (T5/T6, Combi or Shuttle type)",
       capacite: "Up to 8 passengers",
       image: { nom: "vehicule-standard", alt: "Black Volkswagen Transporter minibus" },
     },
     {
+      cle: "business",
       nom: "Business",
       modele: "Mercedes V-Class (or Vito Tourer)",
       capacite: "Up to 7 passengers",
       image: { nom: "vehicule-business", alt: "Black Mercedes V-Class people carrier" },
     },
     {
+      cle: "premium",
       nom: "Premium",
       modele: "Mercedes E-Class Sedan",
       capacite: "Up to 4 passengers",

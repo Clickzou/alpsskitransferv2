@@ -301,3 +301,357 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     demandeDevis: "Chiedici un preventivo",
   },
 };
+
+/* ------------------------------------------------------- champ de lieu */
+
+/**
+ * Les libellés du champ de lieu, partagés par le tunnel et par le formulaire de
+ * recherche de la home.
+ *
+ * Ils vivaient en ternaire `langue === "fr" ? … : …` dans `ChampLieu` : un
+ * Allemand qui tapait une adresse non reconnue se voyait donc réclamer un
+ * « Postcode » en anglais au milieu d'un formulaire allemand. Quatre langues,
+ * quatre entrées, et le composant n'a plus de mots à lui.
+ */
+export interface TextesLieu {
+  nonReconnue: string;
+  codePostal: string;
+  ville: string;
+}
+
+export const TEXTES_LIEU: Record<Lang, TextesLieu> = {
+  en: {
+    nonReconnue: "Address not recognised — tell us the town:",
+    codePostal: "Postcode",
+    ville: "Town",
+  },
+  fr: {
+    nonReconnue: "Adresse non reconnue — précisez la commune :",
+    codePostal: "Code postal",
+    ville: "Ville",
+  },
+  de: {
+    nonReconnue: "Adresse nicht erkannt — nennen Sie uns den Ort:",
+    codePostal: "PLZ",
+    ville: "Ort",
+  },
+  it: {
+    nonReconnue: "Indirizzo non riconosciuto — indica il comune:",
+    codePostal: "CAP",
+    ville: "Città",
+  },
+};
+
+/* ------------------------------------------------ recherche de la home */
+
+/**
+ * Les libellés du formulaire de recherche du bandeau d'accueil.
+ *
+ * Distincts de ceux du tunnel : ce formulaire pose quatre questions, pas
+ * quinze, et ses mots sont ceux d'une recherche — « Get my price » — quand ceux
+ * du tunnel sont ceux d'une commande. Les partager aurait obligé à choisir un
+ * seul ton pour les deux.
+ */
+export interface TextesRecherche {
+  titreAccessible: string;
+  quand: string;
+  depart: string;
+  departIndice: string;
+  arrivee: string;
+  arriveeIndice: string;
+  passagers: string;
+  typeTrajet: string;
+  allerRetour: string;
+  allerSimple: string;
+  action: string;
+}
+
+export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
+  en: {
+    titreAccessible: "Search for a transfer",
+    quand: "Departure date and time",
+    depart: "Pick-up location",
+    departIndice: "Airport, resort, or address with postcode",
+    arrivee: "Drop-off location",
+    arriveeIndice: "Resort, or address with postcode and town",
+    passagers: "How many people (including children)",
+    typeTrajet: "Trip type",
+    allerRetour: "Return",
+    allerSimple: "One-way",
+    action: "Get my price",
+  },
+  fr: {
+    titreAccessible: "Rechercher un transfert",
+    quand: "Date et heure de départ",
+    depart: "Lieu de prise en charge",
+    departIndice: "Aéroport, station, ou adresse avec code postal",
+    arrivee: "Lieu de dépose",
+    arriveeIndice: "Station, ou adresse avec code postal et commune",
+    passagers: "Combien de personnes (enfants compris)",
+    typeTrajet: "Type de trajet",
+    allerRetour: "Aller-retour",
+    allerSimple: "Aller simple",
+    action: "Voir mon prix",
+  },
+  de: {
+    titreAccessible: "Transfer suchen",
+    quand: "Datum und Uhrzeit der Abholung",
+    depart: "Abholort",
+    departIndice: "Flughafen, Skiort oder Adresse mit PLZ",
+    arrivee: "Zielort",
+    arriveeIndice: "Skiort oder Adresse mit PLZ und Ort",
+    passagers: "Wie viele Personen (Kinder eingeschlossen)",
+    typeTrajet: "Fahrtart",
+    allerRetour: "Hin und zurück",
+    allerSimple: "Nur Hinfahrt",
+    action: "Preis anzeigen",
+  },
+  it: {
+    titreAccessible: "Cerca un trasferimento",
+    quand: "Data e ora di partenza",
+    depart: "Luogo di partenza",
+    departIndice: "Aeroporto, località o indirizzo con CAP",
+    arrivee: "Luogo di arrivo",
+    arriveeIndice: "Località o indirizzo con CAP e comune",
+    passagers: "Quante persone (bambini compresi)",
+    typeTrajet: "Tipo di tragitto",
+    allerRetour: "Andata e ritorno",
+    allerSimple: "Solo andata",
+    action: "Vedi il prezzo",
+  },
+};
+
+/* ------------------------------------------------------------------ panier */
+
+/**
+ * Les libellés du panier.
+ *
+ * Le panier n'existait qu'en anglais : son icône était masquée partout ailleurs
+ * — « le panier vit avec le tunnel anglais », disait le commentaire de l'en-tête
+ * — si bien qu'un visiteur français pouvait mettre un transfert de côté depuis
+ * une page de trajet, puis ne plus trouver où le retrouver en changeant de page.
+ * Un panier invisible est un panier perdu, et une réservation avec.
+ *
+ * Le composant est le même dans les quatre langues, et le re-chiffrage côté
+ * serveur aussi : seuls les mots changent. C'est la règle du tunnel, pour la
+ * même raison — deux paniers, c'est deux fois le risque qu'un montant diverge.
+ */
+export interface TextesPanier {
+  titre: string;
+  fil: string;
+  chapo: string;
+  metaDescription: string;
+  vide: string;
+  videTexte: string;
+  trouverTransfert: string;
+  passager: (n: number) => string;
+  calculEnCours: string;
+  retirer: string;
+  vider: string;
+  ecartPrix: (avant: string, apres: string) => string;
+  total: string;
+  lignesEtInclus: (n: number) => string;
+  devisNecessaire: string;
+  continuer: string;
+  demander: string;
+  nom: string;
+  email: string;
+  telephone: string;
+  optionnel: string;
+  envoiEnCours: string;
+  payer: string;
+  envoyer: string;
+  noteRecalcul: string;
+  ajouterUnAutre: string;
+  devisSurDemande: string;
+  prixIndisponible: string;
+  erreurCoordonnees: string;
+  erreurTraitement: string;
+  erreurReseau: string;
+  recuTitre: string;
+  recuTexte: (reference: string) => string;
+}
+
+export const TEXTES_PANIER: Record<Lang, TextesPanier> = {
+  en: {
+    titre: "Your transfers",
+    fil: "Your transfers",
+    chapo: "The transfers you have set aside, priced together and booked in one go.",
+    metaDescription: "The transfers you have selected, ready to book together.",
+    vide: "Your list is empty",
+    videTexte:
+      "Add a transfer and it stays here while you plan the rest of the trip — the outbound and the return are paid together.",
+    trouverTransfert: "Find a transfer",
+    passager: (n) => (n > 1 ? `${n} passengers` : "1 passenger"),
+    calculEnCours: "Checking…",
+    retirer: "Remove",
+    vider: "Empty the list",
+    ecartPrix: (avant, apres) =>
+      `The price has changed since you added this journey: ${avant} → ${apres}. The figure above is the one that applies.`,
+    total: "Total",
+    lignesEtInclus: (n) =>
+      `${n} ${n > 1 ? "transfers" : "transfer"} · tolls and ski carriage included`,
+    devisNecessaire:
+      "One of these journeys needs a quote by hand. Send it to us and we price the whole list together.",
+    continuer: "Continue to booking",
+    demander: "Request these transfers",
+    nom: "Your name",
+    email: "Email",
+    telephone: "Phone",
+    optionnel: "(optional)",
+    envoiEnCours: "One moment…",
+    payer: "Pay for these transfers",
+    envoyer: "Send the request",
+    noteRecalcul:
+      "The total is recalculated by our system before payment — the figure above is what you will be charged.",
+    ajouterUnAutre: "Add another transfer",
+    devisSurDemande: "Quote on request",
+    prixIndisponible: "Price unavailable",
+    erreurCoordonnees: "Please check your name and email address.",
+    erreurTraitement: "We could not process this list. Please try again.",
+    erreurReseau: "We could not reach our booking system. Please try again in a moment.",
+    recuTitre: "Request received",
+    recuTexte: (reference) =>
+      `We have your list and will confirm by email, usually within a few hours. Your reference is ${reference}.`,
+  },
+
+  fr: {
+    titre: "Vos transferts",
+    fil: "Vos transferts",
+    chapo: "Les transferts que vous avez mis de côté, chiffrés ensemble et réservés en une fois.",
+    metaDescription: "Les transferts que vous avez retenus, prêts à être réservés ensemble.",
+    vide: "Votre liste est vide",
+    videTexte:
+      "Ajoutez un transfert : il vous attend ici pendant que vous organisez le reste du voyage — l’aller et le retour se règlent ensemble.",
+    trouverTransfert: "Trouver un transfert",
+    passager: (n) => (n > 1 ? `${n} passagers` : "1 passager"),
+    calculEnCours: "Calcul…",
+    retirer: "Retirer",
+    vider: "Vider la liste",
+    ecartPrix: (avant, apres) =>
+      `Le prix a changé depuis l’ajout de ce trajet : ${avant} → ${apres}. C’est le montant ci-dessus qui s’applique.`,
+    total: "Total",
+    lignesEtInclus: (n) =>
+      `${n} transfert${n > 1 ? "s" : ""} · péages et housses à skis compris`,
+    devisNecessaire:
+      "L’un de ces trajets demande un devis à la main. Envoyez-le-nous et nous chiffrons la liste entière ensemble.",
+    continuer: "Passer à la réservation",
+    demander: "Demander ces transferts",
+    nom: "Votre nom",
+    email: "E-mail",
+    telephone: "Téléphone",
+    optionnel: "(facultatif)",
+    envoiEnCours: "Un instant…",
+    payer: "Payer ces transferts",
+    envoyer: "Envoyer la demande",
+    noteRecalcul:
+      "Le total est recalculé par notre système avant le paiement — le montant ci-dessus est celui qui sera débité.",
+    ajouterUnAutre: "Ajouter un autre transfert",
+    devisSurDemande: "Devis sur demande",
+    prixIndisponible: "Prix indisponible",
+    erreurCoordonnees: "Vérifiez votre nom et votre adresse e-mail.",
+    erreurTraitement: "Nous n’avons pas pu traiter cette liste. Merci de réessayer.",
+    erreurReseau: "Nous n’avons pas pu joindre notre système de réservation. Réessayez dans un instant.",
+    recuTitre: "Demande reçue",
+    recuTexte: (reference) =>
+      `Nous avons votre liste et vous confirmons par e-mail, en général dans les heures qui suivent. Votre référence est ${reference}.`,
+  },
+
+  de: {
+    titre: "Ihre Transfers",
+    fil: "Ihre Transfers",
+    chapo: "Die Transfers, die Sie vorgemerkt haben — gemeinsam berechnet und in einem Zug gebucht.",
+    metaDescription: "Die von Ihnen ausgewählten Transfers, bereit zur gemeinsamen Buchung.",
+    vide: "Ihre Liste ist leer",
+    videTexte:
+      "Legen Sie einen Transfer ab: er bleibt hier, während Sie den Rest der Reise planen — Hin- und Rückfahrt werden zusammen bezahlt.",
+    trouverTransfert: "Transfer finden",
+    passager: (n) => (n > 1 ? `${n} Personen` : "1 Person"),
+    calculEnCours: "Wird berechnet…",
+    retirer: "Entfernen",
+    vider: "Liste leeren",
+    ecartPrix: (avant, apres) =>
+      `Der Preis hat sich seit dem Hinzufügen geändert: ${avant} → ${apres}. Es gilt der Betrag oben.`,
+    total: "Gesamt",
+    lignesEtInclus: (n) =>
+      `${n} Transfer${n > 1 ? "s" : ""} · Maut und Skitransport inklusive`,
+    devisNecessaire:
+      "Eine dieser Fahrten braucht ein Angebot von Hand. Schicken Sie sie uns, wir berechnen die ganze Liste gemeinsam.",
+    continuer: "Weiter zur Buchung",
+    demander: "Diese Transfers anfragen",
+    nom: "Ihr Name",
+    email: "E-Mail",
+    telephone: "Telefon",
+    optionnel: "(optional)",
+    envoiEnCours: "Einen Moment…",
+    payer: "Diese Transfers bezahlen",
+    envoyer: "Anfrage senden",
+    noteRecalcul:
+      "Die Summe wird vor der Zahlung von unserem System neu berechnet — der Betrag oben ist der, der abgebucht wird.",
+    ajouterUnAutre: "Weiteren Transfer hinzufügen",
+    devisSurDemande: "Angebot auf Anfrage",
+    prixIndisponible: "Preis nicht verfügbar",
+    erreurCoordonnees: "Bitte prüfen Sie Name und E-Mail-Adresse.",
+    erreurTraitement: "Wir konnten diese Liste nicht verarbeiten. Bitte versuchen Sie es erneut.",
+    erreurReseau: "Wir konnten unser Buchungssystem nicht erreichen. Bitte gleich noch einmal versuchen.",
+    recuTitre: "Anfrage erhalten",
+    recuTexte: (reference) =>
+      `Wir haben Ihre Liste und bestätigen per E-Mail, in der Regel innerhalb weniger Stunden. Ihre Referenz lautet ${reference}.`,
+  },
+
+  it: {
+    titre: "I tuoi transfer",
+    fil: "I tuoi transfer",
+    chapo: "I transfer che hai messo da parte, calcolati insieme e prenotati in una volta sola.",
+    metaDescription: "I transfer che hai selezionato, pronti per essere prenotati insieme.",
+    vide: "La tua lista è vuota",
+    videTexte:
+      "Aggiungi un transfer: resta qui mentre organizzi il resto del viaggio — andata e ritorno si pagano insieme.",
+    trouverTransfert: "Trova un transfer",
+    passager: (n) => (n > 1 ? `${n} passeggeri` : "1 passeggero"),
+    calculEnCours: "Calcolo…",
+    retirer: "Rimuovi",
+    vider: "Svuota la lista",
+    ecartPrix: (avant, apres) =>
+      `Il prezzo è cambiato da quando hai aggiunto questo tragitto: ${avant} → ${apres}. Vale l’importo qui sopra.`,
+    total: "Totale",
+    lignesEtInclus: (n) =>
+      `${n} transfer · pedaggi e trasporto sci inclusi`,
+    devisNecessaire:
+      "Uno di questi tragitti richiede un preventivo a mano. Inviacelo e calcoliamo l’intera lista insieme.",
+    continuer: "Vai alla prenotazione",
+    demander: "Richiedi questi transfer",
+    nom: "Il tuo nome",
+    email: "E-mail",
+    telephone: "Telefono",
+    optionnel: "(facoltativo)",
+    envoiEnCours: "Un attimo…",
+    payer: "Paga questi transfer",
+    envoyer: "Invia la richiesta",
+    noteRecalcul:
+      "Il totale viene ricalcolato dal nostro sistema prima del pagamento — l’importo qui sopra è quello che verrà addebitato.",
+    ajouterUnAutre: "Aggiungi un altro transfer",
+    devisSurDemande: "Preventivo su richiesta",
+    prixIndisponible: "Prezzo non disponibile",
+    erreurCoordonnees: "Controlla nome e indirizzo e-mail.",
+    erreurTraitement: "Non siamo riusciti a elaborare questa lista. Riprova.",
+    erreurReseau: "Non siamo riusciti a raggiungere il sistema di prenotazione. Riprova tra un istante.",
+    recuTitre: "Richiesta ricevuta",
+    recuTexte: (reference) =>
+      `Abbiamo la tua lista e ti confermiamo via e-mail, di solito entro poche ore. Il tuo riferimento è ${reference}.`,
+  },
+};
+
+/**
+ * Le chemin du panier, par langue.
+ *
+ * Le slug est un mot du marché, comme celui de la réservation : « warenkorb »
+ * et « carrello » sont ce que ces visiteurs cherchent. L'anglais garde `/cart/`,
+ * l'URL du panier WooCommerce, déjà sortie de l'index par le proxy.
+ */
+export const CHEMIN_PANIER: Record<Lang, string> = {
+  en: "/cart/",
+  fr: "/fr/panier/",
+  de: "/de/warenkorb/",
+  it: "/it/carrello/",
+};

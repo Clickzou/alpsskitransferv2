@@ -56,18 +56,26 @@ for (const fichier of await fichiers(LIB, (n) => n.endsWith(".ts"))) {
  * une route qui sert deux types de page (station et hub d'aéroport) délègue à
  * deux composants d'un H1 chacun. On suit donc les composants importés avant de
  * conclure — sans quoi le contrôle refuserait une structure correcte.
+ *
+ * La descente est **récursive**. Elle ne l'était pas, et le contrôle ne voyait
+ * donc rien au-delà du premier composant : le jour où la home traduite a délégué
+ * son bandeau — donc son H1 — au composant `Hero`, les trois pages d'accueil ont
+ * été déclarées sans H1 alors qu'elles en avaient un. Un contrôle bloquant qui
+ * se trompe est pire qu'un contrôle absent : il pousse à contourner.
  */
-async function compterH1(source) {
+async function compterH1(source, vus = new Set()) {
   let total = (source.match(/<h1[\s>]/g) ?? []).length;
   // Le chemin peut contenir des sous-dossiers : "@/components/accueil/Hero".
   const importes = [...source.matchAll(/from "@\/components\/([A-Za-z0-9/]+)"/g)].map((m) => m[1]);
   for (const nom of importes) {
+    if (vus.has(nom)) continue;
+    vus.add(nom);
     try {
       const composant = await readFile(
         path.join(RACINE, "src", "components", `${nom}.tsx`),
         "utf8",
       );
-      total += (composant.match(/<h1[\s>]/g) ?? []).length;
+      total += await compterH1(composant, vus);
     } catch {
       // composant introuvable : ignoré, le typecheck s'en charge
     }

@@ -7,9 +7,11 @@ import type { PageFonctionnelle } from "./types";
 export const privacy: PageFonctionnelle = {
   slug: "privacy",
   metaTitre: "Privacy Policy – Alps Ski Transfers",
-  metaDescription: "",
+  metaDescription:
+    "How Alps Ski Transfers collects, uses and protects your personal data when you book a transfer.",
   h1: "Privacy Policy – Alps Ski Transfers",
-  chapo: "Effective Date: 01/03/2025Website: https://alpsskitransfers.com/",
+  chapo:
+    "How we collect, use and protect your personal data when you use this website and book a transfer. In force since 1 March 2025.",
   noindex: true,
 
   contenu: [

@@ -50,7 +50,7 @@ export default function PageCart() {
         </HeroInterieur>
 
         <Section fond="blanc">
-          <Panier />
+          <Panier langue="en" />
         </Section>
       </main>
       <Footer lang="en" />

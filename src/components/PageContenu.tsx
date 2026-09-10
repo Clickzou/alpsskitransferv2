@@ -4,6 +4,7 @@ import Faq from "@/components/Faq";
 import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { alternativesPageFonctionnelleEn } from "@/lib/intl/liens";
 import JsonLd from "@/components/JsonLd";
 import {
   AppelAction,
@@ -40,9 +41,9 @@ export default function PageContenu({ page }: { page: PageFonctionnelle }) {
 
   return (
     <>
-      <Header lang="en" />
+      <Header lang="en" alternatives={alternativesPageFonctionnelleEn(page.slug)} />
       <main id="contenu">
-        <HeroInterieur>
+        <HeroInterieur image={page.visuel}>
           <FilAriane clair elements={filAriane} />
           <h1 className="mt-4 max-w-3xl text-balance font-display text-titre-page">
             {page.h1}

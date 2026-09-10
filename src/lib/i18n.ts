@@ -71,6 +71,19 @@ export const SEGMENT_STATIONS: Record<LangueSecondaire, string> = {
 };
 
 /**
+ * Racine de l'index des aéroports, par langue.
+ *
+ * C'est un mot-clé comme les autres : un Allemand cherche « Flughafen », un
+ * Italien « aeroporti ». Le pendant anglais est `/airport-ski-transfers/`, qui
+ * garde sa forme parce qu'elle porte l'antériorité.
+ */
+export const SEGMENT_AEROPORTS: Record<LangueSecondaire, string> = {
+  fr: "aeroports",
+  de: "flughaefen",
+  it: "aeroporti",
+};
+
+/**
  * Racine du silo des stations, par langue.
  * EN : `/{country}-ski-transfers/{resort}/`
  * FR : `/fr/transferts-ski/{station}/`

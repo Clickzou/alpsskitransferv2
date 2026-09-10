@@ -86,7 +86,7 @@ export default function PageTrajet({
       <Header lang="en" alternatives={alternativesTrajet(trajet, station, "en")} />
       <main id="contenu">
         <HeroInterieur
-          image={{ nom: "route-alpine", alt: "Route de montagne enneigée au coucher du soleil" }}
+          image={{ nom: "route-alpine", alt: "Snow-covered mountain road at sunset" }}
         >
           <FilAriane clair elements={filAriane} />
 

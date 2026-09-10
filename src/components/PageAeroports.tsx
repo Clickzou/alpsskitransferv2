@@ -3,6 +3,7 @@ import Faq from "@/components/Faq";
 import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { alternativesPageFonctionnelleEn } from "@/lib/intl/liens";
 import JsonLd from "@/components/JsonLd";
 import FormulaireRecherche from "@/components/accueil/FormulaireRecherche";
 import { AppelAction, EnTeteSection, HeroInterieur, Reperes, Section } from "@/components/gabarit/Sections";
@@ -64,7 +65,7 @@ export default function PageAeroports({ page }: { page: PageFonctionnelle }) {
 
   return (
     <>
-      <Header lang="en" />
+      <Header lang="en" alternatives={alternativesPageFonctionnelleEn(page.slug)} />
       <main id="contenu">
         <HeroInterieur
           debordant

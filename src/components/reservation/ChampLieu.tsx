@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import type { Lang } from "@/lib/i18n";
 import { chercherLieux, type Lieu } from "@/lib/reservation/lieux";
+import { TEXTES_LIEU } from "@/lib/reservation/textes";
 
 /**
  * Champ de recherche d'un lieu, avec suggestions.
@@ -74,13 +76,14 @@ export default function ChampLieu({
   placeholder?: string;
   id?: string;
   requis?: boolean;
-  /** Langue des suggestions d'adresses. */
-  langue?: string;
+  /** Langue des suggestions d'adresses **et** des libellés du champ. */
+  langue?: Lang;
   /** À couper si le géocodeur n'a rien à apporter — un champ d'aéroport seul. */
   adressesDistantes?: boolean;
   /** `sombre` pour les champs posés sur le bandeau bleu nuit de la home. */
   variante?: "clair" | "sombre";
 }) {
+  const mots = TEXTES_LIEU[langue];
   const genere = useId();
   const idChamp = id ?? genere;
   const idListe = `${idChamp}-suggestions`;
@@ -296,17 +299,15 @@ export default function ChampLieu({
       {complementRequis ? (
         <div className="mt-2">
           <p className={`text-xs ${sombre ? "text-glacier-300" : "text-alpine-600"}`}>
-            {langue === "fr"
-              ? "Adresse non reconnue — précisez la commune :"
-              : "Address not recognised — tell us the town:"}
+            {mots.nonReconnue}
           </p>
           <div className="mt-1 grid grid-cols-[7rem_1fr] gap-2">
             <input
               className={champ.replace("mt-1 ", "")}
               value={valeur.codePostal ?? ""}
               onChange={(e) => onChange({ ...valeur, codePostal: e.target.value })}
-              placeholder={langue === "fr" ? "Code postal" : "Postcode"}
-              aria-label={langue === "fr" ? "Code postal" : "Postcode"}
+              placeholder={mots.codePostal}
+              aria-label={mots.codePostal}
               autoComplete="postal-code"
               inputMode="numeric"
               required={requis}
@@ -315,8 +316,8 @@ export default function ChampLieu({
               className={champ.replace("mt-1 ", "")}
               value={valeur.ville ?? ""}
               onChange={(e) => onChange({ ...valeur, ville: e.target.value })}
-              placeholder={langue === "fr" ? "Ville" : "Town"}
-              aria-label={langue === "fr" ? "Ville" : "Town"}
+              placeholder={mots.ville}
+              aria-label={mots.ville}
               autoComplete="address-level2"
               required={requis}
             />

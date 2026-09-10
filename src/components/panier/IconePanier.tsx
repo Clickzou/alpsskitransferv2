@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePanier } from "@/components/panier/PanierProvider";
+import type { Lang } from "@/lib/i18n";
+import { CHEMIN_PANIER, TEXTES_PANIER } from "@/lib/reservation/textes";
 
 /**
  * L'icône de panier de l'en-tête, avec sa pastille de quantité.
@@ -16,12 +18,19 @@ import { usePanier } from "@/components/panier/PanierProvider";
  * Le compte n'est rendu qu'une fois le stockage lu (`pret`) : sinon la pastille
  * apparaîtrait à zéro le temps d'une image, ce qui se voit.
  */
-export default function IconePanier({ etiquette = "Your transfers" }: { etiquette?: string }) {
+export default function IconePanier({
+  etiquette = "Your transfers",
+  langue = "en",
+}: {
+  etiquette?: string;
+  langue?: Lang;
+}) {
+  const t = TEXTES_PANIER[langue];
   const { nombre, pret } = usePanier();
 
   return (
     <Link
-      href="/cart/"
+      href={CHEMIN_PANIER[langue]}
       /*
         Un cercle or autour de l'icône : il la pose comme un bouton, la
         distingue des liens de texte voisins, et reprend l'or du logo juste à
@@ -29,9 +38,7 @@ export default function IconePanier({ etiquette = "Your transfers" }: { etiquett
       */
       className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-alpes-300 text-alpine-700 transition hover:border-alpes hover:text-alpes"
       aria-label={
-        pret && nombre > 0
-          ? `${etiquette} — ${nombre} ${nombre > 1 ? "transfers" : "transfer"}`
-          : `${etiquette} — empty`
+        pret && nombre > 0 ? `${etiquette} — ${t.lignesEtInclus(nombre)}` : etiquette
       }
     >
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">

@@ -66,7 +66,7 @@ export const privateAirportTransfersToAlpsSkiResort: PageFonctionnelle = {
     {
       question: "Which ski resorts can I reach by transfer?",
       reponse:
-        "The main resorts of the French, Swiss, Italian and Austrian Alps — among them Val Thorens, the highest resort in Europe; Chamonix, at the foot of Mont Blanc; Tignes and Val d'Isère in the Espace Killy; and Morzine, in the Portes du Soleil. Each resort has its own page with the transfer times from every airport that serves it.",
+        "The main resorts of the French, Swiss and Italian Alps — among them Val Thorens, the highest resort in Europe; Chamonix, at the foot of Mont Blanc; Tignes and Val d'Isère in the Espace Killy; and Morzine, in the Portes du Soleil. Each resort has its own page with the transfer times from every airport that serves it.",
     },
     {
       question: "Can I book for a group or through an agency?",
