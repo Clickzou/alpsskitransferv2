@@ -53,8 +53,19 @@ export interface TextesTunnel {
   ajoutFait: string;
   ajoutDeja: string;
   ajoutPlein: string;
+  /**
+   * Ce que le prix affiché couvre.
+   *
+   * Il disait « per vehicle », et il y avait deux variantes : « per vehicle » et
+   * « both ways, per vehicle », selon qu'on chiffrait un sens ou les deux. Sous
+   * un montant, « par véhicule » se lit comme une unité à multiplier — combien
+   * de véhicules ? — alors qu'il voulait dire l'inverse : le prix ne dépend pas
+   * du nombre de passagers. Cet argument est déjà porté par le sous-titre de
+   * l'écran ; ce qui manquait ici, c'est ce que le montant paie. Depuis que
+   * chaque sens a sa liste et son prix, la réponse est toujours la même : ce
+   * trajet-là. Le total des deux sens est annoncé à part, en bas de l'écran.
+   */
   parVehicule: string;
-  parVehiculeAllerRetour: string;
   remiseRetour: string;
   jusqua: string;
   pieces: string;
@@ -132,8 +143,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     ajoutFait: "Added — your list is in the menu.",
     ajoutDeja: "Already in your list.",
     ajoutPlein: "Your list is full.",
-    parVehicule: "per vehicle",
-    parVehiculeAllerRetour: "both ways, per vehicle",
+    parVehicule: "for this journey",
     remiseRetour: "return discount",
     jusqua: "Up to",
     pieces: "pieces of luggage",
@@ -213,8 +223,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     ajoutFait: "Ajouté — votre liste est dans le menu.",
     ajoutDeja: "Déjà dans votre liste.",
     ajoutPlein: "Votre liste est pleine.",
-    parVehicule: "par véhicule",
-    parVehiculeAllerRetour: "aller-retour, par véhicule",
+    parVehicule: "pour ce trajet",
     remiseRetour: "remise aller-retour",
     jusqua: "Jusqu’à",
     pieces: "pièces de bagage",
@@ -300,8 +309,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     ajoutFait: "Hinzugefügt — Ihre Liste steht im Menü.",
     ajoutDeja: "Schon in Ihrer Liste.",
     ajoutPlein: "Ihre Liste ist voll.",
-    parVehicule: "pro Fahrzeug",
-    parVehiculeAllerRetour: "Hin- und Rückfahrt, pro Fahrzeug",
+    parVehicule: "für diese Fahrt",
     remiseRetour: "Rabatt für Hin- und Rückfahrt",
     jusqua: "Bis zu",
     pieces: "Gepäckstücke",
@@ -386,8 +394,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     ajoutFait: "Aggiunto — la tua lista è nel menu.",
     ajoutDeja: "Già nella tua lista.",
     ajoutPlein: "La tua lista è piena.",
-    parVehicule: "per veicolo",
-    parVehiculeAllerRetour: "andata e ritorno, per veicolo",
+    parVehicule: "per questo tragitto",
     remiseRetour: "sconto andata e ritorno",
     jusqua: "Fino a",
     pieces: "colli",

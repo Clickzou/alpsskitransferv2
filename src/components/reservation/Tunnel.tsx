@@ -791,7 +791,6 @@ export default function Tunnel({
             options={devis.options}
             choisi={choix}
             libelleChoisi={t.choisi}
-            allerRetour={false}
             textes={t}
             prix={prix}
             /* Le panier sert à composer plusieurs courses. Pendant un
@@ -824,7 +823,6 @@ export default function Tunnel({
                 options={devis.optionsRetour}
                 choisi={choixRetour}
                 libelleChoisi={t.choisi}
-                allerRetour={false}
                 textes={t}
                 prix={prix}
                 onChoisir={setChoixRetour}
@@ -1182,7 +1180,6 @@ function ListeVehicules({
   onChoisir,
   surAjout,
   ajout,
-  allerRetour,
   detache = false,
 }: {
   titre: string | null;
@@ -1194,7 +1191,6 @@ function ListeVehicules({
   onChoisir: (option: OptionVehicule) => void;
   surAjout?: (option: OptionVehicule) => void;
   ajout?: { categorie: string; etat: string } | null;
-  allerRetour: boolean;
   /*
     Le second bloc respire, et se sépare d'un filet.
 
@@ -1263,9 +1259,7 @@ function ListeVehicules({
                   </span>
                   <span className="text-right">
                     <span className="font-display text-2xl text-alpine">{prix(option.total)}</span>
-                    <span className="block text-xs text-alpine-600">
-                      {allerRetour ? textes.parVehiculeAllerRetour : textes.parVehicule}
-                    </span>
+                    <span className="block text-xs text-alpine-600">{textes.parVehicule}</span>
                     {option.remiseAllerRetour > 0 ? (
                       <span className="block text-xs text-alpes-700">
                         {textes.remiseRetour} −{prix(option.remiseAllerRetour)}
