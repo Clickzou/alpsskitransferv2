@@ -34,6 +34,16 @@ export interface TextesTunnel {
   retourVers: string;
   voirPrix: string;
   calculEnCours: string;
+  /* L'ecran du choix du vehicule : un titre, et ce que le clic fait. */
+  titreVehicule: string;
+  sousTitreVehicule: string;
+  aller: string;
+  recapPassagers: (n: number) => string;
+  recapBagages: (sacs: number, housses: number) => string;
+  ajouterListe: string;
+  ajoutFait: string;
+  ajoutDeja: string;
+  ajoutPlein: string;
   parVehicule: string;
   parVehiculeAllerRetour: string;
   remiseRetour: string;
@@ -91,6 +101,16 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourVers: "Return to",
     voirPrix: "See prices",
     calculEnCours: "Pricing your journey…",
+    titreVehicule: "Choose your vehicle",
+    sousTitreVehicule: "One price for the whole vehicle, not per seat. Tap a vehicle to continue.",
+    aller: "Outbound",
+    recapPassagers: (n) => `${n} passenger${n > 1 ? "s" : ""}`,
+    recapBagages: (sacs, housses) =>
+      `${sacs} bag${sacs > 1 ? "s" : ""}, ${housses} ski bag${housses > 1 ? "s" : ""}`,
+    ajouterListe: "Booking more than one journey? Add this one to my list",
+    ajoutFait: "Added — your list is in the menu.",
+    ajoutDeja: "Already in your list.",
+    ajoutPlein: "Your list is full.",
     parVehicule: "per vehicle",
     parVehiculeAllerRetour: "both ways, per vehicle",
     remiseRetour: "return discount",
@@ -150,6 +170,17 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourVers: "Retour vers",
     voirPrix: "Voir les prix",
     calculEnCours: "Calcul en cours…",
+    titreVehicule: "Choisissez votre véhicule",
+    sousTitreVehicule:
+      "Un prix pour le véhicule entier, pas par place. Cliquez sur un véhicule pour continuer.",
+    aller: "Aller",
+    recapPassagers: (n) => `${n} passager${n > 1 ? "s" : ""}`,
+    recapBagages: (sacs, housses) =>
+      `${sacs} bagage${sacs > 1 ? "s" : ""}, ${housses} housse${housses > 1 ? "s" : ""} à skis`,
+    ajouterListe: "Vous réservez plusieurs trajets ? Ajouter celui-ci à ma liste",
+    ajoutFait: "Ajouté — votre liste est dans le menu.",
+    ajoutDeja: "Déjà dans votre liste.",
+    ajoutPlein: "Votre liste est pleine.",
     parVehicule: "par véhicule",
     parVehiculeAllerRetour: "aller-retour, par véhicule",
     remiseRetour: "remise aller-retour",
@@ -215,6 +246,17 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourVers: "Rückfahrt nach",
     voirPrix: "Preise anzeigen",
     calculEnCours: "Wird berechnet …",
+    titreVehicule: "Wählen Sie Ihr Fahrzeug",
+    sousTitreVehicule:
+      "Ein Preis für das ganze Fahrzeug, nicht pro Sitzplatz. Fahrzeug antippen, um fortzufahren.",
+    aller: "Hinfahrt",
+    recapPassagers: (n) => `${n} Person${n > 1 ? "en" : ""}`,
+    recapBagages: (sacs, housses) =>
+      `${sacs} Gepäckstück${sacs > 1 ? "e" : ""}, ${housses} ${housses > 1 ? "Skisäcke" : "Skisack"}`,
+    ajouterListe: "Mehrere Fahrten? Diese zu meiner Liste hinzufügen",
+    ajoutFait: "Hinzugefügt — Ihre Liste steht im Menü.",
+    ajoutDeja: "Schon in Ihrer Liste.",
+    ajoutPlein: "Ihre Liste ist voll.",
     parVehicule: "pro Fahrzeug",
     parVehiculeAllerRetour: "Hin- und Rückfahrt, pro Fahrzeug",
     remiseRetour: "Rabatt für Hin- und Rückfahrt",
@@ -279,6 +321,17 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourVers: "Ritorno verso",
     voirPrix: "Vedi i prezzi",
     calculEnCours: "Calcolo in corso…",
+    titreVehicule: "Scegli il tuo veicolo",
+    sousTitreVehicule:
+      "Un prezzo per l'intero veicolo, non a posto. Tocca un veicolo per continuare.",
+    aller: "Andata",
+    recapPassagers: (n) => `${n} passegger${n > 1 ? "i" : "o"}`,
+    recapBagages: (sacs, housses) =>
+      `${sacs} ${sacs > 1 ? "bagagli" : "bagaglio"}, ${housses} ${housses > 1 ? "sacche" : "sacca"} da sci`,
+    ajouterListe: "Prenoti più tragitti? Aggiungi questo alla mia lista",
+    ajoutFait: "Aggiunto — la tua lista è nel menu.",
+    ajoutDeja: "Già nella tua lista.",
+    ajoutPlein: "La tua lista è piena.",
     parVehicule: "per veicolo",
     parVehiculeAllerRetour: "andata e ritorno, per veicolo",
     remiseRetour: "sconto andata e ritorno",

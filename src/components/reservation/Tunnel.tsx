@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
+import Visuel, { type NomVisuel } from "@/components/Visuel";
 import { usePanier } from "@/components/panier/PanierProvider";
 import { DEVISES, convertir, type CodeDevise } from "@/lib/reservation/devises";
 import type { Lieu } from "@/lib/reservation/lieux";
 import { ENTREPRISE } from "@/data/site";
 import { ouvrirCalendrier } from "@/lib/reservation/calendrier";
 import { DELAI_APPEL_HEURES, departImminent } from "@/lib/reservation/gestion";
-import { instantAlpes, saisieAlpes } from "@/lib/temps";
+import { FUSEAU_ALPES, instantAlpes, saisieAlpes } from "@/lib/temps";
 import {
   TEXTES,
   TEXTES_ATTENTE,
@@ -60,6 +61,10 @@ interface Devis {
     retourAilleurs: boolean;
     retourDepart: string | null;
     retourArrivee: string | null;
+    retourKm: number | null;
+    retourDuree: string;
+    passagers: number;
+    passagersRetour: number | null;
   };
   options: OptionVehicule[];
   encaissable: boolean;
@@ -329,9 +334,22 @@ export default function Tunnel({
   }
 
   /** Prix affiché : converti pour l'affichage, facturé en euros. */
+  /*
+    Le prix s'écrit comme on l'écrit dans la langue.
+
+    Le symbole était collé devant le nombre et le nombre formaté en anglais dans
+    les quatre langues : « €515 » sur une page française, où l'on écrit
+    « 515 € ». `Intl` connaît la place du symbole, le séparateur de milliers et
+    l'espace insécable de chaque langue — mieux vaut la lui demander que la
+    coder. Les montants restent entiers : on ne vend pas de demi-euro.
+  */
   const prix = (montantEuros: number) => {
-    const { montant, symbole } = convertir(montantEuros, devise);
-    return `${symbole}${montant.toLocaleString("en-GB")}`;
+    const { montant } = convertir(montantEuros, devise);
+    return new Intl.NumberFormat(LOCALE[langue], {
+      style: "currency",
+      currency: devise,
+      maximumFractionDigits: 0,
+    }).format(montant);
   };
 
   return (
@@ -604,26 +622,51 @@ export default function Tunnel({
       {/* --------------------------------------------------------- 2. véhicule */}
       {etape === "vehicule" && devis ? (
         <div className="mt-6">
+          {/*
+            Le récapitulatif dit la course entière, aller **et** retour.
+
+            Il ne montrait que l'aller et se terminait par « One-way » quel que
+            soit le trajet : un visiteur qui avait saisi une autre station de
+            départ au retour, et un groupe différent, ne les revoyait plus nulle
+            part avant la page de paiement. Ce qu'on lui demande de vérifier
+            avant de choisir un véhicule, c'est justement ce qu'il a saisi.
+          */}
           <Recapitulatif
-            trajet={`${devis.trajet.aeroport} → ${devis.trajet.station}`}
-            details={[
-              devis.trajet.km ? `${devis.trajet.km} km` : null,
-              devis.trajet.duree || null,
-              `${passengers} passenger${passengers > 1 ? "s" : ""}`,
-              `${bags} bag${bags > 1 ? "s" : ""}, ${skis} ski bag${skis > 1 ? "s" : ""}`,
-              devis.trajet.allerRetour ? "Return journey" : "One-way",
-            ]}
-            onModifier={() => setEtape("trajet")}
             libelleModifier={t.modifier}
+            onModifier={() => setEtape("trajet")}
+            pied={t.recapBagages(bags, skis)}
+            trajets={[
+              {
+                sens: devis.trajet.allerRetour ? t.aller : null,
+                lieux: `${devis.trajet.aeroport} → ${devis.trajet.station}`,
+                details: [
+                  quandLisible(when, langue),
+                  devis.trajet.km ? `${devis.trajet.km} km` : null,
+                  devis.trajet.duree || null,
+                  t.recapPassagers(passengers),
+                ],
+              },
+              devis.trajet.allerRetour
+                ? {
+                    sens: t.retour,
+                    lieux: `${devis.trajet.retourDepart ?? devis.trajet.station} → ${
+                      devis.trajet.retourArrivee ?? devis.trajet.aeroport
+                    }`,
+                    details: [
+                      quandLisible(returnWhen, langue),
+                      devis.trajet.retourKm ? `${devis.trajet.retourKm} km` : null,
+                      devis.trajet.retourDuree || null,
+                      t.recapPassagers(retourPassagers ?? passengers),
+                    ],
+                  }
+                : null,
+            ]}
           />
 
-          {devis.trajet.retourAilleurs ? (
-            <p className="mt-3 text-sm text-alpine-700">
-              Return: {devis.trajet.retourDepart} → {devis.trajet.retourArrivee}
-            </p>
-          ) : null}
+          <h2 className="mt-8 font-display text-2xl text-alpine">{t.titreVehicule}</h2>
+          <p className="mt-1 text-sm text-alpine-600">{t.sousTitreVehicule}</p>
 
-          <ul className="mt-6 space-y-3">
+          <ul className="mt-4 space-y-3">
             {devis.options.map((option) => (
               <li key={option.categorie}>
                 <button
@@ -632,33 +675,59 @@ export default function Tunnel({
                     setChoix(option);
                     setEtape("details");
                   }}
-                  className="flex w-full items-center justify-between gap-4 rounded border border-glacier-200 bg-white p-4 text-left transition hover:border-alpes hover:shadow-carte"
+                  className="flex w-full flex-col gap-0 overflow-hidden rounded border border-glacier-200 bg-white text-left transition hover:border-alpes hover:shadow-carte sm:flex-row sm:items-stretch"
                 >
-                  <span>
-                    <span className="font-display text-lg text-alpine">{option.nom}</span>
-                    <span className="block text-xs text-alpine-600">{option.modele}</span>
-                    <span className="block text-xs text-alpine-600">
-                      {t.jusqua} {option.capacite} · {option.capaciteBagages} {t.pieces}
-                    </span>
+                  {/*
+                    La photo du véhicule ouvre la carte.
+
+                    Les trois visuels n'ont pas le même cadrage — 640×333, 640×302,
+                    604×236 — d'où le cadre à proportions imposées et le
+                    recadrage : trois cartes de hauteurs différentes se liraient
+                    comme trois offres de nature différente.
+                  */}
+                  <span className="relative block aspect-[16/9] w-full shrink-0 overflow-hidden bg-glacier-100 sm:aspect-auto sm:w-44">
+                    <Visuel
+                      nom={VISUEL_VEHICULE[option.categorie]}
+                      alt={option.modele}
+                      sizes="(min-width: 640px) 11rem, 100vw"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
                   </span>
-                  <span className="text-right">
-                    <span className="font-display text-2xl text-alpine">
-                      {prix(option.total)}
-                    </span>
-                    <span className="block text-xs text-alpine-600">
-                      {devis.trajet.allerRetour ? t.parVehiculeAllerRetour : t.parVehicule}
-                    </span>
-                    {option.remiseAllerRetour > 0 ? (
-                      <span className="block text-xs text-alpes-700">
-                        {t.remiseRetour} −{prix(option.remiseAllerRetour)}
+
+                  <span className="flex flex-1 items-center justify-between gap-4 p-4">
+                    <span>
+                      <span className="font-display text-lg text-alpine">{option.nom}</span>
+                      <span className="block text-xs text-alpine-600">{option.modele}</span>
+                      <span className="block text-xs text-alpine-600">
+                        {t.jusqua} {option.capacite} · {option.capaciteBagages} {t.pieces}
                       </span>
-                    ) : null}
+                    </span>
+                    <span className="text-right">
+                      <span className="font-display text-2xl text-alpine">
+                        {prix(option.total)}
+                      </span>
+                      <span className="block text-xs text-alpine-600">
+                        {devis.trajet.allerRetour ? t.parVehiculeAllerRetour : t.parVehicule}
+                      </span>
+                      {option.remiseAllerRetour > 0 ? (
+                        <span className="block text-xs text-alpes-700">
+                          {t.remiseRetour} −{prix(option.remiseAllerRetour)}
+                        </span>
+                      ) : null}
+                    </span>
                   </span>
                 </button>
 
                 {/*
                   Ajouter plutôt que réserver : un séjour se compose souvent d'un
                   aller et d'un retour, parfois de deux véhicules.
+
+                  Le libellé disait « Add to my transfers », en anglais dans les
+                  quatre langues et souligné comme l'action principale, alors
+                  qu'il n'est que la porte du panier : on comprenait mal qu'il
+                  suffit de cliquer la carte pour continuer. Il dit maintenant à
+                  quoi il sert, dans la langue de la page, et reste discret.
+
                   La condition porte sur le **prix calculé**, pas sur
                   `encaissable` : ce dernier reste faux tant que le client n'a pas
                   validé le barème, ce qui rendait le panier inatteignable. Une
@@ -667,7 +736,7 @@ export default function Tunnel({
                   `/api/panier` sait faire les deux.
                 */}
                 {option.total > 0 ? (
-                  <div className="mt-2 flex items-center gap-3">
+                  <div className="mt-2 flex flex-wrap items-center gap-3">
                     <button
                       type="button"
                       onClick={() => {
@@ -685,17 +754,17 @@ export default function Tunnel({
                         });
                         setAjout({ categorie: option.categorie, etat });
                       }}
-                      className="text-xs font-semibold text-marque underline underline-offset-2 hover:text-marque-600"
+                      className="text-xs text-alpine-600 underline underline-offset-2 hover:text-marque"
                     >
-                      Add to my transfers
+                      {t.ajouterListe}
                     </button>
                     {ajout?.categorie === option.categorie ? (
                       <span className="text-xs text-alpine-600">
                         {ajout.etat === "ajoute"
-                          ? "Added — see your list in the menu."
+                          ? t.ajoutFait
                           : ajout.etat === "deja-present"
-                            ? "Already in your list."
-                            : "Your list is full."}
+                            ? t.ajoutDeja
+                            : t.ajoutPlein}
                       </span>
                     ) : null}
                   </div>
@@ -719,16 +788,31 @@ export default function Tunnel({
               {surMesure}
             </p>
           ) : devis && choix ? (
+            /* Le même récapitulatif qu'à l'étape précédente : la dernière
+               chose qu'on relit avant de payer doit être la course entière. */
             <Recapitulatif
-              trajet={`${devis.trajet.aeroport} → ${devis.trajet.station}`}
-              details={[
-                choix.nom,
-                `${passengers} passenger${passengers > 1 ? "s" : ""}`,
-                devis.trajet.allerRetour ? "Return journey" : "One-way",
-                prix(choix.total),
-              ]}
-              onModifier={() => setEtape("vehicule")}
               libelleModifier={t.modifier}
+              onModifier={() => setEtape("vehicule")}
+              pied={`${choix.nom} · ${t.recapBagages(bags, skis)} · ${prix(choix.total)}`}
+              trajets={[
+                {
+                  sens: devis.trajet.allerRetour ? t.aller : null,
+                  lieux: `${devis.trajet.aeroport} → ${devis.trajet.station}`,
+                  details: [quandLisible(when, langue), t.recapPassagers(passengers)],
+                },
+                devis.trajet.allerRetour
+                  ? {
+                      sens: t.retour,
+                      lieux: `${devis.trajet.retourDepart ?? devis.trajet.station} → ${
+                        devis.trajet.retourArrivee ?? devis.trajet.aeroport
+                      }`,
+                      details: [
+                        quandLisible(returnWhen, langue),
+                        t.recapPassagers(retourPassagers ?? passengers),
+                      ],
+                    }
+                  : null,
+              ]}
             />
           ) : null}
 
@@ -932,22 +1016,82 @@ function Fil({ etape, libelles }: { etape: Etape; libelles: readonly string[] })
   );
 }
 
+/**
+ * La photo de chaque catégorie, celle de la home.
+ *
+ * Le tunnel montrait trois lignes de texte : un nom, un modèle, un nombre de
+ * places. On choisit une voiture sur ce qu'elle est, et « Volkswagen Transporter
+ * (T5/T6, Combi or Shuttle type) » ne dit rien à qui ne connaît pas les
+ * références. Ce sont les visuels déjà préparés pour la home — aucune image de
+ * plus à produire, et le même véhicule d'un bout à l'autre du site.
+ */
+const VISUEL_VEHICULE: Record<"standard" | "business" | "premium", NomVisuel> = {
+  standard: "vehicule-standard",
+  business: "vehicule-business",
+  premium: "vehicule-premium",
+};
+
+/** Les langues du tunnel, dans la forme attendue par `Intl`. */
+const LOCALE: Record<LangueTunnel, string> = {
+  en: "en-GB",
+  fr: "fr-FR",
+  de: "de-DE",
+  it: "it-IT",
+};
+
+/**
+ * Une saisie `YYYY-MM-DDTHH:mm` telle qu'on la relit.
+ *
+ * L'heure affichée est celle qui a été tapée : c'est l'heure de l'aéroport, pas
+ * celle du navigateur. On formate donc l'instant construit par `instantAlpes`
+ * dans le fuseau du service — le passer à `Intl` sans fuseau explicite rendrait
+ * « 10:00 » à Chambéry et « 09:00 » à Londres pour la même course.
+ */
+function quandLisible(valeur: string, langue: LangueTunnel): string | null {
+  const m = valeur?.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!m) return null;
+  const date = instantAlpes(+m[1], +m[2], +m[3], +m[4], +m[5]);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleString(LOCALE[langue], {
+    timeZone: FUSEAU_ALPES,
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 function Recapitulatif({
-  trajet,
-  details,
+  trajets,
+  pied,
   onModifier,
   libelleModifier,
 }: {
-  trajet: string;
-  details: (string | null)[];
+  /** Un bloc par sens. Le retour est absent sur un aller simple. */
+  trajets: ({ sens: string | null; lieux: string; details: (string | null)[] } | null)[];
+  /** Ce qui vaut pour la course entière — les bagages voyagent dans les deux sens. */
+  pied: string;
   onModifier: () => void;
   libelleModifier: string;
 }) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-4 rounded border border-glacier-200 bg-glacier-50 p-4">
-      <div>
-        <p className="font-display text-base text-alpine">{trajet}</p>
-        <p className="mt-1 text-xs text-alpine-600">{details.filter(Boolean).join(" · ")}</p>
+      <div className="min-w-0 space-y-3">
+        {trajets.filter((bloc) => bloc !== null).map((bloc) => (
+          <div key={bloc.lieux + (bloc.sens ?? "")}>
+            {bloc.sens ? (
+              <p className="text-[0.7rem] font-semibold uppercase tracking-wide text-alpine-600">
+                {bloc.sens}
+              </p>
+            ) : null}
+            <p className="font-display text-base text-alpine">{bloc.lieux}</p>
+            <p className="mt-0.5 text-xs text-alpine-600">
+              {bloc.details.filter(Boolean).join(" · ")}
+            </p>
+          </div>
+        ))}
+        <p className="text-xs text-alpine-600">{pied}</p>
       </div>
       <button
         type="button"

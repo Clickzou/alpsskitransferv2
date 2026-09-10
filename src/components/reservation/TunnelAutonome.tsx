@@ -21,15 +21,33 @@ import type { Lieu } from "@/lib/reservation/lieux";
 export default function TunnelAutonome({ lieux }: { lieux: Lieu[] }) {
   const params = useSearchParams();
   const texte = (cle: string) => params.get(cle) ?? undefined;
-  const passagers = Number(params.get("passengers"));
+  const entierPositif = (cle: string) => {
+    const n = Number(params.get(cle));
+    return Number.isInteger(n) && n > 0 ? n : undefined;
+  };
 
+  /*
+    Le retour aussi, et pas seulement l'aller.
+
+    Quatre paramètres manquaient ici — `returnWhen`, `returnFrom`, `returnTo`,
+    `returnPassengers` — alors que la recherche de l'accueil les met dans l'URL et
+    que le tunnel sait les recevoir : la version traduite les passait déjà. Un
+    visiteur qui avait coché « aller-retour », choisi une autre station de départ
+    au retour et annoncé un groupe différent arrivait donc sur un tunnel qui n'en
+    savait rien, et se voyait proposer le prix d'un aller simple. Sa saisie était
+    perdue en silence, à l'écran qui devait la lui confirmer.
+  */
   return (
     <Tunnel
       lieux={lieux}
       depart={texte("from")}
       arrivee={texte("to")}
       quand={texte("when")}
-      passagersInitial={Number.isInteger(passagers) && passagers > 0 ? passagers : undefined}
+      passagersInitial={entierPositif("passengers")}
+      retourQuand={texte("returnWhen")}
+      retourDepart={texte("returnFrom")}
+      retourArrivee={texte("returnTo")}
+      retourPassagersInitial={entierPositif("returnPassengers")}
     />
   );
 }

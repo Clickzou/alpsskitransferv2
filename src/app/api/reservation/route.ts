@@ -201,7 +201,16 @@ export async function POST(requete: Request) {
     resort: demande.resort,
     vehicule: demande.categorie,
     passagers: demande.passagers,
-    passagersRetour: demande.passagersRetour,
+    /*
+      Le nom de la colonne, pas celui du champ.
+
+      Ecrit en `passagersRetour`, PostgREST refusait la ligne entiere — « Could
+      not find the 'passagersRetour' column » — et la reservation n'etait jamais
+      enregistree. Le paiement, lui, partait quand meme : une course encaissee
+      dont aucun systeme ne gardait la trace. Toutes les colonnes de cette table
+      sont en minuscules souligne.
+    */
+    passagers_retour: demande.passagersRetour ?? null,
     aller: demande.aller.toISOString(),
     retour: demande.retour ? demande.retour.toISOString() : null,
     montant: devis.total,
@@ -267,8 +276,24 @@ export async function POST(requete: Request) {
     .filter(Boolean)
     .join("\n");
 
-  // --- Paiement, quand le barème est validé ---------------------------------
-  if (devis.encaissable && stripeConfigure()) {
+  /*
+    --- Paiement, quand le barème est validé -----------------------------------
+
+    On n'encaisse que ce qu'on a enregistré.
+
+    La condition portait sur le seul barème, si bien qu'une écriture refusée par
+    la base laissait quand même partir le client vers Stripe : l'argent arrivait,
+    la course n'existait nulle part, et le webhook cherchait ensuite une
+    référence introuvable. Quand la base est configurée mais n'a pas pris la
+    ligne, la demande redevient un devis — l'exploitant la reçoit par e-mail et
+    la rappelle. Un transfert à confirmer à la main coûte un appel ; un paiement
+    sans réservation coûte un client.
+  */
+  const perteEnBase = supabaseConfigure() && !enregistree;
+  if (perteEnBase) {
+    console.error(`[reservation] ${ref} non enregistrée — paiement non proposé`);
+  }
+  if (devis.encaissable && stripeConfigure() && !perteEnBase) {
     const origine = origineSite(requete);
     /*
       La langue vient du tunnel ; elle n'est pas un identifiant, seulement un

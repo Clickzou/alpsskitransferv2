@@ -112,9 +112,20 @@ export function origineSite(requete?: Request): string {
     return new URL(requete.url).origin;
   }
 
-  // Posée par Vercel, hors de portée du client : elle vaut pour la
-  // préproduction, où le domaine définitif ne répond pas encore.
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  /*
+    Posées par Vercel, hors de portée du client : elles valent pour la
+    préproduction, où le domaine définitif ne répond pas encore.
+
+    L'ordre compte, et il a coûté un test. `VERCEL_URL` désigne le **déploiement**
+    — `nom-9uj8frsvc-projets.vercel.app` — une adresse qui change à chaque mise
+    en ligne et que la protection Vercel garde derrière un écran de connexion. Le
+    payeur de test y a été renvoyé après avoir réglé sa course : le paiement
+    était pris, la confirmation inatteignable. `VERCEL_PROJECT_PRODUCTION_URL`
+    désigne le **projet**, stable et ouverte, et passe donc devant.
+  */
+  const stable =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  if (stable) return `https://${stable}`;
 
   return SITE.url;
 }

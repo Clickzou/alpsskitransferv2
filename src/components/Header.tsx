@@ -40,12 +40,12 @@ export default function Header({
         {t.allerAuContenu}
       </a>
 
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-6">
         <Link href={lienAccueil(lang)} className="shrink-0" aria-label={t.logoAccueil}>
           <Logo lang={lang} />
         </Link>
 
-        <div className="flex flex-1 items-center justify-end gap-x-5 gap-y-2">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-x-3 gap-y-2 sm:gap-x-5">
           <nav
             aria-label={t.navPrincipale}
             className="hidden flex-wrap items-center gap-x-5 gap-y-1 text-sm lg:flex"
@@ -76,7 +76,7 @@ export default function Header({
 
           <Link
             href={lienTunnelLangue(lang)}
-            className="shrink-0 rounded bg-marque px-4 py-2 text-sm font-semibold text-white transition hover:bg-marque-600"
+            className="shrink-0 rounded bg-marque px-3 py-2 text-xs font-semibold text-white transition hover:bg-marque-600 sm:px-4 sm:text-sm"
           >
             {t.reserver}
           </Link>

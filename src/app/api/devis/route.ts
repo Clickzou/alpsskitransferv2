@@ -93,6 +93,34 @@ export async function POST(requete: Request) {
     (demande.retourAirport && demande.retourAirport !== demande.airport) ||
     (demande.retourResort && demande.retourResort !== demande.resort);
 
+  /*
+    Le retour, décrit en entier.
+
+    L'écran du choix de véhicule n'affichait que l'aller, et concluait par
+    « One-way » alors que la course était un aller-retour : le visiteur qui avait
+    pris soin de saisir une autre station de départ et un autre effectif ne les
+    retrouvait nulle part avant de payer. Ces champs n'étaient renseignés que
+    lorsque le retour partait d'ailleurs ; ils le sont maintenant dès qu'il y a un
+    retour, quitte à reprendre les lieux de l'aller inversés — c'est bien la
+    course qui est décrite, pas ce qui la distingue de l'aller.
+  */
+  const stationRetour = demande.retourResort
+    ? resortParSlug(demande.retourResort)
+    : station;
+  const aeroportRetour = demande.retourAirport
+    ? airportParSlug(demande.retourAirport)
+    : aeroport;
+  const distanceRetour = demande.retour
+    ? (distanceCalculee({
+        origine: aeroportRetour?.slug ?? demande.airport,
+        destination: stationRetour?.slug ?? demande.resort,
+      }) ??
+      distancePubliee({
+        origine: aeroportRetour?.slug ?? demande.airport,
+        destination: stationRetour?.slug ?? demande.resort,
+      }))
+    : null;
+
   return NextResponse.json({
     trajet: {
       aeroport: aeroport.name,
@@ -101,12 +129,12 @@ export async function POST(requete: Request) {
       duree: duree(distance?.minutes ?? null),
       allerRetour: Boolean(demande.retour),
       retourAilleurs: Boolean(retourAilleurs),
-      retourDepart: demande.retourResort
-        ? (resortParSlug(demande.retourResort)?.name ?? null)
-        : null,
-      retourArrivee: demande.retourAirport
-        ? (airportParSlug(demande.retourAirport)?.name ?? null)
-        : null,
+      retourDepart: demande.retour ? (stationRetour?.name ?? null) : null,
+      retourArrivee: demande.retour ? (aeroportRetour?.name ?? null) : null,
+      retourKm: distanceRetour?.km ?? null,
+      retourDuree: duree(distanceRetour?.minutes ?? null),
+      passagers: demande.passagers,
+      passagersRetour: demande.passagersRetour ?? null,
     },
     options,
     // Tant que le barème n'est pas validé, le tunnel affiche le prix et se termine
