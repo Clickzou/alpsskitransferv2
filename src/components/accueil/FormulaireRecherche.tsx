@@ -254,14 +254,6 @@ export default function FormulaireRecherche({
             {mots.allerSimple}
           </label>
         </fieldset>
-
-        <button
-          type="submit"
-          disabled={imminent}
-          className="w-full rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:cursor-not-allowed disabled:opacity-50 sm:ml-auto sm:w-auto"
-        >
-          {mots.action}
-        </button>
       </div>
 
       {/*
@@ -354,6 +346,24 @@ export default function FormulaireRecherche({
           ) : null}
         </fieldset>
       ) : null}
+
+      {/*
+        Le bouton ferme le formulaire, toujours.
+
+        Il vivait sur la ligne des passagers, donc au-dessus du bloc de retour :
+        déplier « Aller-retour » le laissait à mi-hauteur, à valider avant
+        d'avoir rempli ce qui venait de s'ouvrir. Il faut le lire — et
+        l'atteindre à la tabulation — après le dernier champ, pas avant.
+      */}
+      <div className="mt-4 flex">
+        <button
+          type="submit"
+          disabled={imminent}
+          className="w-full rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:cursor-not-allowed disabled:opacity-50 sm:ml-auto sm:w-auto"
+        >
+          {mots.action}
+        </button>
+      </div>
     </form>
   );
 }
