@@ -83,6 +83,21 @@ async function compterH1(source, vus = new Set()) {
   return total;
 }
 
+/*
+ * L'état de l'indexation, à chaque build.
+ *
+ * Le défaut est « fermée » et c'est voulu — mais un défaut silencieux est un
+ * piège le jour de la mise en ligne. Cette ligne est là pour qu'on ne
+ * découvre pas trois semaines plus tard que le site en production est resté
+ * invisible aux moteurs.
+ */
+const indexation = process.env.NEXT_PUBLIC_INDEXATION === "ouverte";
+console.log(
+  indexation
+    ? "[seo] indexation OUVERTE — le site est explorable et indexable."
+    : "[seo] indexation FERMÉE (préproduction) — robots.txt en Disallow, noindex sur toutes les pages. Poser NEXT_PUBLIC_INDEXATION=ouverte le jour de la bascule.",
+);
+
 const pages = await fichiers(APP, (n) => n === "page.tsx");
 for (const page of pages) {
   const source = await readFile(page, "utf8");

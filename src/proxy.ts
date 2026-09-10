@@ -4,6 +4,7 @@ import {
   PAGES_SUPPRIMEES_410,
   REDIRECTIONS_301,
 } from "@/data/redirections";
+import { indexationOuverte } from "@/lib/indexation";
 
 /**
  * Traitement des anciennes URL WordPress. Convention Next 16 : ce fichier
@@ -23,6 +24,21 @@ const GONE = new Set(
 function normaliser(chemin: string): string {
   const bas = chemin.toLowerCase();
   return bas.length > 1 && bas.endsWith("/") ? bas.slice(0, -1) : bas;
+}
+
+/**
+ * L'en-tête qui ferme la préproduction.
+ *
+ * `robots.txt` empêche l'exploration, pas l'indexation : une URL bloquée mais
+ * liée depuis ailleurs peut apparaître dans les résultats, sans titre ni
+ * description. Seul un `noindex` lu sur la réponse l'empêche — d'où cet
+ * en-tête, posé sur tout ce qui sort.
+ */
+function fermerAuxMoteurs(reponse: NextResponse): NextResponse {
+  if (!indexationOuverte()) {
+    reponse.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+  return reponse;
 }
 
 export default function proxy(request: NextRequest) {
@@ -52,7 +68,7 @@ export default function proxy(request: NextRequest) {
     return reponse;
   }
 
-  return NextResponse.next();
+  return fermerAuxMoteurs(NextResponse.next());
 }
 
 export const config = {

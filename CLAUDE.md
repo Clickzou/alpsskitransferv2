@@ -160,13 +160,27 @@ d'où une forme plus courte.
    **Ce qu'il faut savoir** : le silo allemand ne garde que Zermatt, Davos et
    St. Moritz. Le renforcer suppose de traduire d'autres stations suisses.
 
-8. **Le panier parle les quatre langues** depuis le 10 septembre 2026 :
+8. **Le site est fermé aux moteurs tant qu'il n'est pas sur son domaine.**
+   `NEXT_PUBLIC_INDEXATION` — absente ou différente de `ouverte`, le site sert
+   un `robots.txt` en `Disallow: /`, un en-tête `X-Robots-Tag: noindex, nofollow`
+   et un `noindex, nofollow` dans chaque `<head>`. **Le défaut est fermé**, et
+   c'est le sens qui compte : un oubli doit rendre le site invisible, jamais
+   exposer une préproduction. Une préproduction indexée, c'est un duplicata
+   complet du site sur un domaine parasite, à désindexer ensuite page par page ;
+   le `canonical` absolu ne suffit pas, c'est une indication que Google refuse
+   volontiers quand l'URL canonique sert un autre contenu — ce qui est le cas
+   tant que le WordPress est en ligne. **Le jour de la bascule** : poser
+   `NEXT_PUBLIC_INDEXATION=ouverte` sur la production Vercel et redéployer, une
+   fois le domaine définitif branché et pas avant. Le contrôle de prebuild
+   rappelle l'état à chaque build.
+
+9. **Le panier parle les quatre langues** depuis le 10 septembre 2026 :
    `/cart/`, `/fr/panier/`, `/de/warenkorb/`, `/it/carrello/`, un seul composant
    et un seul re-chiffrage serveur. Son icône était masquée hors anglais, si
    bien qu'un visiteur français pouvait mettre un transfert de côté puis ne plus
    le retrouver. `PanierProvider` enveloppe désormais les quatre layouts.
 
-9. **Le moteur de réservation est livré avec le site, en un mois** (décision du
+10. **Le moteur de réservation est livré avec le site, en un mois** (décision du
    7 septembre 2026, voir `docs/moteur-reservation.md`) : formulaire maison en Next +
    Stripe Checkout + Supabase. Le tunnel WooCommerce est déplacé sur
    `book.alpsskitransfers.com`, sorti de l'index, et **reste armé en repli** —

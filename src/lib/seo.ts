@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { indexationOuverte } from "@/lib/indexation";
 import { SITE } from "@/data/site";
 import { LOCALES, type Alternative, type Lang } from "@/lib/i18n";
 
@@ -80,9 +81,25 @@ export function pageMetadata({
       canonical: url,
       languages: alternatives.length > 0 ? languages : undefined,
     },
-    robots: noindex
-      ? { index: false, follow: true }
-      : { index: true, follow: true, "max-image-preview": "large" },
+    /*
+      Trois cas, et pas deux.
+
+      Site fermé (préproduction) : `noindex, nofollow` — on ne veut ni
+      indexation ni propagation par les liens, et c'est ce que pose déjà
+      l'en-tête du proxy. Les deux doivent dire la même chose.
+
+      Page en noindex sur un site ouvert — panier, mentions légales : `follow`,
+      parce que ses liens internes, eux, restent utiles au maillage.
+
+      Troisième verrou après `robots.txt` et l'en-tête : la page peut être
+      servie depuis le cache du CDN sans repasser par le proxy, et son `<head>`
+      doit alors porter la consigne à lui seul.
+    */
+    robots: !indexationOuverte()
+      ? { index: false, follow: false }
+      : noindex
+        ? { index: false, follow: true }
+        : { index: true, follow: true, "max-image-preview": "large" },
     openGraph: {
       type: "website",
       locale: LOCALES[lang],

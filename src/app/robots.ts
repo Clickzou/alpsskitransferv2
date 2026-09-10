@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/data/site";
 import { CHEMINS_NOINDEX } from "@/data/redirections";
+import { indexationOuverte } from "@/lib/indexation";
 
 /**
  * Crawlers de recherche IA autorisés explicitement.
@@ -38,6 +39,19 @@ const BOTS_IA = [
 const PANIERS = ["/cart"];
 
 export default function robots(): MetadataRoute.Robots {
+  /*
+    Préproduction : rien n'est explorable. Le site vit sur une URL Vercel avant
+    la bascule sur le domaine définitif, et une préproduction indexée est un
+    duplicata complet du futur site sur un domaine parasite. Voir
+    `lib/indexation.ts` — le défaut est fermé, on ouvre explicitement.
+  */
+  if (!indexationOuverte()) {
+    return {
+      rules: [{ userAgent: "*", disallow: "/" }],
+      host: SITE.url,
+    };
+  }
+
   // Les pages du tunnel WooCommerce restent accessibles (elles servent la
   // réservation) mais ne doivent pas être explorées.
   const regles = {
