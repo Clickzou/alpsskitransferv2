@@ -26,6 +26,14 @@ import { NextResponse } from "next/server";
  * suffisent à repérer une valeur tronquée au copier-coller, qui est la panne la
  * plus fréquente.
  *
+ * ## Définie et vide n'est pas absente
+ *
+ * Les deux se ressemblent — `process.env.X` est faux dans les deux cas — et se
+ * réparent autrement : une variable absente s'ajoute, une variable vide doit
+ * d'abord être supprimée, sans quoi Vercel refuse l'ajout au motif qu'elle
+ * existe déjà. C'est exactement la boucle où l'on tourne le 10 septembre 2026,
+ * et la raison pour laquelle la sonde distingue les deux états.
+ *
  * ## Pourquoi elle est fermée
  *
  * La carte des services d'un site est un renseignement en soi : savoir que
@@ -78,10 +86,12 @@ export async function GET(requete: Request) {
 
   const variables = ATTENDUES.map(({ nom, role, prefixe }) => {
     const valeur = process.env[nom];
+    const definie = nom in process.env;
     return {
       nom,
       role,
-      presente: Boolean(valeur),
+      // Trois états, pas deux : le remède n'est pas le même pour chacun.
+      etat: !definie ? "absente" : valeur ? "renseignée" : "définie mais vide",
       longueur: valeur?.length ?? 0,
       prefixe: valeur && prefixe ? prefixeDe(valeur) : undefined,
     };
@@ -90,7 +100,7 @@ export async function GET(requete: Request) {
   return NextResponse.json({
     environnement: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
     deploiement: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? null,
-    manquantes: variables.filter((v) => !v.presente).map((v) => v.nom),
+    aCorriger: variables.filter((v) => v.etat !== "renseignée").map((v) => `${v.nom} (${v.etat})`),
     variables,
   });
 }

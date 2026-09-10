@@ -19,3 +19,6 @@ wp-export/
 devis/
 docs/Audit-alpsskitransfers-Clickzou.pdf
 docs/audit-alpsskitransfers-2026-09-04.html
+
+.vercel
+.env*
