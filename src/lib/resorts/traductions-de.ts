@@ -6,11 +6,16 @@ import type { TraductionStation } from "./types";
  * À part des modules de station, comme le français, pour survivre à
  * `npm run migrer:stations` qui réécrit les fichiers repris du WordPress.
  *
- * **Périmètre allemand — décision du 9 septembre 2026.** Il ne recopie pas le
- * périmètre français, il suit son marché : l'Autriche et la Suisse alémanique,
- * au départ d'Innsbruck, Salzbourg et Zurich. Un germanophone qui part skier ne
- * cherche pas Val Thorens depuis Lyon ; il cherche Ischgl depuis Innsbruck,
- * Sölden depuis Salzbourg, Zermatt depuis Zurich. Ce sont aussi les seules
+ * **Périmètre allemand — la Suisse.** Il ne recopie pas le périmètre français,
+ * il suit son marché. Il visait d'abord l'Autriche et la Suisse alémanique au
+ * départ d'Innsbruck, Salzbourg et Zurich ; l'Autriche étant sortie du
+ * périmètre le 10 septembre 2026, il ne restait que trois stations. Quatre
+ * skiorts alémaniques desservis depuis Zurich ont été ajoutés le même jour —
+ * Engelberg, Grindelwald, Interlaken et Wengen — pour que le silo allemand
+ * tienne debout : sept stations, huit liaisons.
+ *
+ * Un germanophone qui part skier ne cherche pas Val Thorens depuis Lyon ; il
+ * cherche Engelberg ou Grindelwald depuis Zurich. Ce sont aussi les seules
  * liaisons où nous avons quelque chose de précis à dire.
  *
  * Les slugs sont allemands : `soelden`, `kitzbuehel`. Le slug anglais reste la
@@ -33,488 +38,12 @@ const inklusive = {
 };
 
 export const TRADUCTIONS_DE: Record<string, TraductionStation> = {
-  ischgl: {
-    slug: "ischgl",
-    metaTitre: "Transfer Ischgl | Innsbruck 100 km, Zürich, Salzburg",
-    metaDescription:
-      "Privater Transfer nach Ischgl ab Innsbruck (100 km, 1 h 25), Zürich und Salzburg. Festpreis pro Fahrzeug, Skisäcke und Kindersitze inklusive.",
-    h1: "Transfers nach Ischgl — das Paznaun ab Innsbruck",
-    chapo:
-      "Ischgl liegt am Ende des Paznauntals auf 1 377 m, und der Weg dorthin ist immer derselbe: von Landeck taleinwärts, 30 km an der Trisanna entlang. Innsbruck ist mit 100 km und rund 1 h 25 der nächste Flughafen, Zürich (228 km, 3 h 30) die internationale Alternative, Salzburg (280 km, 3 h 25) die Verbindung für den Osten. Wir fahren alle drei zum Festpreis pro Fahrzeug, mit Skisäcken und Kindersitzen inklusive.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Ischgl ist kein Ort, den man im Vorbeifahren erreicht. Das Paznaun ist eine Sackgasse: Wer hineinfährt, fährt auf derselben Straße wieder hinaus, und diese Straße endet in Galtür. Das prägt jede Anfahrt — im Guten wie im Schlechten.",
-      },
-      { type: "titre2", texte: "Welcher Flughafen?" },
-      {
-        type: "liste",
-        items: [
-          "Innsbruck — 100 km, etwa 1 h 25. Der nächste, und tagsüber der schnellste: Inntalautobahn bis Landeck, dann das Tal hinauf.",
-          "Zürich — 228 km, etwa 3 h 30. Deutlich weiter, dafür Flüge aus ganz Europa an jedem Wochentag.",
-          "Salzburg — 280 km, etwa 3 h 25. Sinnvoll, wenn Sie aus dem Osten anreisen oder Innsbruck ausgebucht ist.",
-          "München — kein Direktangebot in dieser Liste, aber auf Anfrage gefahren: rechnen Sie mit gut drei Stunden über Garmisch und das Inntal.",
-        ],
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Die Zeiten sind auf dem realen Straßennetz gemessen, ohne Verkehr. Sie gelten für einen freien Wochentag, nicht für einen Bestfall.",
-      },
-      { type: "titre2", texte: "Der Samstag im Paznaun" },
-      {
-        type: "paragraphe",
-        texte:
-          "Ischgl wechselt am Samstag komplett die Gäste, und alle fahren durch dasselbe Nadelöhr bei Landeck. Zwischen zehn und vierzehn Uhr staut es sich regelmäßig am Talschluss, weil Ankommende und Abreisende sich auf einer zweispurigen Straße begegnen. Rechnen Sie an einem Februar-Samstag eine gute Stunde auf jede der oben genannten Zeiten.",
-      },
-      { type: "titre2", texte: "Die letzten 30 Kilometer" },
-      {
-        type: "paragraphe",
-        texte:
-          "Ab Landeck (816 m) steigt die Straße auf 1 377 m — kein Pass, aber eine durchgehende Talstraße mit Tunneln, Galerien und wenig Ausweichmöglichkeit. Sie wird die ganze Saison geräumt und gesalzen. Bei starkem Schneefall wird sie punktuell wegen Lawinengefahr gesperrt; unsere Fahrer haben die Sperrmeldungen laufend und sagen Ihnen Bescheid, bevor Sie am Flughafen stehen.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Der nächste Bahnhof ist Landeck-Zams, 30 km talauswärts, mit Direktzügen aus Wien, München und Zürich. Wenn Sie mit der Bahn anreisen, sagen Sie es uns: Es ist dieselbe Fahrt, ab demselben Punkt.",
-      },
-      { type: "titre2", texte: "Was inklusive ist" },
-      inklusive,
-    ],
-    faq: [
-      {
-        question: "Wie lange dauert der Transfer Innsbruck – Ischgl?",
-        reponse:
-          "Rund 1 h 25 für 100 km, ohne Verkehr. An einem Samstag in der Hochsaison rechnen Sie eine Stunde mehr ein: Bei Landeck treffen Ankommende und Abreisende aufeinander.",
-      },
-      {
-        question: "Welcher Flughafen liegt am nächsten?",
-        reponse:
-          "Innsbruck, 100 km und etwa 1 h 25. Zürich ist mit 228 km deutlich weiter, hat aber ein dichteres internationales Flugangebot.",
-      },
-      {
-        question: "Sind Skisäcke im Preis enthalten?",
-        reponse:
-          "Ja. Ski- und Snowboardtaschen reisen ohne Aufpreis mit; wir bemessen das Fahrzeug nach dem Material, das Sie bei der Buchung angeben.",
-      },
-      {
-        question: "Was, wenn die Paznauntalstraße gesperrt ist?",
-        reponse:
-          "Wir verfolgen die Sperrmeldungen und informieren Sie, bevor Sie losfahren. Wird während der Fahrt gesperrt, warten wir an einem sinnvollen Punkt ab — ohne Aufpreis, das Risiko liegt bei uns.",
-      },
-      {
-        question: "Fahren Sie auch nach Galtür, Kappl und See?",
-        reponse:
-          "Ja, es ist dieselbe Talstraße. Galtür liegt 10 km hinter Ischgl, Kappl und See davor — geben Sie die genaue Adresse bei der Buchung an.",
-      },
-    ],
-  },
 
-  solden: {
-    slug: "soelden",
-    metaTitre: "Transfer Sölden | Innsbruck 84 km, 1 h 15",
-    metaDescription:
-      "Privater Transfer nach Sölden ab Innsbruck (84 km, 1 h 15), Salzburg und Zürich. Festpreis pro Fahrzeug, Skisäcke inklusive, Flug überwacht.",
-    h1: "Transfers nach Sölden — das Ötztal ab Innsbruck",
-    chapo:
-      "Sölden liegt 84 km von Innsbruck entfernt, gut 1 h 15 Fahrt, und ist damit einer der am schnellsten erreichbaren Gletscherorte der Alpen. Salzburg liegt bei 263 km (3 h 10), Zürich bei 272 km (4 h). Die Anfahrt folgt der Inntalautobahn bis Ötztal-Bahnhof und dann 35 km das Tal hinauf — kein Pass, aber ein stetiger Anstieg auf 1 368 m.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Das Ötztal ist das längste Seitental des Inntals, und Sölden liegt weit hinten darin. Was die Anfahrt angenehm macht: Die Autobahn bringt Sie bis fast an den Talanfang, und erst danach beginnt Bergstraße.",
-      },
-      { type: "titre2", texte: "Welcher Flughafen?" },
-      {
-        type: "liste",
-        items: [
-          "Innsbruck — 84 km, etwa 1 h 15. Der nächste Flughafen der Alpen zu einem Gletscherskigebiet dieser Größe.",
-          "Salzburg — 263 km, etwa 3 h 10. Die Wahl bei Anreise aus dem Osten oder wenn Innsbruck nicht passt.",
-          "Zürich — 272 km, etwa 4 h. Weit, aber mit dem breitesten Flugangebot und oft den günstigsten Tarifen.",
-        ],
-      },
-      { type: "titre2", texte: "Innsbruck landet nicht immer in Innsbruck" },
-      {
-        type: "paragraphe",
-        texte:
-          "Der Anflug auf Innsbruck führt durch ein enges Tal und ist wetterabhängiger als anderswo: Bei Föhn oder schlechter Sicht wird häufiger als an anderen Flughäfen nach München oder Salzburg umgeleitet. Wenn Ihnen das passiert, schreiben Sie uns eine Zeile — wir fahren von dort, wo Sie tatsächlich stehen, und Sie buchen nichts neu.",
-      },
-      { type: "titre2", texte: "Die letzten 35 Kilometer" },
-      {
-        type: "paragraphe",
-        texte:
-          "Ab Ötztal-Bahnhof (700 m) steigt die Straße bis Sölden auf 1 368 m. Sie ist gut ausgebaut und wird durchgehend geräumt, hat aber im Bereich Ötz und Umhausen enge Stellen, an denen Gegenverkehr mit Bussen Zeit kostet. Die Weiterfahrt nach Hochsölden, Obergurgl und Vent zweigt hinter dem Ort ab und ist im Winter Kettenpflicht-Gebiet — unsere Fahrzeuge führen Ketten mit.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Der Bahnhof Ötztal an der Arlbergstrecke ist der nächstgelegene, 35 km talauswärts, mit Direktverbindungen aus Wien, München und Zürich. Auch von dort fahren wir.",
-      },
-      { type: "titre2", texte: "Was inklusive ist" },
-      inklusive,
-    ],
-    faq: [
-      {
-        question: "Wie lange dauert der Transfer Innsbruck – Sölden?",
-        reponse:
-          "Rund 1 h 15 für 84 km, ohne Verkehr. An einem Samstag in der Hochsaison rechnen Sie 30 bis 60 Minuten mehr ein.",
-      },
-      {
-        question: "Fahren Sie bis Hochsölden und Obergurgl weiter?",
-        reponse:
-          "Ja. Hochsölden liegt gut 15 Minuten oberhalb, Obergurgl 14 km weiter hinten im Tal — beide fahren wir an, mit Winterausrüstung an Bord.",
-      },
-      {
-        question: "Was passiert, wenn mein Flug nach München umgeleitet wird?",
-        reponse:
-          "Schreiben Sie uns. Wir fahren ab München statt ab Innsbruck; die Differenz stimmen wir vorher schriftlich mit Ihnen ab, es gibt keine Überraschung bei der Ankunft.",
-      },
-      {
-        question: "Gilt der Preis pro Person?",
-        reponse:
-          "Nein, pro Fahrzeug. Zu zweit oder zu acht ist der genannte Betrag derselbe, Maut inklusive.",
-      },
-    ],
-  },
 
-  kitzbuhel: {
-    slug: "kitzbuehel",
-    metaTitre: "Transfer Kitzbühel | Salzburg 75 km, Innsbruck 98 km",
-    metaDescription:
-      "Privater Transfer nach Kitzbühel ab Salzburg (75 km, 1 h 20) und Innsbruck (98 km, 1 h 30). Festpreis pro Fahrzeug, Skisäcke inklusive.",
-    h1: "Transfers nach Kitzbühel — Salzburg oder Innsbruck",
-    chapo:
-      "Kitzbühel ist einer der wenigen großen Skiorte, die von zwei Flughäfen fast gleich weit entfernt sind: Salzburg liegt 75 km entfernt (rund 1 h 20), Innsbruck 98 km (rund 1 h 30). Die Wahl entscheidet sich deshalb am Flugplan, nicht an der Fahrzeit. Beide Strecken fahren wir zum Festpreis pro Fahrzeug, mit Skisäcken, Kindersitzen und Maut im Preis.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Kitzbühel liegt auf 762 m — tief für einen Ort dieser Bekanntheit — und genau darin liegt der Vorteil der Anfahrt: Es gibt keinen langen Schlussanstieg. Wer hier ankommt, ist die ganze Strecke auf Talstraßen gefahren.",
-      },
-      { type: "titre2", texte: "Welcher Flughafen?" },
-      {
-        type: "liste",
-        items: [
-          "Salzburg — 75 km, etwa 1 h 20. Über die Tauernautobahn und das Saalachtal, oder über Lofer. Der kürzeste Weg.",
-          "Innsbruck — 98 km, etwa 1 h 30. Inntalautobahn bis Wörgl, dann durch das Brixental oder über St. Johann.",
-          "München — auf Anfrage, rund zwei Stunden über Rosenheim und Kufstein. Oft die günstigsten Flüge, und für viele deutsche Gäste die kürzeste Gesamtreise.",
-        ],
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Die zwanzig Minuten Unterschied zwischen Salzburg und Innsbruck fallen weniger ins Gewicht als der Flugpreis und die Abflugzeit. Entscheiden Sie nach dem Flug — die Fahrt macht keinen Unterschied, den Sie am Abend noch merken.",
-      },
-      { type: "titre2", texte: "Das Hahnenkamm-Wochenende" },
-      {
-        type: "paragraphe",
-        texte:
-          "Am Wochenende des Hahnenkammrennens, meist im dritten Januarwochenende, ist Kitzbühel nicht mit einer normalen Woche vergleichbar. Zufahrten werden abschnittsweise gesperrt, Parkflächen sind reserviert, und die letzten zwei Kilometer können vierzig Minuten dauern. Wenn Sie an diesen Tagen anreisen, buchen Sie früh und geben Sie uns die genaue Adresse: Wir planen den Zugang von der richtigen Seite.",
-      },
-      { type: "titre2", texte: "Winterausrüstung und Straßen" },
-      {
-        type: "paragraphe",
-        texte:
-          "In Österreich gilt die situative Winterausrüstungspflicht vom 1. November bis 15. April: Bei winterlichen Verhältnissen müssen Winterreifen montiert oder Ketten aufgezogen sein. Unsere Fahrzeuge erfüllen beides. Die Strecken nach Kitzbühel sind Hauptstraßen und werden früh geräumt — der kritische Abschnitt ist eher der Pass Thurn Richtung Mittersill als die Anfahrt selbst.",
-      },
-      { type: "titre2", texte: "Was inklusive ist" },
-      inklusive,
-    ],
-    faq: [
-      {
-        question: "Salzburg oder Innsbruck — was ist besser?",
-        reponse:
-          "Salzburg ist 20 Minuten näher (75 km statt 98 km). Der Unterschied ist klein genug, dass Sie nach Flugpreis und Abflugzeit entscheiden sollten.",
-      },
-      {
-        question: "Fahren Sie auch nach Kirchberg, Reith und Aurach?",
-        reponse:
-          "Ja, alle Orte im Brixental und rund um Kitzbühel. Geben Sie die genaue Adresse an — die letzten Minuten unterscheiden sich spürbar.",
-      },
-      {
-        question: "Ist die Fahrt am Hahnenkamm-Wochenende länger?",
-        reponse:
-          "Ja, deutlich. Rechnen Sie in der Stadt selbst bis zu vierzig Minuten für die letzten Kilometer, und buchen Sie diese Tage früh.",
-      },
-      {
-        question: "Was kostet ein Kindersitz?",
-        reponse:
-          "Nichts. Sitze und Sitzerhöhungen sind im Preis enthalten und werden vor der Abfahrt eingebaut — geben Sie uns das Alter der Kinder an.",
-      },
-    ],
-  },
 
-  "st-anton-am-arlberg": {
-    slug: "st-anton-am-arlberg",
-    metaTitre: "Transfer St. Anton am Arlberg | Innsbruck, Zürich",
-    metaDescription:
-      "Privater Transfer nach St. Anton am Arlberg ab Innsbruck (96 km, 1 h 15) und Zürich (190 km, 2 h 50). Festpreis pro Fahrzeug, Skisäcke inklusive.",
-    h1: "Transfers nach St. Anton am Arlberg",
-    chapo:
-      "St. Anton liegt auf 1 304 m am Fuß des Arlbergs, direkt an der Bahnstrecke und an der S16. Innsbruck ist 96 km entfernt (rund 1 h 15), Zürich 190 km (rund 2 h 50) — und Zürich ist für viele internationale Gäste die praktischere Wahl, weil der Arlberg von Westen genauso gut erreichbar ist wie von Osten. Beide Strecken zum Festpreis pro Fahrzeug.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Der Arlberg ist ein Übergang, kein Talschluss: Von Osten kommt man aus dem Inntal, von Westen aus dem Rheintal, und beide Seiten treffen sich im Tunnel. Das macht St. Anton zu einem der am besten erreichbaren großen Skiorte Österreichs — und zu einem, bei dem die Wahl des Flughafens wirklich offen ist.",
-      },
-      { type: "titre2", texte: "Welcher Flughafen?" },
-      {
-        type: "liste",
-        items: [
-          "Innsbruck — 96 km, etwa 1 h 15. Inntalautobahn bis Landeck, dann die S16 den Arlberg hinauf.",
-          "Zürich — 190 km, etwa 2 h 50. Über St. Gallen und das Rheintal, dann durch Vorarlberg — landschaftlich die schönere Anfahrt.",
-          "Friedrichshafen und München — auf Anfrage. Friedrichshafen ist der schnellste Weg in den Arlberg, den kaum jemand kennt.",
-        ],
-      },
-      { type: "titre2", texte: "Der Arlbergtunnel und die Passstraße" },
-      {
-        type: "paragraphe",
-        texte:
-          "Von Westen führt der Weg durch den Arlbergtunnel (mautpflichtig, im Preis enthalten) oder über die Passstraße via Stuben. Der Tunnel ist die verlässliche Variante; die Passstraße wird bei Schneefall gesperrt und ist ohnehin die längere. Wir fahren den Tunnel, außer er ist gesperrt — dann kostet der Umweg über den Pass rund vierzig Minuten, und der Preis bleibt der vereinbarte.",
-      },
-      { type: "titre2", texte: "St. Anton, St. Christoph, Stuben und Lech" },
-      {
-        type: "paragraphe",
-        texte:
-          "Der Arlberg ist skitechnisch ein Gebiet, verkehrstechnisch mehrere Orte. St. Christoph liegt 6 km oberhalb an der Passstraße, Stuben auf der Vorarlberger Seite, Lech und Zürs zweigen bei Alpe Rauz ab. Die letzten Kilometer unterscheiden sich also erheblich — geben Sie die genaue Adresse an, nicht nur den Ort.",
-      },
-      { type: "titre2", texte: "Anreise mit der Bahn" },
-      {
-        type: "paragraphe",
-        texte:
-          "St. Anton hat einen eigenen Bahnhof an der Arlbergstrecke, mit Direktzügen aus Wien, Zürich und Bregenz. Wer den Zug bis dorthin nimmt, braucht keinen Transfer mehr — wer aus Landeck oder Bludenz kommt, schon, und die Fahrt buchen Sie hier genauso.",
-      },
-      { type: "titre2", texte: "Was inklusive ist" },
-      inklusive,
-    ],
-    faq: [
-      {
-        question: "Wie lange dauert der Transfer Zürich – St. Anton?",
-        reponse:
-          "Rund 2 h 50 für 190 km, ohne Verkehr. Über die Feiertage und an Samstagen im Februar rechnen Sie eine gute halbe Stunde mehr ein.",
-      },
-      {
-        question: "Ist die Arlbergmaut im Preis enthalten?",
-        reponse:
-          "Ja, wie jede Maut auf der Strecke. Der genannte Preis ist der, den Sie zahlen.",
-      },
-      {
-        question: "Fahren Sie auch nach Lech und Zürs?",
-        reponse:
-          "Ja. Die Abzweigung liegt bei Alpe Rauz; Lech ist von St. Anton rund 25 Minuten entfernt, mit Winterausrüstung an Bord.",
-      },
-      {
-        question: "Was passiert, wenn der Arlbergtunnel gesperrt ist?",
-        reponse:
-          "Wir fahren über die Passstraße, sofern sie offen ist — rund vierzig Minuten mehr. Der Preis bleibt der vereinbarte: Eine Sperre ist unser Risiko, nicht Ihres.",
-      },
-    ],
-  },
 
-  obergurgl: {
-    slug: "obergurgl",
-    metaTitre: "Transfer Obergurgl | Innsbruck 98 km, 1 h 30",
-    metaDescription:
-      "Privater Transfer nach Obergurgl und Hochgurgl ab Innsbruck (98 km, 1 h 30) und Salzburg. Festpreis pro Fahrzeug, Winterausrüstung an Bord.",
-    h1: "Transfers nach Obergurgl — das hintere Ötztal",
-    chapo:
-      "Obergurgl liegt auf 1 930 m am Talschluss des Ötztals und ist damit einer der höchstgelegenen Kirchdörfer Österreichs. Innsbruck ist 98 km entfernt, rund 1 h 30, Salzburg 277 km (3 h 25). Die letzten 14 km ab Sölden steigen um 560 Höhenmeter — ein echter Winteranstieg, den unsere Fahrzeuge mit Winterreifen und Ketten an Bord machen.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Wer nach Obergurgl fährt, fährt bis ans Ende des Ötztals. Dahinter liegt nur noch das Timmelsjoch, das den ganzen Winter über gesperrt ist. Das bedeutet: eine Zufahrt, ein Weg zurück, und ein Schlussanstieg, der die Fahrt prägt.",
-      },
-      { type: "titre2", texte: "Welcher Flughafen?" },
-      {
-        type: "liste",
-        items: [
-          "Innsbruck — 98 km, etwa 1 h 30. Autobahn bis Ötztal-Bahnhof, dann 49 km Talstraße bis Obergurgl.",
-          "Salzburg — 277 km, etwa 3 h 25. Für Anreisen aus dem Osten Österreichs oder wenn Innsbruck nicht passt.",
-          "Zürich und München — auf Anfrage; beide liegen bei rund vier Stunden.",
-        ],
-      },
-      { type: "titre2", texte: "Die 14 Kilometer ab Sölden" },
-      {
-        type: "paragraphe",
-        texte:
-          "Ab Sölden (1 368 m) steigt die Straße in Kehren auf 1 930 m, mit einem Abzweig nach Hochgurgl auf 2 150 m. Sie ist geräumt und gesalzen, aber im Winter gilt hier Kettenpflicht bei entsprechenden Verhältnissen, und bei starkem Schneefall wird der Abschnitt wegen Lawinengefahr zeitweise gesperrt. Diese Sperren sind kurz und angekündigt; unsere Fahrer verfolgen sie und stimmen die Abfahrtszeit darauf ab.",
-      },
-      { type: "titre2", texte: "Obergurgl oder Hochgurgl" },
-      {
-        type: "paragraphe",
-        texte:
-          "Die beiden Orte sind sechs Kilometer und zehn Minuten voneinander entfernt, und die Hotels heißen ähnlich. Geben Sie bei der Buchung an, welcher es ist — und wenn Sie in Hochgurgl wohnen, auch das Hotel: Die Zufahrten liegen auf verschiedenen Seiten der Straße, und im Schnee ist das kein Detail.",
-      },
-      { type: "titre2", texte: "Höhe und Saison" },
-      {
-        type: "paragraphe",
-        texte:
-          "Auf dieser Höhe ist die Saison lang — von Mitte November bis in den Mai —, und im November wie im April ist die Anfahrt oft angenehmer als im Februar: weniger Verkehr im Tal, dieselbe Straße. Wenn Ihre Daten flexibel sind, lohnt sich der Blick auf einen Wochentag.",
-      },
-      { type: "titre2", texte: "Was inklusive ist" },
-      inklusive,
-    ],
-    faq: [
-      {
-        question: "Wie lange dauert der Transfer Innsbruck – Obergurgl?",
-        reponse:
-          "Rund 1 h 30 für 98 km, ohne Verkehr. An einem Samstag in der Hochsaison rechnen Sie 30 bis 60 Minuten mehr ein.",
-      },
-      {
-        question: "Fahren Sie auch nach Hochgurgl?",
-        reponse:
-          "Ja, weitere sechs Kilometer und rund zehn Minuten. Geben Sie das Hotel an, damit wir die richtige Zufahrt nehmen.",
-      },
-      {
-        question: "Brauchen Sie Schneeketten für diese Strecke?",
-        reponse:
-          "Unsere Fahrzeuge führen sie mit und legen sie an, wenn die Verhältnisse es verlangen. Das ist im Preis enthalten und kostet Sie nichts extra.",
-      },
-      {
-        question: "Ist das Timmelsjoch im Winter befahrbar?",
-        reponse:
-          "Nein, es ist von Ende Oktober bis Ende Mai gesperrt. Die Anfahrt aus Südtirol führt im Winter über den Brenner und das Inntal.",
-      },
-    ],
-  },
 
-  mayrhofen: {
-    slug: "mayrhofen",
-    metaTitre: "Transfer Mayrhofen | Innsbruck 75 km, 1 h 10",
-    metaDescription:
-      "Privater Transfer nach Mayrhofen im Zillertal ab Innsbruck (75 km, 1 h 10). Festpreis pro Fahrzeug, Skisäcke und Kindersitze inklusive.",
-    h1: "Transfers nach Mayrhofen — das Zillertal ab Innsbruck",
-    chapo:
-      "Mayrhofen liegt 75 km von Innsbruck entfernt, rund 1 h 10 Fahrt: Inntalautobahn bis Wiesing, dann 30 km flaches Zillertal. Es ist eine der kürzesten Anfahrten zu einem großen Skigebiet in den Alpen, und eine der einfachsten — der Ort liegt auf 630 m, ohne nennenswerten Schlussanstieg.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Das Zillertal ist breit, flach und dicht besiedelt, und Mayrhofen liegt dort, wo es sich in vier Seitentäler aufteilt. Die Anfahrt ist deshalb bis zum Schluss unspektakulär — wer eine Bergstraße erwartet, findet eine Bundesstraße durch Dörfer.",
-      },
-      { type: "titre2", texte: "Welcher Flughafen?" },
-      {
-        type: "liste",
-        items: [
-          "Innsbruck — 75 km, etwa 1 h 10. Die naheliegende Wahl, und tagsüber die schnellste.",
-          "Salzburg — rund 190 km über die Inntalautobahn; auf Anfrage gefahren.",
-          "München — rund 190 km über Kufstein; für deutsche Gäste oft die kürzeste Gesamtreise.",
-        ],
-      },
-      { type: "titre2", texte: "Der Verkehr im Zillertal" },
-      {
-        type: "paragraphe",
-        texte:
-          "Was hier Zeit kostet, ist nicht die Steigung, sondern die Menge. Das Zillertal hat sehr viele Betten und eine Straße, und am Samstagvormittag wie am späten Nachmittag steht es zwischen Fügen und Zell regelmäßig. Rechnen Sie an einem Februar-Samstag mit einer halben bis einer Stunde zusätzlich.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Die Zillertalbahn fährt parallel zur Straße und ist bei Stau tatsächlich schneller — aber sie nimmt Ihr Gepäck nicht ab und endet nicht vor Ihrer Unterkunft. Für zwei Personen mit Handgepäck eine Option; mit Ski und Koffern nicht.",
-      },
-      { type: "titre2", texte: "Die Seitentäler" },
-      {
-        type: "paragraphe",
-        texte:
-          "Hinter Mayrhofen zweigen Zillergrund, Stillupgrund, Zemmgrund und das Tuxertal ab. Hintertux liegt 20 km und rund 30 Minuten weiter, auf 1 500 m, und ist der Teil der Fahrt, für den Winterausrüstung zählt. Auch dorthin fahren wir — sagen Sie es bei der Buchung, es ändert die Zeitplanung.",
-      },
-      { type: "titre2", texte: "Was inklusive ist" },
-      inklusive,
-    ],
-    faq: [
-      {
-        question: "Wie lange dauert der Transfer Innsbruck – Mayrhofen?",
-        reponse:
-          "Rund 1 h 10 für 75 km, ohne Verkehr. Am Samstagvormittag in der Hochsaison rechnen Sie eine halbe bis eine Stunde mehr ein.",
-      },
-      {
-        question: "Fahren Sie bis Hintertux und Lanersbach?",
-        reponse:
-          "Ja, das Tuxertal hinauf — rund 30 Minuten ab Mayrhofen. Geben Sie den Ort bei der Buchung an.",
-      },
-      {
-        question: "Lohnt sich die Zillertalbahn statt eines Transfers?",
-        reponse:
-          "Bei Stau ist sie schneller, aber sie endet am Bahnhof und nicht vor Ihrer Unterkunft. Mit Ski und Koffern ist der Transfer die bequemere Rechnung.",
-      },
-      {
-        question: "Gilt der Preis auch für acht Personen?",
-        reponse:
-          "Ja, er gilt pro Fahrzeug. Wir wählen die Fahrzeuggröße nach Personen und Gepäck, das Sie bei der Buchung angeben.",
-      },
-    ],
-  },
 
-  "zell-am-see": {
-    slug: "zell-am-see",
-    metaTitre: "Transfer Zell am See | Salzburg 78 km, 1 h 20",
-    metaDescription:
-      "Privater Transfer nach Zell am See und Kaprun ab Salzburg (78 km, 1 h 20). Festpreis pro Fahrzeug, Skisäcke und Kindersitze inklusive.",
-    h1: "Transfers nach Zell am See und Kaprun",
-    chapo:
-      "Zell am See liegt 78 km von Salzburg entfernt, rund 1 h 20 Fahrt über die Tauernautobahn und das Saalachtal. Der Ort liegt auf 750 m am See, Kaprun 8 km weiter im Tal, und das Gletscherskigebiet am Kitzsteinhorn nochmals darüber. Festpreis pro Fahrzeug, Skisäcke und Kindersitze inklusive.",
-    contenu: [
-      {
-        type: "paragraphe",
-        texte:
-          "Zell am See ist eine Stadt am See mit Skigebiet, nicht ein Skiort mit Stadtkern — was für die Anfahrt heißt: Sie fahren bis in einen Ort mit Ampeln, Einbahnen und Uferstraße. Die genaue Adresse zählt hier mehr als anderswo.",
-      },
-      { type: "titre2", texte: "Welcher Flughafen?" },
-      {
-        type: "liste",
-        items: [
-          "Salzburg — 78 km, etwa 1 h 20. Der nächste, und mit Abstand der praktischste.",
-          "München — rund 190 km, etwa 2 h 15; oft günstigere Flüge, auf Anfrage gefahren.",
-          "Innsbruck — rund 170 km über den Pass Thurn; wetterabhängiger und selten die bessere Wahl.",
-        ],
-      },
-      { type: "titre2", texte: "Zell am See, Kaprun, Schüttdorf" },
-      {
-        type: "paragraphe",
-        texte:
-          "Die drei liegen dicht beieinander und werden im selben Atemzug genannt, sind aber verschiedene Ziele: Schüttdorf am Südufer, Kaprun 8 km talwärts Richtung Kitzsteinhorn. Zwischen einer Adresse in der Zeller Altstadt und einem Hotel in Kaprun liegen zwanzig Minuten — geben Sie die Straße an, nicht nur den Ort.",
-      },
-      { type: "titre2", texte: "Der Pass Thurn und die Tauern" },
-      {
-        type: "paragraphe",
-        texte:
-          "Zwei Passstraßen berühren die Region: der Pass Thurn Richtung Kitzbühel und die Großglockner Hochalpenstraße, die im Winter gesperrt ist. Für die Anfahrt aus Salzburg brauchen Sie keine davon — die Strecke bleibt im Tal, und das macht sie auch bei Schneefall verlässlich.",
-      },
-      { type: "titre2", texte: "Anreise mit der Bahn" },
-      {
-        type: "paragraphe",
-        texte:
-          "Zell am See liegt an der Salzburg-Tiroler-Bahn, mit Direktzügen aus Salzburg und Innsbruck, und der Bahnhof ist mitten im Ort. Wenn Sie mit dem Zug kommen und nur die letzte Etappe brauchen — nach Kaprun, auf die Schmittenhöhe, in ein Hotel am Südufer —, fahren wir auch das.",
-      },
-      { type: "titre2", texte: "Was inklusive ist" },
-      inklusive,
-    ],
-    faq: [
-      {
-        question: "Wie lange dauert der Transfer Salzburg – Zell am See?",
-        reponse:
-          "Rund 1 h 20 für 78 km, ohne Verkehr. Am Samstag in der Hochsaison rechnen Sie eine halbe Stunde mehr ein.",
-      },
-      {
-        question: "Fahren Sie auch nach Kaprun?",
-        reponse:
-          "Ja, weitere 8 km und rund 15 Minuten. Geben Sie die genaue Adresse an — zwischen Zeller Altstadt und Kaprun liegen zwanzig Minuten.",
-      },
-      {
-        question: "Ist die Großglocknerstraße eine Option?",
-        reponse:
-          "Im Winter nicht: Sie ist von Anfang November bis Anfang Mai gesperrt. Unsere Strecken bleiben im Tal.",
-      },
-      {
-        question: "Können Sie mehrere Fahrzeuge für eine Gruppe stellen?",
-        reponse:
-          "Ja, ab neun Personen koordinieren wir mehrere Fahrzeuge auf denselben Termin, damit die Gruppe zusammen ankommt.",
-      },
-    ],
-  },
 
   zermatt: {
     slug: "zermatt",
@@ -720,6 +249,299 @@ export const TRADUCTIONS_DE: Record<string, TraductionStation> = {
         question: "Ist die Schweizer Vignette im Preis enthalten?",
         reponse:
           "Ja, wie jede Maut und jeder Autoverlad auf der Strecke. Der genannte Preis ist der, den Sie zahlen.",
+      },
+    ],
+  },
+
+  engelberg: {
+    slug: "engelberg",
+    metaTitre: "Transfer Engelberg | 107 km ab Zürich, rund 1 h 50",
+    metaDescription:
+      "Privater Transfer nach Engelberg ab Zürich: 107 km, rund 1 h 50, fast durchgehend Autobahn. Festpreis pro Fahrzeug, Skisäcke und Vignette inklusive.",
+    h1: "Transfers nach Engelberg — der kürzeste Weg ab Zürich",
+    chapo:
+      "Engelberg ist der nächstgelegene ernstzunehmende Skiort ab Zürich: 107 km, rund 1 h 50, davon der größte Teil Autobahn. Wer morgens landet, steht mittags am Titlis — das schafft kaum ein Ort dieser Größenordnung.",
+    contenu: [
+      { type: "titre2", texte: "Warum die Entfernung hier zählt" },
+      {
+        type: "paragraphe",
+        texte:
+          "Autobahn bis Stans, dann zwanzig Kilometer das Tal hinauf: der Transfer ab Zürich ist der kürzeste, den ein internationaler Flughafen in die Schweizer Alpen bietet. Das ist kein Detail für einen Kurzaufenthalt — bei drei Skitagen entscheidet die Anfahrt darüber, ob der erste davon zählt.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Die Höhe gewinnen hier die Bahnen, nicht der Transfer. Die Talstraße liegt niedrig und wird die ganze Saison geräumt, was Engelberg zu einer der verlässlichsten Anfahrten der Alpen bei schlechtem Wetter macht.",
+      },
+
+      { type: "titre2", texte: "Welcher Flughafen für Engelberg?" },
+      {
+        type: "liste",
+        items: [
+          "Zürich (ZRH) — 107 km, rund 1 h 50. Flüge die ganze Woche, Langstreckenanschluss, Autobahn bis Stans.",
+          "Bern (BRN) — 158 km, rund 2 h 05. Näher an der Mitte des Landes, aber mit dünnem Flugplan: erst die Verbindung prüfen, dann planen.",
+          "Basel (BSL) — rund 145 km, 2 h. Interessant für Flüge aus Deutschland und Frankreich.",
+          "Milano Malpensa (MXP) — 220 km, rund 3 h durch den Gotthard. Lohnt sich für den Flugpreis, nicht für die Fahrt: der Tunnel staut sich an Wochenenden und Feiertagen erheblich.",
+        ],
+      },
+
+      { type: "titre2", texte: "Der Ort" },
+      {
+        type: "paragraphe",
+        texte:
+          "Engelberg ist um ein Benediktinerkloster von 1120 gewachsen, und die Abtei steht bis heute mitten im Dorf — ungewöhnliche Nachbarschaft für einen Ort, der international als einer der besten Freeride-Berge der Alpen gilt. Der Titlis darüber reicht auf 3 020 m, mit einem Gletscher, der die Saison lang trägt.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Für den Transfer heißt das zweierlei: Das Dorf ist kompakt und die Adressen liegen nah beieinander, und viele Gäste bringen Tourenausrüstung mit. Melden Sie Splitboards, Felle und Airbag-Rucksäcke bei der Buchung an — sie brauchen mehr Platz als ein Paar Ski, und der Kofferraum bestimmt das Fahrzeug vor der Sitzzahl.",
+      },
+
+      { type: "titre2", texte: "Winter, Gepäck, Buchung" },
+      {
+        type: "paragraphe",
+        texte:
+          "Unsere Fahrzeuge fahren mit Winterreifen und führen Ketten mit; in der Schweiz entscheidet der Zustand der Straße, nicht das Datum. Die Autobahnvignette und jede Maut der Strecke sind im genannten Preis enthalten.",
+      },
+      inklusive,
+    ],
+    faq: [
+      {
+        question: "Wie lange dauert der Transfer vom Flughafen Zürich nach Engelberg?",
+        reponse:
+          "107 km und rund 1 h 50 ohne Verkehr, fast durchgehend Autobahn bis Stans. An einem Samstag in der Hochsaison rechnen Sie zwanzig bis dreißig Minuten mehr ein.",
+      },
+      {
+        question: "Fährt das Fahrzeug bis vor die Unterkunft?",
+        reponse:
+          "Ja. Engelberg ist mit dem Auto erreichbar, wir setzen Sie an der genauen Adresse ab — Hotel, Chalet oder Ferienwohnung.",
+      },
+      {
+        question: "Lohnt sich Milano Malpensa für Engelberg?",
+        reponse:
+          "Nur beim Flugpreis. 220 km und rund drei Stunden durch den Gotthardtunnel, der sich an Wochenenden und in den Ferien staut. Zürich bleibt bei gleichem Preis immer die bessere Wahl.",
+      },
+      {
+        question: "Nehmen Sie Tourenausrüstung mit?",
+        reponse:
+          "Ja, und ohne Aufpreis. Melden Sie Splitboards, Tourenski und Airbag-Rucksäcke bei der Buchung an: Sie brauchen mehr Platz als klassische Ski, und wir wählen das Fahrzeug danach aus.",
+      },
+      {
+        question: "Was ist im Preis enthalten?",
+        reponse:
+          "Der Festpreis pro Fahrzeug, Skisäcke, Kindersitze, Maut, die Schweizer Vignette, Flugüberwachung und Wartezeit bei Verspätung. Nach der Buchung ändert sich nichts mehr.",
+      },
+    ],
+  },
+
+  grindelwald: {
+    slug: "grindelwald",
+    metaTitre: "Transfer Grindelwald | Zürich 157 km, Genf 233 km",
+    metaDescription:
+      "Privater Transfer nach Grindelwald ab Zürich (157 km, 2 h 40) und Genf (233 km, 3 h). Festpreis pro Fahrzeug, Vignette und Skisäcke inklusive.",
+    h1: "Transfers nach Grindelwald — unter der Eiger-Nordwand",
+    chapo:
+      "Grindelwald liegt auf 1 034 m am Fuß der Eiger-Nordwand, und die Anfahrt bleibt bis zuletzt im Tal: 157 km und rund 2 h 40 ab Zürich, 233 km und rund 3 h ab Genf. Die Höhe machen die Bahnen — der Transfer endet vor Ihrer Unterkunft.",
+    contenu: [
+      { type: "titre2", texte: "Welcher Flughafen für Grindelwald?" },
+      {
+        type: "liste",
+        items: [
+          "Zürich (ZRH) — 157 km, rund 2 h 40. Der Hauptzugang: Autobahn über Bern und Interlaken, dann das Lütschinental hinauf.",
+          "Genf (GVA) — 233 km, rund 3 h. Die größere Auswahl an europäischen Flügen, dafür die längere Fahrt am Genfersee entlang.",
+          "Bern (BRN) — rund 80 km, gut eine Stunde. Mit Abstand der nächste Flughafen, aber mit dünnem Flugplan.",
+          "Basel (BSL) — rund 180 km. Sinnvoll für Flüge aus Deutschland, überwiegend Autobahn.",
+        ],
+      },
+
+      { type: "titre2", texte: "Der Ort und das Gebiet" },
+      {
+        type: "paragraphe",
+        texte:
+          "Grindelwald ist kein zusammengebautes Retortendorf: ein gewachsener Ort mit Bauernhäusern, Hotels aus der Belle Époque und einer Aussicht, die seit hundertfünfzig Jahren Gäste bringt. Zwei Gebiete teilen sich den Ort — First im Norden, Männlichen und Kleine Scheidegg im Süden, von dort geht es weiter nach Wengen.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Seit dem Eiger Express ist die Kleine Scheidegg in gut zwanzig Minuten erreichbar. Für den Transfer heißt das: Fragen Sie nicht nach dem nächsten Lift, sondern nennen Sie Ihre Adresse — der Ort zieht sich über mehrere Kilometer, und zwischen Grund und Dorf liegt ein spürbarer Höhenunterschied mit Gepäck.",
+      },
+
+      { type: "titre2", texte: "Die letzte Etappe" },
+      {
+        type: "paragraphe",
+        texte:
+          "Die Straße von Interlaken durch das Lütschinental ist eine Hauptstraße, die ganze Saison geräumt, und selten das Problem. Was hier zählt, ist der Verkehr an Samstagen und die Anreise bei Schneefall am Nachmittag: Planen Sie die Abholung nicht auf die letzte Minute vor einer Bahnabfahrt.",
+      },
+      inklusive,
+    ],
+    faq: [
+      {
+        question: "Wie lange dauert die Fahrt vom Flughafen Zürich nach Grindelwald?",
+        reponse:
+          "157 km und rund 2 h 40 ohne Verkehr: Autobahn über Bern bis Interlaken, dann rund 20 km durch das Lütschinental. An Samstagen in der Hochsaison etwas mehr.",
+      },
+      {
+        question: "Zürich oder Genf für Grindelwald?",
+        reponse:
+          "Zürich ist rund 75 km und eine gute halbe Stunde näher. Genf lohnt sich, wenn Ihr Flug dorthin deutlich günstiger ist oder aus Süd- oder Westeuropa kommt.",
+      },
+      {
+        question: "Fährt das Fahrzeug bis ins Dorf?",
+        reponse:
+          "Ja. Grindelwald ist mit dem Auto erreichbar, anders als Wengen oder Mürren im Nachbartal. Wir setzen Sie an der genauen Adresse ab.",
+      },
+      {
+        question: "Kann ich von Grindelwald aus nach Wengen fahren?",
+        reponse:
+          "Über die Kleine Scheidegg mit der Bahn, ja — mit dem Auto nicht: Wengen hat keine Straße. Wer dort wohnt, bucht den Transfer nach Lauterbrunnen und steigt in die Wengernalpbahn.",
+      },
+      {
+        question: "Ist die Vignette im Preis?",
+        reponse:
+          "Ja, wie jede Maut der Strecke. Der genannte Preis ist der Endpreis pro Fahrzeug.",
+      },
+    ],
+  },
+
+  interlaken: {
+    slug: "interlaken",
+    metaTitre: "Transfer Interlaken | 139 km ab Zürich, rund 2 h 20",
+    metaDescription:
+      "Privater Transfer nach Interlaken ab Zürich (139 km, 2 h 20) und Genf (216 km, 2 h 40). Festpreis pro Fahrzeug, Vignette und Skisäcke inklusive.",
+    h1: "Transfers nach Interlaken — die Basis des Berner Oberlands",
+    chapo:
+      "Interlaken ist selbst kein Skiort, sondern das Drehkreuz der Region: 566 m hoch, zwischen Thuner und Brienzer See, mit Bahnen, die halbstündlich in die Berge fahren. 139 km und rund 2 h 20 ab Zürich, 216 km und rund 2 h 40 ab Genf.",
+    contenu: [
+      { type: "titre2", texte: "Warum viele hier wohnen und anderswo Ski fahren" },
+      {
+        type: "paragraphe",
+        texte:
+          "Der Preis, die Auswahl an Unterkünften und die Bahnen: Grindelwald liegt 20 km entfernt, Lauterbrunnen 12 km, Wengen und Mürren eine Bergbahn darüber, Adelboden und Gstaad innerhalb einer Fahrstunde. Wer eine Woche im Oberland verbringt und mehrere Gebiete fahren will, wohnt hier oft günstiger als oben.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Für den Transfer ist das die einfachste Ankunft der Region: flach, tief gelegen, Autobahn bis kurz vor die Stadt. Bei Schneefall ist Interlaken eine der wenigen Adressen in den Alpen, bei denen die Anfahrt kein Thema ist.",
+      },
+
+      { type: "titre2", texte: "Welcher Flughafen für Interlaken?" },
+      {
+        type: "liste",
+        items: [
+          "Bern (BRN) — 51 km, rund 50 Minuten. Mit Abstand der nächste, auf der Autobahn am Thuner See entlang; der Flugplan ist allerdings dünn.",
+          "Zürich (ZRH) — 139 km, rund 2 h 20. Der Hauptzugang, Autobahn die ganze Strecke über Bern.",
+          "Genf (GVA) — 216 km, rund 2 h 40. Die größte europäische Auswahl, eine ruhige Fahrt an den Seen entlang.",
+          "Milano Malpensa (MXP) — über den Simplon oder mit dem Autoverlad in Kandersteg, je nach Verhältnissen. Für Flüge aus Südeuropa einen Vergleich wert.",
+        ],
+      },
+
+      { type: "titre2", texte: "Ankunft und Adresse" },
+      {
+        type: "paragraphe",
+        texte:
+          "Interlaken hat zwei Bahnhöfe — Ost und West — und die Unterkünfte verteilen sich über beide Seiten der Stadt sowie über Matten und Unterseen. Nennen Sie bei der Buchung die genaue Adresse: Für die Fahrt macht es wenig aus, für den Treffpunkt alles.",
+      },
+      inklusive,
+    ],
+    faq: [
+      {
+        question: "Ist Interlaken ein Skiort?",
+        reponse:
+          "Nein, es ist die Basis. Gefahren wird in Grindelwald, auf der Kleinen Scheidegg, in Wengen, Mürren oder am Schilthorn — alles halbstündlich mit der Bahn erreichbar.",
+      },
+      {
+        question: "Wie lange dauert der Transfer ab Zürich?",
+        reponse:
+          "139 km und rund 2 h 20 ohne Verkehr, überwiegend Autobahn über Bern. Ab Genf sind es 216 km und rund 2 h 40.",
+      },
+      {
+        question: "Lohnt sich der Flughafen Bern?",
+        reponse:
+          "Wenn Ihre Stadt angeflogen wird, ja: 51 km und knapp eine Stunde, die kürzeste Anfahrt der Region. Der Flugplan ist aber schmal — prüfen Sie die Verbindung, bevor Sie darauf planen.",
+      },
+      {
+        question: "Können wir unterwegs in Grindelwald oder Lauterbrunnen halten?",
+        reponse:
+          "Sagen Sie es bei der Buchung. Ein Zwischenstopp im Tal ist möglich; wir nennen Ihnen den Preis vorher, er ändert sich danach nicht.",
+      },
+      {
+        question: "Ist die Anfahrt bei Schneefall heikel?",
+        reponse:
+          "Weniger als fast überall sonst in den Alpen: die Strecke bleibt tief und verläuft auf Autobahn und Seestraße. Unsere Fahrzeuge fahren dennoch mit Winterreifen und führen Ketten mit.",
+      },
+    ],
+  },
+
+  wengen: {
+    slug: "wengen",
+    metaTitre: "Transfer Wengen | über Lauterbrunnen und die Bergbahn",
+    metaDescription:
+      "Privater Transfer nach Wengen ab Zürich: bis Lauterbrunnen, dann die Wengernalpbahn. Festpreis pro Fahrzeug, Ankunft auf eine Abfahrt abgestimmt.",
+    h1: "Transfers nach Wengen — bis Lauterbrunnen, dann die Bahn",
+    chapo:
+      "Wengen hat keine Straße. Das Dorf auf 1 274 m wird ausschließlich von der Wengernalpbahn erschlossen, die in rund 15 Minuten die Felswand hinauf fährt, etwa alle halbe Stunde. Ihr Transfer endet also in Lauterbrunnen — und wir stimmen die Ankunft auf eine Abfahrt ab.",
+    contenu: [
+      { type: "titre2", texte: "Das steht hier oben, nicht unten auf der Seite" },
+      {
+        type: "paragraphe",
+        texte:
+          "Im Voraus gesagt gehört das zum Reiz des Ortes; um elf Uhr abends am Bahnsteig entdeckt, nicht mehr. Deshalb steht es als Erstes: Kein Fahrzeug fährt nach Wengen hinein, und wer Ihnen etwas anderes andeutet, meint dasselbe — Lauterbrunnen —, sagt es nur später.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Die Straße endet in Lauterbrunnen, rund 149 km und zweieinhalb Stunden ab Zürich. Die 174 km und knapp 4 h 45, die Sie in der Tabelle unten finden, schließen die Bergbahn bis ins Dorf ein — beides stimmt, es misst nur nicht dasselbe.",
+      },
+
+      { type: "titre2", texte: "Wie die letzte Etappe funktioniert" },
+      {
+        type: "liste",
+        items: [
+          "Wir setzen Sie am Bahnhof Lauterbrunnen ab, direkt am Parkplatz.",
+          "Die Wengernalpbahn fährt etwa alle 30 Minuten, die Fahrt dauert rund 15 Minuten.",
+          "Ski und Gepäck fahren mit; für schweres Gepäck gibt es in Wengen Elektrokarren der Hotels.",
+          "Sagen Sie uns Ihr Hotel: Wir legen die Ankunft auf eine Abfahrt, statt Sie auf einem kalten Bahnsteig warten zu lassen.",
+        ],
+      },
+
+      { type: "titre2", texte: "Der Ort" },
+      {
+        type: "paragraphe",
+        texte:
+          "Wengen liegt auf einer Terrasse über dem Lauterbrunnental, gegenüber Jungfrau, Mönch und Eiger. Skiort ist es seit den Viktorianern, und eine Straße hatte es nie — das Ergebnis ist ein Dorf ohne Autoverkehr, mit dem Skigebiet der Kleinen Scheidegg direkt darüber.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Ein Datum sollten Sie kennen: das Lauberhorn-Wochenende im Januar. Tal und Bahnen sind dann voll, die Unterkünfte lange ausgebucht. Wer in dieser Woche kommt, bucht den Transfer früh — und rechnet mit mehr Zeit für die letzten Kilometer.",
+      },
+      inklusive,
+    ],
+    faq: [
+      {
+        question: "Kann das Fahrzeug bis Wengen fahren?",
+        reponse:
+          "Nein. Wengen ist autofrei und hat keine Straßenverbindung. Der Transfer endet am Bahnhof Lauterbrunnen, von dort fährt die Wengernalpbahn in rund 15 Minuten hinauf.",
+      },
+      {
+        question: "Wie oft fährt die Bahn?",
+        reponse:
+          "Etwa alle halbe Stunde, bis in den späten Abend. Nennen Sie uns Ihren Flug und Ihr Hotel: Wir stimmen die Ankunft in Lauterbrunnen auf eine Abfahrt ab.",
+      },
+      {
+        question: "Wie lange dauert die Fahrt ab Zürich?",
+        reponse:
+          "Bis Lauterbrunnen rund 149 km und zweieinhalb Stunden. Mit der Bergbahn bis ins Dorf kommen Sie insgesamt auf knapp 4 h 45, je nach Anschluss.",
+      },
+      {
+        question: "Was passiert mit dem Gepäck?",
+        reponse:
+          "Ski und Koffer fahren in der Bahn mit. In Wengen selbst holen die meisten Hotels ihre Gäste mit Elektrokarren am Bahnhof ab — sagen Sie dem Hotel Ihre Ankunftszeit.",
+      },
+      {
+        question: "Wann ist es besonders voll?",
+        reponse:
+          "Am Lauberhorn-Wochenende im Januar und in den Februarferien. Beides sind Termine, an denen man den Transfer nicht kurzfristig bucht.",
       },
     ],
   },

@@ -59,13 +59,23 @@ du `.wpress` :
 
 | Type | Anglais (racine) | Langues traduites (`/fr/`, `/de/`, `/it/`) |
 |---|---|---|
-| Hub pays | `/{country}-ski-transfers/` | pas de hub pays : l'accueil de la langue joue ce rôle |
+| Index des stations | `/ski-resort-transfers/` | `/{lang}/{silo}/` — la racine du silo |
+| Index des aéroports | `/airport-ski-transfers/` | `/{lang}/{aéroports}/` (`SEGMENT_AEROPORTS`) |
+| Hub pays | `/{country}-ski-transfers/` | `/{lang}/{silo}/{pays}/` — **seulement les pays réellement desservis dans la langue** |
 | Station (page mère) | `/{country}-ski-transfers/{resort}/` | `/{lang}/{silo}/{station}/` |
 | Trajet (page fille) | `/{country}-ski-transfers/{resort}/{airport}-transfers/` | `/{lang}/{silo}/{station}/{aéroport}/` |
-| Hub aéroport | `/{country-de-l-aéroport}-ski-transfers/{airport}/` | pas de hub aéroport traduit |
+| Hub aéroport | `/{country-de-l-aéroport}-ski-transfers/{airport}/` | pas de hub aéroport traduit : l'index des aéroports mène aux trajets |
 | Page fonctionnelle | `/{slug}/` — URL conservées du WordPress | `/{lang}/{slug}/` |
 | Blog | `/blog/{slug}/` | `/{lang}/blog/{slug}/` |
 | Réservation | `/book-ski-transfer-tickets/` | `/fr/reserver/`, `/de/buchen/`, `/it/prenota/` |
+
+Les hubs pays traduits sont apparus le 10 septembre 2026 : l'accueil de la langue
+jouait ce rôle, et le pied de page traduit renvoyait donc vers les quatre hubs
+**anglais** sans même le signaler. Ils sont **cinq**, pas douze, parce que le
+périmètre suit les stations traduites — France en français ; Suisse en allemand ;
+Italie et France en italien (`src/lib/pays-intl.ts`). L'accueil, lui,
+est redevenu une home : bandeau, formulaire de recherche, réassurance, véhicules,
+avis, comme en anglais.
 
 Le segment `{silo}` est propre à chaque langue, parce que c'est un mot-clé :
 `transferts-ski`, `skitransfer`, `trasferimenti-sci` (`SEGMENT_STATIONS` dans
@@ -74,9 +84,12 @@ Le segment `{silo}` est propre à chaque langue, parce que c'est un mot-clé :
 la table d'une langue ferme le trajet** — sans segment, pas d'URL, donc pas de page.
 
 Le segment racine `[silo]` sert les hubs pays **et** les pages fonctionnelles ; le
-segment `[silo]/[resort]` sert les pages de station **et** les hubs d'aéroport.
+segment `[silo]/[resort]` sert les pages de station **et** les hubs d'aéroport ;
+côté traduit, `{silo}/[station]` sert les stations **et** les hubs pays.
 Next n'accepte qu'un segment dynamique par niveau, d'où ces aiguillages — chacun
-délègue à un composant dédié, un seul H1 par page.
+délègue à un composant dédié, un seul H1 par page. `paramsStations()` refuse au
+build qu'un hub pays porte le slug d'une station : l'un des deux ne serait jamais
+servi.
 
 Le silo anglais conserve le pattern des 40 pages de station existantes : ce sont
 les URL qui portent l'antériorité **et** le meilleur contenu du site (≈ 1 100 mots
@@ -110,25 +123,50 @@ d'où une forme plus courte.
    fusionnent dans les pages de trajet.
 5. **i18n : anglais d'abord, les autres langues page par page.** Quatre langues —
    EN, FR, DE, IT — décidées le 9 septembre 2026 sur les données de l'audit :
-   l'allemand est le premier marché après l'anglais (Innsbruck, Salzbourg, Zurich
-   desservis, fort pouvoir d'achat), l'italien suit ; l'espagnol et le portugais ne
-   sont pas des marchés du ski alpin. Un `hreflang` n'est émis que sur une paire qui
+   l'allemand est le premier marché après l'anglais (fort pouvoir d'achat),
+   l'italien suit ; l'espagnol et le portugais ne sont pas des marchés du ski
+   alpin. **Attention** : l'allemand avait été choisi pour l'Autriche, sortie du
+   périmètre le 10 septembre 2026 — il ne lui reste que la Suisse, trois stations
+   et quatre trajets. Un `hreflang` n'est émis que sur une paire qui
    existe réellement, et le sélecteur de langue n'affiche une langue que là où la
    page existe. Le site actuel annonce EN / ES / DE / IT alors qu'aucune version
    n'existe — c'est le défaut à ne pas reproduire.
    Les deux se calculent **au même endroit**, `src/lib/intl/liens.ts` : un sélecteur
    qui proposerait une langue que le hreflang ne déclare pas serait le même défaut,
-   en plus discret. Les traductions vivent dans des registres à part
+   en plus discret. Et la déclaration doit être **réciproque** : jusqu'au
+   10 septembre 2026 les pages traduites déclaraient l'anglais sans que l'anglais
+   déclare rien, ce que Google ignore purement et simplement — les pages
+   fonctionnelles anglaises passent maintenant par `alternativesPageFonctionnelleEn()`,
+   les hubs pays par `alternativesHubPaysEn()`. Les traductions vivent dans des registres à part
    (`traductions-{lang}.ts`) pour survivre aux scripts de migration, et chaque langue
-   a son propre périmètre — l'allemand vise l'Autriche et la Suisse alémanique,
-   l'italien la Vallée d'Aoste et le Piémont. Ce ne sont pas des miroirs du français.
+   a son propre périmètre — l'allemand vise la Suisse alémanique, l'italien la
+   Vallée d'Aoste et le Piémont. Ce ne sont pas des miroirs du français.
 6. **Blog** : gabarits livrés, maillage automatique dans les deux sens avec les
    stations et les trajets. `src/lib/articles/`.
    **Design** : la home suit la maquette validée par le client (bleu nuit, vert de
    réassurance, magenta d'action — voir `tailwind.config.ts`). Son contenu est repris
    mot pour mot de la home WordPress dans `src/data/accueil.ts` : la refonte change
    la mise en page, pas le propos.
-7. **Le moteur de réservation est livré avec le site, en un mois** (décision du
+7. **L'Autriche est hors périmètre** (décision du client, 10 septembre 2026).
+   Dix stations, dix-sept trajets, sept traductions allemandes et un hub pays
+   traduit retirés — dans toutes les langues, anglais compris. Le point d'entrée
+   est `src/lib/resorts/registry.ts` : tous les scripts en partent, donc une
+   station remise là revient au prochain `migrer:stations`. Les vingt-six URL
+   autrichiennes de l'ancien site partent en 301 vers `/austria-ski-transfers/`,
+   qui subsiste comme **porte d'entrée d'aéroports** — Innsbruck dessert Selva
+   Val Gardena — sur le modèle de l'Allemagne, qui n'a jamais eu de station. La
+   table `STATIONS_HORS_PERIMETRE` du générateur de redirections porte ces
+   destinations : c'est là qu'on ajoute un pays si le périmètre bouge encore.
+   **Ce qu'il faut savoir** : le silo allemand ne garde que Zermatt, Davos et
+   St. Moritz. Le renforcer suppose de traduire d'autres stations suisses.
+
+8. **Le panier parle les quatre langues** depuis le 10 septembre 2026 :
+   `/cart/`, `/fr/panier/`, `/de/warenkorb/`, `/it/carrello/`, un seul composant
+   et un seul re-chiffrage serveur. Son icône était masquée hors anglais, si
+   bien qu'un visiteur français pouvait mettre un transfert de côté puis ne plus
+   le retrouver. `PanierProvider` enveloppe désormais les quatre layouts.
+
+9. **Le moteur de réservation est livré avec le site, en un mois** (décision du
    7 septembre 2026, voir `docs/moteur-reservation.md`) : formulaire maison en Next +
    Stripe Checkout + Supabase. Le tunnel WooCommerce est déplacé sur
    `book.alpsskitransfers.com`, sorti de l'index, et **reste armé en repli** —

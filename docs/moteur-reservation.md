@@ -184,7 +184,24 @@ sauvegarde `.wpress`), à extraire avec `npm run wp:extract`.
 3. **Compte Stripe déjà ouvert.** Aucun délai de vérification à absorber : les clés
    se posent dans `.env.local` (voir `.env.example`), jamais dans le dépôt.
 4. **Back-office** réduit à une liste des courses à venir, filtrable et exportable.
-   Pas d'application chauffeur.
+   Pas d'application chauffeur. **Chaque ligne montre le trajet en entier** —
+   demande explicite de l'exploitant, 10 septembre 2026 : « sur le site aussi le
+   plus important c'est le suivi client, avec l'ancien logiciel on ne voyait pas
+   la destination de la course, je devais les contacter à chaque fois pour
+   demander le trajet ». Une liste de courses qui oblige à rappeler le client
+   pour savoir où il va n'est pas un back-office, c'est un carnet de rendez-vous.
+
+   Les colonnes minimales, dans cet ordre de lecture : date et heure de prise en
+   charge, **aéroport de départ → station d'arrivée**, **adresse exacte en
+   station**, nom du passager, téléphone, numéro de vol, nombre de passagers,
+   véhicule, housses à skis, statut de paiement, référence. Le message libre et
+   l'âge des enfants suivent en second rang.
+
+   **Les données sont déjà là** : la table `reservations` écrite par
+   `/api/reservation/` porte `airport`, `resort`, `adresse`, `vol`, `aller`,
+   `retour`, `client_telephone` et le reste (voir `src/app/api/reservation/route.ts`).
+   Il ne manque que l'écran — c'est un travail d'affichage, pas de modèle de
+   données, et le point est donc tranché sans coût supplémentaire.
 5. **Remboursements** faits à la main depuis le tableau de bord Stripe, avec une
    politique d'annulation affichée sur le site.
 6. **Euro seul** à l'affichage et à l'encaissement.
@@ -193,8 +210,8 @@ sauvegarde `.wpress`), à extraire avec `npm run wp:extract`.
 le reste. Les six questions ci-dessus ne changent donc plus le prix ni le délai :
 elles changent seulement ce qui entre dans la V1. À défaut de réponse, les valeurs
 retenues sont les plus simples — paiement intégral, aller-retour supporté (c'est la
-norme du transfert de ski), back-office réduit à une liste exportable, remboursements
-faits à la main dans Stripe, euro seul.
+norme du transfert de ski), back-office réduit à une liste exportable **montrant le
+trajet complet**, remboursements faits à la main dans Stripe, euro seul.
 
 Le point 6 est le seul vrai bloquant : **le compte Stripe ne s'ouvre pas sans savoir
 quelle entité encaisse.** À lancer le premier jour, la vérification d'identité prend

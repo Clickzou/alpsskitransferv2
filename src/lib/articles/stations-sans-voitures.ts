@@ -139,6 +139,176 @@ export const stationsSansVoitures: Article = {
    * plutôt que des généralités.
    */
   traductions: {
+    fr: {
+      slug: "ou-s-arrete-la-voiture-en-station",
+      titre: "Où la voiture s’arrête vraiment, station par station",
+      metaTitre: "Où s’arrête la voiture en station de ski ?",
+      metaDescription:
+        "Val Thorens, Belle Plagne, Les Arcs, Avoriaz : où le véhicule vous dépose réellement, ce que deviennent les skis, et comment prévoir les derniers mètres.",
+      altVisuel: "Station piétonne des Alpes, atteinte à pied ou en navette",
+      chapo:
+        "« Dépose devant votre logement » ne veut pas dire la même chose partout. Dans une station piétonne, la voiture s’arrête à un parking et les derniers cent cinquante mètres se font avec les bagages — à pied, en luge à skis ou en chenillette. Voici où c’est le cas dans les stations que nous desservons, et comment on prévoit ces derniers mètres pour qu’ils soient la partie agréable du voyage.",
+      stationsLiees: [
+        "val-thorens",
+        "la-plagne",
+        "les-arcs",
+        "les-menuires",
+        "courchevel",
+        "tignes",
+      ],
+      contenu: [
+        {
+          type: "paragraphe",
+          texte:
+            "La question ne se pose presque jamais avant le départ, et toujours à l’arrivée, à dix-neuf heures, avec deux enfants fatigués et quatre paires de skis. Elle mérite deux minutes de lecture.",
+        },
+
+        { type: "titre2", texte: "Val Thorens : le centre est piéton" },
+        {
+          type: "paragraphe",
+          texte:
+            "La station est accessible en voiture jusqu’à ses parkings, mais son cœur ne l’est pas : les rues centrales sont piétonnes, et la circulation y est réglementée. Concrètement, le véhicule vous dépose au plus près de votre résidence selon l’accès du jour, et les derniers mètres se font à pied. Beaucoup de résidences prêtent des luges à bagages — demandez-le à la réservation de votre logement, pas en arrivant.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Ajoutez la montée depuis Moûtiers : 37 kilomètres et une heure, souvent la partie la plus lente des 161 km depuis Genève. Un samedi de février, la file d’attente à l’entrée de la station fait partie du trajet.",
+        },
+
+        { type: "titre2", texte: "La Plagne : six villages, et deux entièrement piétons" },
+        {
+          type: "paragraphe",
+          texte:
+            "Belle Plagne et Plagne Centre sont conçues sans voitures : on entre par un parking couvert et on rejoint son immeuble par des galeries et des passerelles. Plagne 1800, Plagne Villages et Montalbert se conduisent normalement. Sur une même « station », l’arrivée n’a donc rien à voir selon le village — c’est pourquoi nous demandons le nom du village et de la résidence, pas seulement « La Plagne ».",
+        },
+
+        { type: "titre2", texte: "Les Arcs : le funiculaire depuis Bourg-Saint-Maurice" },
+        {
+          type: "paragraphe",
+          texte:
+            "Arc 1600 est reliée à Bourg-Saint-Maurice par un funiculaire de sept minutes, et c’est parfois le trajet le plus rapide en fin de journée. Les quatre villages — 1600, 1800, 1950 et 2000 — sont accessibles par la route, mais 1950 et 2000 ont des zones piétonnes et des accès qui se ferment en cas de forte neige. Là encore : le numéro du village change tout.",
+        },
+
+        { type: "titre2", texte: "Avoriaz : la route s’arrête au parking" },
+        {
+          type: "paragraphe",
+          texte:
+            "C’est le cas français le plus net, même si nous n’y publions pas encore de page. Aucune voiture n’entre à Avoriaz : le véhicule s’arrête au parking à l’entrée, et la station se parcourt à pied, en traîneau tiré par des chevaux ou en chenillette. Les hôtels organisent le transport des bagages — prévenez-les de votre heure d’arrivée, c’est la seule chose à faire.",
+        },
+
+        { type: "titre2", texte: "Les autres cas à connaître" },
+        {
+          type: "liste",
+          items: [
+            "Les Menuires et Courchevel : accessibles en voiture, mais leurs quartiers s’étagent sur plusieurs centaines de mètres de dénivelé. L’adresse compte plus que le nom de la station.",
+            "Tignes et Val d’Isère : la route du Val Claret et celle qui monte du barrage peuvent fermer temporairement en cas de risque d’avalanche. C’est rare, c’est annoncé, et cela décale une prise en charge.",
+            "Hors de France, les cas radicaux existent : Zermatt s’arrête à Täsch, Wengen à Lauterbrunnen. Nous le disons avant la réservation sur les pages concernées.",
+          ],
+        },
+
+        { type: "titre2", texte: "Prévoir les derniers mètres" },
+        {
+          type: "liste",
+          items: [
+            "Donnez l’adresse complète : village, résidence, rue. Pas seulement la station.",
+            "Dites-nous l’étage et l’ascenseur si vous en avez un : cela change le point de dépose.",
+            "Demandez à votre logeur s’il prête une luge à bagages — la plupart le font, presque personne ne le sait.",
+            "Prévoyez un quart d’heure de plus à l’arrivée dans une station piétonne. C’est le temps que prend la dernière étape, pas un retard.",
+          ],
+        },
+
+        {
+          type: "paragraphe",
+          texte:
+            "Ce que nous faisons de notre côté : nous disons où la voiture s’arrête avant la réservation, pas à l’arrivée, et nous choisissons le point de dépose le plus proche autorisé le jour même — ce qui dépend de la neige et de l’heure autant que de la carte.",
+        },
+      ],
+    },
+    it: {
+      slug: "dove-finisce-la-strada",
+      titre: "Dove finisce la strada, località per località",
+      metaTitre: "Dove finisce la strada nelle località sciistiche",
+      metaDescription:
+        "Cervinia, Courmayeur, Champoluc, Chamois: dove il veicolo ti lascia davvero, che cosa succede agli sci e come prevedere gli ultimi metri.",
+      altVisuel: "Località senza auto, raggiungibile a piedi o in funivia",
+      chapo:
+        "« Ti lasciamo davanti all’alloggio » non significa la stessa cosa ovunque. In alcune località la strada si ferma a un parcheggio, in altre una valle chiude d’inverno al traffico privato. Ecco dove succede tra le località che serviamo, e come si prevedono gli ultimi metri perché siano la parte piacevole del viaggio.",
+      stationsLiees: [
+        "cervinia",
+        "courmayeur",
+        "champoluc",
+        "alagna-valsesia",
+        "gressoney",
+        "selva-val-gardena",
+      ],
+      contenu: [
+        {
+          type: "paragraphe",
+          texte:
+            "La domanda non si pone quasi mai alla partenza, e sempre all’arrivo, alle sette di sera, con due bambini stanchi e quattro paia di sci. Vale due minuti di lettura.",
+        },
+
+        { type: "titre2", texte: "Courmayeur: la Val Ferret chiude d’inverno" },
+        {
+          type: "paragraphe",
+          texte:
+            "Courmayeur si raggiunge in auto senza problemi, ma la Val Ferret — dove si trovano molti chalet e agriturismi — è chiusa al traffico privato nei mesi invernali. Si arriva fino a Planpincieux o al parcheggio della valle, poi si prosegue con la navetta o a piedi. Se il tuo alloggio è in Val Ferret, dicci il nome esatto: cambia il punto in cui ti lasciamo, non il prezzo.",
+        },
+        {
+          type: "paragraphe",
+          texte:
+            "Vale la pena ricordare un’altra cosa su Courmayeur: l’aeroporto più rapido non è italiano. Ginevra dista 102 km contro i 158 di Torino — un’ora e mezza contro due.",
+        },
+
+        { type: "titre2", texte: "Cervinia: il Breuil è in gran parte pedonale" },
+        {
+          type: "paragraphe",
+          texte:
+            "Breuil-Cervinia si raggiunge in auto fino ai parcheggi, ma il centro è pedonale e la circolazione è regolata: gli ultimi metri si fanno a piedi, con i bagagli. La salita da Châtillon aggiunge poi 27 km di tornanti ai 121 km da Torino — è la parte lenta del tragitto, e in caso di nevicata è quella che conta.",
+        },
+
+        { type: "titre2", texte: "Monterosa Ski: tre valli, tre strade separate" },
+        {
+          type: "paragraphe",
+          texte:
+            "Champoluc, Gressoney e Alagna sono collegate sugli sci ma non sulla strada: passare dall’una all’altra in auto significa ridiscendere in fondovalle e risalire, un’ora e mezza buona. Se prenoti il rientro da una valle diversa da quella di arrivo, diccelo alla prenotazione — è un tragitto diverso, non una variazione.",
+        },
+
+        { type: "titre2", texte: "Chamois: il caso limite" },
+        {
+          type: "paragraphe",
+          texte:
+            "Non lo serviamo, ma merita di essere conosciuto perché è l’unico comune italiano senza strada di accesso: ci si arriva solo con la funivia da Buisson, o a piedi. Chi ci va prenota il transfer fino a Buisson e prosegue con l’impianto, che ha orari — non è un dettaglio da scoprire alle undici di sera.",
+        },
+
+        { type: "titre2", texte: "Gli altri casi da conoscere" },
+        {
+          type: "liste",
+          items: [
+            "Selva Val Gardena: raggiungibile in auto, ma il paese si allunga per chilometri lungo la statale. L’indirizzo conta più del nome della località.",
+            "Sestriere e Sauze d’Oulx: strade principali, sgomberate tutta la stagione. La salita da Oulx a Sauze è però ripida e stretta in caso di neve.",
+            "Fuori dall’Italia, i casi radicali esistono: Zermatt si ferma a Täsch, Wengen a Lauterbrunnen. Lo diciamo prima della prenotazione nelle pagine interessate.",
+          ],
+        },
+
+        { type: "titre2", texte: "Prevedere gli ultimi metri" },
+        {
+          type: "liste",
+          items: [
+            "Dai l’indirizzo completo: frazione, residence, via. Non solo la località.",
+            "Se l’alloggio è in una valle chiusa d’inverno, dillo alla prenotazione.",
+            "Chiedi al proprietario se presta una slitta portabagagli: molti lo fanno, quasi nessuno lo sa.",
+            "Metti in conto un quarto d’ora in più all’arrivo in una località pedonale. È il tempo dell’ultima tappa, non un ritardo.",
+          ],
+        },
+
+        {
+          type: "paragraphe",
+          texte:
+            "Quello che facciamo noi: diciamo dove finisce la strada prima della prenotazione, non all’arrivo, e scegliamo il punto di discesa più vicino consentito quel giorno — che dipende dalla neve e dall’ora quanto dalla mappa.",
+        },
+      ],
+    },
     de: {
       slug: "autofreie-skiorte",
       titre: "Autofreie Skiorte: wie Sie wirklich hinkommen",

@@ -135,7 +135,96 @@ export const reserverTransfertSki: Article = {
   ],
 
   traductions: {
+    de: {
+      altVisuel: "Winterreifen auf einer verschneiten Straße zu einem Skiort",
+      slug: "transfer-buchen-worauf-achten",
+      titre: "Transfer buchen: worauf Sie vor dem Bezahlen achten sollten",
+      metaTitre: "Skitransfer buchen: worauf Sie vorher achten sollten",
+      metaDescription:
+        "Pro Person oder pro Fahrzeug, Maut, Skisäcke, Kindersitze, Flugüberwachung, Storno: acht Punkte, die den wirklichen Preis eines Transfers bestimmen.",
+      chapo:
+        "Der Transfer ist einer der wenigen Urlaubskäufe, bei denen genannter und bezahlter Preis regelmäßig auseinandergehen — und bei denen das billigste Angebot oft die teuerste Fahrt bezeichnet. Diese acht Punkte klären das vorher, in zwei Minuten.",
+      stationsLiees: ["zermatt", "davos", "st-moritz", "engelberg", "grindelwald", "wengen"],
+      contenu: [
+        {
+          type: "paragraphe",
+          texte:
+            "Alle acht lassen sich vor dem Bezahlen prüfen, und die Antwort steht bei einem seriösen Anbieter auf der Seite — nicht in den AGB, nicht auf Nachfrage per E-Mail.",
+        },
+
+        { type: "titre2", texte: "1. Pro Person oder pro Fahrzeug?" },
+        {
+          type: "paragraphe",
+          texte:
+            "Das ist der Unterschied, der am meisten kostet. Ein Preis pro Person sieht auf dem Vergleichsportal niedrig aus und verdreifacht sich zu dritt. Ein Preis pro Fahrzeug bleibt gleich, ob Sie zu zweit oder zu acht fahren. Rechnen Sie immer auf die ganze Gruppe um, bevor Sie zwei Angebote nebeneinanderlegen.",
+        },
+
+        { type: "titre2", texte: "2. Ist die Maut im Preis?" },
+        {
+          type: "paragraphe",
+          texte:
+            "In der Schweiz kommt die Autobahnvignette dazu, auf manchen Strecken ein Tunnel. Das sind keine Rundungsposten: Der Mont-Blanc-Tunnel kostet für einen Kleinbus eine ernstzunehmende Summe. Ein Angebot, das die Maut ausklammert, ist kein Angebot, sondern eine Schätzung.",
+        },
+
+        { type: "titre2", texte: "3. Kosten Skisäcke extra?" },
+        {
+          type: "paragraphe",
+          texte:
+            "Manche Anbieter berechnen sie pro Stück, andere gar nicht — und wieder andere merken erst am Flughafen, dass das Fahrzeug zu klein ist. Der entscheidende Punkt ist nicht der Preis, sondern die Frage: Wer nach Anzahl und Art des Gepäcks fragt, bevor er ein Fahrzeug nennt, hat verstanden, dass der Kofferraum vor der Sitzzahl entscheidet.",
+        },
+
+        { type: "titre2", texte: "4. Was passiert bei Flugverspätung?" },
+        {
+          type: "paragraphe",
+          texte:
+            "Die Frage lautet nicht, ob gewartet wird, sondern ob der Flug überwacht wird. Wer die Flugnummer abfragt und die Abholung automatisch verschiebt, kostet Sie bei zwei Stunden Verspätung nichts. Wer nur eine Uhrzeit notiert, berechnet Wartezeit — oder ist weg.",
+        },
+
+        { type: "titre2", texte: "5. Kindersitze" },
+        {
+          type: "paragraphe",
+          texte:
+            "In Frankreich gilt die Sicherungspflicht bis 10 Jahre, in der Schweiz bis 12 Jahre oder 150 cm, in Italien bis 150 cm. Sitze und Erhöhungen gehören ins Angebot und werden vor der Abfahrt eingebaut — nicht auf dem Parkplatz improvisiert. Nennen Sie das Alter der Kinder bei der Buchung, nicht bei der Ankunft.",
+        },
+
+        { type: "titre2", texte: "6. Die Winterausrüstung des Fahrzeugs" },
+        {
+          type: "paragraphe",
+          texte:
+            "In Frankreich schreibt das Berggesetz vom 1. November bis 31. März Winterreifen oder Ketten vor; in Österreich gilt eine situative Pflicht vom 1. November bis 15. April; in der Schweiz entscheidet der Zustand der Straße statt des Datums. Fragen Sie nach Reifen und Ketten: Die letzten Kilometer zu einem Skiort sind genau die, auf denen es darauf ankommt.",
+        },
+
+        { type: "titre2", texte: "7. Die Adresse, nicht der Ort" },
+        {
+          type: "paragraphe",
+          texte:
+            "Ein Skiort zieht sich über Kilometer und Höhenmeter. Zwischen zwei Ortsteilen liegen mit Gepäck zwanzig Minuten Steigung. Ein Anbieter, der nur nach dem Ort fragt, setzt Sie irgendwo ab; einer, der nach Straße und Hausnummer fragt, fährt Sie vor die Tür. Und wo die Straße endet — Zermatt in Täsch, Wengen in Lauterbrunnen —, muss das vor der Buchung stehen, nicht danach.",
+        },
+
+        { type: "titre2", texte: "8. Storno, und was tatsächlich zugesagt wird" },
+        {
+          type: "paragraphe",
+          texte:
+            "Lesen Sie die Frist und die Form: bis wann kostenlos, ab wann anteilig, und was bei einem gestrichenen Flug gilt. Eine klare Regel auf der Seite ist ein besseres Zeichen als ein großzügiges Versprechen im Chat.",
+        },
+
+        { type: "titre2", texte: "Wann buchen" },
+        {
+          type: "paragraphe",
+          texte:
+            "Zusammen mit dem Flug, nicht in der Woche davor. Die Weihnachtstage und die Februarferien sind bei den Fahrzeugen früher ausgebucht als bei den Betten, und an einem Samstag im Februar gibt es keine Reserve — weder bei uns noch bei anderen.",
+        },
+
+        { type: "titre2", texte: "In einer Zeile" },
+        {
+          type: "paragraphe",
+          texte:
+            "Ein Preis pro Fahrzeug, Maut und Skisäcke inklusive, Flug überwacht, Kindersitze eingebaut, Winterreifen und Ketten an Bord, Absetzen an der genauen Adresse, Stornoregel auf der Seite. Fehlt einer dieser Punkte, ist der Preis nicht der Preis.",
+        },
+      ],
+    },
     fr: {
+      altVisuel: "Pneus hiver sur une route enneigée vers une station de ski",
       slug: "reserver-un-transfert-ski-ce-quil-faut-verifier",
       titre: "Réserver un transfert : ce qu’il faut vérifier avant de payer",
       metaTitre: "Transfert ski : ce qu’il faut vérifier avant de payer",

@@ -17,10 +17,10 @@ vérifiée. **Ce fichier dit où reprendre.**
 | Trajets | **104** : 89 repris, **15 rédigés** (les liaisons Genève de l'audit) — **0 inerte** |
 | Hubs pays et hubs aéroport | 5 + 31 — les **10 aéroports qui portent le trafic** ont un contenu rédigé |
 | Pages fonctionnelles conservées | 14 |
-| Français | home + **10 stations** + **17 trajets** + **2 articles** + **5 pages de conversion**, tunnel compris — 35 URL |
-| Allemand | home + **10 stations** + **18 trajets** + **5 pages de conversion** + **2 articles**, tunnel compris — 37 URL |
-| Italien | home + **11 stations** + **16 trajets** + **5 pages de conversion** + **2 articles**, tunnel compris — 36 URL |
-| Blog | **3 articles** en anglais, **2 par langue traduite** — chacun adapté à son marché |
+| Français | home + **10 stations** + **17 trajets** + **3 articles** + pages de conversion, service, juridique et la page locale VTC Chambéry |
+| Allemand | home + **7 stations** + **8 trajets** + **9 pages** + **2 articles**, tunnel compris — l'Autriche est sortie le 10 septembre, quatre skiorts suisses l'ont remplacée |
+| Italien | home + **11 stations** + **16 trajets** + **3 articles** + pages de conversion, service et juridique |
+| Blog | **3 articles × 4 langues** — chacun adapté à son marché, pas traduit |
 | Home | **au design validé** par le client |
 | Stations, trajets, hubs, pages fonctionnelles | **au design de la home** (8 septembre) |
 | Moteur de réservation | **au niveau du concurrent** (autocomplétion, adresse libre, bagages, retour asymétrique, devises) — reste à brancher Stripe et Supabase |
@@ -46,8 +46,10 @@ Ce qui a changé de forme :
   sont des composants partagés. Next impose un segment statique par langue, donc trois
   arborescences de routes — elles ne contiennent que des aiguillages de quinze lignes.
 
-**Allemand et italien, écrits pour leur marché.** L'allemand part d'Innsbruck, de
-Salzbourg et de Zurich vers le Tyrol, l'Arlberg et la Suisse alémanique ; l'italien de
+**Allemand et italien, écrits pour leur marché.** L'allemand partait d'Innsbruck, de
+Salzbourg et de Zurich vers le Tyrol, l'Arlberg et la Suisse alémanique — **l'Autriche
+est sortie du périmètre le 10 septembre 2026**, il ne lui reste que Zermatt, Davos et
+St. Moritz depuis Zurich et Genève ; l'italien de
 Turin, Milan et Bergame vers la Vallée d'Aoste, le Piémont et la Via Lattea. Ce ne sont
 pas des traductions du français : le périmètre, les exemples et la réglementation
 hivernale citée diffèrent. Toutes les distances viennent de `data/distances.ts`.
@@ -301,15 +303,16 @@ design, la technique en dernier.** Les pages sont faites.
 - **Les avis** : les 4 témoignages repris de la home ne sont rattachés à aucune
   plateforme. À sourcer, ou à remplacer par un flux Trustpilot ou Google.
 
-**À expliquer à JC à la reprise (9 septembre au soir, question restée ouverte) :**
-l'article « quel aéroport » existe en quatre versions qui ne couvrent pas les mêmes
-massifs — les Alpes françaises en anglais et en français, le Tyrol et la Suisse en
-allemand, les Alpes italiennes en italien — et les quatre se déclarent mutuellement
-en `hreflang`. La question est de savoir si l'on garde ce lien ou si on le coupe.
-Reprendre l'explication **en partant du problème concret**, pas du vocabulaire :
-Google doit-il traiter ces quatre pages comme une seule, servie dans la langue du
-visiteur, ou comme quatre pages distinctes ? Décision de JC, une ligne de code dans
-les deux cas.
+**~~Question du 9 septembre~~ — tranchée le 10 septembre 2026 : le `hreflang` de
+l'article « quel aéroport » est **conservé**.** Les quatre versions restent un seul
+groupe. Le raisonnement est écrit en tête de `src/lib/articles/quel-aeroport-alpes.ts` :
+`hreflang` couvre l'adaptation régionale et pas seulement la traduction littérale ;
+un groupe jugé trop divergent est ignoré par Google, jamais pénalisé, quand le
+couper coûte à coup sûr quatre pages orphelines et un lecteur allemand renvoyé sur
+l'anglais ; et la version allemande, réécrite sur la Suisse après la sortie de
+l'Autriche, est aujourd'hui plus proche des trois autres qu'au moment de la question.
+**Le seul signal qui justifierait de revenir dessus** : ces URL signalées « page en
+double sans URL canonique choisie par l'utilisateur » dans la Search Console.
 
 ## Trois points de méthode à ne pas réapprendre
 

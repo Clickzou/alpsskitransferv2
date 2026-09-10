@@ -6,6 +6,36 @@ import type { Article } from "./types";
  * Les distances et durées citées viennent de `src/data/distances.ts` (routage
  * OpenStreetMap, 2 108 liaisons). Si la table est recalculée, relire les chiffres
  * de cet article : c'est le seul endroit du site où ils sont écrits en dur.
+ *
+ * ## Les quatre versions restent liées par `hreflang` — décision du 10 septembre 2026
+ *
+ * La question était ouverte depuis le 9 septembre : ces quatre pages ne couvrent
+ * pas les mêmes massifs — les Alpes françaises en anglais et en français, la
+ * Suisse en allemand, les Alpes italiennes en italien — et elles se déclarent
+ * pourtant mutuellement. Google doit-il y voir une page servie en quatre
+ * langues, ou quatre pages distinctes ?
+ *
+ * **Une page, servie en quatre langues.** Trois raisons :
+ *
+ * 1. C'est le cas d'usage prévu. `hreflang` couvre l'**adaptation régionale**,
+ *    pas seulement la traduction mot pour mot : même intention de recherche
+ *    (« quel aéroport pour partir skier »), même fonction dans le silo, même
+ *    gabarit. Qu'un Allemand y trouve Zurich et un Italien Turin est le
+ *    comportement recherché, pas une divergence.
+ * 2. Les coûts sont asymétriques. Un `hreflang` que Google juge trop divergent
+ *    est **ignoré** — il n'y a pas de pénalité. Le couper, en revanche, coûte
+ *    à coup sûr : quatre pages orphelines, et un lecteur allemand renvoyé vers
+ *    la version anglaise par le `x-default`.
+ * 3. La divergence se réduit d'elle-même. La version allemande parlait du Tyrol
+ *    et de l'Arlberg ; depuis la sortie de l'Autriche du périmètre elle traite
+ *    de la Suisse, c'est-à-dire des sept stations que le silo allemand dessert
+ *    réellement. Le lien est aujourd'hui plus légitime qu'il ne l'était quand la
+ *    question a été posée.
+ *
+ * À surveiller dans la Search Console : si le rapport de couverture signale ces
+ * URL comme « page en double sans URL canonique choisie par l'utilisateur »,
+ * c'est le signal que Google refuse le groupe — et il sera alors temps de
+ * couper. Aucun autre signal ne justifie de revenir sur cette décision.
  */
 export const quelAeroportAlpes: Article = {
   slug: "which-airport-for-the-french-alps",
@@ -180,6 +210,7 @@ export const quelAeroportAlpes: Article = {
    */
   traductions: {
     fr: {
+      altVisuel: "Terminal d’aéroport, porte d’entrée des Alpes",
       slug: "quel-aeroport-pour-les-alpes",
       titre: "Quel aéroport choisir pour les Alpes françaises ?",
       metaTitre: "Quel aéroport pour les Alpes ? Genève, Lyon, Chambéry",
@@ -302,120 +333,92 @@ export const quelAeroportAlpes: Article = {
      */
     de: {
       slug: "welcher-flughafen-fuer-die-alpen",
-      titre: "Welcher Flughafen für Tirol, den Arlberg und die Schweiz?",
-      metaTitre: "Welcher Flughafen für die Alpen? Innsbruck, Zürich, München",
+      titre: "Welcher Flughafen für die Schweizer Alpen?",
+      metaTitre: "Welcher Flughafen für die Schweizer Alpen? Zürich, Genf",
       metaDescription:
-        "Innsbruck, Salzburg, Zürich, München, Friedrichshafen: reale Entfernungen und Fahrzeiten zu 15 Skiorten, und wie Sie in dreißig Sekunden entscheiden.",
+        "Zürich, Bern, Basel, Genf, Malpensa: reale Entfernungen und Fahrzeiten zu den Schweizer Skiorten, und wie Sie in dreißig Sekunden entscheiden.",
       altVisuel: "Flughafenterminal, Tor zu den Alpen",
       chapo:
-        "Innsbruck ist die naheliegende Antwort, und für die Hälfte der Ostalpen die falsche. Hier sind die fünf Flughäfen, die Tirol, den Arlberg, das Salzburger Land und die Schweiz erschließen, mit den realen Entfernungen und Fahrzeiten — auf dem Straßennetz gemessen, nicht geschätzt — und eine Methode, um in dreißig Sekunden zu entscheiden.",
+        "Zürich ist die naheliegende Antwort, und meistens die richtige — aber nicht immer. Hier sind die fünf Flughäfen, die das Berner Oberland, Graubünden und das Wallis erschließen, mit den realen Entfernungen und Fahrzeiten — auf dem Straßennetz gemessen, nicht geschätzt — und eine Methode, um in dreißig Sekunden zu entscheiden.",
       stationsLiees: [
-        "ischgl",
-        "solden",
-        "kitzbuhel",
-        "st-anton-am-arlberg",
-        "obergurgl",
-        "mayrhofen",
-        "zell-am-see",
-        "zermatt",
+        "engelberg",
+        "interlaken",
+        "grindelwald",
+        "wengen",
         "davos",
         "st-moritz",
+        "zermatt",
       ],
       contenu: [
         {
           type: "paragraphe",
           texte:
-            "Zuerst wird der Flug gebucht, dann der Transfer gesucht. Für eine Skiwoche ist das die falsche Reihenfolge: Zwischen zwei Flughäfen liegen nicht zwanzig Minuten, sondern zwei Stunden in jede Richtung — und die entscheiden, ob Sie am Anreisetag noch auf der Piste stehen oder im Auto sitzen.",
+            "Die Frage stellt sich anders als in Frankreich oder Österreich. Die Schweiz hat einen großen internationalen Flughafen, drei kleinere und einen im Nachbarland — und weil das Land klein ist, liegen alle Skiorte grundsätzlich in Reichweite. Was sich unterscheidet, sind zwei bis vier Stunden Fahrt, und die entscheiden über den Ankunftstag.",
         },
 
-        { type: "titre2", texte: "Innsbruck: unschlagbar in Tirol, wetterabhängig" },
+        { type: "titre2", texte: "Zürich: der Hauptzugang, und für fast alles die kürzeste Wahl" },
         {
           type: "paragraphe",
           texte:
-            "Innsbruck liegt mitten im Inntal, und von dort ist fast ganz Tirol in anderthalb Stunden erreichbar: Mayrhofen 75 km (1 h 10), Sölden 84 km (1 h 15), Serfaus 92 km (1 h 15), St. Anton am Arlberg 96 km (1 h 15), Obergurgl 98 km (1 h 30), Ischgl 100 km (1 h 25). Kein anderer Flughafen der Alpen deckt so viele große Skigebiete auf so kurzer Distanz ab.",
+            "Flüge die ganze Woche, Langstreckenanschluss, und ein Autobahnnetz, das in alle Richtungen aus dem Flughafen führt. Für die Zentralschweiz und das Berner Oberland ist Zürich unschlagbar, und für Graubünden gibt es keine ernsthafte Alternative.",
         },
         {
-          type: "paragraphe",
-          texte:
-            "Zwei Einschränkungen. Erstens ist das Winterflugprogramm auf Samstage konzentriert — unter der Woche fliegt hier deutlich weniger als in Zürich oder München. Zweitens führt der Anflug durch ein enges Tal: Bei Föhn oder schlechter Sicht wird häufiger als anderswo nach München oder Salzburg umgeleitet. Ein Transferanbieter, der das nicht einplant, lässt Sie an einem Flughafen stehen, an dem niemand auf Sie wartet.",
-        },
-
-        { type: "titre2", texte: "Salzburg: das Salzburger Land und die Kitzbüheler Alpen" },
-        {
-          type: "paragraphe",
-          texte:
-            "Salzburg hat ein klar umrissenes Einzugsgebiet, und darin ist es die beste Wahl: Kitzbühel 75 km (1 h 20), Zell am See 78 km (1 h 20), Bad Gastein 104 km (2 h 20). Für diese drei kommt kein anderer Flughafen heran — Kitzbühel ab Innsbruck sind 98 km und zwanzig Minuten mehr.",
-        },
-        {
-          type: "paragraphe",
-          texte:
-            "Weiter westlich kippt das Bild schnell: Sölden liegt ab Salzburg bei 263 km (3 h 10), Ischgl bei 280 km (3 h 25). Beide sind ab Innsbruck in gut einer Stunde erreichbar. Salzburg lohnt sich dort nur, wenn der Flug deutlich besser passt.",
+          type: "liste",
+          items: [
+            "Engelberg — 107 km, rund 1 h 50. Der kürzeste Transfer in ein großes Schweizer Skigebiet ab einem internationalen Flughafen.",
+            "Interlaken — 139 km, rund 2 h 20, durchgehend Autobahn.",
+            "Lauterbrunnen für Wengen — rund 149 km, zweieinhalb Stunden; die letzte Etappe fährt die Zahnradbahn.",
+            "Grindelwald — 157 km, rund 2 h 40.",
+            "Davos — 166 km, rund 2 h 35 über den Wolfgangpass.",
+            "St. Moritz — 221 km, rund 3 h 20 über den Julier.",
+            "Zermatt (bis Täsch) — 251 km, rund 4 h 15.",
+          ],
         },
 
-        { type: "titre2", texte: "Zürich: die Schweiz, und der Arlberg von Westen" },
+        { type: "titre2", texte: "Bern: der nächste, wenn er Ihre Stadt anfliegt" },
         {
           type: "paragraphe",
           texte:
-            "Zürich ist der einzige dieser Flughäfen, der an jedem Wochentag aus ganz Europa angeflogen wird. Das ist sein eigentlicher Vorteil: Sie können mittwochs anreisen, ohne von einem Charter abzuhängen.",
-        },
-        {
-          type: "paragraphe",
-          texte:
-            "In der Schweiz ist er konkurrenzlos: Engelberg 107 km (1 h 50), Interlaken 139 km (2 h 20), Grindelwald 157 km (2 h 40), Davos 166 km (2 h 35), St. Moritz 221 km (3 h 20), Zermatt 251 km (4 h 15). Und er erschließt den Arlberg von Westen — St. Anton 190 km (2 h 50) —, was besonders für Lech und Zürs zählt: Die Abzweigung bei Alpe Rauz liegt auf dieser Seite des Tunnels.",
+            "51 km und knapp eine Stunde bis Interlaken, auf der Autobahn am Thuner See entlang: kein anderer Flughafen kommt dem Berner Oberland so nahe. Der Haken ist der Flugplan, der dünn ist und saisonal schwankt. Prüfen Sie die Verbindung zuerst und planen Sie erst dann darauf — nicht umgekehrt.",
         },
 
-        { type: "titre2", texte: "München: der günstige Umweg, der oft keiner ist" },
+        { type: "titre2", texte: "Basel: der Zugang aus dem Norden" },
         {
           type: "paragraphe",
           texte:
-            "München ist ein echter Hub mit Flügen das ganze Jahr, und für viele deutsche Gäste ist es der Flughafen mit der kürzesten Gesamtreise — Anfahrt zum Abflughafen eingerechnet. Kitzbühel liegt bei 167 km (2 h), Mayrhofen bei 198 km (2 h 20), Zell am See bei 209 km (2 h 40), Sölden bei 239 km (3 h 10).",
-        },
-        {
-          type: "paragraphe",
-          texte:
-            "Selten die kürzeste Fahrt, häufig der günstigste Flug — und im Februar, wenn die Tarife nach Innsbruck steigen, oft die vernünftigere Rechnung. Es ist außerdem der Flughafen, an dem Sie landen, wenn Innsbruck umleitet: Ein Transfer ab München ist dann keine Notlösung, sondern eine Strecke, die wir ohnehin fahren.",
+            "Für Gäste aus Deutschland und dem Elsass ist Basel oft die einfachste Anreise, und die Fahrt in die Zentralschweiz ist kurz: rund 145 km und zwei Stunden bis Engelberg, überwiegend Autobahn. Ins Berner Oberland dauert es länger als ab Zürich, ohne dass es kürzer wäre — hier entscheidet der Flugpreis, nicht die Karte.",
         },
 
-        { type: "titre2", texte: "Friedrichshafen: der Flughafen, den kaum jemand kennt" },
+        { type: "titre2", texte: "Genf: das Wallis, und nur das Wallis" },
         {
           type: "paragraphe",
           texte:
-            "Am Bodensee gelegen, klein, und für den Arlberg die schnellste Verbindung überhaupt: St. Anton 129 km (1 h 40), Lech 138 km (2 h 20), Davos 154 km (2 h), Ischgl 167 km (2 h 20). Das schlägt Zürich um eine Stunde und München um fast zwei. Das Winterprogramm ist schmal — aber wenn Ihre Daten passen, gibt es keine bessere Wahl für den Arlberg und die Grisonen.",
-        },
-        {
-          type: "paragraphe",
-          texte:
-            "Memmingen spielt in derselben Liga, etwas weiter weg: St. Anton 172 km (2 h), Sölden 187 km (2 h 40). Beide lohnen einen Blick, bevor Sie automatisch München buchen.",
+            "Für Zermatt ist Genf die kürzere Wahl: 237 km und rund 3 h 10 bis Täsch, gegenüber 251 km und 4 h 15 ab Zürich — die vierzehn Kilometer Unterschied täuschen, es ist die Strecke durch das Rhonetal, die schneller läuft. Für das Berner Oberland dagegen ist Genf ein Umweg: 216 km bis Interlaken, 233 km bis Grindelwald, jeweils eine gute halbe Stunde mehr als ab Zürich.",
         },
 
-        { type: "titre2", texte: "Die Flughäfen im anderen Land" },
+        { type: "titre2", texte: "Milano Malpensa: der Preis gegen den Tunnel" },
         {
           type: "paragraphe",
           texte:
-            "Für einen Ort nahe der Grenze liegt der beste Flughafen oft jenseits davon. Selva in der Val Gardena erreichen Sie ab Innsbruck in 120 km (1 h 50) — näher als ab Verona (194 km) und deutlich näher als ab Bergamo (274 km). Umgekehrt ist Mailand Malpensa über den Simplon eine reale Option für das Wallis. Die Grenze kostet nichts: Österreich, die Schweiz und Italien liegen alle im Schengen-Raum.",
+            "Aus Süd- und Osteuropa ist Malpensa häufig deutlich günstiger, und für die Zentralschweiz durchaus eine Option: 220 km und rund drei Stunden bis Engelberg durch den Gotthard. Der Tunnel ist allerdings die Unbekannte — an Wochenenden und in den Ferien staut er sich erheblich, und niemand kann Ihnen vorher sagen, um wie viel. Rechnen Sie den Puffer ein, bevor Sie den Flugpreis vergleichen.",
         },
 
         { type: "titre2", texte: "Das Samstagsproblem" },
         {
           type: "paragraphe",
           texte:
-            "Alle genannten Zeiten sind ohne Verkehr gemessen. An einem Samstag im Februar wechseln die Alpen am selben Vormittag ihre Gäste, und die Achsen, die zählen — die Inntalautobahn, das Zillertal, die Talstraße ins Paznaun —, stehen. Rechnen Sie 45 Minuten bis eine Stunde zusätzlich ein, unabhängig vom Flughafen.",
-        },
-        {
-          type: "paragraphe",
-          texte:
-            "Wenn Ihre Daten flexibel sind, ist eine Anreise am Sonntag oder unter der Woche die einfachste Stunde, die Sie sich sparen können — in beide Richtungen.",
+            "Alle genannten Zeiten gelten ohne Verkehr. An einem Samstagvormittag im Februar überlagern sich Wochenwechsel und Tagesausflugsverkehr aus Zürich, Bern und Luzern: dreißig Minuten mehr sind normal, auf der Gotthardachse deutlich mehr. Ein Flug am Freitagabend oder am Sonntag löst das Problem zuverlässiger als jede Routenwahl.",
         },
 
         { type: "titre2", texte: "In dreißig Sekunden entscheiden" },
         {
           type: "liste",
           items: [
-            "Tirol — Ötztal, Paznaun, Zillertal, Arlberg von Osten: Innsbruck, sofern es an Ihrem Tag fliegt.",
-            "Kitzbühel, Zell am See, Bad Gastein: Salzburg, ohne zu zögern.",
-            "Arlberg, Lech, Zürs, Graubünden: Friedrichshafen prüfen, dann Zürich.",
-            "Schweiz — Wallis, Berner Oberland, Engadin: Zürich, mit Genf als Alternative für Zermatt.",
-            "Wenn Innsbruck an Ihrem Tag nicht fliegt: München vergleichen, bevor Sie auf Salzburg ausweichen.",
+            "Berner Oberland oder Zentralschweiz? Zürich — außer Bern fliegt Ihre Stadt an, dann Bern.",
+            "Graubünden, also Davos, Klosters oder St. Moritz? Zürich, ohne Alternative.",
+            "Zermatt? Genf, rund eine Stunde vor Zürich.",
+            "Anreise aus Deutschland? Basel für die Zentralschweiz, sonst Zürich.",
+            "Anreise aus Südeuropa? Malpensa prüfen, aber den Gotthard mitrechnen.",
           ],
         },
         {
