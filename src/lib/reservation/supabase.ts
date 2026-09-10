@@ -84,3 +84,51 @@ export async function mettreAJour(
     return false;
   }
 }
+
+/**
+ * Lit des lignes d'une table, triées, avec un filtre optionnel.
+ *
+ * PostgREST prend ses paramètres dans l'URL : `select`, `order`, et un filtre
+ * par colonne au format `colonne=eq.valeur`. Pas de SDK à charger pour cela —
+ * c'est la même raison qui vaut pour l'insertion.
+ *
+ * Renvoie un tableau vide quand Supabase n'est pas configuré : un back-office
+ * qui affiche « aucune course » sur un environnement sans base est plus lisible
+ * qu'une exception, et la page dit elle-même que la base n'est pas branchée.
+ */
+export async function lire<T>(
+  table: string,
+  options: {
+    colonnes?: string;
+    tri?: { colonne: string; croissant?: boolean };
+    filtres?: { colonne: string; operateur: string; valeur: string }[];
+    limite?: number;
+  } = {},
+): Promise<T[]> {
+  if (!supabaseConfigure()) return [];
+
+  try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}`);
+    url.searchParams.set("select", options.colonnes ?? "*");
+    if (options.tri) {
+      url.searchParams.set(
+        "order",
+        `${options.tri.colonne}.${options.tri.croissant === false ? "desc" : "asc"}`,
+      );
+    }
+    for (const filtre of options.filtres ?? []) {
+      url.searchParams.set(filtre.colonne, `${filtre.operateur}.${filtre.valeur}`);
+    }
+    if (options.limite) url.searchParams.set("limit", String(options.limite));
+
+    const reponse = await fetch(url, { headers: entetes(), cache: "no-store" });
+    if (!reponse.ok) {
+      console.error(`[supabase] lecture refusée sur ${table}`, await reponse.text());
+      return [];
+    }
+    return (await reponse.json()) as T[];
+  } catch (erreur) {
+    console.error(`[supabase] lecture impossible sur ${table}`, erreur);
+    return [];
+  }
+}

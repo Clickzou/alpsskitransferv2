@@ -38,6 +38,17 @@ const BOTS_IA = [
  */
 const PANIERS = ["/cart"];
 
+/*
+  Le back-office n'est **pas** listé ici, et c'est délibéré.
+
+  `robots.txt` est public : y écrire un `Disallow` sur l'adresse du back-office
+  publierait à tout le monde le chemin qu'on a choisi discret, et la première
+  chose que lit un scanner automatique est justement ce fichier. La page porte
+  un `noindex, nofollow` en dur dans son layout — c'est ce qui empêche
+  réellement l'indexation, un Disallow ne le fait pas — et l'authentification
+  fait le reste. Une URL peu devinable ne protège rien à elle seule ; elle
+  réduit seulement le bruit de fond.
+*/
 export default function robots(): MetadataRoute.Robots {
   /*
     Préproduction : rien n'est explorable. Le site vit sur une URL Vercel avant

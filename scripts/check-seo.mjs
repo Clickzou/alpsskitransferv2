@@ -98,7 +98,17 @@ console.log(
     : "[seo] indexation FERMÉE (préproduction) — robots.txt en Disallow, noindex sur toutes les pages. Poser NEXT_PUBLIC_INDEXATION=ouverte le jour de la bascule.",
 );
 
-const pages = await fichiers(APP, (n) => n === "page.tsx");
+/*
+ * Le back-office est hors du contrôle.
+ *
+ * `(admin)` n'est pas une page de site : pas de metaTitre à calibrer, pas de
+ * description à écrire, aucune raison d'être exploré. Ses metadonnées vivent
+ * dans son layout, avec un `noindex` en dur. Le contrôler ici reviendrait à
+ * exiger d'un écran de gestion qu'il se vende dans les résultats de recherche.
+ */
+const pages = (await fichiers(APP, (n) => n === "page.tsx")).filter(
+  (chemin) => !chemin.includes(`${path.sep}(admin)${path.sep}`),
+);
 for (const page of pages) {
   const source = await readFile(page, "utf8");
   const h1 = await compterH1(source);
