@@ -25,7 +25,8 @@
     "images:preparer": "node scripts/preparer-images.mjs",
     "logo:preparer": "node scripts/preparer-logo.mjs",
     "destination:analyser": "node scripts/analyser-destination.mjs",
-    "audit:seo": "node scripts/audit-seo.mjs"
+    "audit:seo": "node scripts/audit-seo.mjs",
+    "moteur:auditer": "node scripts/audit-moteur.mjs"
   },
   "dependencies": {
     "next": "16.1.6",

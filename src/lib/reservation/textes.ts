@@ -132,6 +132,15 @@ export interface TextesTunnel {
    * pouvait pas le découvrir. On dit ce qui manque, et on ramène au champ qui
    * le décide.
    */
+  /**
+   * Le bouton qui ramène au champ en cause, quand le serveur a refusé.
+   *
+   * Un refus s'affichait seul, avec pour seule issue « demandez un devis » : le
+   * visiteur dont le groupe dépassait de une personne n'avait pas de chemin
+   * pour le corriger, alors que c'était une saisie à changer. Le serveur nomme
+   * le champ fautif, le tunnel y ramène le curseur.
+   */
+  corrigerSaisie: string;
   vehiculesEcartes: (places: number) => string;
   vehiculesEcartesAction: string;
   capaciteBorne: (places: number) => string;
@@ -229,6 +238,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     vehiculesEcartes: (places) =>
       `Some vehicles are not shown because they do not seat ${places} people or their luggage.`,
     vehiculesEcartesAction: "Change the journey",
+    corrigerSaisie: "Go back and change it",
     enfants: "Children’s ages, for the right seats",
     enfantsIndice: "e.g. 3 and 7",
     precisions: "Add child seats or a note (optional)",
@@ -323,6 +333,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     vehiculesEcartes: (places) =>
       `Certains véhicules ne sont pas proposés : ils ne prennent pas ${places} personnes, ou leurs bagages.`,
     vehiculesEcartesAction: "Modifier le trajet",
+    corrigerSaisie: "Revenir et le modifier",
     enfants: "Âge des enfants, pour les bons sièges",
     enfantsIndice: "par exemple 3 et 7",
     precisions: "Ajouter des sièges enfants ou une précision (facultatif)",
@@ -422,6 +433,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     vehiculesEcartes: (places) =>
       `Einige Fahrzeuge fehlen: Sie fassen keine ${places} Personen oder deren Gepäck.`,
     vehiculesEcartesAction: "Fahrt ändern",
+    corrigerSaisie: "Zurück und ändern",
     enfants: "Alter der Kinder, für die richtigen Sitze",
     enfantsIndice: "zum Beispiel 3 und 7",
     precisions: "Kindersitze oder Hinweis hinzufügen (optional)",
@@ -520,6 +532,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     vehiculesEcartes: (places) =>
       `Alcuni veicoli non compaiono: non portano ${places} persone o i loro bagagli.`,
     vehiculesEcartesAction: "Modifica il tragitto",
+    corrigerSaisie: "Torna e modifica",
     enfants: "Età dei bambini, per i seggiolini giusti",
     enfantsIndice: "per esempio 3 e 7",
     precisions: "Aggiungi seggiolini o una nota (facoltativo)",

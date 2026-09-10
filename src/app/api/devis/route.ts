@@ -32,7 +32,10 @@ export async function POST(requete: Request) {
   }
 
   const valide = validerDemande((corps ?? {}) as Record<string, unknown>);
-  if (!valide.ok) return NextResponse.json({ erreur: valide.message }, { status: 400 });
+  if (!valide.ok) {
+    /* Le champ voyage avec le message : le tunnel y ramène le curseur. */
+    return NextResponse.json({ erreur: valide.message, champ: valide.champ }, { status: 400 });
+  }
 
   // Lieu saisi librement : on ne chiffre pas une liaison qu'on ne sait pas mesurer.
   if ("surMesure" in valide) {

@@ -237,6 +237,11 @@ export default function Tunnel({
   const [choixRetour, setChoixRetour] = useState<OptionVehicule | null>(null);
   const [surMesure, setSurMesure] = useState<string | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
+  /* Le champ que le serveur désigne dans son refus — voir `ChampFautif`. */
+  const [champFautif, setChampFautif] = useState<string | null>(null);
+  const champPassagers = useRef<HTMLInputElement>(null);
+  const champPassagersRetour = useRef<HTMLInputElement>(null);
+  const champBagages = useRef<HTMLInputElement>(null);
   const [enCours, setEnCours] = useState(false);
 
   const [client, setClient] = useState({
@@ -254,6 +259,33 @@ export default function Tunnel({
 
   // Changer la demande invalide le prix affiché : on ne garde jamais à l'écran un
   // devis qui ne correspond plus à la saisie.
+  /**
+   * Ramène à l'étape du trajet, curseur sur le champ que le serveur a désigné.
+   *
+   * Le curseur est posé après le rendu : le champ n'existe pas au moment du
+   * clic. Sans cela, le visiteur arrivait en haut d'un formulaire de quinze
+   * champs et devait retrouver celui qu'il venait corriger.
+   */
+  function corrigerLaSaisie(champ: string | null) {
+    setEtape("trajet");
+    setTimeout(() => {
+      /*
+        Le champ que le refus désigne. Les bagages méritent leur entrée : leur
+        plafond porte sur la **somme** des valises et des housses, que ni l'un ni
+        l'autre des deux champs ne peut borner seul — c'est le seul refus que le
+        navigateur ne sait pas prévenir.
+      */
+      const cible =
+        champ === "passagersRetour"
+          ? champPassagersRetour.current
+          : champ === "bagages"
+            ? champBagages.current
+            : champPassagers.current;
+      cible?.focus();
+      cible?.select();
+    }, 300);
+  }
+
   /*
     Une borne par sens : un enfant est un passager de son propre trajet.
 
@@ -363,7 +395,10 @@ export default function Tunnel({
       });
       const donnees = await reponse.json();
       if (!reponse.ok) {
-        if (!automatique) setErreur(donnees.erreur ?? t.erreurPrix);
+        if (!automatique) {
+          setErreur(donnees.erreur ?? t.erreurPrix);
+          setChampFautif(donnees.champ ?? null);
+        }
         return;
       }
       if (donnees.devisSurMesure) {
@@ -391,6 +426,7 @@ export default function Tunnel({
     if (imminent) return;
 
     setErreur(null);
+    setChampFautif(null);
     setEnCours(true);
     try {
       const reponse = await fetch("/api/reservation/", {
@@ -411,6 +447,7 @@ export default function Tunnel({
       const donnees = await reponse.json();
       if (!reponse.ok) {
         setErreur(donnees.erreur ?? t.erreurEnvoi);
+        setChampFautif(donnees.champ ?? null);
         return;
       }
       if (donnees.paiement) {
@@ -532,10 +569,22 @@ export default function Tunnel({
           className="mt-6 rounded border border-marque/30 bg-marque/5 px-4 py-3 text-sm text-alpine"
         >
           {erreur}{" "}
-          <a className="font-medium text-marque underline" href="/contact/">
-            {t.demandeDevis}
-          </a>
-          .
+          {champFautif ? (
+            <button
+              type="button"
+              onClick={() => corrigerLaSaisie(champFautif)}
+              className="font-medium text-marque underline underline-offset-2 hover:text-marque-600"
+            >
+              {t.corrigerSaisie}
+            </button>
+          ) : (
+            <>
+              <a className="font-medium text-marque underline" href="/contact/">
+                {t.demandeDevis}
+              </a>
+              .
+            </>
+          )}
         </p>
       ) : null}
 
@@ -618,6 +667,7 @@ export default function Tunnel({
                 {t.passagers}
               </label>
               <input
+                ref={champPassagers}
                 id="passengers"
                 type="number"
                 min={1}
@@ -653,6 +703,7 @@ export default function Tunnel({
                   {t.bagages}
                 </label>
                 <input
+                  ref={champBagages}
                   id="bags"
                   type="number"
                   min={0}
@@ -726,6 +777,7 @@ export default function Tunnel({
                       {t.retourPassagers}
                     </label>
                     <input
+                      ref={champPassagersRetour}
                       id="returnPassengers"
                       type="number"
                       min={1}

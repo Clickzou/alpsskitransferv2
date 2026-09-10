@@ -127,7 +127,10 @@ export async function POST(requete: Request) {
   }
 
   const valide = validerDemande(corps);
-  if (!valide.ok) return NextResponse.json({ erreur: valide.message }, { status: 400 });
+  if (!valide.ok) {
+    /* Le champ voyage avec le message : le tunnel y ramène le curseur. */
+    return NextResponse.json({ erreur: valide.message, champ: valide.champ }, { status: 400 });
+  }
 
   const client = (corps.client ?? {}) as Coordonnees;
   const nom = propre(client.nom, 120);
@@ -178,7 +181,11 @@ export async function POST(requete: Request) {
     nombreEnfants(client.enfantsNombreRetour) > groupeRetour
   ) {
     return NextResponse.json(
-      { erreur: "There are more children than passengers — check the number of people." },
+      {
+        erreur: "There are more children than passengers — check the number of people.",
+        champ:
+          nombreEnfants(client.enfantsNombre) > groupeAller ? "passagers" : "passagersRetour",
+      },
       { status: 400 },
     );
   }
@@ -284,6 +291,7 @@ export async function POST(requete: Request) {
       {
         erreur: "We do not have a fixed price for this journey — ask us for a quote.",
         devisSurMesure: true,
+        champ: "passagers",
       },
       { status: 422 },
     );

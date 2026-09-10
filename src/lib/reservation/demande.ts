@@ -78,26 +78,40 @@ export interface DemandeSurMesure {
   motif: "adresse-libre" | "liaison-inconnue";
 }
 
+/**
+ * Le champ qu'un refus désigne.
+ *
+ * Un message seul laisse le visiteur devant un formulaire de quinze champs :
+ * « Passengers must be between 1 and 8 » est exact et ne dit pas où corriger.
+ * Le tunnel s'en sert pour ramener à l'étape du trajet, le curseur sur le champ
+ * en cause.
+ */
+export type ChampFautif = "passagers" | "passagersRetour" | "bagages" | "dates" | "lieux";
+
 export type Validation =
   | { ok: true; demande: DemandeReservation }
   | { ok: true; surMesure: DemandeSurMesure }
-  | { ok: false; message: string };
+  | { ok: false; message: string; champ?: ChampFautif };
 
 export function validerDemande(entree: EntreeBrute): Validation {
   const aller = dateLocale(entree.when);
-  if (!aller) return { ok: false, message: "Give a pick-up date and time." };
+  if (!aller) return { ok: false, message: "Give a pick-up date and time.", champ: "dates" };
 
   const retour = entree.returnWhen ? dateLocale(entree.returnWhen) : null;
   if (entree.returnWhen && !retour) {
-    return { ok: false, message: "Return date is not valid." };
+    return { ok: false, message: "Return date is not valid.", champ: "dates" };
   }
   if (retour && retour.getTime() <= aller.getTime()) {
-    return { ok: false, message: "The return must be after the outbound journey." };
+    return { ok: false, message: "The return must be after the outbound journey.", champ: "dates" };
   }
 
   const passagers = entier(entree.passengers);
   if (passagers === null || passagers < 1 || passagers > CAPACITE.standard) {
-    return { ok: false, message: `Passengers must be between 1 and ${CAPACITE.standard}.` };
+    return {
+      ok: false,
+      message: `Passengers must be between 1 and ${CAPACITE.standard}.`,
+      champ: "passagers",
+    };
   }
 
   /*
@@ -107,7 +121,11 @@ export function validerDemande(entree: EntreeBrute): Validation {
   */
   const passagersRetour = retour ? entier(entree.returnPassengers) : null;
   if (passagersRetour !== null && (passagersRetour < 1 || passagersRetour > CAPACITE.standard)) {
-    return { ok: false, message: `Passengers must be between 1 and ${CAPACITE.standard}.` };
+    return {
+      ok: false,
+      message: `Passengers must be between 1 and ${CAPACITE.standard}.`,
+      champ: "passagersRetour",
+    };
   }
 
   const bagages = Math.max(0, entier(entree.bags) ?? 0);
@@ -116,6 +134,7 @@ export function validerDemande(entree: EntreeBrute): Validation {
     return {
       ok: false,
       message: `That is more luggage than one vehicle takes — ask us for a group quote.`,
+      champ: "bagages",
     };
   }
 
@@ -144,7 +163,7 @@ export function validerDemande(entree: EntreeBrute): Validation {
     const depart = texte(entree.fromText, 300) ?? from;
     const arrivee = texte(entree.toText, 300) ?? to;
     if (!depart || !arrivee) {
-      return { ok: false, message: "Tell us where you are travelling from and to." };
+      return { ok: false, message: "Tell us where you are travelling from and to.", champ: "lieux" };
     }
     return {
       ok: true,
@@ -211,6 +230,17 @@ export function validerDemande(entree: EntreeBrute): Validation {
       airport: departConnu.slug,
       resort: arriveeConnue.slug,
       categorie,
+      /*
+        Le véhicule du retour voyage aussi par ce chemin — le cas courant.
+
+        Il n'était transmis que par la branche du retour asymétrique, celle où
+        les lieux changent. Sur un aller-retour ordinaire, le retour reprenait
+        donc silencieusement le véhicule de l'aller : une Premium à quatre
+        places était acceptée pour un retour à sept personnes, et le choix
+        inverse — venir en Premium, repartir en Standard — était refusé faute de
+        places. Deux fautes symétriques, la première étant la grave.
+      */
+      categorieRetour,
       passagers,
       passagersRetour,
       aller,
