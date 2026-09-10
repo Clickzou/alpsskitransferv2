@@ -50,7 +50,9 @@ function LigneCourse({ course }: { course: Course }) {
         <span className="text-sm text-alpine-700">{course.adresse}</span>
 
         <span className="text-sm text-alpine-600">
-          {course.passagers} pax · {course.vehicule}
+          {course.passagers} pax
+          {course.passagersRetour ? ` (${course.passagersRetour} au retour)` : ""} ·{" "}
+          {course.vehicule}
           {course.bagagesSki > 0 ? ` · ${course.bagagesSki} ski` : ""}
         </span>
 

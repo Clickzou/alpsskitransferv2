@@ -33,6 +33,7 @@ interface LigneBase {
   resort: string;
   vehicule: string;
   passagers: number;
+  passagers_retour: number | null;
   aller: string;
   retour: string | null;
   montant: string | number;
@@ -60,6 +61,8 @@ export interface Course {
   aller: Date;
   retour: Date | null;
   passagers: number;
+  /** Le groupe du retour quand il diffère — `null` s'il est le même. */
+  passagersRetour: number | null;
   vehicule: string;
   bagagesSki: number;
   vol: string | null;
@@ -94,6 +97,12 @@ function versCourse(ligne: LigneBase): Course {
     aller: new Date(ligne.aller),
     retour: ligne.retour ? new Date(ligne.retour) : null,
     passagers: ligne.passagers,
+    // Un retour au même effectif n'est pas une information : on ne le remonte
+    // que lorsqu'il diffère, sinon l'écran répète ce qu'il a déjà dit.
+    passagersRetour:
+      ligne.passagers_retour && ligne.passagers_retour !== ligne.passagers
+        ? ligne.passagers_retour
+        : null,
     vehicule: ligne.vehicule,
     bagagesSki: ligne.bagages_ski,
     vol: ligne.vol,

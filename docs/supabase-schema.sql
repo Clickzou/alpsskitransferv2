@@ -17,6 +17,8 @@ create table if not exists reservations (
   resort        text not null,                     -- slug du registre des stations
   vehicule      text not null,                     -- standard · business · premium
   passagers     smallint not null check (passagers between 1 and 16),
+  passagers_retour smallint                        -- null = le groupe ne change pas
+                check (passagers_retour is null or passagers_retour between 1 and 16),
   aller         timestamptz not null,
   retour        timestamptz,                       -- null = aller simple
   montant       numeric(10, 2) not null,

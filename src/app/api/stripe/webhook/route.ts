@@ -112,6 +112,7 @@ export async function POST(requete: Request) {
         retour: string | null;
         vehicule: string;
         passagers: number;
+        passagers_retour: number | null;
         bagages_ski: number;
         enfants: string | null;
         message: string | null;
@@ -194,6 +195,7 @@ export async function POST(requete: Request) {
       },
       vehicule: reservation?.vehicule ?? "",
       passagers: reservation?.passagers ?? 0,
+      passagersRetour: reservation?.passagers_retour ?? null,
       vol: reservation?.vol ?? null,
       bagagesSki: reservation?.bagages_ski ?? null,
       enfants: reservation?.enfants ?? null,
