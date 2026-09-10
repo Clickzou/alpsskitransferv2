@@ -35,8 +35,32 @@ interface Coordonnees {
   vol?: string;
   adresse?: string;
   skis?: number;
+  /** Combien d'enfants voyagent — un siège chacun à charger. */
+  enfantsNombre?: string;
+  /** Leurs âges, qui décident du type de siège. */
   enfants?: string;
   message?: string;
+}
+
+/**
+ * Les enfants, en une phrase pour le chauffeur.
+ *
+ * Deux champs à l'écran — combien, et quels âges — mais une seule colonne en
+ * base, et surtout une seule ligne à lire dans l'avis de course. Le nombre dit
+ * ce qu'il faut charger, l'âge ce qu'il faut charger exactement ; l'un sans
+ * l'autre laisse partir sans le bon siège.
+ */
+function phraseEnfants(client: Coordonnees): string {
+  const nombre = nombreEnfants(client);
+  const ages = propre(client.enfants, 120);
+  if (nombre < 1) return ages;
+  return ages ? `${nombre} (${ages})` : `${nombre}`;
+}
+
+/** Le nombre d'enfants annoncé, ramené à un entier positif. */
+function nombreEnfants(client: Coordonnees): number {
+  const n = Number(client.enfantsNombre);
+  return Number.isInteger(n) && n > 0 ? n : 0;
 }
 
 const propre = (valeur: unknown, taille = 200): string =>
@@ -121,6 +145,32 @@ export async function POST(requete: Request) {
     );
   }
 
+  /*
+    Un enfant est un passager.
+
+    Le champ du groupe demande « combien de personnes, enfants compris » ; celui
+    des sièges demande combien d'entre elles sont des enfants. Rien n'empêchait
+    d'annoncer six enfants dans un groupe de deux — la liste du navigateur allait
+    jusqu'à six quel qu'il soit. C'est incohérent à lire pour le chauffeur, et
+    c'est surtout le genre de saisie qui fait partir un véhicule trop petit,
+    puisque le nombre de sièges à installer prend de la place.
+
+    Le contrôle est ici, où il décide vraiment : la liste du navigateur ne
+    protège que d'une faute d'inattention, la console suffit à la contourner.
+    Sur un aller-retour, la borne est le trajet le plus chargé — un enfant qui ne
+    fait qu'un des deux sens reste un enfant à asseoir.
+  */
+  const groupePlusCharge = Math.max(
+    Number(corps.passengers) || 0,
+    Number(corps.returnPassengers) || 0,
+  );
+  if (nombreEnfants(client) > groupePlusCharge) {
+    return NextResponse.json(
+      { erreur: "There are more children than passengers — check the number of people." },
+      { status: 400 },
+    );
+  }
+
   // Demande sur mesure : un lieu saisi librement, aucune distance a mesurer. On
   // l'enregistre et on la notifie comme une demande de devis, sans prix.
   if ("surMesure" in valide) {
@@ -143,7 +193,7 @@ export async function POST(requete: Request) {
       vol: propre(client.vol, 20),
       adresse,
       bagages_ski: s.skis,
-      enfants: propre(client.enfants, 120),
+      enfants: phraseEnfants(client),
       message: propre(client.message, 2000),
     };
     const enregistreeSurMesure = await inserer("reservations", ligneSurMesure);
@@ -282,7 +332,7 @@ export async function POST(requete: Request) {
     vol: propre(client.vol, 20),
     adresse,
     bagages_ski: Number.isInteger(client.skis) ? client.skis : 0,
-    enfants: propre(client.enfants, 120),
+    enfants: phraseEnfants(client),
     message: propre(client.message, 2000),
   };
 

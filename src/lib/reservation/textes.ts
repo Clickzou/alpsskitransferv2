@@ -80,6 +80,17 @@ export interface TextesTunnel {
   facultatif: string;
   adresse: string;
   adresseIndice: string;
+  /**
+   * Les enfants, en deux questions.
+   *
+   * Le tunnel ne demandait que les âges, en texte libre. C'est l'information qui
+   * décide du type de siège — nacelle, siège-auto, rehausseur — mais pas de
+   * leur nombre : « 3 et 7 » se lit vite, « 3, 3 et 7 » se lit mal, et une
+   * réponse comme « petits » n'en donne aucun. Le chauffeur charge pourtant un
+   * siège par enfant, et il les emporte avant de partir.
+   */
+  enfantsNombre: string;
+  enfantsNombreIndice: string;
   enfants: string;
   enfantsIndice: string;
   precisions: string;
@@ -158,6 +169,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     facultatif: "optional",
     adresse: "Address in resort",
     adresseIndice: "Chalet, hotel or residence",
+    enfantsNombre: "How many children",
+    enfantsNombreIndice: "Car seats are included",
     enfants: "Children’s ages, for the right seats",
     enfantsIndice: "e.g. 3 and 7",
     precisions: "Add child seats or a note (optional)",
@@ -239,6 +252,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     facultatif: "facultatif",
     adresse: "Adresse en station",
     adresseIndice: "Chalet, hôtel ou résidence",
+    enfantsNombre: "Combien d'enfants",
+    enfantsNombreIndice: "Les sièges sont compris",
     enfants: "Âge des enfants, pour les bons sièges",
     enfantsIndice: "par exemple 3 et 7",
     precisions: "Ajouter des sièges enfants ou une précision (facultatif)",
@@ -325,6 +340,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     facultatif: "optional",
     adresse: "Adresse im Skiort",
     adresseIndice: "Chalet, Hotel oder Appartement",
+    enfantsNombre: "Wie viele Kinder",
+    enfantsNombreIndice: "Kindersitze sind inbegriffen",
     enfants: "Alter der Kinder, für die richtigen Sitze",
     enfantsIndice: "zum Beispiel 3 und 7",
     precisions: "Kindersitze oder Hinweis hinzufügen (optional)",
@@ -410,6 +427,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     facultatif: "facoltativo",
     adresse: "Indirizzo in località",
     adresseIndice: "Chalet, hotel o residence",
+    enfantsNombre: "Quanti bambini",
+    enfantsNombreIndice: "I seggiolini sono inclusi",
     enfants: "Età dei bambini, per i seggiolini giusti",
     enfantsIndice: "per esempio 3 e 7",
     precisions: "Aggiungi seggiolini o una nota (facoltativo)",
@@ -1039,7 +1058,7 @@ export function corpsAvis(course: CourseAvis): string {
 
   const complements = [
     course.bagagesSki ? `Housses à skis : ${course.bagagesSki}` : null,
-    course.enfants ? `Enfants : ${course.enfants} (sièges à prévoir)` : null,
+    course.enfants ? `Enfants : ${course.enfants} · sièges à prévoir` : null,
   ].filter((l) => l !== null);
   if (complements.length > 0) lignes.push("", ...complements);
 

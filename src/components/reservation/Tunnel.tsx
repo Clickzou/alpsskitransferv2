@@ -234,6 +234,7 @@ export default function Tunnel({
     email: "",
     telephone: "",
     vol: "",
+    enfantsNombre: "0",
     enfants: "",
     message: "",
   });
@@ -241,6 +242,23 @@ export default function Tunnel({
 
   // Changer la demande invalide le prix affiché : on ne garde jamais à l'écran un
   // devis qui ne correspond plus à la saisie.
+  /* Le trajet le plus chargé borne le nombre d'enfants — voir `/api/reservation`. */
+  const maxEnfants = Math.max(passengers, retourPassagers ?? 0);
+
+  /*
+    Réduire le groupe après avoir annoncé des enfants laissait la valeur en
+    place : quatre enfants restaient sélectionnés dans un groupe revenu à deux,
+    et le serveur refusait la réservation au dernier écran, sans qu'on voie
+    pourquoi. Elle est ramenée à la nouvelle borne.
+  */
+  useEffect(() => {
+    setClient((precedent) =>
+      Number(precedent.enfantsNombre) > maxEnfants
+        ? { ...precedent, enfantsNombre: String(maxEnfants) }
+        : precedent,
+    );
+  }, [maxEnfants]);
+
   useEffect(() => {
     setDevis(null);
     setChoix(null);
@@ -404,6 +422,7 @@ export default function Tunnel({
     une liste vide serait pire que ne rien proposer.
   */
   const allerRetourChiffre = Boolean(devis?.trajet.allerRetour && devis.optionsRetour.length > 0);
+
 
   /** Met une course chiffrée dans la liste du visiteur — la porte du panier. */
   const ajouterAuPanier = (option: OptionVehicule) => {
@@ -994,6 +1013,41 @@ export default function Tunnel({
               {t.precisions}
             </summary>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {/*
+                Combien, puis quel âge.
+
+                Le nombre décide de ce que le chauffeur charge — un siège par
+                enfant, pris avant de partir —, l'âge décide du type : nacelle,
+                siège-auto ou rehausseur. Les âges seuls ne donnaient ni l'un ni
+                l'autre de façon sûre : « 3 et 7 » se compte, « petits » ne se
+                compte pas. Le compte se choisit dans une liste plutôt que de se
+                taper : c'est un petit nombre, et une liste ne se remplit pas de
+                travers.
+              */}
+              <div className="min-w-0">
+                <label className={ETIQUETTE} htmlFor="enfantsNombre">
+                  {t.enfantsNombre}
+                </label>
+                <select
+                  id="enfantsNombre"
+                  className={CHAMP}
+                  value={client.enfantsNombre}
+                  onChange={(e) => setClient({ ...client, enfantsNombre: e.target.value })}
+                >
+                  {/*
+                    La liste s'arrête au groupe : un enfant est un passager, et
+                    le champ du haut demande « combien de personnes, enfants
+                    compris ». Proposer plus d'enfants que de sièges vendus
+                    invite à une saisie que le serveur refusera.
+                  */}
+                  {Array.from({ length: maxEnfants + 1 }, (_, n) => (
+                    <option key={n} value={String(n)}>
+                      {n}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-alpine-600">{t.enfantsNombreIndice}</p>
+              </div>
               <div className="min-w-0">
                 <label className={ETIQUETTE} htmlFor="enfants">
                   {t.enfants}
