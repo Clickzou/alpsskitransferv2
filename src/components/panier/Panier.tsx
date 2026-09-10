@@ -1,5 +1,6 @@
 "use client";
 
+import { FUSEAU_ALPES } from "@/lib/temps";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePanier } from "@/components/panier/PanierProvider";
@@ -32,6 +33,7 @@ function quandLisible(iso: string, langue: Lang) {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;
   return date.toLocaleString(LOCALES[langue], {
+    timeZone: FUSEAU_ALPES,
     weekday: "short",
     day: "numeric",
     month: "short",

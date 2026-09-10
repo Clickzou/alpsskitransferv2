@@ -1,3 +1,4 @@
+import { FUSEAU_ALPES } from "@/lib/temps";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { SITE } from "@/data/site";
@@ -51,6 +52,7 @@ function heure(iso: string): string {
   return Number.isNaN(date.getTime())
     ? iso
     : date.toLocaleString("en-GB", {
+    timeZone: FUSEAU_ALPES,
         day: "numeric",
         month: "short",
         year: "numeric",

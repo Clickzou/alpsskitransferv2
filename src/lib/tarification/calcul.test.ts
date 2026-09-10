@@ -1,4 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { instantAlpes } from "@/lib/temps";
+
+/*
+  Les dates de ce fichier sont des instants des Alpes, pas des `new Date(...)`
+  locaux : construites avec le fuseau de la machine, elles décrivaient 23 h à
+  Chambéry et minuit sur Vercel, si bien que la majoration de nuit changeait
+  selon l'endroit où les tests tournaient. Un barème ne se vérifie pas à la
+  géographie près.
+*/
 import { BAREME_DEFAUT } from "./bareme";
 import { calculer, estDeNuit, type DemandeTransfert } from "./calcul";
 
@@ -11,13 +20,13 @@ import { calculer, estDeNuit, type DemandeTransfert } from "./calcul";
  */
 
 /** Mercredi 14 janvier 2026, 10 h — jour ordinaire, hors plage de nuit. */
-const MERCREDI_10H = new Date(2026, 0, 14, 10, 0);
+const MERCREDI_10H = instantAlpes(2026, 1, 14, 10, 0);
 /** Samedi 17 janvier 2026, 10 h — jour de rotation des locations. */
-const SAMEDI_10H = new Date(2026, 0, 17, 10, 0);
+const SAMEDI_10H = instantAlpes(2026, 1, 17, 10, 0);
 /** Dimanche 18 janvier 2026, 10 h. */
-const DIMANCHE_10H = new Date(2026, 0, 18, 10, 0);
+const DIMANCHE_10H = instantAlpes(2026, 1, 18, 10, 0);
 /** Mercredi 14 janvier 2026, 23 h — dans la plage de nuit. */
-const MERCREDI_23H = new Date(2026, 0, 14, 23, 0);
+const MERCREDI_23H = instantAlpes(2026, 1, 14, 23, 0);
 
 const base: DemandeTransfert = {
   km: 100,
@@ -95,7 +104,7 @@ describe("majorations", () => {
   });
 
   it("cumule le jour et la nuit", () => {
-    const samediNuit = new Date(2026, 0, 17, 23, 0);
+    const samediNuit = instantAlpes(2026, 1, 17, 23, 0);
     const devis = calculer({ ...base, depart: samediNuit });
     // 210 + 36 (samedi) + 42 (nuit) — les deux majorations portent sur la base.
     expect(devis.total).toBe(288);
@@ -111,11 +120,11 @@ describe("majorations", () => {
 
 describe("plage de nuit", () => {
   it("couvre la plage qui enjambe minuit", () => {
-    expect(estDeNuit(new Date(2026, 0, 14, 22, 0))).toBe(true);
-    expect(estDeNuit(new Date(2026, 0, 14, 3, 0))).toBe(true);
-    expect(estDeNuit(new Date(2026, 0, 14, 5, 59))).toBe(true);
-    expect(estDeNuit(new Date(2026, 0, 14, 6, 0))).toBe(false);
-    expect(estDeNuit(new Date(2026, 0, 14, 21, 59))).toBe(false);
+    expect(estDeNuit(instantAlpes(2026, 1, 14, 22, 0))).toBe(true);
+    expect(estDeNuit(instantAlpes(2026, 1, 14, 3, 0))).toBe(true);
+    expect(estDeNuit(instantAlpes(2026, 1, 14, 5, 59))).toBe(true);
+    expect(estDeNuit(instantAlpes(2026, 1, 14, 6, 0))).toBe(false);
+    expect(estDeNuit(instantAlpes(2026, 1, 14, 21, 59))).toBe(false);
   });
 });
 
@@ -186,7 +195,7 @@ describe("prix fixe", () => {
 
   it("reste soumis aux majorations", () => {
     // Un samedi à 23 h reste un samedi à 23 h, prix négocié ou non.
-    const devis = calculer({ ...base, prixFixe: 180, depart: new Date(2026, 0, 17, 23, 0) });
+    const devis = calculer({ ...base, prixFixe: 180, depart: instantAlpes(2026, 1, 17, 23, 0) });
     expect(devis.total).toBe(247); // 180 + 31 + 36
   });
 

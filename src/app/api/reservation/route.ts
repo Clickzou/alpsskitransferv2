@@ -1,3 +1,4 @@
+import { FUSEAU_ALPES } from "@/lib/temps";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { ENTREPRISE, SITE } from "@/data/site";
@@ -49,6 +50,7 @@ function reference(): string {
 
 const heure = (date: Date) =>
   date.toLocaleString("en-GB", {
+    timeZone: FUSEAU_ALPES,
     weekday: "short",
     day: "2-digit",
     month: "short",

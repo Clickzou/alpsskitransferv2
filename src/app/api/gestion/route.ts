@@ -1,3 +1,4 @@
+import { FUSEAU_ALPES } from "@/lib/temps";
 import { NextResponse } from "next/server";
 import { envoyer } from "@/lib/reservation/email";
 import { jetonValide, modifiableEnLigne } from "@/lib/reservation/gestion";
@@ -83,6 +84,7 @@ export async function POST(requete: Request) {
 
   const quand = (d: Date) =>
     d.toLocaleString("fr-FR", {
+    timeZone: FUSEAU_ALPES,
       weekday: "short",
       day: "numeric",
       month: "short",

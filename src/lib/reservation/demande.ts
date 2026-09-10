@@ -1,6 +1,7 @@
 import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
 import type { CategorieVehicule } from "@/lib/tarification/bareme";
+import { instantAlpes } from "@/lib/temps";
 import { CAPACITE, CAPACITE_BAGAGES, type DemandeReservation } from "./devis";
 
 /**
@@ -45,14 +46,20 @@ const entier = (v: unknown): number | null => {
   return Number.isInteger(n) ? n : null;
 };
 
-/** Analyse une date locale `YYYY-MM-DDTHH:mm`, telle que la produit un `datetime-local`. */
+/**
+ * Analyse une date `YYYY-MM-DDTHH:mm`, telle que la produit un `datetime-local`.
+ *
+ * L'heure saisie est celle de l'aéroport, pas celle du serveur : `instantAlpes`
+ * la rattache au fuseau du service. Sans cela la même saisie donnait deux
+ * instants différents en développement et en production — voir `lib/temps.ts`.
+ */
 export function dateLocale(valeur: unknown): Date | null {
   const brut = texte(valeur, 40);
   if (!brut) return null;
   const m = brut.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
   if (!m) return null;
   const [, annee, mois, jour, heure, minute] = m.map(Number) as unknown as number[];
-  const date = new Date(annee, mois - 1, jour, heure, minute);
+  const date = instantAlpes(annee, mois, jour, heure, minute);
   return Number.isNaN(date.getTime()) ? null : date;
 }
 

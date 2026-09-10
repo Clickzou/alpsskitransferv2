@@ -7,6 +7,7 @@ import { DEVISES, convertir, type CodeDevise } from "@/lib/reservation/devises";
 import type { Lieu } from "@/lib/reservation/lieux";
 import { ENTREPRISE } from "@/data/site";
 import { departImminent } from "@/lib/reservation/gestion";
+import { instantAlpes } from "@/lib/temps";
 import {
   TEXTES,
   TEXTES_ATTENTE,
@@ -127,7 +128,9 @@ export default function Tunnel({
   const imminent = (() => {
     const m = when.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
     if (!m) return false;
-    return departImminent(new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]));
+    // Le fuseau du visiteur ne décide pas : un Londonien qui réserve pour
+    // 13 h veut 13 h à Genève, pas 13 h chez lui.
+    return departImminent(instantAlpes(+m[1], +m[2], +m[3], +m[4], +m[5]));
   })();
   const [allerRetour, setAllerRetour] = useState(false);
   const [returnWhen, setReturnWhen] = useState("");

@@ -1,3 +1,4 @@
+import { FUSEAU_ALPES } from "@/lib/temps";
 import { redirect } from "next/navigation";
 import Logo from "@/components/Logo";
 import { coursesAVenir, coursesPassees, statutLisible, type Course } from "@/lib/admin/courses";
@@ -21,6 +22,7 @@ import { actionDeconnexion } from "./actions";
 
 function heure(date: Date): string {
   return date.toLocaleString("fr-FR", {
+    timeZone: FUSEAU_ALPES,
     weekday: "short",
     day: "numeric",
     month: "short",

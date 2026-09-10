@@ -109,8 +109,15 @@ export function modifiableEnLigne(aller: Date, maintenant = new Date()): boolean
  */
 export const DELAI_APPEL_HEURES = 1;
 
-/** Vrai quand la prise en charge est trop proche pour être garantie sans appel. */
+/**
+ * Vrai quand la prise en charge est trop proche pour être garantie sans appel.
+ *
+ * **Une heure déjà passée compte aussi.** L'ancienne borne `ecart > 0` la
+ * laissait filer : le formulaire s'ouvrant sur l'heure courante, il suffisait
+ * d'attendre une minute avant de valider pour réserver une course dont l'heure
+ * était révolue — sans avertissement, et jusqu'au paiement. Ce n'était pas un
+ * cas tordu, c'était le cas normal d'un visiteur qui réfléchit.
+ */
 export function departImminent(aller: Date, maintenant = new Date()): boolean {
-  const ecart = aller.getTime() - maintenant.getTime();
-  return ecart > 0 && ecart < DELAI_APPEL_HEURES * 3600 * 1000;
+  return aller.getTime() - maintenant.getTime() < DELAI_APPEL_HEURES * 3600 * 1000;
 }

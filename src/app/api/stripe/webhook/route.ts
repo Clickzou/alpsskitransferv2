@@ -1,3 +1,4 @@
+import { FUSEAU_ALPES } from "@/lib/temps";
 import { NextResponse } from "next/server";
 import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
@@ -132,6 +133,7 @@ export async function POST(requete: Request) {
   const quand = (iso: string | null | undefined) =>
     iso
       ? new Date(iso).toLocaleString("fr-FR", {
+    timeZone: FUSEAU_ALPES,
           weekday: "short",
           day: "numeric",
           month: "short",

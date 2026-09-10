@@ -1,3 +1,4 @@
+import { composantesAlpes } from "@/lib/temps";
 import {
   BAREME_DEFAUT,
   baremeValide,
@@ -62,7 +63,8 @@ const arrondi = (montant: number) => Math.round(montant);
 
 /** Une prise en charge entre 22h et 6h est de nuit — bornes du barème. */
 export function estDeNuit(depart: Date, bareme: Bareme = BAREME_DEFAUT): boolean {
-  const heure = depart.getHours();
+  // L'heure de l'aéroport, jamais celle du serveur — voir `lib/temps.ts`.
+  const heure = composantesAlpes(depart).heure;
   const { debut, fin } = bareme.plageNuit;
   return debut > fin ? heure >= debut || heure < fin : heure >= debut && heure < fin;
 }
@@ -85,7 +87,7 @@ export function calculer(demande: DemandeTransfert, bareme: Bareme = BAREME_DEFA
   const coefficient = prixFixe ? 1 : (demande.coefficient ?? 1);
   const base = prixFixe ? demande.prixFixe! : (priseEnCharge + kilometrage) * coefficient;
 
-  const jour = demande.depart.getDay();
+  const jour = composantesAlpes(demande.depart).jourSemaine;
   if (jour === 6) {
     const montant = (base * bareme.majorations.samedi) / 100;
     majorations.push({ libelle: "Samedi", montant: arrondi(montant) });
