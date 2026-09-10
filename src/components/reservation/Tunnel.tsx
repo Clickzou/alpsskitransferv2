@@ -80,6 +80,16 @@ const CHAMP =
 const ETIQUETTE = "block text-xs font-semibold uppercase tracking-wide text-alpine-600";
 
 /**
+ * Le plus grand véhicule du parc, en passagers.
+ *
+ * Le champ du retour montait à seize quand celui de l'aller s'arrêtait à huit :
+ * on pouvait donc annoncer un retour que le moteur refuserait ensuite, sans que
+ * rien ne l'ait signalé à la saisie. C'est la capacité de la catégorie
+ * `standard`, la plus grande — voir `CAPACITE` dans `lib/reservation/devis`.
+ */
+const CAPACITE_MAX = 8;
+
+/**
  * L'étiquette d'un champ, avec ce qu'on attend de lui.
  *
  * Les quatre champs indispensables portaient déjà `required` : le navigateur les
@@ -611,12 +621,31 @@ export default function Tunnel({
                 id="passengers"
                 type="number"
                 min={1}
-                max={8}
+                max={CAPACITE_MAX}
                 className={CHAMP}
                 value={passengers}
                 onChange={(e) => setPassengers(Number(e.target.value))}
                 required
               />
+              {/*
+                Le plafond s'annonce à l'approche, pas après le refus.
+
+                Au-delà de huit personnes le moteur répondait « Passengers must be
+                between 1 and 8 » et s'arrêtait là : exact, et un client perdu.
+                Un groupe de dix se transporte en deux véhicules, ce que la page
+                des groupes existe pour organiser.
+              */}
+              {passengers >= CAPACITE_MAX ? (
+                <p className="mt-1 text-xs text-alpine-600">
+                  {t.capaciteBorne(CAPACITE_MAX)}{" "}
+                  <a
+                    href={t.capaciteGroupeLien}
+                    className="font-medium text-marque underline underline-offset-2 hover:text-marque-600"
+                  >
+                    {t.capaciteGroupe}
+                  </a>
+                </p>
+              ) : null}
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="min-w-0">
@@ -700,7 +729,7 @@ export default function Tunnel({
                       id="returnPassengers"
                       type="number"
                       min={1}
-                      max={16}
+                      max={CAPACITE_MAX}
                       className={CHAMP}
                       value={retourPassagers ?? passengers}
                       onChange={(e) => setRetourPassagers(Number(e.target.value))}
@@ -821,6 +850,8 @@ export default function Tunnel({
           <ListeVehicules
             titre={allerRetourChiffre ? t.vehiculeAller : null}
             options={devis.options}
+            places={passengers}
+            onModifier={() => setEtape("trajet")}
             choisi={choix}
             libelleChoisi={t.choisi}
             textes={t}
@@ -853,6 +884,8 @@ export default function Tunnel({
                 detache
                 titre={t.vehiculeRetour}
                 options={devis.optionsRetour}
+                places={retourPassagers ?? passengers}
+                onModifier={() => setEtape("trajet")}
                 choisi={choixRetour}
                 libelleChoisi={t.choisi}
                 textes={t}
@@ -1308,6 +1341,8 @@ function ListeVehicules({
   surAjout,
   ajout,
   detache = false,
+  places,
+  onModifier,
 }: {
   titre: string | null;
   options: OptionVehicule[];
@@ -1326,6 +1361,10 @@ function ListeVehicules({
     distincts. Du blanc et un trait suffisent à le dire.
   */
   detache?: boolean;
+  /** L'effectif de ce sens : ce qui décide des catégories possibles. */
+  places: number;
+  /** Ramène au formulaire, quand aucun véhicule proposé ne convient. */
+  onModifier: () => void;
 }) {
   return (
     <section className={detache ? "mt-10 border-t border-glacier-200 pt-8" : "mt-4"}>
@@ -1434,6 +1473,25 @@ function ListeVehicules({
           );
         })}
       </ul>
+
+      {/*
+        Trois catégories existent ; celles qui ne tiennent pas le groupe ou ses
+        bagages sont retirées du devis. Elles disparaissaient sans un mot, et
+        c'est la question qu'on se pose devant une liste courte : « il n'y a que
+        ça ? ». On répond, et on rend la main.
+      */}
+      {options.length < 3 ? (
+        <p className="mt-3 text-xs text-alpine-600">
+          {textes.vehiculesEcartes(places)}{" "}
+          <button
+            type="button"
+            onClick={onModifier}
+            className="font-medium text-marque underline underline-offset-2 hover:text-marque-600"
+          >
+            {textes.vehiculesEcartesAction}
+          </button>
+        </p>
+      ) : null}
     </section>
   );
 }

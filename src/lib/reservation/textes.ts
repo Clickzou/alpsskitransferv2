@@ -113,6 +113,31 @@ export interface TextesTunnel {
    */
   enfantsBorne: (places: number) => string;
   enfantsChangerGroupe: string;
+  /**
+   * Le plafond d'un véhicule, et où va celui qui le dépasse.
+   *
+   * Au-delà de huit personnes, le moteur répondait « Passengers must be between
+   * 1 and 8 » et s'arrêtait là. C'est vrai, et c'est un client perdu : un groupe
+   * de dix se transporte très bien, en deux véhicules, et c'est précisément ce
+   * que la page des groupes existe pour organiser. Le plafond est annoncé avant
+   * qu'on le heurte, avec le chemin d'à côté.
+   */
+  /**
+   * Pourquoi la liste des véhicules est plus courte qu'ailleurs.
+   *
+   * Les catégories trop petites pour le groupe — ou pour ses bagages — sont
+   * écartées du devis, et elles disparaissaient sans un mot : à six personnes,
+   * on ne voyait plus que deux véhicules sur trois, et rien ne disait que le
+   * troisième existait. Le visiteur qui accepterait de voyager à quatre ne
+   * pouvait pas le découvrir. On dit ce qui manque, et on ramène au champ qui
+   * le décide.
+   */
+  vehiculesEcartes: (places: number) => string;
+  vehiculesEcartesAction: string;
+  capaciteBorne: (places: number) => string;
+  capaciteGroupe: string;
+  /** Où mène « demandez un devis groupe », selon la langue. */
+  capaciteGroupeLien: string;
   enfants: string;
   enfantsIndice: string;
   precisions: string;
@@ -197,6 +222,13 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     enfantsBorne: (places) =>
       `The list stops at ${places} because this journey is booked for ${places} people, children included. Travelling with more?`,
     enfantsChangerGroupe: "Change the number of passengers",
+    capaciteBorne: (places) =>
+      `${places} people is the most one vehicle takes.`,
+    capaciteGroupe: "More of you? Ask us for a group quote.",
+    capaciteGroupeLien: "/inquiry/",
+    vehiculesEcartes: (places) =>
+      `Some vehicles are not shown because they do not seat ${places} people or their luggage.`,
+    vehiculesEcartesAction: "Change the journey",
     enfants: "Children’s ages, for the right seats",
     enfantsIndice: "e.g. 3 and 7",
     precisions: "Add child seats or a note (optional)",
@@ -284,6 +316,13 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     enfantsBorne: (places) =>
       `La liste s'arrête à ${places} parce que ce trajet est réservé pour ${places} personnes, enfants compris. Vous êtes plus nombreux ?`,
     enfantsChangerGroupe: "Modifier le nombre de passagers",
+    capaciteBorne: (places) =>
+      `${places} personnes, c'est le maximum d'un véhicule.`,
+    capaciteGroupe: "Vous êtes plus nombreux ? Demandez un devis groupe.",
+    capaciteGroupeLien: "/fr/agences-et-professionnels/",
+    vehiculesEcartes: (places) =>
+      `Certains véhicules ne sont pas proposés : ils ne prennent pas ${places} personnes, ou leurs bagages.`,
+    vehiculesEcartesAction: "Modifier le trajet",
     enfants: "Âge des enfants, pour les bons sièges",
     enfantsIndice: "par exemple 3 et 7",
     precisions: "Ajouter des sièges enfants ou une précision (facultatif)",
@@ -376,6 +415,13 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     enfantsBorne: (places) =>
       `Die Liste endet bei ${places}, weil diese Fahrt für ${places} Personen gebucht ist, Kinder eingeschlossen. Sind Sie mehr?`,
     enfantsChangerGroupe: "Personenzahl ändern",
+    capaciteBorne: (places) =>
+      `${places} Personen sind das Maximum für ein Fahrzeug.`,
+    capaciteGroupe: "Sind Sie mehr? Fordern Sie ein Gruppenangebot an.",
+    capaciteGroupeLien: "/de/agenturen-und-firmen/",
+    vehiculesEcartes: (places) =>
+      `Einige Fahrzeuge fehlen: Sie fassen keine ${places} Personen oder deren Gepäck.`,
+    vehiculesEcartesAction: "Fahrt ändern",
     enfants: "Alter der Kinder, für die richtigen Sitze",
     enfantsIndice: "zum Beispiel 3 und 7",
     precisions: "Kindersitze oder Hinweis hinzufügen (optional)",
@@ -467,6 +513,13 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     enfantsBorne: (places) =>
       `L'elenco si ferma a ${places} perché questo tragitto è prenotato per ${places} persone, bambini compresi. Siete di più?`,
     enfantsChangerGroupe: "Modifica il numero di passeggeri",
+    capaciteBorne: (places) =>
+      `${places} persone sono il massimo per un veicolo.`,
+    capaciteGroupe: "Siete di più? Chiedeteci un preventivo per gruppi.",
+    capaciteGroupeLien: "/it/agenzie-e-aziende/",
+    vehiculesEcartes: (places) =>
+      `Alcuni veicoli non compaiono: non portano ${places} persone o i loro bagagli.`,
+    vehiculesEcartesAction: "Modifica il tragitto",
     enfants: "Età dei bambini, per i seggiolini giusti",
     enfantsIndice: "per esempio 3 e 7",
     precisions: "Aggiungi seggiolini o una nota (facoltativo)",
