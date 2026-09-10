@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
 import Visuel, { type NomVisuel } from "@/components/Visuel";
 import { usePanier } from "@/components/panier/PanierProvider";
@@ -380,6 +380,29 @@ export default function Tunnel({
     setAjout({ categorie: option.categorie, etat });
   };
 
+  /*
+    Changer d'étape ramène en haut du formulaire.
+
+    Les trois étapes se remplacent au même endroit de la page, et rien ne
+    faisait remonter la vue : on validait un bouton en bas de l'étape des
+    véhicules et on atterrissait au milieu de l'étape des coordonnées, sous le
+    titre, sans savoir qu'on avait changé d'écran. C'est plus visible encore sur
+    un téléphone, où l'étape précédente était plus haute que la fenêtre.
+
+    Pas au premier rendu : le tunnel s'ouvre parfois directement sur les
+    véhicules — quand la recherche de l'accueil a tout transmis — et la page
+    sauterait alors dès l'arrivée, avant même que le visiteur ait lu le titre.
+  */
+  const bloc = useRef<HTMLDivElement>(null);
+  const premierRendu = useRef(true);
+  useEffect(() => {
+    if (premierRendu.current) {
+      premierRendu.current = false;
+      return;
+    }
+    bloc.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [etape]);
+
   const prix = (montantEuros: number) => {
     const { montant } = convertir(montantEuros, devise);
     return new Intl.NumberFormat(LOCALE[langue], {
@@ -390,7 +413,7 @@ export default function Tunnel({
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div ref={bloc} className="mx-auto max-w-3xl scroll-mt-28">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Fil etape={etape} libelles={t.etapes} />
         {prixAttendu ? (

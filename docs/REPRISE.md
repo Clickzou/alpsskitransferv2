@@ -1,7 +1,7 @@
-# Point de reprise — 10 septembre 2026, 20 h
+# Point de reprise — 10 septembre 2026, 22 h
 
-Tout est enregistré, le build passe : 367 pages, 69 tests, couverture des 261 URL
-vérifiée. **Ce fichier dit où reprendre.**
+Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
+261 URL vérifiée. **Ce fichier dit où reprendre.**
 
 > **Convention de reprise avec JC.**
 > « On en est où ? » → lire ce fichier et résumer l'état, sans rien lancer.
@@ -9,35 +9,101 @@ vérifiée. **Ce fichier dit où reprendre.**
 
 ---
 
-# Reprise du 10 septembre 2026, 20 h — le moteur en production
+# Reprise du 10 septembre 2026, 22 h — le paiement est prouvé
 
-Tout est commité et poussé (`00fc65a`), build vert : **69 tests**, 41 pages
-contrôlées, couverture 261/261. Rien en attente dans l'arbre de travail.
+## À FAIRE EN PREMIER — une migration attend
 
-## Le mot d'ordre
+**Coller `docs/supabase-migration-retour.sql` dans l'éditeur SQL de Supabase.**
+Trois colonnes : `retour_airport`, `retour_resort`, `vehicule_retour`.
 
-**« Go » → reprendre les tests du moteur en ligne**, sur
-`https://alpsskitransferv2.vercel.app`, dans l'ordre du tableau ci-dessous.
+Tant qu'elle n'est pas passée, **aucune réservation ne s'enregistre** — et c'est
+voulu : le garde-fou posé le même jour refuse d'ouvrir le paiement quand la base
+n'a pas pris la ligne. Vérifié en local, la demande repart en devis, l'exploitant
+est notifié, rien n'est encaissé. Mais rien ne se vend non plus. **À passer avant
+le prochain déploiement.**
 
-## Ce qui est prouvé en ligne
+## Le paiement complet est fait
 
-| Maille | État | Comment c'est vérifié |
-|---|---|---|
-| Calcul du prix | ✅ | `/api/devis/` → Genève → Val Thorens, 161 km, 298 € |
-| Écriture en base | ✅ | la réservation apparaît dans `reservations` |
-| Session Stripe | ✅ | l'URL de paiement s'ouvre |
-| Envoi d'e-mail | ✅ | `/api/contact/` renvoie `{"ok":true}` vers une adresse externe |
-| Refus sous 1 h | ✅ | départ dans 30 min et départ passé : tous deux refusés |
-| **Paiement complet** | ⏳ | **jamais fait** — c'est le premier test à reprendre |
+C'était le test qui restait depuis la veille. Réservation **AST-09CB6A**, 515 €,
+aller-retour Genève → Les Gets avec retour depuis l'Alpe d'Huez, payée à la carte
+`4242` : statut `payee`, ligne dans `paiements`, vrai `payment_intent` Stripe,
+confirmation reçue par le client, avis de course reçu sur
+`contact@alpsskitransfers.com`. **La chaîne entière est prouvée en ligne.**
 
-## Le test qui reste
+Trois pannes silencieuses le bloquaient, toutes trouvées ce soir :
 
-Payer une réservation de test avec la carte `4242 4242 4242 4242`, puis vérifier
-dans cet ordre : statut `payee` en base, ligne dans `paiements`, e-mail au client,
-avis de course à `nmtransports73@gmail.com`. Chaque étape qui échoue désigne sa
-variable — le webhook pour le statut, Resend pour les e-mails.
+- **La réservation ne s'enregistrait plus depuis la veille.** La ligne portait
+  `passagersRetour` quand la colonne s'appelle `passagers_retour` : PostgREST
+  refusait la ligne entière, `inserer` renvoyait `null` dans un journal que
+  personne ne lit, et le tunnel envoyait quand même le client payer. L'argent
+  arrivait, la course n'existait nulle part. **La session Stripe n'est plus créée
+  si la base n'a pas pris la ligne**, et un test compare les clés écrites aux
+  colonnes du schéma.
+- **Le retour après paiement tombait sur l'écran de connexion Vercel.**
+  `VERCEL_URL` désigne le déploiement, protégé ; `VERCEL_PROJECT_PRODUCTION_URL`
+  désigne le projet, stable et ouvert, et passe devant.
+- **Le tunnel jetait le retour à l'entrée.** Quatre paramètres d'URL manquaient
+  dans `TunnelAutonome` — la version traduite les passait déjà.
 
-Le lien de paiement se refabrique par un `POST /api/reservation/`.
+## Ce que le moteur sait faire de plus
+
+- **Un véhicule par sens, chiffré sur l'effectif de ce sens.** Un seul véhicule
+  servait les deux trajets, dimensionné sur le groupe le plus nombreux : arriver
+  à deux et repartir à six faisait payer un huit places à l'aller, à vide. Deux
+  listes, deux prix, un total. Suivi jusqu'au bout — colonne, avis de course,
+  e-mail, tableau de bord.
+- **Le retour dit d'où il part.** Ses lieux n'étaient enregistrés nulle part :
+  l'avis annonçait une date de retour sans point de prise en charge, et le
+  chauffeur serait allé à la station de l'aller, cent cinquante kilomètres plus
+  loin.
+- **L'avis de course est refondu** : un bloc par sens, complet et exécutable
+  seul, puis qui appeler. Neuf tests fixent ce qu'il contient.
+- **La remise d'aller-retour passe à zéro.** Elle valait 5 % du retour, ne venait
+  pas du WordPress, et l'exploitant ne l'a jamais consentie — elle s'affichait
+  pourtant au client. La mécanique reste testée : la remettre est une ligne, le
+  jour où elle est validée.
+
+## Ce que le site a gagné au passage
+
+- **L'en-tête débordait de 87 px sur iPhone, sur toutes les pages** : le logo
+  faisait 218 px de large. Sept pages contrôlées, plus aucun débordement.
+- **`/book-ski-transfer-tickets/` n'est plus que son formulaire** (décision du
+  client) : bandeau, chiffres, texte WordPress, « ce que le billet comprend » et
+  FAQ retirés. Le H1 est celui du tunnel. **Cette URL ne se positionnera plus sur
+  « book ski transfer tickets »** — c'est assumé, et écrit en tête du composant.
+- L'écran du véhicule a un titre, les photos des trois catégories, un
+  récapitulatif qui montre les deux sens, et des prix formatés par langue
+  (« 515 € », plus « €515 »).
+
+## Ce qui reste à prouver
+
+| Maille | État |
+|---|---|
+| Calcul du prix, écriture, session, e-mails, refus sous 1 h | ✅ |
+| **Paiement complet** | ✅ **fait le 10 septembre au soir** |
+| La migration en base | ⏳ **à passer** |
+| L'écran d'édition des tarifs | ⏳ jamais commencé |
+
+## Le prochain vrai morceau
+
+**L'écran d'édition des tarifs** — la demande d'origine. La table `tarifs` existe
+mais aucun code ne la lit : les prix viennent de `BAREME_DEFAUT`, dans le code.
+Tant que cet écran n'existe pas, changer un tarif demande un déploiement.
+
+## Ce qui attend le client
+
+1. **Le barème** (`wp-export/tarifs-a-valider.csv`), remise d'aller-retour
+   comprise — elle est à zéro en attendant.
+2. **Inviter Nassim sur Stripe**, puis la vérification d'identité de
+   NM Transports 73 pour encaisser réellement.
+3. Le passage aux **clés `sk_live_`** et un webhook sur le domaine définitif.
+
+## Deux choses à nettoyer avant la mise en ligne
+
+- **Les réservations de test sont dans la vraie base** (`AST-09CB6A`,
+  `AST-9ADD77`, `AST-9EABD9` et les précédentes). À supprimer avant l'ouverture.
+- `EMAIL_EXPLOITANT` vaut `contact@alpsskitransfers.com` en production, pas
+  `nmtransports73@gmail.com` — à confirmer avec Nassim.
 
 ## Ce qui a été réglé aujourd'hui
 
