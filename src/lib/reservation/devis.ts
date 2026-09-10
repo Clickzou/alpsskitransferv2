@@ -23,6 +23,15 @@ export interface DemandeReservation {
   resort: string;
   categorie: CategorieVehicule;
   passagers: number;
+  /**
+   * Le groupe du retour, quand il diffère de l'aller.
+   *
+   * Le prix est **par véhicule** : repartir à deux quand on est venu à quatre
+   * ne le change pas. Ce qui change, c'est le véhicule à envoyer — la capacité
+   * doit tenir le groupe le plus nombreux des deux — et ce que le chauffeur
+   * doit savoir en préparant sa journée. Absent, le retour reprend l'aller.
+   */
+  passagersRetour?: number | null;
   /** Départ de l'aller, heure locale. */
   aller: Date;
   /** Départ du retour. Absent = aller simple. */
@@ -132,7 +141,9 @@ export function devisReservation(
   demande: DemandeReservation,
 ): { ok: true; devis: DevisReservation } | { ok: false; echec: EchecDevis } {
   const maximum = CAPACITE[demande.categorie];
-  if (demande.passagers < 1 || demande.passagers > maximum) {
+  // Le véhicule doit tenir le trajet le plus chargé des deux.
+  const groupeMax = Math.max(demande.passagers, demande.passagersRetour ?? 0);
+  if (demande.passagers < 1 || groupeMax > maximum) {
     return { ok: false, echec: { raison: "trop-de-passagers", maximum } };
   }
 
@@ -178,7 +189,7 @@ export function devisReservation(
         km: d.km,
         categorie: demande.categorie,
         depart,
-        passagers: demande.passagers,
+        passagers: retour ? (demande.passagersRetour ?? demande.passagers) : demande.passagers,
         partage: demande.partage ?? false,
         allerRetour: false,
         coefficient: retour ? coefficientDestination(resortRetour) : coefficient,

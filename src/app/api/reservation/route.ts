@@ -201,6 +201,7 @@ export async function POST(requete: Request) {
     resort: demande.resort,
     vehicule: demande.categorie,
     passagers: demande.passagers,
+    passagersRetour: demande.passagersRetour,
     aller: demande.aller.toISOString(),
     retour: demande.retour ? demande.retour.toISOString() : null,
     montant: devis.total,
@@ -253,6 +254,9 @@ export async function POST(requete: Request) {
     `Outbound: ${heure(demande.aller)}`,
     demande.retour ? `Return: ${heure(demande.retour)}` : null,
     `Vehicle: ${demande.categorie} — ${demande.passagers} passenger(s)`,
+    demande.passagersRetour && demande.passagersRetour !== demande.passagers
+      ? `Return journey: ${demande.passagersRetour} passenger(s)`
+      : null,
     `Total: €${devis.total}${demande.retour ? " for both journeys" : ""}`,
     `Address in resort: ${adresse}`,
     ligne.vol ? `Flight: ${ligne.vol}` : null,

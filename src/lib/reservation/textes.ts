@@ -29,6 +29,7 @@ export interface TextesTunnel {
   retourCase: string;
   retourQuand: string;
   retourAilleurs: string;
+  retourPassagers: string;
   retourDe: string;
   retourVers: string;
   voirPrix: string;
@@ -83,6 +84,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourCase: "I also need a transfer back",
     retourQuand: "Return pick-up",
     retourAilleurs: "My return starts or ends somewhere else",
+    retourPassagers: "People on the return",
     retourDe: "Return from",
     retourVers: "Return to",
     voirPrix: "See prices",
@@ -139,6 +141,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourCase: "J’ai aussi besoin du trajet retour",
     retourQuand: "Prise en charge du retour",
     retourAilleurs: "Mon retour part ou arrive ailleurs",
+    retourPassagers: "Personnes au retour",
     retourDe: "Retour depuis",
     retourVers: "Retour vers",
     voirPrix: "Voir les prix",
@@ -201,6 +204,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourCase: "Ich brauche auch die Rückfahrt",
     retourQuand: "Abholung für die Rückfahrt",
     retourAilleurs: "Meine Rückfahrt startet oder endet woanders",
+    retourPassagers: "Personen auf der Rückfahrt",
     retourDe: "Rückfahrt ab",
     retourVers: "Rückfahrt nach",
     voirPrix: "Preise anzeigen",
@@ -262,6 +266,7 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     retourCase: "Mi serve anche il ritorno",
     retourQuand: "Presa in carico per il ritorno",
     retourAilleurs: "Il ritorno parte o arriva altrove",
+    retourPassagers: "Persone al ritorno",
     retourDe: "Ritorno da",
     retourVers: "Ritorno verso",
     voirPrix: "Vedi i prezzi",
@@ -364,6 +369,14 @@ export interface TextesRecherche {
   allerRetour: string;
   allerSimple: string;
   action: string;
+  /* Le retour, déplié seulement quand l'aller-retour est choisi. */
+  retourTitre: string;
+  retourQuand: string;
+  retourAilleurs: string;
+  retourDepart: string;
+  retourArrivee: string;
+  retourPassagers: string;
+  retourPassagersIndice: string;
 }
 
 export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
@@ -379,6 +392,13 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     allerRetour: "Return",
     allerSimple: "One-way",
     action: "Get my price",
+    retourTitre: "Your return journey",
+    retourQuand: "Return date and time",
+    retourAilleurs: "The return starts somewhere else",
+    retourDepart: "Return pick-up",
+    retourArrivee: "Return drop-off",
+    retourPassagers: "People on the return",
+    retourPassagersIndice: "Leave as is if the group is the same.",
   },
   fr: {
     titreAccessible: "Rechercher un transfert",
@@ -392,6 +412,13 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     allerRetour: "Aller-retour",
     allerSimple: "Aller simple",
     action: "Voir mon prix",
+    retourTitre: "Votre retour",
+    retourQuand: "Date et heure du retour",
+    retourAilleurs: "Le retour part d’un autre endroit",
+    retourDepart: "Prise en charge au retour",
+    retourArrivee: "Dépose au retour",
+    retourPassagers: "Personnes au retour",
+    retourPassagersIndice: "À laisser tel quel si le groupe ne change pas.",
   },
   de: {
     titreAccessible: "Transfer suchen",
@@ -405,6 +432,13 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     allerRetour: "Hin und zurück",
     allerSimple: "Nur Hinfahrt",
     action: "Preis anzeigen",
+    retourTitre: "Ihre Rückfahrt",
+    retourQuand: "Datum und Uhrzeit der Rückfahrt",
+    retourAilleurs: "Die Rückfahrt startet woanders",
+    retourDepart: "Abholort der Rückfahrt",
+    retourArrivee: "Zielort der Rückfahrt",
+    retourPassagers: "Personen auf der Rückfahrt",
+    retourPassagersIndice: "Unverändert lassen, wenn die Gruppe gleich bleibt.",
   },
   it: {
     titreAccessible: "Cerca un trasferimento",
@@ -418,6 +452,13 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     allerRetour: "Andata e ritorno",
     allerSimple: "Solo andata",
     action: "Vedi il prezzo",
+    retourTitre: "Il tuo ritorno",
+    retourQuand: "Data e ora del ritorno",
+    retourAilleurs: "Il ritorno parte da un altro luogo",
+    retourDepart: "Presa in carico al ritorno",
+    retourArrivee: "Arrivo al ritorno",
+    retourPassagers: "Persone al ritorno",
+    retourPassagersIndice: "Da lasciare invariato se il gruppo non cambia.",
   },
 };
 
@@ -789,6 +830,8 @@ export interface CourseAvis {
   client: { nom: string; email: string; telephone: string };
   vehicule: string;
   passagers: number;
+  /** Le groupe du retour quand il diffère : le chauffeur prépare sa journée avec. */
+  passagersRetour?: number | null;
   vol?: string | null;
   bagagesSki?: number | null;
   enfants?: string | null;
@@ -814,7 +857,13 @@ export function corpsAvis(course: CourseAvis): string {
     `Véhicule   : ${course.vehicule} · ${course.passagers} passager(s)`,
     course.bagagesSki ? `Housses ski : ${course.bagagesSki}` : null,
     course.enfants ? `Enfants    : ${course.enfants} (sièges à prévoir)` : null,
-    course.retour ? `Retour     : ${course.retour}` : "Aller simple",
+    course.retour
+      ? `Retour     : ${course.retour}${
+          course.passagersRetour && course.passagersRetour !== course.passagers
+            ? ` · ${course.passagersRetour} passager(s)`
+            : ""
+        }`
+      : "Aller simple",
     course.montant != null
       ? `Montant    : ${course.montant} € — ${course.paye ? "payé" : "non encaissé, à confirmer"}`
       : null,

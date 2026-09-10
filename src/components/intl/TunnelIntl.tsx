@@ -42,6 +42,8 @@ export default function TunnelIntl({
   }));
 
   const passagers = Number(texte("passengers"));
+  const passagersRetour = Number(texte("returnPassengers"));
+  const entierPositif = (n: number) => (Number.isInteger(n) && n > 0 ? n : undefined);
 
   return (
     <>
@@ -91,7 +93,11 @@ export default function TunnelIntl({
             depart={texte("from")}
             arrivee={texte("to")}
             quand={texte("when")}
-            passagersInitial={Number.isInteger(passagers) && passagers > 0 ? passagers : undefined}
+            passagersInitial={entierPositif(passagers)}
+            retourQuand={texte("returnWhen")}
+            retourDepart={texte("returnFrom")}
+            retourArrivee={texte("returnTo")}
+            retourPassagersInitial={entierPositif(passagersRetour)}
           />
         </Section>
       </main>

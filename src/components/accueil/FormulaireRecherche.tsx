@@ -55,6 +55,11 @@ export default function FormulaireRecherche({
   const [quand, setQuand] = useState("");
   const [passagers, setPassagers] = useState(2);
   const [allerRetour, setAllerRetour] = useState(false);
+  const [retourQuand, setRetourQuand] = useState("");
+  const [retourAilleurs, setRetourAilleurs] = useState(false);
+  const [retourDe, setRetourDe] = useState<ValeurLieu>({ slug: null, texte: "" });
+  const [retourVers, setRetourVers] = useState<ValeurLieu>({ slug: null, texte: "" });
+  const [retourPassagers, setRetourPassagers] = useState<number | null>(null);
 
   /* Recalculé à chaque rendu : la valeur dépend de l'heure qu'il est. */
   const imminent = (() => {
@@ -111,6 +116,26 @@ export default function FormulaireRecherche({
      */
     parametres.set("from", de.slug ?? de.texte);
     parametres.set("to", vers.slug ?? vers.texte);
+
+    /*
+      Le retour voyage en entier, ou pas du tout.
+
+      Le formulaire n'envoyait que `trip=return` : le tunnel savait qu'il y
+      avait un retour et redemandait tout. Un visiteur qui a déjà donné sa date
+      de retour et son point de départ ne doit pas les retaper à l'écran
+      suivant — c'est le même reproche que « Voir mon prix » qui ne montrait
+      pas de prix.
+    */
+    if (allerRetour) {
+      parametres.set("returnWhen", retourQuand);
+      if (retourAilleurs) {
+        if (retourDe.slug ?? retourDe.texte) parametres.set("returnFrom", retourDe.slug ?? retourDe.texte);
+        if (retourVers.slug ?? retourVers.texte) parametres.set("returnTo", retourVers.slug ?? retourVers.texte);
+      }
+      if (retourPassagers !== null && retourPassagers !== passagers) {
+        parametres.set("returnPassengers", String(retourPassagers));
+      }
+    }
     router.push(`${tunnel}?${parametres.toString()}${ANCRE_TUNNEL}`);
   }
 
@@ -238,6 +263,97 @@ export default function FormulaireRecherche({
           {mots.action}
         </button>
       </div>
+
+      {/*
+        Le retour, déplié à la demande.
+
+        Cocher « Aller-retour » ne faisait rien de visible : le visiteur
+        supposait que le retour se réglerait plus tard, et le tunnel le lui
+        redemandait entièrement. Un retour n'est pas la copie de l'aller — il
+        part souvent d'une autre station, parfois vers un autre aéroport, et le
+        groupe n'est pas toujours le même au départ qu'au retour.
+
+        Les lieux ne s'affichent que si le visiteur le demande : les redemander
+        d'office alors qu'ils sont presque toujours ceux de l'aller inversé
+        ferait payer à tout le monde un cas qui concerne une minorité.
+      */}
+      {allerRetour ? (
+        <fieldset className="mt-5 rounded-xl border border-white/15 bg-white/5 p-4">
+          <legend className="px-2 text-xs font-semibold uppercase tracking-wide text-or-300">
+            {mots.retourTitre}
+          </legend>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="min-w-0">
+              <label className={etiquette} htmlFor="retour-quand">
+                {mots.retourQuand}
+              </label>
+              <input
+                id="retour-quand"
+                type="datetime-local"
+                onClick={ouvrirCalendrier}
+                required
+                /* Le retour ne peut pas précéder l'aller. */
+                min={quand || premiereHeure}
+                value={retourQuand}
+                onChange={(e) => setRetourQuand(e.target.value)}
+                className={champ}
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label className={etiquette} htmlFor="retour-passagers">
+                {mots.retourPassagers}
+              </label>
+              <input
+                id="retour-passagers"
+                type="number"
+                min={1}
+                max={16}
+                value={retourPassagers ?? passagers}
+                onChange={(e) => setRetourPassagers(Number(e.target.value))}
+                className={`${champ} w-24`}
+              />
+              <p className="mt-1 text-xs text-glacier-300">{mots.retourPassagersIndice}</p>
+            </div>
+
+            <label className="flex items-end gap-2 pb-2 text-sm text-white">
+              <input
+                type="checkbox"
+                checked={retourAilleurs}
+                onChange={(e) => setRetourAilleurs(e.target.checked)}
+                className="mb-1 accent-alpes"
+              />
+              {mots.retourAilleurs}
+            </label>
+          </div>
+
+          {retourAilleurs ? (
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <ChampLieu
+                id="retour-depart"
+                lieux={lieux}
+                valeur={retourDe}
+                onChange={setRetourDe}
+                etiquette={mots.retourDepart}
+                placeholder={mots.arriveeIndice}
+                langue={langue}
+                variante="sombre"
+              />
+              <ChampLieu
+                id="retour-arrivee"
+                lieux={lieux}
+                valeur={retourVers}
+                onChange={setRetourVers}
+                etiquette={mots.retourArrivee}
+                placeholder={mots.departIndice}
+                langue={langue}
+                variante="sombre"
+              />
+            </div>
+          ) : null}
+        </fieldset>
+      ) : null}
     </form>
   );
 }

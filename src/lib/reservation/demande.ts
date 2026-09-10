@@ -23,6 +23,7 @@ export interface EntreeBrute {
   from?: unknown;
   to?: unknown;
   when?: unknown;
+  returnPassengers?: unknown;
   returnWhen?: unknown;
   returnFrom?: unknown;
   returnTo?: unknown;
@@ -97,6 +98,16 @@ export function validerDemande(entree: EntreeBrute): Validation {
     return { ok: false, message: `Passengers must be between 1 and ${CAPACITE.standard}.` };
   }
 
+  /*
+    Le groupe du retour, quand il diffère. Il n'a de sens qu'avec un retour :
+    reçu sur un aller simple, il est ignoré plutôt que refusé — un paramètre
+    d'URL oublié ne doit pas bloquer une réservation valable.
+  */
+  const passagersRetour = retour ? entier(entree.returnPassengers) : null;
+  if (passagersRetour !== null && (passagersRetour < 1 || passagersRetour > CAPACITE.standard)) {
+    return { ok: false, message: `Passengers must be between 1 and ${CAPACITE.standard}.` };
+  }
+
   const bagages = Math.max(0, entier(entree.bags) ?? 0);
   const skis = Math.max(0, entier(entree.skis) ?? 0);
   if (bagages + skis > CAPACITE_BAGAGES.standard) {
@@ -168,6 +179,7 @@ export function validerDemande(entree: EntreeBrute): Validation {
         resort: arriveeConnue.slug,
         categorie,
         passagers,
+        passagersRetour,
         aller,
         retour,
         retourAirport: airportRetour.slug,
@@ -186,6 +198,7 @@ export function validerDemande(entree: EntreeBrute): Validation {
       resort: arriveeConnue.slug,
       categorie,
       passagers,
+      passagersRetour,
       aller,
       retour,
       bagages,

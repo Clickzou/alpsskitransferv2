@@ -95,6 +95,10 @@ export default function Tunnel({
   arrivee,
   quand,
   passagersInitial,
+  retourQuand,
+  retourDepart,
+  retourArrivee,
+  retourPassagersInitial,
   langue = "en",
 }: {
   lieux: Lieu[];
@@ -102,6 +106,11 @@ export default function Tunnel({
   arrivee?: string;
   quand?: string;
   passagersInitial?: number;
+  /* Le retour tel que l'accueil l'a rempli — voir `FormulaireRecherche`. */
+  retourQuand?: string;
+  retourDepart?: string;
+  retourArrivee?: string;
+  retourPassagersInitial?: number;
   langue?: LangueTunnel;
 }) {
   const t = TEXTES[langue];
@@ -142,12 +151,17 @@ export default function Tunnel({
     // 13 h veut 13 h à Genève, pas 13 h chez lui.
     return departImminent(instantAlpes(+m[1], +m[2], +m[3], +m[4], +m[5]));
   })();
-  const [allerRetour, setAllerRetour] = useState(false);
-  const [returnWhen, setReturnWhen] = useState("");
-  const [retourAilleurs, setRetourAilleurs] = useState(false);
-  const [retourDe, setRetourDe] = useState<ValeurLieu>({ slug: null, texte: "" });
-  const [retourVers, setRetourVers] = useState<ValeurLieu>({ slug: null, texte: "" });
+  /* L'aller-retour est déjà décidé si l'accueil a transmis une date de retour. */
+  const [allerRetour, setAllerRetour] = useState(Boolean(retourQuand));
+  const [returnWhen, setReturnWhen] = useState(retourQuand ?? "");
+  const [retourAilleurs, setRetourAilleurs] = useState(Boolean(retourDepart || retourArrivee));
+  const [retourDe, setRetourDe] = useState<ValeurLieu>(lieuDe(retourDepart));
+  const [retourVers, setRetourVers] = useState<ValeurLieu>(lieuDe(retourArrivee));
   const [passengers, setPassengers] = useState(passagersInitial ?? 2);
+  /* `null` = le groupe ne change pas ; le retour suit alors l'aller. */
+  const [retourPassagers, setRetourPassagers] = useState<number | null>(
+    retourPassagersInitial ?? null,
+  );
   const [bags, setBags] = useState(2);
   const [skis, setSkis] = useState(2);
   const [devise, setDevise] = useState<CodeDevise>("EUR");
@@ -178,7 +192,7 @@ export default function Tunnel({
     setDevis(null);
     setChoix(null);
     setSurMesure(null);
-  }, [de, vers, when, returnWhen, allerRetour, retourDe, retourVers, passengers, bags, skis]);
+  }, [de, vers, when, returnWhen, allerRetour, retourDe, retourVers, passengers, retourPassagers, bags, skis]);
 
   const corpsDemande = useMemo(
     () => ({
@@ -193,10 +207,11 @@ export default function Tunnel({
       returnFromText: adresseEntiere(retourDe),
       returnToText: adresseEntiere(retourVers),
       passengers,
+      returnPassengers: allerRetour && retourPassagers !== null ? retourPassagers : undefined,
       bags,
       skis,
     }),
-    [de, vers, when, allerRetour, returnWhen, retourAilleurs, retourDe, retourVers, passengers, bags, skis],
+    [de, vers, when, allerRetour, returnWhen, retourAilleurs, retourDe, retourVers, passengers, retourPassagers, bags, skis],
   );
 
   /*
@@ -213,7 +228,8 @@ export default function Tunnel({
     la suite du parcours appartient au visiteur.
   */
   useEffect(() => {
-    const chiffrable = Boolean(lieuDe(depart).slug && lieuDe(arrivee).slug && quand);
+    const retourComplet = !retourQuand || Boolean(retourQuand);
+    const chiffrable = Boolean(lieuDe(depart).slug && lieuDe(arrivee).slug && quand && retourComplet);
     if (chiffrable) void chercherPrix(true).finally(() => setPrixAttendu(false));
     else setPrixAttendu(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -500,20 +516,43 @@ export default function Tunnel({
 
             {allerRetour ? (
               <div className="mt-3 space-y-3">
-                <div className="max-w-xs">
-                  <label className={ETIQUETTE} htmlFor="returnWhen">
-                    {t.retourQuand}
-                  </label>
-                  <input
-                    id="returnWhen"
-                    type="datetime-local"
-                    onClick={ouvrirCalendrier}
-                    className={CHAMP}
-                    min={when || premiereHeure}
-                    value={returnWhen}
-                    onChange={(e) => setReturnWhen(e.target.value)}
-                    required
-                  />
+                <div className="flex flex-wrap gap-4">
+                  <div className="max-w-xs flex-1">
+                    <label className={ETIQUETTE} htmlFor="returnWhen">
+                      {t.retourQuand}
+                    </label>
+                    <input
+                      id="returnWhen"
+                      type="datetime-local"
+                      onClick={ouvrirCalendrier}
+                      className={CHAMP}
+                      min={when || premiereHeure}
+                      value={returnWhen}
+                      onChange={(e) => setReturnWhen(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  {/*
+                    Le groupe du retour. Le prix est par véhicule, donc repartir
+                    à deux quand on est venu à quatre ne le change pas — mais le
+                    chauffeur prépare sa journée avec, et la capacité retenue est
+                    celle du trajet le plus chargé.
+                  */}
+                  <div className="w-28">
+                    <label className={ETIQUETTE} htmlFor="returnPassengers">
+                      {t.retourPassagers}
+                    </label>
+                    <input
+                      id="returnPassengers"
+                      type="number"
+                      min={1}
+                      max={16}
+                      className={CHAMP}
+                      value={retourPassagers ?? passengers}
+                      onChange={(e) => setRetourPassagers(Number(e.target.value))}
+                    />
+                  </div>
                 </div>
 
                 <label className="flex items-center gap-2 text-sm text-alpine-700">
