@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
 import Visuel, { type NomVisuel } from "@/components/Visuel";
 import { usePanier } from "@/components/panier/PanierProvider";
@@ -78,6 +78,50 @@ type Etape = "trajet" | "vehicule" | "details" | "envoye";
 const CHAMP =
   "mt-1 w-full min-w-0 rounded border border-glacier-300 bg-white px-3 py-2 text-sm text-alpine focus:border-alpes focus:outline-none focus:ring-2 focus:ring-alpes/30";
 const ETIQUETTE = "block text-xs font-semibold uppercase tracking-wide text-alpine-600";
+
+/**
+ * L'étiquette d'un champ, avec ce qu'on attend de lui.
+ *
+ * Les quatre champs indispensables portaient déjà `required` : le navigateur les
+ * bloquait, mais rien ne le disait à l'écran. On découvrait l'obligation en
+ * butant dessus, au moment de valider, sur un formulaire qu'on croyait fini —
+ * et le seul champ facultatif, le numéro de vol, avait exactement la même
+ * apparence que les autres.
+ *
+ * L'astérisque est marqué `aria-hidden` et doublé d'un mot lu par les lecteurs
+ * d'écran : seul, il s'annonce « étoile » et n'apprend rien. Le champ facultatif
+ * garde sa mention en toutes lettres — c'est l'exception, elle mérite le mot.
+ */
+function Etiquette({
+  pour,
+  children,
+  obligatoire,
+  mention,
+}: {
+  pour: string;
+  children: ReactNode;
+  obligatoire?: string;
+  mention?: string;
+}) {
+  return (
+    <label className={ETIQUETTE} htmlFor={pour}>
+      {children}
+      {obligatoire ? (
+        <>
+          <span aria-hidden className="ml-1 text-marque">
+            *
+          </span>
+          <span className="sr-only"> ({obligatoire})</span>
+        </>
+      ) : null}
+      {mention ? (
+        <span className="ml-2 font-normal normal-case tracking-normal text-alpine-500">
+          {mention}
+        </span>
+      ) : null}
+    </label>
+  );
+}
 
 /**
  * L'adresse telle que l'exploitant la lira, et telle que le chauffeur la
@@ -869,9 +913,9 @@ export default function Tunnel({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="min-w-0">
-              <label className={ETIQUETTE} htmlFor="nom">
+              <Etiquette pour="nom" obligatoire={t.obligatoire}>
                 {t.nom}
-              </label>
+              </Etiquette>
               <input
                 id="nom"
                 className={CHAMP}
@@ -881,9 +925,9 @@ export default function Tunnel({
               />
             </div>
             <div className="min-w-0">
-              <label className={ETIQUETTE} htmlFor="email">
+              <Etiquette pour="email" obligatoire={t.obligatoire}>
                 {t.email}
-              </label>
+              </Etiquette>
               <input
                 id="email"
                 type="email"
@@ -894,9 +938,9 @@ export default function Tunnel({
               />
             </div>
             <div className="min-w-0">
-              <label className={ETIQUETTE} htmlFor="telephone">
+              <Etiquette pour="telephone" obligatoire={t.obligatoire}>
                 {t.telephone}
-              </label>
+              </Etiquette>
               <input
                 id="telephone"
                 type="tel"
@@ -907,9 +951,9 @@ export default function Tunnel({
               />
             </div>
             <div className="min-w-0">
-              <label className={ETIQUETTE} htmlFor="vol">
+              <Etiquette pour="vol" mention={t.facultatif}>
                 {t.vol}
-              </label>
+              </Etiquette>
               <input
                 id="vol"
                 className={CHAMP}
@@ -919,9 +963,9 @@ export default function Tunnel({
               />
             </div>
             <div className="min-w-0 sm:col-span-2">
-              <label className={ETIQUETTE} htmlFor="adresse">
+              <Etiquette pour="adresse" obligatoire={t.obligatoire}>
                 {t.adresse}
-              </label>
+              </Etiquette>
               <input
                 id="adresse"
                 className={CHAMP}

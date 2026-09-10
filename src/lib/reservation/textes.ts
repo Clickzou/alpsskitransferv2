@@ -64,6 +64,9 @@ export interface TextesTunnel {
   email: string;
   telephone: string;
   vol: string;
+  /* Ce qu'on doit remplir, et ce qu'on peut laisser vide. */
+  obligatoire: string;
+  facultatif: string;
   adresse: string;
   adresseIndice: string;
   enfants: string;
@@ -141,6 +144,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     email: "Email",
     telephone: "Mobile number",
     vol: "Flight number",
+    obligatoire: "required",
+    facultatif: "optional",
     adresse: "Address in resort",
     adresseIndice: "Chalet, hotel or residence",
     enfants: "Children’s ages, for the right seats",
@@ -221,6 +226,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     email: "E-mail",
     telephone: "Téléphone mobile",
     vol: "Numéro de vol",
+    obligatoire: "obligatoire",
+    facultatif: "facultatif",
     adresse: "Adresse en station",
     adresseIndice: "Chalet, hôtel ou résidence",
     enfants: "Âge des enfants, pour les bons sièges",
@@ -306,6 +313,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     email: "E-Mail",
     telephone: "Mobiltelefon",
     vol: "Flugnummer",
+    obligatoire: "Pflichtfeld",
+    facultatif: "optional",
     adresse: "Adresse im Skiort",
     adresseIndice: "Chalet, Hotel oder Appartement",
     enfants: "Alter der Kinder, für die richtigen Sitze",
@@ -390,6 +399,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     email: "E-mail",
     telephone: "Cellulare",
     vol: "Numero del volo",
+    obligatoire: "obbligatorio",
+    facultatif: "facoltativo",
     adresse: "Indirizzo in località",
     adresseIndice: "Chalet, hotel o residence",
     enfants: "Età dei bambini, per i seggiolini giusti",
