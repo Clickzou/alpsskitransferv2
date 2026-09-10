@@ -6,8 +6,8 @@ import { usePanier } from "@/components/panier/PanierProvider";
 import { DEVISES, convertir, type CodeDevise } from "@/lib/reservation/devises";
 import type { Lieu } from "@/lib/reservation/lieux";
 import { ENTREPRISE } from "@/data/site";
-import { departImminent } from "@/lib/reservation/gestion";
-import { instantAlpes } from "@/lib/temps";
+import { DELAI_APPEL_HEURES, departImminent } from "@/lib/reservation/gestion";
+import { instantAlpes, saisieAlpes } from "@/lib/temps";
 import {
   TEXTES,
   TEXTES_ATTENTE,
@@ -218,6 +218,12 @@ export default function Tunnel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* La première heure vendable, à l'heure de l'aéroport — comme à l'accueil. */
+  const premiereHeure = useMemo(
+    () => saisieAlpes(new Date(Date.now() + DELAI_APPEL_HEURES * 3600 * 1000)),
+    [],
+  );
+
   function inverser() {
     setDe(vers);
     setVers(de);
@@ -397,6 +403,7 @@ export default function Tunnel({
                 id="when"
                 type="datetime-local"
                 className={CHAMP}
+                min={premiereHeure}
                 value={when}
                 onChange={(e) => setWhen(e.target.value)}
                 required
@@ -499,6 +506,7 @@ export default function Tunnel({
                     id="returnWhen"
                     type="datetime-local"
                     className={CHAMP}
+                    min={when || premiereHeure}
                     value={returnWhen}
                     onChange={(e) => setReturnWhen(e.target.value)}
                     required

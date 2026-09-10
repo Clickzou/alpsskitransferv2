@@ -120,3 +120,16 @@ export function formaterAlpes(
 ): string {
   return instant.toLocaleString(locale, { ...options, timeZone: FUSEAU_ALPES });
 }
+
+/**
+ * Un instant au format `YYYY-MM-DDTHH:mm`, tel qu'un `datetime-local` l'attend.
+ *
+ * Sert à borner le champ de date : `min` empêche le sélecteur natif de proposer
+ * une heure que le serveur refusera de toute façon. C'est une politesse, pas
+ * une sécurité — la règle reste vérifiée côté serveur.
+ */
+export function saisieAlpes(instant: Date): string {
+  const c = composantesAlpes(instant);
+  const deuxChiffres = (n: number) => String(n).padStart(2, "0");
+  return `${c.annee}-${deuxChiffres(c.mois)}-${deuxChiffres(c.jour)}T${deuxChiffres(c.heure)}:${deuxChiffres(c.minute)}`;
+}

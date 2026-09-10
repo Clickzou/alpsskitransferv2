@@ -1,14 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
 import type { Lang } from "@/lib/i18n";
 import { ANCRE_TUNNEL, CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import type { Lieu } from "@/lib/reservation/lieux";
 import { ENTREPRISE } from "@/data/site";
-import { departImminent } from "@/lib/reservation/gestion";
-import { instantAlpes } from "@/lib/temps";
+import { DELAI_APPEL_HEURES, departImminent } from "@/lib/reservation/gestion";
+import { instantAlpes, saisieAlpes } from "@/lib/temps";
 import { TEXTES_IMMINENT, TEXTES_RECHERCHE } from "@/lib/reservation/textes";
 
 /**
@@ -64,10 +64,30 @@ export default function FormulaireRecherche({
     return departImminent(instantAlpes(+m[1], +m[2], +m[3], +m[4], +m[5]));
   })();
 
+  /*
+    La première heure vendable, à l'heure de l'aéroport.
+
+    Elle borne le sélecteur natif : sans `min`, le champ proposait volontiers
+    une heure déjà passée, et le visiteur n'apprenait qu'au bout du parcours
+    qu'elle ne se réservait pas.
+  */
+  const premiereHeure = useMemo(
+    () => saisieAlpes(new Date(Date.now() + DELAI_APPEL_HEURES * 3600 * 1000)),
+    [],
+  );
+
   function rechercher(evenement: React.FormEvent) {
     evenement.preventDefault();
     // Le bouton est déjà désactivé ; ce garde-fou couvre la soumission au clavier.
     if (imminent) return;
+    /*
+      Sans date, pas de recherche.
+
+      Le champ était facultatif : on partait vers le tunnel avec un itinéraire
+      et pas d'heure, et le tunnel ne pouvait rien chiffrer — le visiteur
+      changeait de page pour retrouver un formulaire à finir de remplir.
+    */
+    if (!quand) return;
 
     const parametres = new URLSearchParams({
       passengers: String(passagers),
@@ -113,6 +133,8 @@ export default function FormulaireRecherche({
           <input
             id="quand"
             type="datetime-local"
+            required
+            min={premiereHeure}
             value={quand}
             onChange={(e) => setQuand(e.target.value)}
             className={champ}
