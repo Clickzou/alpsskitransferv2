@@ -1,4 +1,4 @@
-# Point de reprise — 10 septembre 2026, 22 h
+# Point de reprise — 10 septembre 2026, 23 h 30
 
 Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 261 URL vérifiée. **Ce fichier dit où reprendre.**
@@ -9,80 +9,87 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 ---
 
-# Reprise du 10 septembre 2026, 22 h — le paiement est prouvé
+# Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
-## À FAIRE EN PREMIER — une migration attend
+## À FAIRE EN PREMIER — la migration attend toujours
 
 **Coller `docs/supabase-migration-retour.sql` dans l'éditeur SQL de Supabase.**
 Trois colonnes : `retour_airport`, `retour_resort`, `vehicule_retour`.
 
-Tant qu'elle n'est pas passée, **aucune réservation ne s'enregistre** — et c'est
-voulu : le garde-fou posé le même jour refuse d'ouvrir le paiement quand la base
-n'a pas pris la ligne. Vérifié en local, la demande repart en devis, l'exploitant
-est notifié, rien n'est encaissé. Mais rien ne se vend non plus. **À passer avant
-le prochain déploiement.**
+```sql
+alter table reservations
+  add column if not exists retour_airport  text,
+  add column if not exists retour_resort   text,
+  add column if not exists vehicule_retour text;
+```
 
-## Le paiement complet est fait
+Tant qu'elle n'est pas passée, **aucune réservation ne s'enregistre**, donc le
+tunnel se termine sur « Request received » au lieu d'aller au paiement. C'est
+voulu — le garde-fou refuse d'encaisser une course que la base n'a pas prise —
+mais rien ne se vend. C'est la première chose à faire demain, et le paiement
+revient tout seul.
 
-C'était le test qui restait depuis la veille. Réservation **AST-09CB6A**, 515 €,
-aller-retour Genève → Les Gets avec retour depuis l'Alpe d'Huez, payée à la carte
-`4242` : statut `payee`, ligne dans `paiements`, vrai `payment_intent` Stripe,
-confirmation reçue par le client, avis de course reçu sur
-`contact@alpsskitransfers.com`. **La chaîne entière est prouvée en ligne.**
+Une fois passée : rejouer un paiement de bout en bout avec la carte `4242`, sur
+un aller-retour à **deux véhicules différents**, pour vérifier que la chaîne
+complète repart.
 
-Trois pannes silencieuses le bloquaient, toutes trouvées ce soir :
+## Ce qui a été prouvé hier soir
 
-- **La réservation ne s'enregistrait plus depuis la veille.** La ligne portait
-  `passagersRetour` quand la colonne s'appelle `passagers_retour` : PostgREST
-  refusait la ligne entière, `inserer` renvoyait `null` dans un journal que
-  personne ne lit, et le tunnel envoyait quand même le client payer. L'argent
-  arrivait, la course n'existait nulle part. **La session Stripe n'est plus créée
-  si la base n'a pas pris la ligne**, et un test compare les clés écrites aux
-  colonnes du schéma.
-- **Le retour après paiement tombait sur l'écran de connexion Vercel.**
-  `VERCEL_URL` désigne le déploiement, protégé ; `VERCEL_PROJECT_PRODUCTION_URL`
-  désigne le projet, stable et ouvert, et passe devant.
-- **Le tunnel jetait le retour à l'entrée.** Quatre paramètres d'URL manquaient
-  dans `TunnelAutonome` — la version traduite les passait déjà.
+**Le paiement complet, pour la première fois** — réservation AST-09CB6A, 515 €,
+Genève → Les Gets avec retour depuis l'Alpe d'Huez : statut `payee`, ligne dans
+`paiements`, vrai `payment_intent`, confirmation au client, avis de course reçu.
 
-## Ce que le moteur sait faire de plus
+Trois pannes silencieuses le bloquaient : une colonne écrite en casse camel qui
+faisait rejeter toute la ligne pendant que le client partait payer ; le retour
+après paiement pointé sur l'URL de déploiement, protégée par le SSO Vercel ; et
+le tunnel qui jetait les quatre paramètres de retour à l'entrée.
 
-- **Un véhicule par sens, chiffré sur l'effectif de ce sens.** Un seul véhicule
-  servait les deux trajets, dimensionné sur le groupe le plus nombreux : arriver
-  à deux et repartir à six faisait payer un huit places à l'aller, à vide. Deux
-  listes, deux prix, un total. Suivi jusqu'au bout — colonne, avis de course,
-  e-mail, tableau de bord.
-- **Le retour dit d'où il part.** Ses lieux n'étaient enregistrés nulle part :
-  l'avis annonçait une date de retour sans point de prise en charge, et le
-  chauffeur serait allé à la station de l'aller, cent cinquante kilomètres plus
-  loin.
-- **L'avis de course est refondu** : un bloc par sens, complet et exécutable
-  seul, puis qui appeler. Neuf tests fixent ce qu'il contient.
-- **La remise d'aller-retour passe à zéro.** Elle valait 5 % du retour, ne venait
-  pas du WordPress, et l'exploitant ne l'a jamais consentie — elle s'affichait
-  pourtant au client. La mécanique reste testée : la remettre est une ligne, le
-  jour où elle est validée.
+## Ce que le moteur sait faire maintenant
 
-## Ce que le site a gagné au passage
+- **Un véhicule et un prix par sens**, chiffrés sur l'effectif de ce sens. Un
+  audit l'a d'ailleurs sauvé d'un défaut sérieux : le véhicule du retour n'était
+  transmis que sur les aller-retours dont les lieux changent, si bien qu'une
+  Premium à quatre places pouvait être vendue pour un retour à sept personnes.
+- **Les enfants se comptent par trajet**, bornés par le groupe de leur sens, et
+  la liste explique pourquoi elle s'arrête là.
+- **Les refus disent d'où ils viennent** : le serveur nomme le champ fautif, le
+  tunnel propose « revenir et le modifier » et pose le curseur dessus.
+- **Le plafond de huit personnes s'annonce avant qu'on le heurte**, avec le lien
+  vers le devis groupe de la langue ; les catégories écartées faute de places
+  disent qu'elles existent.
+- `npm run moteur:auditer` rejoue les treize cas limites — capacités, effectifs,
+  bagages, enfants, dates. **Tous passent.**
 
-- **L'en-tête débordait de 87 px sur iPhone, sur toutes les pages** : le logo
-  faisait 218 px de large. Sept pages contrôlées, plus aucun débordement.
+## Ce qui a changé à l'écran
+
+- L'écran du véhicule : titre, photos, récapitulatif des deux sens avec lieux,
+  dates, distances et effectifs, prix « pour ce trajet » formatés par langue.
+- L'étape des coordonnées : quatre champs, astérisque sur les obligatoires,
+  « optional » sur le vol. **L'adresse exacte a été retirée** (décision du
+  client) : un seul champ ne pouvait pas décrire un aller-retour asymétrique, et
+  l'avis de course porte « ADRESSE À OBTENIR PAR TÉLÉPHONE ».
+- Changer d'étape ramène en haut du formulaire.
 - **`/book-ski-transfer-tickets/` n'est plus que son formulaire** (décision du
-  client) : bandeau, chiffres, texte WordPress, « ce que le billet comprend » et
-  FAQ retirés. Le H1 est celui du tunnel. **Cette URL ne se positionnera plus sur
-  « book ski transfer tickets »** — c'est assumé, et écrit en tête du composant.
-- L'écran du véhicule a un titre, les photos des trois catégories, un
-  récapitulatif qui montre les deux sens, et des prix formatés par langue
-  (« 515 € », plus « €515 »).
+  client) : plus de bandeau, de texte WordPress, de FAQ. **Cette URL ne se
+  positionnera plus sur « book ski transfer tickets »** — c'est assumé, et écrit
+  en tête du composant.
+- L'en-tête débordait de 87 px sur iPhone, sur toutes les pages. Réglé.
 
-## Ce qui reste à prouver
+## Ce qui attend le client
 
-| Maille | État |
-|---|---|
-| Calcul du prix, écriture, session, e-mails, refus sous 1 h | ✅ |
-| **Paiement complet** | ✅ **fait le 10 septembre au soir** |
-| La migration en base | ⏳ **à passer** |
-| L'écran d'édition des tarifs | ⏳ jamais commencé |
+1. **Le barème** (`wp-export/tarifs-a-valider.csv`). La remise d'aller-retour a
+   été **mise à zéro** : elle valait 5 %, ne venait pas du WordPress, et Nassim
+   ne l'avait jamais consentie. La remettre est une ligne.
+2. **Inviter Nassim sur Stripe**, puis la vérification d'identité de
+   NM Transports 73 pour encaisser réellement.
+3. Le passage aux **clés `sk_live_`** et un webhook sur le domaine définitif.
+
+## Deux choses à nettoyer avant la mise en ligne
+
+- **Les réservations de test sont dans la vraie base** — une quinzaine, toutes
+  du 10 septembre. À supprimer avant l'ouverture.
+- `EMAIL_EXPLOITANT` vaut `contact@alpsskitransfers.com` en production, pas
+  `nmtransports73@gmail.com` — à confirmer avec Nassim.
 
 ## Le prochain vrai morceau
 
