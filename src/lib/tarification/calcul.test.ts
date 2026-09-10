@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { BAREME_DEFAUT } from "./bareme";
 import { calculer, estDeNuit, type DemandeTransfert } from "./calcul";
 
@@ -27,6 +27,22 @@ const base: DemandeTransfert = {
   partage: false,
   allerRetour: false,
 };
+
+/*
+ * Ces tests décident si le site encaisse : ils ne doivent donc rien devoir à
+ * l'environnement qui les exécute.
+ *
+ * `BAREME_VALIDE` était une constante ; devenue variable d'environnement, elle
+ * a suivi le processus — et le build Vercel, où elle vaut « oui », a fait
+ * échouer deux tests qui passaient en local, où vitest ne lit pas `.env.local`.
+ * Le prebuild a bloqué le déploiement, ce qui est exactement son rôle.
+ *
+ * On repart donc d'un état connu avant chaque cas : barème non validé, comme au
+ * premier jour. Les tests qui vérifient l'ouverture la posent eux-mêmes.
+ */
+beforeEach(() => {
+  delete process.env.BAREME_VALIDE;
+});
 
 describe("calcul du prix", () => {
   it("applique prise en charge + kilométrage", () => {
