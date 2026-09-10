@@ -337,6 +337,14 @@ double sans URL canonique choisie par l'utilisateur » dans la Search Console.
   horizontal inexistant. Pour vérifier un rendu mobile, passer par Playwright avec
   `devices["iPhone 13"]` et comparer `scrollWidth` à `clientWidth`.
 
+## La bascule
+
+La séquence du jour J vit dans **`docs/MISE-EN-LIGNE.md`** : ce qui doit être
+réglé avant de toucher au DNS, l'ordre des opérations — le domaine d'abord,
+l'indexation ensuite —, la recette des redirections en ligne et les trois
+semaines de surveillance qui suivent. Le site est fermé aux moteurs par défaut
+(`NEXT_PUBLIC_INDEXATION`), et le prebuild rappelle son état à chaque build.
+
 ## Calendrier
 
 Livraison **début octobre 2026**, site et moteur ensemble. Les réservations se
