@@ -11,27 +11,39 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 # Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
-## À FAIRE EN PREMIER — la migration attend toujours
+## À FAIRE EN PREMIER — l'espace « ma réservation » n'existe pas
 
-**Coller `docs/supabase-migration-retour.sql` dans l'éditeur SQL de Supabase.**
-Trois colonnes : `retour_airport`, `retour_resort`, `vehicule_retour`.
+Après paiement, la page de confirmation propose « Back to the site ». Elle doit
+proposer **« Gérer ma réservation »** — décision de JC, 10 septembre au soir.
 
-```sql
-alter table reservations
-  add column if not exists retour_airport  text,
-  add column if not exists retour_resort   text,
-  add column if not exists vehicule_retour text;
-```
+**Mais la page n'existe pas.** Elle a été conçue et jamais construite :
 
-Tant qu'elle n'est pas passée, **aucune réservation ne s'enregistre**, donc le
-tunnel se termine sur « Request received » au lieu d'aller au paiement. C'est
-voulu — le garde-fou refuse d'encaisser une course que la base n'a pas prise —
-mais rien ne se vend. C'est la première chose à faire demain, et le paiement
-revient tout seul.
+- `CHEMIN_GESTION` (`src/lib/reservation/gestion.ts`) déclare les quatre URL —
+  `/manage-booking/`, `/fr/gerer-ma-reservation/`, `/de/buchung-verwalten/`,
+  `/it/gestisci-prenotazione/` ;
+- `lienGestion()` sait fabriquer le lien signé `?ref=…&j=…` — **et n'est appelé
+  nulle part** ;
+- `/api/gestion/` sait déjà relire une réservation, changer son horaire, refuser
+  en deçà de `PREAVIS_HEURES` (24 h) et prévenir l'exploitant ;
+- aucune route ne répond à ces quatre URL.
 
-Une fois passée : rejouer un paiement de bout en bout avec la carte `4242`, sur
-un aller-retour à **deux véhicules différents**, pour vérifier que la chaîne
-complète repart.
+Ce qu'il reste à écrire : la page elle-même, dans les quatre langues. Elle lit
+`ref` et `j`, vérifie le jeton, affiche la course, propose le nouvel horaire, et
+renvoie au téléphone quand le départ est à moins de 24 h. Puis brancher le lien
+sur les deux confirmations — celle du tunnel et l'e-mail de paiement.
+
+**Tant qu'elle n'existe pas, ne pas changer le bouton** : il pointerait sur un
+404 juste après un paiement.
+
+## ~~La migration~~ — passée le 10 septembre au soir
+
+Les trois colonnes `retour_airport`, `retour_resort`, `vehicule_retour` sont en
+base. **Vérifié dans la foulée par un paiement complet** : AST-62B62B, 610 €,
+Genève → Les Gets en Premium à deux, retour Alpe d'Huez → Genève en Standard à
+sept, un enfant à l'aller et trois au retour. Statut `payee`, ligne dans
+`paiements`, `payment_intent` réel. **Deux véhicules, deux effectifs, deux
+lieux : le cas complet est prouvé.**
+
 
 ## Ce qui a été prouvé hier soir
 
