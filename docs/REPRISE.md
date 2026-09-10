@@ -1,11 +1,90 @@
-# Point de reprise — 8 septembre 2026
+# Point de reprise — 10 septembre 2026, 20 h
 
-Tout est enregistré, le build passe : 269 pages, 49 tests, couverture des 261 URL
+Tout est enregistré, le build passe : 367 pages, 69 tests, couverture des 261 URL
 vérifiée. **Ce fichier dit où reprendre.**
 
 > **Convention de reprise avec JC.**
 > « On en est où ? » → lire ce fichier et résumer l'état, sans rien lancer.
 > « Go » → enchaîner sur le point 1 de « À reprendre », sans redemander confirmation.
+
+---
+
+# Reprise du 10 septembre 2026, 20 h — le moteur en production
+
+Tout est commité et poussé (`00fc65a`), build vert : **69 tests**, 41 pages
+contrôlées, couverture 261/261. Rien en attente dans l'arbre de travail.
+
+## Le mot d'ordre
+
+**« Go » → reprendre les tests du moteur en ligne**, sur
+`https://alpsskitransferv2.vercel.app`, dans l'ordre du tableau ci-dessous.
+
+## Ce qui est prouvé en ligne
+
+| Maille | État | Comment c'est vérifié |
+|---|---|---|
+| Calcul du prix | ✅ | `/api/devis/` → Genève → Val Thorens, 161 km, 298 € |
+| Écriture en base | ✅ | la réservation apparaît dans `reservations` |
+| Session Stripe | ✅ | l'URL de paiement s'ouvre |
+| Envoi d'e-mail | ✅ | `/api/contact/` renvoie `{"ok":true}` vers une adresse externe |
+| Refus sous 1 h | ✅ | départ dans 30 min et départ passé : tous deux refusés |
+| **Paiement complet** | ⏳ | **jamais fait** — c'est le premier test à reprendre |
+
+## Le test qui reste
+
+Payer une réservation de test avec la carte `4242 4242 4242 4242`, puis vérifier
+dans cet ordre : statut `payee` en base, ligne dans `paiements`, e-mail au client,
+avis de course à `nmtransports73@gmail.com`. Chaque étape qui échoue désigne sa
+variable — le webhook pour le statut, Resend pour les e-mails.
+
+Le lien de paiement se refabrique par un `POST /api/reservation/`.
+
+## Ce qui a été réglé aujourd'hui
+
+**Les onze clés de Vercel existaient mais étaient vides.** L'import de la veille
+avait créé les noms sans les valeurs, et l'interface les affichait comme des
+variables normales. Diagnostiqué par `/api/diagnostic/` — une sonde qui dit,
+sans révéler aucune valeur, ce que le processus voit vraiment. Elle exige
+`SECRET_GESTION` en en-tête et répond 404 sans lui. **Elle resservira le jour de
+la bascule vers les clés réelles.**
+
+**Le fuseau horaire.** `new Date(annee, mois, …)` prenait le fuseau de la
+machine : Europe/Paris en développement, UTC sur Vercel. Toute comparaison avec
+l'heure réelle était fausse de deux heures — le refus de vendre à moins d'une
+heure ne se déclenchait jamais. Le fuseau du service est maintenant écrit dans
+`src/lib/temps.ts`, pas subi, et les tests passent sous cinq fuseaux.
+
+**Resend est vérifié** : les trois enregistrements DNS sont dans la zone
+o2switch, l'expéditeur est `bookings@alpsskitransfers.com`. La lenteur venait du
+cache négatif d'o2switch, réglé à 24 h — bon à savoir pour les prochains
+domaines.
+
+**Le webhook Stripe** existe enfin (`checkout.session.completed`), son
+`whsec_` est dans Vercel et en local.
+
+**Le parcours** : « Voir mon prix » montre un prix, la date est obligatoire et
+bornée, le calendrier s'ouvre au clic sur tout le champ, l'aller-retour se
+déplie (date, groupe, lieux), le bouton conclut le formulaire, et l'étape des
+coordonnées ne montre plus que cinq champs.
+
+**Le groupe du retour** peut différer de l'aller : colonne `passagers_retour`
+créée en base, écrite, affichée au tableau de bord. Le prix ne change pas — il
+est par véhicule — mais la capacité retenue est celle du trajet le plus chargé.
+
+## Ce qui attend le client
+
+1. **Inviter Nassim sur Stripe** (Paramètres → Équipe et sécurité), puis la
+   vérification d'identité de NM Transports 73 pour encaisser réellement.
+2. Le passage aux **clés `sk_live_`**, et un nouvel endpoint webhook sur le
+   domaine définitif.
+
+## Le prochain vrai morceau
+
+**L'écran d'édition des tarifs** — la demande d'origine. La table `tarifs`
+existe en base mais aucun code ne la lit : les prix viennent toujours de
+`BAREME_DEFAUT`, dans le code. Tant que cet écran n'existe pas, changer un tarif
+demande un déploiement.
+
 
 ## Où en est le site
 
@@ -23,7 +102,7 @@ vérifiée. **Ce fichier dit où reprendre.**
 | Blog | **3 articles × 4 langues** — chacun adapté à son marché, pas traduit |
 | Home | **au design validé** par le client |
 | Stations, trajets, hubs, pages fonctionnelles | **au design de la home** (8 septembre) |
-| Moteur de réservation | **au niveau du concurrent** (autocomplétion, adresse libre, bagages, retour asymétrique, devises) — reste à brancher Stripe et Supabase |
+| Moteur de réservation | **en production** : Stripe, Supabase et Resend branchés et vérifiés en ligne. Reste le test de paiement complet et l'écran des tarifs |
 
 ## Fait le 9 septembre
 
