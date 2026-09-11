@@ -62,6 +62,7 @@ const ATTENDUES: { nom: string; role: string; prefixe?: boolean }[] = [
   { nom: "CRON_SECRET", role: "relance du matin (tâche planifiée)" },
   { nom: "FACTURES_ACTIVES", role: "émission des factures — « oui » pour allumer" },
   { nom: "STRIPE_TAUX_TVA", role: "taux de TVA 10 % des factures" },
+  { nom: "IBAN_VIREMENT", role: "IBAN, BIC et titulaire pour les virements" },
   { nom: "BAREME_VALIDE", role: "autorisation d'encaisser" },
   { nom: "NEXT_PUBLIC_MOTEUR_RESERVATION", role: "moteur interne ou repli WooCommerce" },
   { nom: "NEXT_PUBLIC_INDEXATION", role: "ouverture aux moteurs de recherche" },

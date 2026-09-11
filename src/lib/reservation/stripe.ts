@@ -196,6 +196,141 @@ export interface FactureStripe {
   pdf: string | null;
 }
 
+/** Un appel d'écriture à l'API Stripe — `null` sur tout refus, journalisé. */
+async function ecrireStripe<T>(
+  chemin: string,
+  parametres: URLSearchParams,
+  idempotence?: string,
+): Promise<T | null> {
+  if (!stripeConfigure()) return null;
+  try {
+    const reponse = await fetch(`https://api.stripe.com${chemin}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        ...(idempotence ? { "Idempotency-Key": idempotence } : {}),
+      },
+      body: parametres,
+      cache: "no-store",
+    });
+    if (!reponse.ok) {
+      console.error(`[stripe] ${chemin} refusé`, await reponse.text());
+      return null;
+    }
+    return (await reponse.json()) as T;
+  } catch (erreur) {
+    console.error(`[stripe] ${chemin} impossible`, erreur);
+    return null;
+  }
+}
+
+export interface DemandeFactureTelephone {
+  reference: string;
+  email: string;
+  nom: string;
+  langue: string;
+  lignes: LigneCheckout[];
+  /** Le délai de paiement, en jours. */
+  joursEcheance: number;
+  /** La mention de virement — IBAN, référence, échéance — ou `null` pour la carte. */
+  mentionVirement: string | null;
+}
+
+/**
+ * La facture d'une réservation prise au téléphone.
+ *
+ * Une facture « à régler », pas une page de paiement : Stripe la numérote dans
+ * la même série que les factures du site, et sa page en ligne permet de la
+ * payer par carte — c'est le lien de paiement envoyé au client. Pour un
+ * virement, la mention porte l'IBAN, la référence et l'échéance ; l'exploitant
+ * la marque payée à réception (`marquerFacturePayee`).
+ *
+ * Chaque appel porte une clé d'idempotence tirée de la référence : un double
+ * clic, ou une nouvelle tentative après une coupure, ne crée ni deux clients
+ * ni deux factures.
+ *
+ * `null` quand la facturation est éteinte ou que Stripe refuse une étape.
+ */
+export async function creerFactureTelephone(
+  demande: DemandeFactureTelephone,
+): Promise<FactureStripe | null> {
+  if (!facturesActives()) return null;
+  const taux = process.env.STRIPE_TAUX_TVA!.trim();
+
+  const client = await ecrireStripe<{ id: string }>(
+    "/v1/customers",
+    new URLSearchParams({
+      email: demande.email,
+      name: demande.nom,
+      "preferred_locales[0]": demande.langue,
+      "metadata[reference]": demande.reference,
+    }),
+    `client-${demande.reference}`,
+  );
+  if (!client) return null;
+
+  for (const [i, ligne] of demande.lignes.entries()) {
+    const element = await ecrireStripe(
+      "/v1/invoiceitems",
+      new URLSearchParams({
+        customer: client.id,
+        currency: "eur",
+        amount: String(Math.round(ligne.montant * 100)),
+        description: `${ligne.intitule} — ${ligne.description}`,
+        "tax_rates[0]": taux,
+      }),
+      `ligne-${demande.reference}-${i}`,
+    );
+    if (!element) return null;
+  }
+
+  const parametres = new URLSearchParams({
+    customer: client.id,
+    collection_method: "send_invoice",
+    days_until_due: String(demande.joursEcheance),
+    pending_invoice_items_behavior: "include",
+    "metadata[reference]": demande.reference,
+    "metadata[source]": "telephone",
+    "payment_settings[payment_method_types][0]": "card",
+  });
+  if (demande.mentionVirement) parametres.set("description", demande.mentionVirement);
+
+  const brouillon = await ecrireStripe<{ id: string }>(
+    "/v1/invoices",
+    parametres,
+    `facture-${demande.reference}`,
+  );
+  if (!brouillon) return null;
+
+  const finale = await ecrireStripe<{
+    id: string;
+    number: string | null;
+    hosted_invoice_url: string | null;
+    invoice_pdf: string | null;
+  }>(`/v1/invoices/${brouillon.id}/finalize`, new URLSearchParams({ auto_advance: "false" }));
+  if (!finale) return null;
+
+  return {
+    id: finale.id,
+    numero: finale.number,
+    url: finale.hosted_invoice_url,
+    pdf: finale.invoice_pdf,
+  };
+}
+
+/**
+ * Marque une facture payée hors de Stripe — un virement reçu sur le compte de
+ * l'exploitant. Stripe la passe à « payée » sans rien encaisser lui-même.
+ */
+export async function marquerFacturePayee(id: string): Promise<boolean> {
+  const reponse = await ecrireStripe(
+    `/v1/invoices/${encodeURIComponent(id)}/pay`,
+    new URLSearchParams({ paid_out_of_band: "true" }),
+  );
+  return reponse !== null;
+}
+
 /** Relit une facture Stripe — `null` si Stripe n'est pas configuré ou ne répond pas. */
 export async function lireFacture(id: string): Promise<FactureStripe | null> {
   if (!stripeConfigure()) return null;

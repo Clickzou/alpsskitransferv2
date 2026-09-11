@@ -11,7 +11,38 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 # Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
-## À FAIRE EN PREMIER — la migration `langue`, puis le déploiement
+## À FAIRE EN PREMIER — la saisie téléphonique : migration, IBAN, webhook
+
+Demande de JC, 11 septembre : la plupart des réservations arrivent par
+téléphone. **« + Nouvelle réservation (téléphone) »** dans le back-office
+(`nouvelle/`) : les mêmes champs, les mêmes contrôles (`validerDemande`) et le
+même prix de grille (`devisReservation`) que le site ; le prix se corrige, et
+la correction entre dans l'historique. Puis **carte** ou **virement** :
+
+- facturation allumée — une facture Stripe « à régler », dans la série NMT ;
+  sa page en ligne se paie par carte, et pour un virement elle porte l'IBAN,
+  la référence et l'échéance (7 jours, ramenés à 2 jours avant le départ) ;
+- facturation éteinte — un lien Stripe Checkout pour la carte, l'IBAN seul dans
+  l'e-mail pour un virement.
+
+Le client reçoit un e-mail dans sa langue (`textes-telephone.ts`). La fiche
+montre l'origine, et les boutons **« Virement reçu »** et **« Renvoyer
+l'e-mail de paiement »**. Une facture téléphonique payée par carte passe seule à
+« payée » par le webhook (`invoice.paid`) ; un virement déjà noté n'y est pas
+compté deux fois. Les réservations téléphoniques en attente restent dans
+« À venir », pas dans « Paiements non aboutis ».
+
+**Avant de déployer, dans cet ordre :**
+
+1. `docs/supabase-migration-telephone.sql` (colonnes `source`, `mode_paiement`,
+   `facture_stripe`) — sans elle, la saisie téléphonique échoue ; le site, lui,
+   ne les écrit pas.
+2. `IBAN_VIREMENT` sur Vercel, posée par JC — IBAN, BIC et titulaire sur une
+   ligne. Sans elle, l'e-mail annonce les coordonnées sans les donner.
+3. Stripe → Développeurs → Webhooks : ajouter l'événement **`invoice.paid`** à
+   l'endpoint `/api/stripe/webhook` (il n'écoute que `checkout.session.completed`).
+
+## Pour mémoire — la migration `langue` (passée le 11 septembre) et la relance du matin
 
 **Dans cet ordre, impérativement.** Exécuter `docs/supabase-migration-langue.sql`
 avant de déployer : `/api/reservation` écrit désormais la langue du client, et

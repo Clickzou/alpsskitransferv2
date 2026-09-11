@@ -87,6 +87,16 @@ function LigneCourse({ course }: { course: Course }) {
               adresse manquante — à demander au client
             </p>
           ) : null}
+          {course.source === "telephone" ? (
+            <p className="text-xs text-alpine-600">
+              réservation téléphonique
+              {course.statut === "en-attente-paiement"
+                ? course.modePaiement === "virement"
+                  ? " · virement attendu"
+                  : " · lien de paiement envoyé"
+                : ""}
+            </p>
+          ) : null}
         </div>
 
         <span className="flex items-center gap-2 lg:justify-end">
@@ -223,8 +233,12 @@ export default async function PageAdmin({
     Il reste consultable, replié en bas : c'est un client qui a hésité, qu'on
     peut rappeler. Décision de JC, 11 septembre 2026.
   */
-  const aAssurer = aVenir.filter((course) => course.statut !== "en-attente-paiement");
-  const nonAboutis = aVenir.filter((course) => course.statut === "en-attente-paiement");
+  // Une réservation téléphonique en attente de virement n'est pas un paiement
+  // abandonné : c'est une course à assurer, dont l'argent arrive par la banque.
+  const nonAbouti = (course: Course) =>
+    course.statut === "en-attente-paiement" && course.source !== "telephone";
+  const aAssurer = aVenir.filter((course) => !nonAbouti(course));
+  const nonAboutis = aVenir.filter(nonAbouti);
 
   // Une recherche en cours remplace la vue du jour : elle porte sur toute la base.
   const params = await searchParams;
@@ -236,6 +250,15 @@ export default async function PageAdmin({
     <main className="mx-auto max-w-7xl px-4 py-8">
       <Entete email={utilisateur.email} actif="reservations" />
       <h1 className="sr-only">Réservations</h1>
+
+      <div className="mt-6 flex justify-end">
+        <Link
+          href="/gestion-ventes-tarifs-seo/nouvelle/"
+          className="rounded bg-marque px-5 py-2 text-sm font-semibold text-white transition hover:bg-marque-600"
+        >
+          + Nouvelle réservation (téléphone)
+        </Link>
+      </div>
 
       <Recherche q={critere.q} du={critere.du} au={critere.au} />
 

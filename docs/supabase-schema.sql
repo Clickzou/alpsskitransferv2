@@ -34,6 +34,9 @@ create table if not exists reservations (
   adresse_retour text,                             -- null = même adresse qu'à l'aller
   vol_retour    text,                              -- demandés après le paiement
   langue        text,                              -- en · fr · de · it, pour écrire au client
+  source        text not null default 'site',     -- site · telephone
+  mode_paiement text,                              -- carte · virement (réservations téléphoniques)
+  facture_stripe text,                             -- in_… : facture d'une réservation téléphonique
   bagages_ski   smallint not null default 0,
   enfants       text,                              -- âges, pour les bons sièges
   message       text,

@@ -49,6 +49,10 @@ interface LigneBase {
   adresse: string;
   adresse_retour: string | null;
   vol_retour: string | null;
+  source: string | null;
+  mode_paiement: string | null;
+  facture_stripe: string | null;
+  langue: string | null;
   bagages_ski: number;
   enfants: string | null;
   message: string | null;
@@ -77,6 +81,12 @@ export interface Course {
   /** La prise en charge au retour, donnée après le paiement ; `null` = même adresse qu'à l'aller. */
   adresseRetour: string | null;
   volRetour: string | null;
+  /** site · telephone — une réservation téléphonique en attente de virement est une vraie course. */
+  source: string;
+  /** carte · virement, pour une réservation téléphonique. */
+  modePaiement: string | null;
+  factureStripe: string | null;
+  langue: string | null;
   /** Où repart le client, et vers quel aéroport — toujours renseignés quand il y a un retour. */
   stationRetour: string;
   aeroportRetour: string;
@@ -213,6 +223,10 @@ function versCourse(ligne: LigneBase): Course {
         : null,
     adresseRetour: ligne.adresse_retour?.trim() || null,
     volRetour: ligne.vol_retour?.trim() || null,
+    source: ligne.source ?? "site",
+    modePaiement: ligne.mode_paiement ?? null,
+    factureStripe: ligne.facture_stripe ?? null,
+    langue: ligne.langue ?? null,
     stationRetour: nomStation(ligne.retour_resort ?? ligne.resort),
     aeroportRetour: nomAeroport(ligne.retour_airport ?? ligne.airport),
     vehicule: ligne.vehicule,

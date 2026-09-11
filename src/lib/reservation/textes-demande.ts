@@ -241,6 +241,11 @@ export function montantClient(langue: string, montant: number, allerRetour: bool
   return allerRetour ? `${prix}${textesDemande(langue).libelles.deuxTrajets}` : prix;
 }
 
+/** Une échéance — le jour seul, dans la langue du client. */
+export function jourClient(langue: string, date: Date): string {
+  return formaterAlpes(date, locale(langue), { day: "numeric", month: "long", year: "numeric" });
+}
+
 /** Le récapitulatif de la demande, ligne à ligne, dans la langue du client. */
 export function recapDemande(langue: string, r: RecapDemande): string {
   const { libelles: L, deuxPoints } = textesDemande(langue);

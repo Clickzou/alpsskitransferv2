@@ -68,6 +68,28 @@ export function enfantsParSens(texte: string | null | undefined): {
     : { aller: Number(aller), retour: Number(retour), ages: ages ?? null };
 }
 
+/**
+ * La phrase à stocker, à partir de ce qui a été saisi — celle que
+ * `enfantsLisibles` et `enfantsParSens` relisent.
+ *
+ * Même format que `phraseEnfants` de `/api/reservation`, qui l'écrit pour le
+ * tunnel du site ; la saisie téléphonique du back-office l'écrit par ici. Les
+ * deux doivent rester d'accord : c'est la même colonne, relue par le même code.
+ */
+export function phraseEnfants(
+  aller: number,
+  retour: number,
+  ages: string | null,
+  allerRetour: boolean,
+): string {
+  const a = Math.max(0, Math.floor(aller) || 0);
+  const r = Math.max(0, Math.floor(retour) || 0);
+  const suffixe = ages ? ` (${ages})` : "";
+  if (a === 0 && r === 0) return ages ? `âges : ${ages}` : "";
+  if (!allerRetour || a === r) return `${Math.max(a, r)}${suffixe}`;
+  return `aller ${a} · retour ${r}${suffixe}`;
+}
+
 /** La phrase stockée en base, dite en français à l'exploitant. */
 export function enfantsLisibles(texte: string | null | undefined): string {
   const phrase = texte?.trim();

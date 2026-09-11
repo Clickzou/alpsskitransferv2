@@ -15,6 +15,20 @@ import { lire, mettreAJour } from "@/lib/reservation/supabase";
 import { textesDecision } from "@/lib/reservation/textes-decision";
 import { resortParSlug } from "@/lib/resorts";
 import { formaterAlpes } from "@/lib/temps";
+import { SITE } from "@/data/site";
+import { lireFacture, marquerFacturePayee, creerSessionCheckout } from "@/lib/reservation/stripe";
+import { inserer } from "@/lib/reservation/supabase";
+import { textesEmail } from "@/lib/reservation/textes";
+import { textesTelephone } from "@/lib/reservation/textes-telephone";
+import {
+  dateClient,
+  jourClient,
+  montantClient,
+  recapDemande,
+} from "@/lib/reservation/textes-demande";
+import { echeanceVirement } from "@/lib/reservation/telephone";
+import { cheminConfirmation } from "@/lib/reservation/config";
+import { jetonGestion } from "@/lib/reservation/gestion";
 
 /**
  * Les actions du back-office : entrer, sortir, et trancher une demande.
@@ -177,4 +191,224 @@ async function trancher(donnees: FormData, decision: "acceptee" | "refusee"): Pr
 
   const fait = decision === "acceptee" ? "valide" : "refuse";
   return retourFiche(envoye ? fait : `${fait}-sans-email`);
+}
+
+/* ---------------------------------------------- réservations téléphoniques */
+
+interface ReservationTelephone {
+  reference: string;
+  statut: string;
+  airport: string;
+  resort: string;
+  aller: string;
+  retour: string | null;
+  retour_airport: string | null;
+  retour_resort: string | null;
+  vehicule: string;
+  vehicule_retour: string | null;
+  passagers: number;
+  passagers_retour: number | null;
+  bagages_ski: number;
+  adresse: string | null;
+  vol: string | null;
+  message: string | null;
+  montant: string | number;
+  devise: string | null;
+  client_nom: string;
+  client_email: string;
+  langue: string | null;
+  mode_paiement: string | null;
+  facture_stripe: string | null;
+}
+
+async function lireReservation(reference: string): Promise<ReservationTelephone | null> {
+  const [r] = await lire<ReservationTelephone>("reservations", {
+    filtres: [{ colonne: "reference", operateur: "eq", valeur: reference }],
+    limite: 1,
+  });
+  return r ?? null;
+}
+
+async function origineActions(): Promise<string> {
+  const entetes = await headers();
+  return origineSite(
+    new Request(`${entetes.get("x-forwarded-proto") ?? "http"}://${entetes.get("host") ?? "localhost"}`),
+  );
+}
+
+function trajetDe(r: ReservationTelephone): string {
+  return `${airportParSlug(r.airport)?.name ?? r.airport} → ${resortParSlug(r.resort)?.name ?? r.resort}`;
+}
+
+/**
+ * « Virement reçu » — l'exploitant a vu l'argent arriver sur son compte.
+ *
+ * La réservation passe à « payée », le paiement s'enregistre sous l'identifiant
+ * de la facture, puis la facture est marquée payée chez Stripe. Dans cet ordre :
+ * Stripe envoie alors `invoice.paid`, et le webhook, qui trouve le paiement
+ * déjà enregistré, ne refait rien — ni seconde ligne, ni second e-mail.
+ */
+export async function actionVirementRecu(donnees: FormData): Promise<void> {
+  const utilisateur = await utilisateurCourant();
+  if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
+
+  const reference = String(donnees.get("reference") ?? "");
+  const retourFiche = (fait: string): never => redirect(`${cheminFiche(reference)}?fait=${fait}`);
+
+  const r = await lireReservation(reference);
+  if (!r) return retourFiche("perimee");
+  if (r.statut === "payee") return retourFiche("deja-payee");
+
+  const ok = await mettreAJour(
+    "reservations",
+    { colonne: "reference", valeur: reference },
+    { statut: "payee", paye_le: new Date().toISOString() },
+  );
+  if (!ok) return retourFiche("echec");
+
+  await inserer("paiements", {
+    reference,
+    session_stripe: r.facture_stripe ?? `virement-${reference}`,
+    paiement_stripe: null,
+    montant: Number(r.montant),
+    devise: r.devise ?? "EUR",
+    statut: "paye",
+  });
+  if (r.facture_stripe) await marquerFacturePayee(r.facture_stripe);
+  await inserer("modifications", {
+    reference,
+    champ: "paiement",
+    ancien: null,
+    nouveau: `Virement reçu — noté par ${utilisateur.email}`,
+    statut: "appliquee",
+    source: "exploitant",
+  });
+
+  // La confirmation au client, comme après un paiement en ligne.
+  const langue = r.langue ?? "en";
+  const mots = textesEmail(langue);
+  const facture = r.facture_stripe ? await lireFacture(r.facture_stripe) : null;
+  const lien = lienGestion(await origineActions(), reference, langue);
+  await envoyer({
+    destinataire: r.client_email,
+    sujet: mots.sujet(reference),
+    texte: [
+      mots.corps({
+        reference,
+        trajet: trajetDe(r),
+        montant: `${Number(r.montant)} €`,
+        lien: lien ?? undefined,
+      }),
+      ...(facture?.url ? ["", mots.facture(facture.url)] : []),
+      "",
+      `${SITE.nom} — ${SITE.url}`,
+    ].join("\n"),
+  });
+
+  return retourFiche("virement-recu");
+}
+
+/**
+ * Renvoyer au client l'e-mail de paiement — il ne l'a pas reçu, ou l'a perdu.
+ *
+ * Le lien de paiement est refait : celui de la facture quand elle existe, sinon
+ * une nouvelle page de paiement Stripe — une page Checkout expire au bout de
+ * vingt-quatre heures.
+ */
+export async function actionRenvoyerPaiement(donnees: FormData): Promise<void> {
+  const utilisateur = await utilisateurCourant();
+  if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
+
+  const reference = String(donnees.get("reference") ?? "");
+  const retourFiche = (fait: string): never => redirect(`${cheminFiche(reference)}?fait=${fait}`);
+
+  const r = await lireReservation(reference);
+  if (!r) return retourFiche("perimee");
+  if (r.statut === "payee") return retourFiche("deja-payee");
+
+  const langue = r.langue ?? "fr";
+  const mode = r.mode_paiement === "virement" ? "virement" : "carte";
+  const origine = await origineActions();
+  const aller = new Date(r.aller);
+  const retour = r.retour ? new Date(r.retour) : null;
+  const montant = Number(r.montant);
+  const trajet = trajetDe(r);
+  const trajetRetour =
+    retour && (r.retour_resort || r.retour_airport)
+      ? `${resortParSlug(r.retour_resort ?? r.resort)?.name ?? r.retour_resort} → ${
+          airportParSlug(r.retour_airport ?? r.airport)?.name ?? r.retour_airport
+        }`
+      : null;
+
+  const facture = r.facture_stripe ? await lireFacture(r.facture_stripe) : null;
+  let lienPaiement = facture?.url ?? null;
+  if (!facture && mode === "carte") {
+    const jeton = jetonGestion(reference);
+    const session = await creerSessionCheckout({
+      reference,
+      lignes: [
+        {
+          intitule: trajet,
+          description: `${dateClient(langue, aller)}${retour ? ` · ${dateClient(langue, retour)}` : ""}`,
+          montant,
+        },
+      ],
+      email: r.client_email,
+      urlSucces: `${origine}${cheminConfirmation(langue)}?ref=${reference}${jeton ? `&j=${jeton}` : ""}`,
+      urlAnnulation: `${origine}/`,
+      metadonnees: { airport: r.airport, resort: r.resort, langue },
+    });
+    if (session) {
+      lienPaiement = session.url;
+      await mettreAJour("reservations", { colonne: "reference", valeur: reference }, { session_stripe: session.id });
+    }
+  }
+
+  const mots = textesTelephone(langue);
+  const envoye = await envoyer({
+    destinataire: r.client_email,
+    sujet: mots.sujet(reference, trajet),
+    texte: [
+      mots.corps({
+        nom: r.client_nom,
+        reference,
+        recap: recapDemande(langue, {
+          reference,
+          trajet,
+          aller: dateClient(langue, aller),
+          retour: retour ? dateClient(langue, retour) : null,
+          trajetRetour,
+          vehicule: r.vehicule,
+          vehiculeRetour: r.vehicule_retour,
+          passagers: r.passagers,
+          passagersRetour: r.passagers_retour,
+          bagages: null,
+          skis: r.bagages_ski,
+          adresse: r.adresse || null,
+          vol: r.vol,
+          message: r.message,
+          total: montantClient(langue, montant, Boolean(retour)),
+        }),
+        mode,
+        lienPaiement,
+        iban: process.env.IBAN_VIREMENT?.trim() || null,
+        echeance: mode === "virement" ? jourClient(langue, echeanceVirement(aller)) : null,
+        facture: mode === "virement" ? (facture?.url ?? null) : null,
+        lienGestion: lienGestion(origine, reference, langue),
+      }),
+      "",
+      `${SITE.nom} — ${SITE.url}`,
+    ].join("\n"),
+  });
+
+  await inserer("modifications", {
+    reference,
+    champ: "paiement",
+    ancien: null,
+    nouveau: `E-mail de paiement renvoyé par ${utilisateur.email}${envoye ? "" : " — NON parti"}`,
+    statut: "appliquee",
+    source: "exploitant",
+  });
+
+  return retourFiche(envoye ? "renvoye" : "renvoi-echec");
 }

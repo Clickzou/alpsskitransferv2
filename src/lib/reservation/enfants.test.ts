@@ -1,5 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { agesLisibles, enfantsLisibles, enfantsParSens } from "./enfants";
+import { agesLisibles, enfantsLisibles, enfantsParSens, phraseEnfants } from "./enfants";
+
+describe("phraseEnfants", () => {
+  it("écrit le format que le back-office relit", () => {
+    const phrase = phraseEnfants(1, 2, "3 et 4", true);
+    expect(phrase).toBe("aller 1 · retour 2 (3 et 4)");
+    expect(enfantsLisibles(phrase)).toBe("1 enfant à l’aller, 2 au retour · âges : 3 ans et 4 ans");
+  });
+
+  it("ne répète pas un nombre qui ne change pas", () => {
+    expect(phraseEnfants(2, 2, null, true)).toBe("2");
+    expect(phraseEnfants(2, 0, "5, 8", false)).toBe("2 (5, 8)");
+  });
+
+  it("marque des âges donnés sans nombre", () => {
+    expect(phraseEnfants(0, 0, "4", false)).toBe("âges : 4");
+    expect(phraseEnfants(0, 0, null, false)).toBe("");
+  });
+});
 
 describe("enfantsParSens", () => {
   it("sépare l'aller et le retour", () => {

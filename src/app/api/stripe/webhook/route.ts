@@ -5,6 +5,7 @@ import { resortParSlug } from "@/lib/resorts";
 import { SITE } from "@/data/site";
 import { envoyer } from "@/lib/reservation/email";
 import { origineSite } from "@/lib/reservation/config";
+import { cheminFiche } from "@/lib/reservation/demandes";
 import { lienGestion } from "@/lib/reservation/gestion";
 import { lireFacture, signatureValide } from "@/lib/reservation/stripe";
 import { corpsAvis, sujetAvis, textesEmail } from "@/lib/reservation/textes";
@@ -21,6 +22,94 @@ import { inserer, lire, mettreAJour } from "@/lib/reservation/supabase";
  * POST /api/stripe/webhook
  */
 export const dynamic = "force-dynamic";
+
+/** Une facture Stripe payée — l'objet de l'événement `invoice.paid`. */
+interface FacturePayee {
+  id: string;
+  amount_paid: number;
+  currency: string;
+  payment_intent: string | null;
+  hosted_invoice_url: string | null;
+  metadata?: Record<string, string>;
+}
+
+/**
+ * Une réservation **téléphonique** payée sur sa facture.
+ *
+ * Celles du site se règlent par la session Checkout, traitée plus bas : leur
+ * facture émet aussi `invoice.paid`, qu'on ignore ici, sans quoi chaque
+ * paiement en ligne serait compté deux fois. Et un virement que l'exploitant a
+ * déjà noté (`actionVirementRecu`) a son paiement en base sous l'identifiant
+ * de la facture : on le reconnaît, et on ne refait rien.
+ */
+async function factureTelephonePayee(facture: FacturePayee, requete: Request) {
+  const reference = facture.metadata?.reference;
+  if (facture.metadata?.source !== "telephone" || !reference) {
+    return NextResponse.json({ recu: true, ignore: "invoice.paid" });
+  }
+
+  const deja = await lire<{ id: string }>("paiements", {
+    colonnes: "id",
+    filtres: [{ colonne: "session_stripe", operateur: "eq", valeur: facture.id }],
+    limite: 1,
+  });
+  if (deja.length > 0) return NextResponse.json({ recu: true, deja: facture.id });
+
+  await mettreAJour("reservations", { colonne: "reference", valeur: reference }, {
+    statut: "payee",
+    paiement_stripe: facture.payment_intent,
+    paye_le: new Date().toISOString(),
+  });
+  await inserer("paiements", {
+    reference,
+    session_stripe: facture.id,
+    paiement_stripe: facture.payment_intent,
+    montant: facture.amount_paid / 100,
+    devise: facture.currency.toUpperCase(),
+    statut: "paye",
+  });
+
+  const [r] = await lire<{ client_email: string; langue: string | null; airport: string; resort: string }>(
+    "reservations",
+    { filtres: [{ colonne: "reference", operateur: "eq", valeur: reference }], limite: 1 },
+  );
+  if (r) {
+    const langue = r.langue ?? "en";
+    const mots = textesEmail(langue);
+    const lien = lienGestion(origineSite(requete), reference, langue);
+    await envoyer({
+      destinataire: r.client_email,
+      sujet: mots.sujet(reference),
+      texte: [
+        mots.corps({
+          reference,
+          trajet: `${airportParSlug(r.airport)?.name ?? r.airport} → ${resortParSlug(r.resort)?.name ?? r.resort}`,
+          montant: `${facture.amount_paid / 100} €`,
+          lien: lien ?? undefined,
+        }),
+        ...(facture.hosted_invoice_url ? ["", mots.facture(facture.hosted_invoice_url)] : []),
+        "",
+        `${SITE.nom} — ${SITE.url}`,
+      ].join("\n"),
+    });
+  }
+
+  const exploitant = process.env.EMAIL_EXPLOITANT;
+  if (exploitant) {
+    await envoyer({
+      destinataire: exploitant,
+      sujet: `PAYÉE — ${reference} (réservation téléphonique)`,
+      texte: [
+        `La facture de la réservation téléphonique ${reference} a été réglée par carte.`,
+        "",
+        "Fiche du client :",
+        `${origineSite(requete)}${cheminFiche(reference)}`,
+      ].join("\n"),
+    });
+  }
+
+  return NextResponse.json({ recu: true });
+}
 
 interface SessionStripe {
   id: string;
@@ -52,6 +141,10 @@ export async function POST(requete: Request) {
 
   // Les autres événements sont acquittés sans traitement : Stripe cesse de les
   // rejouer, et le journal reste lisible.
+  if (evenement.type === "invoice.paid") {
+    return factureTelephonePayee(evenement.data.object as unknown as FacturePayee, requete);
+  }
+
   if (evenement.type !== "checkout.session.completed") {
     return NextResponse.json({ recu: true, ignore: evenement.type });
   }

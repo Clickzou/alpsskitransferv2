@@ -42,6 +42,8 @@ const STATUTS: Record<string, string> = {
 
 /** Une ligne d'historique, lisible d'un coup d'œil : ce qui a bougé, d'où, vers où, et son sort. */
 export function decrire(m: Modification): string {
+  // La création d'une réservation téléphonique et ses paiements se disent en toutes lettres.
+  if (m.champ === "creation" || m.champ === "paiement") return m.nouveau ?? "";
   if (m.champ === "relance") {
     return "Rappel automatique envoyé au client : adresse manquante";
   }

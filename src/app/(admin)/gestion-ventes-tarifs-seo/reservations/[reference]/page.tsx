@@ -6,7 +6,12 @@ import { factureDeReference } from "@/lib/admin/factures";
 import { facturesActives } from "@/lib/reservation/stripe";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
-import { actionRefuser, actionValider } from "../../actions";
+import {
+  actionRefuser,
+  actionRenvoyerPaiement,
+  actionValider,
+  actionVirementRecu,
+} from "../../actions";
 import CarteSens from "../../CarteSens";
 import Entete from "../../Entete";
 
@@ -56,6 +61,24 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
     texte: "Avec cette demande, le retour tomberait avant l’aller : elle ne peut pas être validée.",
   },
   echec: { alerte: true, texte: "L’enregistrement a échoué. Réessayez dans un instant." },
+  cree: {
+    alerte: false,
+    texte: "Réservation créée. Le client a reçu un e-mail avec le moyen de payer et son lien.",
+  },
+  "cree-sans-email": {
+    alerte: true,
+    texte: "Réservation créée, mais l’e-mail au client n’a pas pu partir : utilisez « Renvoyer l’e-mail de paiement ».",
+  },
+  "virement-recu": {
+    alerte: false,
+    texte: "Virement noté : la réservation est payée, et le client a reçu sa confirmation.",
+  },
+  "deja-payee": { alerte: true, texte: "Cette réservation est déjà payée." },
+  renvoye: { alerte: false, texte: "L’e-mail de paiement est reparti chez le client." },
+  "renvoi-echec": {
+    alerte: true,
+    texte: "L’e-mail de paiement n’a pas pu partir : vérifiez l’adresse du client, ou appelez-le.",
+  },
 };
 
 function Bloc({ titre, children }: { titre: string; children: React.ReactNode }) {
@@ -216,6 +239,42 @@ export default async function FicheReservation({
           <Info libelle="Statut">{statut.texte}</Info>
           <Info libelle="Réservée le">{heure(course.creeLe)}</Info>
           {course.payeLe ? <Info libelle="Payée le">{heure(course.payeLe)}</Info> : null}
+          {course.source === "telephone" ? (
+            <Info libelle="Origine">
+              réservation téléphonique · {course.modePaiement === "virement" ? "virement" : "carte"}
+            </Info>
+          ) : null}
+          {/*
+            Une réservation téléphonique se suit jusqu'au paiement : le virement
+            se note à réception, et l'e-mail de paiement se renvoie au client
+            qui ne l'a pas reçu.
+          */}
+          {course.source === "telephone" &&
+          course.statut !== "payee" &&
+          course.statut !== "annulee" ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {course.modePaiement === "virement" ? (
+                <form action={actionVirementRecu}>
+                  <input type="hidden" name="reference" value={course.reference} />
+                  <button
+                    type="submit"
+                    className="rounded bg-alpes px-4 py-2 text-sm font-semibold text-white transition hover:bg-alpes-700"
+                  >
+                    Virement reçu
+                  </button>
+                </form>
+              ) : null}
+              <form action={actionRenvoyerPaiement}>
+                <input type="hidden" name="reference" value={course.reference} />
+                <button
+                  type="submit"
+                  className="rounded border border-glacier-300 px-4 py-2 text-sm text-alpine-700 transition hover:border-alpine/40 hover:bg-glacier-50"
+                >
+                  Renvoyer l’e-mail de paiement
+                </button>
+              </form>
+            </div>
+          ) : null}
         </Bloc>
 
         <Bloc titre="Facture">
