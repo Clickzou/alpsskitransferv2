@@ -1,5 +1,6 @@
 import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
+import { adresseModifiable } from "@/lib/reservation/adresses-station";
 import { demandesEnAttente } from "@/lib/reservation/demandes";
 import { jetonValide, modifiabilite } from "@/lib/reservation/gestion";
 import { lire, supabaseConfigure } from "@/lib/reservation/supabase";
@@ -49,6 +50,19 @@ export interface CourseGestion {
    * `null`. Le client doit voir ce qu'il a demandé, et que ce n'est pas acquis.
    */
   demande: { aller: string | null; retour: string | null } | null;
+  /** L'adresse de dépose en station — demandée après le paiement. */
+  adresse: string | null;
+  /** La prise en charge au retour ; `null` = la même qu'à l'aller, dans la même station. */
+  adresseRetour: string | null;
+  volRetour: string | null;
+  stationAller: string;
+  stationRetour: string | null;
+  /** Le retour repart de la station de l'aller : la même adresse peut servir. */
+  memeStation: boolean;
+  /** Il manque de quoi trouver le client, à l'aller ou au retour. */
+  adresseManquante: boolean;
+  /** Ce que le client peut encore saisir ou corriger, sens par sens. */
+  adressesOuvertes: { aller: boolean; retour: boolean };
 }
 
 export type Dossier =
@@ -80,6 +94,9 @@ interface Ligne {
   passagers_retour: number | null;
   vol: string | null;
   montant: string | number;
+  adresse: string | null;
+  adresse_retour: string | null;
+  vol_retour: string | null;
 }
 
 /** « geneva-airport » → « Geneva Airport » : le client ne lit pas des slugs. */
@@ -127,6 +144,16 @@ export async function chargerDossier(
         )}`
       : null;
 
+  /*
+    Les adresses en station, demandées après le paiement. Au retour, `null`
+    veut dire « la même qu'à l'aller » — seulement quand le client repart de la
+    même station ; d'une autre, elle manque tant qu'il ne l'a pas donnée.
+  */
+  const memeStation = !ligne.retour_resort || ligne.retour_resort === ligne.resort;
+  const adresseAller = ligne.adresse?.trim() || null;
+  const adresseRetour = ligne.adresse_retour?.trim() || null;
+  const retourEffectif = adresseRetour ?? (memeStation ? adresseAller : null);
+
   const course: CourseGestion = {
     reference: ligne.reference,
     aller: ligne.aller,
@@ -141,6 +168,19 @@ export async function chargerDossier(
     montant: Number(ligne.montant),
     payee: ligne.statut === "payee",
     demande: null,
+    adresse: adresseAller,
+    adresseRetour,
+    volRetour: ligne.vol_retour?.trim() || null,
+    stationAller: nomStation(ligne.resort),
+    stationRetour: ligne.retour ? nomStation(ligne.retour_resort ?? ligne.resort) : null,
+    memeStation,
+    adresseManquante: !adresseAller || (Boolean(ligne.retour) && !retourEffectif),
+    adressesOuvertes: {
+      aller: adresseModifiable(new Date(ligne.aller), adresseAller, maintenant),
+      retour: ligne.retour
+        ? adresseModifiable(new Date(ligne.retour), retourEffectif, maintenant)
+        : false,
+    },
   };
 
   if (ligne.statut === "annulee") return { etat: "annulee", course };

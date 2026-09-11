@@ -26,7 +26,15 @@ export default function CarteSens({ sens }: { sens: Sens }) {
         {lignes.map(([libelle, valeur]) => (
           <Fragment key={libelle}>
             <dt className="text-alpine-600">{libelle}</dt>
-            <dd className="text-alpine">{valeur}</dd>
+            <dd
+              className={
+                libelle === "Adresse en station" && sens.adresseManquante
+                  ? "font-semibold text-marque"
+                  : "text-alpine"
+              }
+            >
+              {valeur}
+            </dd>
           </Fragment>
         ))}
       </dl>

@@ -8,6 +8,7 @@ import { T } from "@/lib/intl/textes";
 import { cheminConfirmation } from "@/lib/reservation/config";
 import { CHEMIN_GESTION } from "@/lib/reservation/gestion";
 import { TEXTES_GESTION } from "@/lib/reservation/textes";
+import { TEXTES_ADRESSES } from "@/lib/reservation/textes-adresses";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -82,8 +83,11 @@ export default async function PageConfirmation({
 
             {lienGerer ? (
               <div className="space-y-3 pt-2">
-                <p>{TEXTES_GESTION.de.chapo}</p>
-                <BoutonAction href={lienGerer}>{TEXTES_GESTION.de.bouton}</BoutonAction>
+                {/* L'adresse se demande après le paiement : c'est l'étape qui reste. */}
+                <p>{TEXTES_ADRESSES.de.chapoConfirmation}</p>
+                <BoutonAction href={`${lienGerer}#adresses`}>
+                  {TEXTES_ADRESSES.de.boutonConfirmation}
+                </BoutonAction>
                 <p>
                   <Link className="text-marque underline underline-offset-4" href="/de/">
                     {TEXTES_GESTION.de.retourSite}

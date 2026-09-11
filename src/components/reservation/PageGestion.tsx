@@ -2,6 +2,7 @@ import Link from "next/link";
 import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Adresses from "@/components/reservation/Adresses";
 import Gestion from "@/components/reservation/Gestion";
 import RecapCourse from "@/components/reservation/RecapCourse";
 import { HeroInterieur, Section } from "@/components/gabarit/Sections";
@@ -83,6 +84,9 @@ export default async function PageGestion({
 
         <Section fond="blanc">
           {dossier.etat === "ouverte" || dossier.etat === "tardive" ? (
+            <div className="space-y-10">
+              {/* L'adresse d'abord : c'est pour elle que la confirmation envoie ici. */}
+              <Adresses course={dossier.course} jeton={jeton ?? ""} langue={lang} />
             <Gestion
               course={dossier.course}
               jeton={jeton ?? ""}
@@ -93,6 +97,7 @@ export default async function PageGestion({
               }
               lienContact={contact}
             />
+            </div>
           ) : (
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_21rem]">
               {/*

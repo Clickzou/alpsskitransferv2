@@ -22,7 +22,14 @@ export function heure(date: Date): string {
   });
 }
 
-const CHAMPS: Record<string, string> = { aller: "Prise en charge", retour: "Retour", vol: "Vol" };
+const CHAMPS: Record<string, string> = {
+  aller: "Prise en charge",
+  retour: "Retour",
+  vol: "Vol",
+  adresse: "Adresse à l’aller",
+  adresse_retour: "Adresse au retour",
+  vol_retour: "Vol retour",
+};
 
 const STATUTS: Record<string, string> = {
   "en-attente": "à valider",
@@ -39,7 +46,7 @@ export function decrire(m: Modification): string {
     return `Message à moins de 24 h : « ${m.nouveau ?? "sans message"} »`;
   }
   const valeur = (v: string | null) =>
-    !v ? "—" : m.champ === "vol" ? v : heure(new Date(v));
+    !v ? "—" : m.champ === "aller" || m.champ === "retour" ? heure(new Date(v)) : v;
   return `${CHAMPS[m.champ] ?? m.champ} : ${valeur(m.ancien)} → ${valeur(m.nouveau)} · ${
     STATUTS[m.statut] ?? m.statut
   }`;
@@ -51,6 +58,8 @@ export interface Sens {
   quand: Date;
   trajet: string;
   adresse: string;
+  /** L'adresse manque : le chauffeur ne sait pas où aller. */
+  adresseManquante: boolean;
   vol: string;
   passagers: number;
   vehicule: string;
@@ -58,6 +67,9 @@ export interface Sens {
   ages: string;
   housses: string;
 }
+
+/** Ce que la carte affiche à la place d'une adresse que le client n'a pas encore donnée. */
+const MANQUANTE = "MANQUANTE — à demander au client";
 
 /** « premium » → « Premium » : les catégories portent le même nom partout. */
 function categorie(vehicule: string): string {
@@ -84,7 +96,8 @@ export function sensDeLaCourse(course: Course): Sens[] {
     libelle: "Aller",
     quand: course.aller,
     trajet: course.trajet,
-    adresse: course.adresse || "non renseignée",
+    adresse: course.adresse || MANQUANTE,
+    adresseManquante: !course.adresse,
     vol: course.vol || "non renseigné",
     passagers: course.passagers,
     vehicule: categorie(course.vehicule),
@@ -95,21 +108,22 @@ export function sensDeLaCourse(course: Course): Sens[] {
   if (!course.retour) return [aller];
 
   /*
-    L'adresse en station est celle de l'aller. Quand le client repart d'une
-    autre station, on ne la connaît pas : le dire vaut mieux que de répéter une
+    Au retour, pas d'adresse propre veut dire « la même qu'à l'aller » — mais
+    seulement quand le client repart de la même station. D'une autre, elle
+    manque tant qu'il ne l'a pas donnée : le dire vaut mieux que de répéter une
     adresse fausse à un chauffeur.
   */
   const memeStation = course.stationRetour === course.arrivee;
+  const adresseRetour = course.adresseRetour ?? (memeStation ? course.adresse || null : null);
   return [
     aller,
     {
       libelle: "Retour",
       quand: course.retour,
       trajet: `${course.stationRetour} → ${course.aeroportRetour}`,
-      adresse: memeStation
-        ? course.adresse || "non renseignée"
-        : "autre station — à demander au client",
-      vol: "non demandé",
+      adresse: adresseRetour ?? MANQUANTE,
+      adresseManquante: !adresseRetour,
+      vol: course.volRetour || "non renseigné",
       passagers: course.passagersRetour ?? course.passagers,
       vehicule: categorie(course.vehiculeRetour ?? course.vehicule),
       enfants: compte(enfants.retour),
@@ -117,6 +131,17 @@ export function sensDeLaCourse(course: Course): Sens[] {
       housses,
     },
   ];
+}
+
+/**
+ * Il manque une adresse pour une course encore à assurer. Un paiement non
+ * abouti n'est pas concerné — il n'y a personne à aller chercher —, ni une
+ * course dont les trajets sont déjà faits.
+ */
+export function adresseManquante(course: Course): boolean {
+  if (course.statut === "en-attente-paiement") return false;
+  if ((course.retour ?? course.aller).getTime() <= Date.now()) return false;
+  return sensDeLaCourse(course).some((s) => s.adresseManquante);
 }
 
 /** Les lignes d'une course qui attendent la décision de l'exploitant. */

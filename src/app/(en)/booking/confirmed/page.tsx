@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { BoutonAction, HeroInterieur, Section } from "@/components/gabarit/Sections";
 import { CHEMIN_GESTION } from "@/lib/reservation/gestion";
 import { TEXTES_GESTION } from "@/lib/reservation/textes";
+import { TEXTES_ADRESSES } from "@/lib/reservation/textes-adresses";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -83,8 +84,11 @@ export default async function PageConfirmation({
             </p>
             {lienGerer ? (
               <div className="space-y-3 pt-2">
-                <p>{TEXTES_GESTION.en.chapo}</p>
-                <BoutonAction href={lienGerer}>{TEXTES_GESTION.en.bouton}</BoutonAction>
+                {/* L'adresse se demande après le paiement : c'est l'étape qui reste. */}
+                <p>{TEXTES_ADRESSES.en.chapoConfirmation}</p>
+                <BoutonAction href={`${lienGerer}#adresses`}>
+                  {TEXTES_ADRESSES.en.boutonConfirmation}
+                </BoutonAction>
                 <p>
                   <Link className="text-marque underline underline-offset-4" href="/">
                     {TEXTES_GESTION.en.retourSite}

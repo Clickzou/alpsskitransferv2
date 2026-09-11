@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { aValider, decrire, heure, sensDeLaCourse } from "@/lib/admin/affichage";
+import {
+  adresseManquante,
+  aValider,
+  decrire,
+  heure,
+  sensDeLaCourse,
+} from "@/lib/admin/affichage";
 import { coursesAVenir, coursesPassees, statutLisible, type Course } from "@/lib/admin/courses";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
@@ -49,7 +55,13 @@ function LigneCourse({ course }: { course: Course }) {
               <span className="font-medium tabular-nums text-alpine">{heure(s.quand)}</span>
               {/* La destination : la raison d'être de cet écran. */}
               <span className="font-semibold text-alpine">{s.trajet}</span>
-              <span className="text-sm text-alpine-700">{s.adresse}</span>
+              <span
+                className={
+                  s.adresseManquante ? "text-sm font-semibold text-marque" : "text-sm text-alpine-700"
+                }
+              >
+                {s.adresse}
+              </span>
               <span className="text-sm text-alpine-600">
                 {s.passagers} pax · {s.vehicule}
               </span>
@@ -61,6 +73,12 @@ function LigneCourse({ course }: { course: Course }) {
             <p className="text-xs font-semibold text-marque">demande de changement à valider</p>
           ) : course.historique.length > 0 ? (
             <p className="text-xs text-or-700">modifiée par le client</p>
+          ) : null}
+          {/* Sans adresse, le chauffeur ne sait pas où aller : Nassim appelle le client. */}
+          {adresseManquante(course) ? (
+            <p className="text-xs font-semibold text-marque">
+              adresse manquante — à demander au client
+            </p>
           ) : null}
         </div>
 

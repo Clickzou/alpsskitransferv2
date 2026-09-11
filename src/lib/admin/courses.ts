@@ -46,6 +46,8 @@ interface LigneBase {
   client_telephone: string;
   vol: string | null;
   adresse: string;
+  adresse_retour: string | null;
+  vol_retour: string | null;
   bagages_ski: number;
   enfants: string | null;
   message: string | null;
@@ -71,6 +73,9 @@ export interface Course {
    * inversé. `null` autrement : l'écran n'a alors rien à ajouter.
    */
   trajetRetour: string | null;
+  /** La prise en charge au retour, donnée après le paiement ; `null` = même adresse qu'à l'aller. */
+  adresseRetour: string | null;
+  volRetour: string | null;
   /** Où repart le client, et vers quel aéroport — toujours renseignés quand il y a un retour. */
   stationRetour: string;
   aeroportRetour: string;
@@ -205,6 +210,8 @@ function versCourse(ligne: LigneBase): Course {
             ligne.retour_airport ?? ligne.airport,
           )}`
         : null,
+    adresseRetour: ligne.adresse_retour?.trim() || null,
+    volRetour: ligne.vol_retour?.trim() || null,
     stationRetour: nomStation(ligne.retour_resort ?? ligne.resort),
     aeroportRetour: nomAeroport(ligne.retour_airport ?? ligne.airport),
     vehicule: ligne.vehicule,

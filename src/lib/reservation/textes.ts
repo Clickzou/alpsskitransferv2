@@ -995,7 +995,13 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         "If anything changes — a new flight, an extra passenger, a different",
         "address in resort — tell us as early as you can.",
         ...(lien
-          ? ["", "To ask for a new pick-up time, up to 24 hours before:", lien]
+          ? [
+              "",
+              "One step left: your address in resort, so your driver knows where to",
+              "drop you off and pick you up. Add it here — and ask for a new pick-up",
+              "time if you need to, up to 24 hours before:",
+              lien,
+            ]
           : []),
       ]
         .filter((l) => l !== null)
@@ -1021,7 +1027,9 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         ...(lien
           ? [
               "",
-              "Pour demander un autre horaire de prise en charge,",
+              "Il reste une étape : votre adresse en station, pour que votre",
+              "chauffeur sache où vous déposer et venir vous chercher. Indiquez-la",
+              "ici — et demandez un autre horaire de prise en charge si besoin,",
               "jusqu’à 24 heures avant :",
               lien,
             ]
@@ -1050,7 +1058,9 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         ...(lien
           ? [
               "",
-              "Eine andere Abholzeit können Sie bis 24 Stunden vorher anfragen:",
+              "Ein Schritt fehlt noch: Ihre Adresse im Skiort, damit Ihr Fahrer weiß,",
+              "wo er Sie absetzt und abholt. Geben Sie sie hier an — und fragen Sie",
+              "bei Bedarf bis 24 Stunden vorher eine andere Abholzeit an:",
               lien,
             ]
           : []),
@@ -1078,7 +1088,9 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         ...(lien
           ? [
               "",
-              "Per chiedere un altro orario di presa in carico, fino a 24 ore prima:",
+              "Manca un ultimo passo: il tuo indirizzo in località, perché l’autista",
+              "sappia dove lasciarti e dove venirti a prendere. Indicalo qui — e, se",
+              "serve, chiedi un altro orario fino a 24 ore prima:",
               lien,
             ]
           : []),

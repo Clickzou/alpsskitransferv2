@@ -11,7 +11,32 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 # Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
-## À FAIRE EN PREMIER — la migration `modifications`, puis le déploiement
+## À FAIRE EN PREMIER — la migration `adresses`, puis le déploiement
+
+**Dans cet ordre.** Exécuter `docs/supabase-migration-adresses.sql` (deux
+colonnes : `adresse_retour`, `vol_retour`) avant de déployer le code qui les
+écrit — sans elles, PostgREST refuse toute la mise à jour.
+
+**L'adresse en station se demande après le paiement** (décision de JC,
+11 septembre) : obligatoire, mais hors du tunnel pour ne pas alourdir l'achat.
+
+- La page de confirmation et l'e-mail de paiement disent « il reste une étape »
+  et mènent à l'encadré **« Votre adresse en station »**, en tête de la page de
+  gestion (`Adresses.tsx`, ancre `#adresses`) : dépose à l'aller, prise en
+  charge au retour — « même adresse » cochée par défaut quand c'est la même
+  station — et vol retour, facultatif.
+- Une adresse manquante se complète jusqu'à la prise en charge ; connue, elle
+  ne se change plus à moins de 24 h (`adresses-station.ts`). Elle s'applique
+  sans validation — ni l'heure ni le prix ne bougent — et entre dans
+  l'historique. Nassim n'est prévenu par e-mail que pour une course de moins
+  de 48 h.
+- Back-office : « MANQUANTE — à demander au client » en rouge dans les cartes,
+  et « adresse manquante » sur la ligne repliée.
+
+**À faire ensuite, si besoin** : une relance automatique au client à J-3 et une
+alerte à Nassim la veille (tâche planifiée Vercel).
+
+## ~~La migration `modifications`~~ — passée le 11 septembre
 
 **Dans cet ordre, sinon les demandes d'horaire échouent.** Exécuter
 `docs/supabase-migration-modifications.sql` dans l'éditeur SQL de Supabase,
