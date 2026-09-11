@@ -79,7 +79,33 @@ create table if not exists tarifs (
   unique (airport, resort, vehicule, type_jour)
 );
 
+-- Les demandes de changement faites depuis le lien de gestion, et leur sort :
+-- une heure se demande et l'exploitant la valide ; le vol s'applique tout de
+-- suite. Voir `supabase-migration-modifications.sql`.
+create table if not exists modifications (
+  id            uuid primary key default gen_random_uuid(),
+  reference     text not null references reservations (reference),
+  lot           uuid,                              -- une demande : aller et retour ensemble
+  champ         text not null,                     -- aller · retour · vol · demande
+  ancien        text,                              -- ISO pour une heure, texte sinon
+  nouveau       text,                              -- pour une demande à moins de 24 h : le message
+  statut        text not null default 'appliquee',
+                -- en-attente · acceptee · refusee · remplacee · appliquee · transmise
+  langue        text,                              -- celle du client, pour lui répondre
+  source        text not null default 'client',   -- client · exploitant
+  cree_le       timestamptz not null default now(),
+  traite_le     timestamptz,
+  traite_par    text
+);
+
+create index if not exists modifications_reference_idx
+  on modifications (reference, cree_le);
+create index if not exists modifications_attente_idx
+  on modifications (statut)
+  where statut = 'en-attente';
+
 -- Row Level Security : tout est fermé, seule la clé de service écrit et lit.
-alter table reservations enable row level security;
+alter table reservations  enable row level security;
 alter table paiements     enable row level security;
 alter table tarifs        enable row level security;
+alter table modifications enable row level security;

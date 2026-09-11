@@ -57,17 +57,32 @@ export async function inserer<T extends Record<string, unknown>>(
   }
 }
 
-/** Met à jour les lignes d'une table filtrées par une colonne. */
+/** Un filtre PostgREST : `colonne=operateur.valeur`, l'égalité par défaut. */
+interface Filtre {
+  colonne: string;
+  valeur: string;
+  operateur?: string;
+}
+
+/**
+ * Met à jour les lignes d'une table filtrées par une ou plusieurs colonnes.
+ *
+ * Plusieurs filtres, parce qu'une demande de changement se tranche sur trois
+ * critères à la fois — sa réservation, son lot, et son statut encore « en
+ * attente » : filtrer sur la seule référence réécrirait tout l'historique.
+ */
 export async function mettreAJour(
   table: string,
-  filtre: { colonne: string; valeur: string },
+  filtre: Filtre | Filtre[],
   champs: Record<string, unknown>,
 ): Promise<boolean> {
   if (!supabaseConfigure()) return false;
 
   try {
     const url = new URL(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}`);
-    url.searchParams.set(filtre.colonne, `eq.${filtre.valeur}`);
+    for (const f of Array.isArray(filtre) ? filtre : [filtre]) {
+      url.searchParams.set(f.colonne, `${f.operateur ?? "eq"}.${f.valeur}`);
+    }
     const reponse = await fetch(url, {
       method: "PATCH",
       headers: entetes(),

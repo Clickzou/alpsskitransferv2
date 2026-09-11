@@ -251,7 +251,7 @@ export const PAGES_IT: PageIntl[] = [
       {
         question: "Entro quando posso cancellare?",
         reponse:
-          "Fino a 48 ore prima della presa in carico, senza spese. Dopo dipende dal veicolo già assegnato — scrivici, di solito troviamo una soluzione.",
+          "Fino a 24 ore prima della presa in carico ti rimborsiamo l’intero importo, meno le eventuali spese di transazione. Dopo non è più previsto un rimborso — ma puoi chiedere un altro orario fino a 24 ore prima, dal link nella tua e-mail di conferma.",
       },
       {
         question: "Posso prenotare per qualcun altro?",

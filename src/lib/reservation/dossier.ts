@@ -1,6 +1,7 @@
 import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
-import { jetonValide, modifiableEnLigne } from "@/lib/reservation/gestion";
+import { demandesEnAttente } from "@/lib/reservation/demandes";
+import { jetonValide, modifiabilite } from "@/lib/reservation/gestion";
 import { lire, supabaseConfigure } from "@/lib/reservation/supabase";
 
 /**
@@ -43,6 +44,11 @@ export interface CourseGestion {
   vol: string | null;
   montant: number;
   payee: boolean;
+  /**
+   * La demande qui attend l'exploitant — les heures demandées, en ISO — ou
+   * `null`. Le client doit voir ce qu'il a demandé, et que ce n'est pas acquis.
+   */
+  demande: { aller: string | null; retour: string | null } | null;
 }
 
 export type Dossier =
@@ -52,7 +58,12 @@ export type Dossier =
   | { etat: "annulee"; course: CourseGestion }
   | { etat: "passee"; course: CourseGestion }
   | { etat: "tardive"; course: CourseGestion }
-  | { etat: "ouverte"; course: CourseGestion };
+  | {
+      etat: "ouverte";
+      course: CourseGestion;
+      /** Chaque sens a son propre préavis : l'un peut être ouvert, l'autre non. */
+      modifiable: { aller: boolean; retour: boolean };
+    };
 
 interface Ligne {
   reference: string;
@@ -109,7 +120,6 @@ export async function chargerDossier(
   });
   if (!ligne) return { etat: "introuvable" };
 
-  const aller = new Date(ligne.aller);
   const trajetRetour =
     ligne.retour && (ligne.retour_resort || ligne.retour_airport)
       ? `${nomStation(ligne.retour_resort ?? ligne.resort)} → ${nomAeroport(
@@ -130,6 +140,7 @@ export async function chargerDossier(
     vol: ligne.vol,
     montant: Number(ligne.montant),
     payee: ligne.statut === "payee",
+    demande: null,
   };
 
   if (ligne.statut === "annulee") return { etat: "annulee", course };
@@ -141,9 +152,26 @@ export async function chargerDossier(
     doit lire « ce trajet a déjà eu lieu », pas « prévenez-nous 24 heures à
     l'avance » — qui l'enverrait écrire à l'exploitant pour rien.
   */
-  if (aller.getTime() <= maintenant.getTime()) return { etat: "passee", course };
+  const attente = await demandesEnAttente(ligne.reference);
+  if (attente.length > 0) {
+    course.demande = {
+      aller: attente.find((l) => l.champ === "aller")?.nouveau ?? null,
+      retour: attente.find((l) => l.champ === "retour")?.nouveau ?? null,
+    };
+  }
 
-  return modifiableEnLigne(aller, maintenant)
-    ? { etat: "ouverte", course }
+  const sens = modifiabilite(
+    new Date(ligne.aller),
+    ligne.retour ? new Date(ligne.retour) : null,
+    maintenant,
+  );
+  /*
+    Et la course n'est passée que quand le retour l'est aussi : le client déjà
+    en station, qui décale son retour, n'a pas à lire que tout est fini.
+  */
+  if (!sens.aVenir) return { etat: "passee", course };
+
+  return sens.aller || sens.retour
+    ? { etat: "ouverte", course, modifiable: { aller: sens.aller, retour: sens.retour } }
     : { etat: "tardive", course };
 }

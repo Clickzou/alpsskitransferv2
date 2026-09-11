@@ -95,6 +95,28 @@ export function modifiableEnLigne(aller: Date, maintenant = new Date()): boolean
 }
 
 /**
+ * Ce que le client peut encore déplacer lui-même, sens par sens.
+ *
+ * Chaque sens a son propre préavis. La règle ne regardait que l'aller : le
+ * client déjà en station, qui décale son retour parce que son vol a changé —
+ * le cas le plus courant — lisait « ce trajet a déjà eu lieu ». Le retour se
+ * juge sur sa propre date, et la course n'est passée que quand il l'est aussi.
+ */
+export function modifiabilite(
+  aller: Date,
+  retour: Date | null,
+  maintenant = new Date(),
+): { aller: boolean; retour: boolean; aVenir: boolean } {
+  return {
+    aller: modifiableEnLigne(aller, maintenant),
+    retour: retour !== null && modifiableEnLigne(retour, maintenant),
+    aVenir:
+      aller.getTime() > maintenant.getTime() ||
+      (retour !== null && retour.getTime() > maintenant.getTime()),
+  };
+}
+
+/**
  * En deçà de ce délai, la réservation en ligne est fermée.
  *
  * Une heure, décision de l'exploitant du 10 septembre 2026 : en dessous, aucun

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import RecapCourse, { quandLisible } from "@/components/reservation/RecapCourse";
+import RecapCourse from "@/components/reservation/RecapCourse";
 import { ENTREPRISE } from "@/data/site";
 import type { Lang } from "@/lib/i18n";
 import type { CourseGestion } from "@/lib/reservation/dossier";
@@ -10,51 +10,76 @@ import { TEXTES_GESTION } from "@/lib/reservation/textes";
 import { saisieAlpes } from "@/lib/temps";
 
 /**
- * « Gérer ma réservation » — l'heure de prise en charge, et rien d'autre.
+ * « Gérer ma réservation » — demander une autre heure, corriger son vol.
  *
- * ## Ce que le formulaire change, et ce qu'il ne change pas
+ * ## Une heure se demande, elle ne se modifie pas
  *
- * L'heure et le numéro de vol. Le véhicule, le trajet et le nombre de passagers
- * changent le prix : les laisser modifier après un paiement reviendrait à
- * encaisser un montant pour une course différente. La page le dit plutôt que de
- * laisser chercher le bouton qui n'existe pas.
+ * Décision de JC, 11 septembre 2026. Le client propose une heure, à l'aller ou
+ * au retour ; l'exploitant la valide ou la refuse depuis la fiche du client, et
+ * la réponse part par e-mail. D'ici là, l'heure d'origine tient, et la page le
+ * dit : l'heure demandée s'affiche sous l'heure retenue, jamais à sa place.
  *
- * ## Les deux modes, et pourquoi le serveur tranche
+ * Le numéro de vol s'applique tout de suite. Le véhicule, le trajet et le
+ * nombre de passagers changent le prix : ils passent par l'exploitant, et la
+ * page le dit plutôt que de laisser chercher le bouton qui n'existe pas.
  *
- * Au-delà de vingt-quatre heures, la modification s'enregistre et l'exploitant
- * est prévenu. En deçà, la page présente un message à transmettre et le numéro
- * de téléphone : la journée du chauffeur est déjà construite autour de cette
- * course, un déplacement se négocie.
+ * ## Chaque sens a son propre préavis
+ *
+ * Au-delà de vingt-quatre heures, un sens se demande en ligne. En deçà, il est
+ * verrouillé et la page renvoie au téléphone. Les deux se jugent séparément :
+ * le client déjà en station, dont l'aller est fait, doit pouvoir demander à
+ * décaler son retour. Quand plus aucun sens n'est ouvert, la page présente un
+ * message à transmettre.
  *
  * Le mode affiché ici vient du serveur, qui l'a calculé en relisant la base — et
  * `/api/gestion` le recalcule avant d'écrire. La page ne décide de rien : elle
- * ne fait qu'éviter de proposer ce qui sera refusé. C'est aussi pourquoi une
- * réponse `signalement` sur un formulaire ouvert est prévue : entre l'affichage
- * et l'envoi, la barre des vingt-quatre heures peut avoir été franchie.
+ * ne fait qu'éviter de proposer ce qui sera refusé.
  */
 export default function Gestion({
   course,
   jeton,
   langue,
   tardif,
+  modifiable,
   lienContact,
 }: {
   course: CourseGestion;
   jeton: string;
   langue: Lang;
-  /** Vrai quand le départ est à moins de 24 heures : on signale, on ne modifie plus. */
+  /** Vrai quand aucun sens n'est à plus de 24 heures : on signale, on ne demande plus. */
   tardif: boolean;
+  /** Ce que le client peut encore demander en ligne, sens par sens. */
+  modifiable: { aller: boolean; retour: boolean };
   lienContact: string;
 }) {
   const mots = TEXTES_GESTION[langue];
+  const allerOuvert = modifiable.aller;
+  const retourOuvert = Boolean(course.retour) && modifiable.retour;
 
-  const [quand, setQuand] = useState(() => saisieAlpes(new Date(course.aller)));
+  /*
+    Les champs partent de la demande en attente quand il y en a une : un client
+    qui revient ajuster son retour ne doit pas, sans le voir, retirer ce qu'il
+    avait demandé pour l'aller — une nouvelle demande remplace l'ancienne.
+  */
+  const [quand, setQuand] = useState(() =>
+    saisieAlpes(new Date(course.demande?.aller ?? course.aller)),
+  );
+  const [quandRetour, setQuandRetour] = useState(() => {
+    const depart = course.demande?.retour ?? course.retour;
+    return depart ? saisieAlpes(new Date(depart)) : "";
+  });
   const [vol, setVol] = useState(course.vol ?? "");
   const [message, setMessage] = useState("");
   const [envoi, setEnvoi] = useState(false);
   const [echec, setEchec] = useState<string | null>(null);
   const [resultat, setResultat] = useState<
-    { mode: "modifie"; aller: string } | { mode: "signalement"; transmis: boolean } | null
+    | {
+        mode: "demande" | "modifie";
+        vol: string | null;
+        demande: { aller: string | null; retour: string | null } | null;
+      }
+    | { mode: "signalement"; transmis: boolean }
+    | null
   >(null);
 
   /*
@@ -65,11 +90,14 @@ export default function Gestion({
   const [plancher] = useState(() =>
     saisieAlpes(new Date(Date.now() + PREAVIS_HEURES * 3600 * 1000)),
   );
+  /* Le retour ne précède pas l'aller : le sélecteur le dit avant le serveur. */
+  const allerRetenu = allerOuvert ? quand : saisieAlpes(new Date(course.aller));
+  const plancherRetour = allerRetenu > plancher ? allerRetenu : plancher;
 
-  /** La course telle qu'elle est maintenant : le récapitulatif suit la modification. */
+  /** La course telle qu'elle est maintenant : le récapitulatif suit la réponse. */
   const courseAffichee: CourseGestion =
-    resultat?.mode === "modifie"
-      ? { ...course, aller: resultat.aller, vol: vol.trim() || null }
+    resultat && resultat.mode !== "signalement"
+      ? { ...course, vol: resultat.vol, demande: resultat.demande ?? course.demande }
       : course;
 
   const MESSAGES: Record<string, string> = {
@@ -78,6 +106,7 @@ export default function Gestion({
     "reservation-annulee": mots.annuleeTexte,
     "date-illisible": mots.erreurDate,
     "nouvelle-date-trop-proche": mots.erreurTropProche,
+    "retour-avant-aller": mots.erreurRetourAvantAller,
     "enregistrement-impossible": mots.erreurEnregistrement,
   };
 
@@ -93,8 +122,11 @@ export default function Gestion({
         body: JSON.stringify({
           reference: course.reference,
           jeton,
-          aller: quand,
-          vol: vol.trim(),
+          langue,
+          // Seuls les sens ouverts partent : un champ absent laisse l'heure en place.
+          aller: tardif || allerOuvert ? quand : undefined,
+          retour: retourOuvert ? quandRetour : undefined,
+          vol: allerOuvert ? vol.trim() : undefined,
           message: message.trim() || undefined,
         }),
       });
@@ -107,9 +139,13 @@ export default function Gestion({
       }
 
       setResultat(
-        donnees.mode === "modifie"
-          ? { mode: "modifie", aller: donnees.aller }
-          : { mode: "signalement", transmis: Boolean(donnees.transmis) },
+        donnees.mode === "signalement"
+          ? { mode: "signalement", transmis: Boolean(donnees.transmis) }
+          : {
+              mode: donnees.mode === "demande" ? "demande" : "modifie",
+              vol: donnees.vol ?? null,
+              demande: donnees.demande ?? null,
+            },
       );
     } catch {
       setEchec(mots.erreurReseau);
@@ -136,12 +172,15 @@ export default function Gestion({
       </div>
 
       <aside className="lg:sticky lg:top-6 lg:h-fit">
-        {resultat?.mode === "modifie" ? (
+        {resultat?.mode === "demande" ? (
+          <div className="rounded-xl border border-or/40 bg-or-50 p-5">
+            <p className="font-display text-lg text-alpine">{mots.demandeTitre}</p>
+            <p className="mt-2 text-sm leading-relaxed text-alpine-700">{mots.demandeTexte}</p>
+          </div>
+        ) : resultat?.mode === "modifie" ? (
           <div className="rounded-xl border border-alpes/30 bg-alpes-50 p-5">
             <p className="font-display text-lg text-alpine">{mots.faitTitre}</p>
-            <p className="mt-2 text-sm leading-relaxed text-alpine-700">
-              {mots.faitTexte(quandLisible(resultat.aller, langue))}
-            </p>
+            <p className="mt-2 text-sm leading-relaxed text-alpine-700">{mots.faitTexte}</p>
           </div>
         ) : resultat?.mode === "signalement" ? (
           <div className="rounded-xl border border-or/40 bg-or-50 p-5">
@@ -158,9 +197,10 @@ export default function Gestion({
           </div>
         ) : tardif ? (
           /*
-            Moins de vingt-quatre heures. Le formulaire n'est pas retiré — un vol
-            annulé la veille au soir est exactement le moment où le client doit
-            pouvoir prévenir — mais il ne modifie plus : il transmet.
+            Moins de vingt-quatre heures sur les deux sens. Le formulaire n'est
+            pas retiré — un vol annulé la veille au soir est exactement le moment
+            où le client doit pouvoir prévenir — mais il ne demande plus : il
+            transmet.
           */
           <form onSubmit={envoyer} className="rounded-xl border border-or/40 bg-or-50 p-5">
             <p className="font-display text-lg text-alpine">{mots.tardifTitre}</p>
@@ -203,36 +243,78 @@ export default function Gestion({
             <p className="font-display text-lg text-alpine">{mots.modifierTitre}</p>
             <p className="mt-2 text-sm leading-relaxed text-alpine-600">{mots.modifierTexte}</p>
 
-            <div className="mt-4">
-              <label className={etiquette} htmlFor="gestion-quand">
-                {mots.nouvelHoraire}
-              </label>
-              <input
-                id="gestion-quand"
-                type="datetime-local"
-                required
-                min={plancher}
-                value={quand}
-                onChange={(e) => setQuand(e.target.value)}
-                className={champ}
-              />
-              <p className="mt-1 text-xs text-alpine-600">{mots.nouvelHoraireIndice}</p>
-            </div>
+            {course.demande ? (
+              <p className="mt-4 rounded border border-or/40 bg-or-50 p-3 text-xs leading-relaxed text-alpine-700">
+                {mots.demandeRemplace}
+              </p>
+            ) : null}
 
-            <div className="mt-4">
-              <label className={etiquette} htmlFor="gestion-vol">
-                {mots.numeroVol} <span className="normal-case">{mots.facultatif}</span>
-              </label>
-              <input
-                id="gestion-vol"
-                type="text"
-                inputMode="text"
-                maxLength={20}
-                value={vol}
-                onChange={(e) => setVol(e.target.value)}
-                className={champ}
-              />
-            </div>
+            {allerOuvert ? (
+              <>
+                <div className="mt-4">
+                  <label className={etiquette} htmlFor="gestion-quand">
+                    {mots.nouvelHoraire}
+                  </label>
+                  <input
+                    id="gestion-quand"
+                    type="datetime-local"
+                    required
+                    min={plancher}
+                    value={quand}
+                    onChange={(e) => setQuand(e.target.value)}
+                    className={champ}
+                  />
+                  <p className="mt-1 text-xs text-alpine-600">{mots.nouvelHoraireIndice}</p>
+                </div>
+
+                <div className="mt-4">
+                  <label className={etiquette} htmlFor="gestion-vol">
+                    {mots.numeroVol} <span className="normal-case">{mots.facultatif}</span>
+                  </label>
+                  <input
+                    id="gestion-vol"
+                    type="text"
+                    inputMode="text"
+                    maxLength={20}
+                    value={vol}
+                    onChange={(e) => setVol(e.target.value)}
+                    className={champ}
+                  />
+                </div>
+              </>
+            ) : (
+              /*
+                L'aller est trop proche, ou déjà fait : il n'est plus proposé, et
+                la page dit pourquoi — sans quoi le client chercherait le champ.
+              */
+              <p className="mt-4 rounded border border-or/40 bg-or-50 p-3 text-xs leading-relaxed text-alpine-700">
+                {mots.allerVerrouille}{" "}
+                <a
+                  href={`tel:${ENTREPRISE.telephone}`}
+                  className="whitespace-nowrap underline underline-offset-2 hover:text-marque"
+                >
+                  {ENTREPRISE.telephoneAffiche}
+                </a>
+              </p>
+            )}
+
+            {retourOuvert ? (
+              <div className="mt-4">
+                <label className={etiquette} htmlFor="gestion-retour">
+                  {mots.nouvelHoraireRetour}
+                </label>
+                <input
+                  id="gestion-retour"
+                  type="datetime-local"
+                  required
+                  min={plancherRetour}
+                  value={quandRetour}
+                  onChange={(e) => setQuandRetour(e.target.value)}
+                  className={champ}
+                />
+                <p className="mt-1 text-xs text-alpine-600">{mots.nouvelHoraireRetourIndice}</p>
+              </div>
+            ) : null}
 
             {echec ? <p className="mt-3 text-xs text-marque">{echec}</p> : null}
 

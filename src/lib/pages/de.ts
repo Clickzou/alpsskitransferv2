@@ -253,7 +253,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         question: "Bis wann kann ich stornieren?",
         reponse:
-          "Bis 48 Stunden vor der Abholung kostenfrei. Danach hängt es davon ab, ob das Fahrzeug bereits disponiert ist — schreiben Sie uns, wir finden meist eine Lösung.",
+          "Bis 24 Stunden vor der Abholung erstatten wir den vollen Betrag, abzüglich etwaiger Transaktionsgebühren. Danach ist keine Erstattung mehr möglich — eine andere Abholzeit können Sie aber bis 24 Stunden vorher anfragen, über den Link in Ihrer Bestätigungs-E-Mail.",
       },
       {
         question: "Kann ich einen Transfer für jemand anderen buchen?",

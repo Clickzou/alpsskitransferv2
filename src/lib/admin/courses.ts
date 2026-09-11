@@ -83,6 +83,81 @@ export interface Course {
   devise: string;
   payeLe: Date | null;
   creeLe: Date;
+  /** Ce que le client a changé depuis son lien de gestion, dans l'ordre. */
+  historique: Modification[];
+}
+
+/** Une ligne de l'historique : un champ changé, ou une demande à moins de 24 heures. */
+export interface Modification {
+  champ: string;
+  ancien: string | null;
+  nouveau: string | null;
+  /** en-attente · acceptee · refusee · remplacee · appliquee · transmise */
+  statut: string;
+  /** L'aller et le retour d'une même demande partagent un lot, et se tranchent ensemble. */
+  lot: string | null;
+  langue: string | null;
+  source: string;
+  le: Date;
+}
+
+interface LigneModification {
+  reference: string;
+  champ: string;
+  ancien: string | null;
+  nouveau: string | null;
+  statut: string | null;
+  lot: string | null;
+  langue: string | null;
+  source: string;
+  cree_le: string;
+}
+
+/**
+ * Rattache à chaque course son historique, en une seule requête.
+ *
+ * La réservation ne garde que la dernière heure : au téléphone avec un client
+ * qui dit « j'avais réservé pour 14 h », c'est ici que l'exploitant voit qui a
+ * changé quoi, et quand.
+ *
+ * L'absence de la table est tolérée : avant la migration du 11 septembre, le
+ * back-office doit continuer d'afficher les courses — sans historique.
+ */
+async function avecHistorique(courses: Course[]): Promise<Course[]> {
+  if (courses.length === 0) return courses;
+  try {
+    const lignes = await lire<LigneModification>("modifications", {
+      filtres: [
+        {
+          colonne: "reference",
+          operateur: "in",
+          valeur: `(${courses.map((c) => c.reference).join(",")})`,
+        },
+      ],
+      tri: { colonne: "cree_le", croissant: true },
+      limite: 1000,
+    });
+    if (!Array.isArray(lignes)) return courses;
+
+    const parReference = new Map<string, Modification[]>();
+    for (const ligne of lignes) {
+      const liste = parReference.get(ligne.reference) ?? [];
+      liste.push({
+        champ: ligne.champ,
+        ancien: ligne.ancien,
+        nouveau: ligne.nouveau,
+        statut: ligne.statut ?? "appliquee",
+        lot: ligne.lot,
+        langue: ligne.langue,
+        source: ligne.source,
+        le: new Date(ligne.cree_le),
+      });
+      parReference.set(ligne.reference, liste);
+    }
+    return courses.map((c) => ({ ...c, historique: parReference.get(c.reference) ?? [] }));
+  } catch {
+    return courses;
+  }
 }
 
 /** Le nom lisible d'un aéroport ou d'une station, ou son slug si le registre l'ignore. */
@@ -145,6 +220,7 @@ function versCourse(ligne: LigneBase): Course {
     devise: ligne.devise,
     payeLe: ligne.paye_le ? new Date(ligne.paye_le) : null,
     creeLe: new Date(ligne.cree_le),
+    historique: [],
   };
 }
 
@@ -160,7 +236,23 @@ export async function coursesAVenir(limite = 200): Promise<Course[]> {
     filtres: [{ colonne: "aller", operateur: "gte", valeur: new Date().toISOString() }],
     limite,
   });
-  return lignes.map(versCourse);
+  return avecHistorique(lignes.map(versCourse));
+}
+
+/**
+ * Une réservation et son historique — la fiche du client.
+ *
+ * C'est là que mène l'e-mail « à valider » : l'exploitant y lit tout ce que le
+ * client a saisi, ce qu'il a demandé depuis, et tranche.
+ */
+export async function courseParReference(reference: string): Promise<Course | null> {
+  const [ligne] = await lire<LigneBase>("reservations", {
+    filtres: [{ colonne: "reference", operateur: "eq", valeur: reference }],
+    limite: 1,
+  });
+  if (!ligne) return null;
+  const [course] = await avecHistorique([versCourse(ligne)]);
+  return course ?? null;
 }
 
 /** Les courses passées, la plus récente en tête. */
@@ -170,7 +262,7 @@ export async function coursesPassees(limite = 100): Promise<Course[]> {
     filtres: [{ colonne: "aller", operateur: "lt", valeur: new Date().toISOString() }],
     limite,
   });
-  return lignes.map(versCourse);
+  return avecHistorique(lignes.map(versCourse));
 }
 
 /**

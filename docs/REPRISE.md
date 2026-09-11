@@ -11,6 +11,45 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 # Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
+## À FAIRE EN PREMIER — la migration `modifications`, puis le déploiement
+
+**Dans cet ordre, sinon les demandes d'horaire échouent.** Exécuter
+`docs/supabase-migration-modifications.sql` dans l'éditeur SQL de Supabase,
+puis pousser. Déployé avant la table, le code répond « nous n'avons pas pu
+enregistrer » à tout client qui demande une autre heure — rien n'est perdu,
+rien ne passe.
+
+Ce que le 11 septembre a changé, sur décisions de JC :
+
+- **Une heure se demande, elle ne se modifie plus.** Le client propose depuis
+  son lien ; la réservation ne bouge pas ; Nassim reçoit « À VALIDER » avec le
+  lien vers la **fiche du client** (`/gestion-ventes-tarifs-seo/reservations/{ref}/`),
+  valide ou refuse ; le client reçoit la réponse dans sa langue
+  (`textes-decision.ts`). Sans réponse, l'heure d'origine tient. Pas de
+  contre-proposition. Le **numéro de vol**, lui, s'applique tout de suite.
+- **Chaque sens a son préavis de 24 h** (`modifiabilite()`) : le client déjà en
+  station peut demander à décaler son retour, et la course n'est « passée »
+  que quand le retour l'est aussi. Avant, tout se jugeait sur l'aller.
+- **Le back-office** : onglets (celui des tarifs s'ajoutera avec son écran),
+  « Demandes à valider » en tête de liste, fiche client complète — formulaire,
+  paiement, historique, place réservée aux factures. La connexion ramène sur la
+  fiche d'où venait le lien (`suiteSure`, qui refuse toute adresse hors du
+  back-office).
+- **Pages légales corrigées** : modification 24 h, annulation alignée sur les
+  conditions de vente (plus de 24 h : remboursement moins les frais, rien en
+  deçà — les CGV disaient 7 jours / 50 %), attente 100 €/h (140 € dans les
+  conditions de vente), e-mail `contact@` au lieu de `customerservice@` et d'un
+  « [customer support email] » jamais rempli. Les trois pages sont désormais
+  protégées de `migrer:pages`.
+
+**À tester après déploiement** : une demande sur l'aller, une sur le retour, la
+validation, le refus, les deux e-mails au client, et le lien de l'e-mail
+« À VALIDER » session ouverte puis session fermée.
+
+**En attente de Nassim** : la facturation. Il faut savoir s'il est en franchise
+de TVA ou à 10 %, comment traiter les trajets suisses et italiens, et sa
+dénomination exacte (« EI »). Recommandation rendue : factures Stripe Checkout.
+
 ## ~~L'espace « ma réservation »~~ — construit le 11 septembre
 
 Les quatre URL répondent — `/manage-booking/`, `/fr/gerer-ma-reservation/`,
@@ -36,9 +75,14 @@ formulaire ouvert ; lien absent ou faux refusé dans les quatre langues.
 valeur locale (la sonde répondait 404). Remplacée par la CLI en Production et
 Preview, redéployée : la sonde répond, commit `0d1b076`, et AST-62B62B s'ouvre
 sur `alpsskitransferv2.vercel.app` avec un jeton calculé en local.
-**Pas encore fait** : une modification réelle enregistrée puis relue, avec
-l'avis « HORAIRE MODIFIÉ » à l'exploitant, et le lien cliqué depuis un vrai
-e-mail de paiement.
+**Testé par JC le 11 septembre, en production** : paiement AST-9EF8D6 (653 €,
+statut `payee`), e-mail reçu avec le lien, lien ouvert sur la bonne course, et
+— le départ étant le lendemain — message « moins de 24 h » transmis à
+l'exploitant, réservation laissée intacte.
+**Prouvé ensuite** : le changement d'heure d'AST-E8919A (15 h 45 → 17 h 10,
+stockée 15 h 10 UTC — la correction du fuseau tient), e-mails reçus. Ce mode
+immédiat a été remplacé le jour même par la validation de l'exploitant — voir
+plus haut.
 
 Les aéroports s'affichent sous leur nom anglais dans les quatre langues — comme
 dans le tunnel et l'e-mail : il n'existe pas de registre de noms traduits.

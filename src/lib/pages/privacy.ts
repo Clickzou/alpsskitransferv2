@@ -48,7 +48,7 @@ export const privacy: PageFonctionnelle = {
     { type: "paragraphe", texte: "For detailed information, refer to our Cookie Policy." },
     { type: "titre2", texte: "7. Your Data Rights" },
     { type: "paragraphe", texte: "✔ Access the personal data we hold about you.✔ Correct or update any inaccurate information.✔ Request deletion of your data (subject to legal requirements).✔ Withdraw consent for marketing communications at any time.✔ Object to data processing under certain conditions." },
-    { type: "paragraphe", texte: "To exercise these rights, contact us at [customer support email]." },
+    { type: "paragraphe", texte: "To exercise these rights, contact us at contact@alpsskitransfers.com." },
     { type: "titre2", texte: "8. Third-Party Links" },
     { type: "paragraphe", texte: "Our website may contain links to external sites (e.g., ski resorts, travel agencies). We are not responsible for the privacy practices of these third parties. We recommend reviewing their privacy policies before sharing personal data." },
     { type: "titre2", texte: "9. Marketing & Communications" },
@@ -64,7 +64,7 @@ export const privacy: PageFonctionnelle = {
     { type: "paragraphe", texte: "If significant changes are made, we will notify customers via email or website notice." },
     { type: "titre2", texte: "12. Contact Us" },
     { type: "paragraphe", texte: "For questions or concerns about this Privacy Policy, contact us:" },
-    { type: "paragraphe", texte: "📧 Email: customerservice@alpsskitransfers.com📞 Phone: +337 69 78 91 89🌍 Website: https://alpsskitransfers.com/" },
+    { type: "paragraphe", texte: "📧 Email: contact@alpsskitransfers.com📞 Phone: +33 7 69 78 91 89🌍 Website: https://alpsskitransfers.com/" },
     { type: "paragraphe", texte: "By using our services, you agree to the terms outlined in this Privacy Policy." },
   ],
 

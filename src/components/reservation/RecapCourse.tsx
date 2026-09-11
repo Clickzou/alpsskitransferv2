@@ -46,6 +46,9 @@ export default function RecapCourse({
   langue: Lang;
   mots: TextesGestion;
 }) {
+  /* L'espace avant les deux-points est une règle française, pas une règle du site. */
+  const deuxPoints = langue === "fr" ? " : " : ": ";
+
   return (
     <div className="rounded-xl border border-glacier-200 bg-white p-5 shadow-carte sm:p-6">
       <p className="font-display text-lg text-alpine">{course.trajetAller}</p>
@@ -55,7 +58,15 @@ export default function RecapCourse({
           <strong className="tabular-nums">{course.reference}</strong>
         </Ligne>
 
-        <Ligne libelle={mots.aller}>{quandLisible(course.aller, langue)}</Ligne>
+        <Ligne libelle={mots.aller}>
+          {quandLisible(course.aller, langue)}
+          {/* L'heure demandée s'affiche sous l'heure retenue, jamais à sa place. */}
+          {course.demande?.aller ? (
+            <span className="mt-0.5 block text-xs text-or-700">
+              {mots.demandeEnAttente(quandLisible(course.demande.aller, langue))}
+            </span>
+          ) : null}
+        </Ligne>
 
         {course.retour ? (
           <Ligne libelle={mots.retour}>
@@ -69,6 +80,11 @@ export default function RecapCourse({
             {course.trajetRetour ? (
               <span className="mt-0.5 block text-xs text-alpine-600">{course.trajetRetour}</span>
             ) : null}
+            {course.demande?.retour ? (
+              <span className="mt-0.5 block text-xs text-or-700">
+                {mots.demandeEnAttente(quandLisible(course.demande.retour, langue))}
+              </span>
+            ) : null}
           </Ligne>
         ) : null}
 
@@ -80,12 +96,16 @@ export default function RecapCourse({
           */}
           {course.vehiculeRetour && course.vehiculeRetour !== course.vehicule ? (
             <span className="mt-0.5 block text-xs text-alpine-600">
-              {mots.retour} : {course.vehiculeRetour}
+              {mots.retour}
+              {deuxPoints}
+              {course.vehiculeRetour}
               {course.passagersRetour ? ` · ${mots.passagers(course.passagersRetour)}` : null}
             </span>
           ) : course.passagersRetour && course.passagersRetour !== course.passagers ? (
             <span className="mt-0.5 block text-xs text-alpine-600">
-              {mots.retour} : {mots.passagers(course.passagersRetour)}
+              {mots.retour}
+              {deuxPoints}
+              {mots.passagers(course.passagersRetour)}
             </span>
           ) : null}
         </Ligne>

@@ -12,7 +12,7 @@ import { actionConnexion } from "../actions";
  * téléphone en montagne, c'est la différence entre « ça marche » et « ça tourne
  * en rond ».
  */
-export default function FormulaireConnexion() {
+export default function FormulaireConnexion({ suite }: { suite: string }) {
   const [erreur, action, enCours] = useActionState(actionConnexion, null);
 
   const champ =
@@ -21,6 +21,8 @@ export default function FormulaireConnexion() {
 
   return (
     <form action={action} className="space-y-4">
+      {/* Où revenir une fois connecté — revérifié côté serveur par `suiteSure`. */}
+      <input type="hidden" name="suite" value={suite} />
       <div>
         <label className={etiquette} htmlFor="email">
           E-mail

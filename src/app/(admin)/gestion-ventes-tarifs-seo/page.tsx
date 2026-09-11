@@ -1,10 +1,11 @@
-import { FUSEAU_ALPES } from "@/lib/temps";
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import Logo from "@/components/Logo";
+import { aValider, decrire, heure } from "@/lib/admin/affichage";
 import { coursesAVenir, coursesPassees, statutLisible, type Course } from "@/lib/admin/courses";
 import { utilisateurCourant } from "@/lib/admin/session";
+import { cheminFiche } from "@/lib/reservation/demandes";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
-import { actionDeconnexion } from "./actions";
+import Entete from "./Entete";
 
 /**
  * La liste des courses.
@@ -20,17 +21,6 @@ import { actionDeconnexion } from "./actions";
  * volent pas la largeur à ce qu'on lit tous les jours.
  */
 
-function heure(date: Date): string {
-  return date.toLocaleString("fr-FR", {
-    timeZone: FUSEAU_ALPES,
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 function LigneCourse({ course }: { course: Course }) {
   const statut = statutLisible(course.statut);
   const couleur = {
@@ -45,7 +35,19 @@ function LigneCourse({ course }: { course: Course }) {
         <span className="font-medium tabular-nums text-alpine">{heure(course.aller)}</span>
 
         {/* La destination : la raison d'être de cet écran. */}
-        <span className="font-semibold text-alpine">{course.trajet}</span>
+        <span className="font-semibold text-alpine">
+          {course.trajet}
+          {/* Une demande en attente, ou un changement passé, se voit sans déplier la ligne. */}
+          {aValider(course).length > 0 ? (
+            <span className="mt-0.5 block text-xs font-semibold text-marque">
+              demande à valider
+            </span>
+          ) : course.historique.length > 0 ? (
+            <span className="mt-0.5 block text-xs font-normal text-or-700">
+              modifiée par le client
+            </span>
+          ) : null}
+        </span>
 
         <span className="text-sm text-alpine-700">{course.adresse}</span>
 
@@ -119,6 +121,31 @@ function LigneCourse({ course }: { course: Course }) {
             </>
           ) : null}
         </div>
+
+        {course.historique.length > 0 ? (
+          <div className="sm:col-span-2 lg:col-span-4">
+            <p className="text-xs uppercase tracking-wide text-alpine-600">
+              Modifications par le client
+            </p>
+            <ul className="mt-1 space-y-1">
+              {course.historique.map((m, i) => (
+                <li key={i}>
+                  <span className="tabular-nums text-alpine-600">{heure(m.le)}</span> —{" "}
+                  {decrire(m)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        <div className="sm:col-span-2 lg:col-span-4">
+          <Link
+            href={cheminFiche(course.reference)}
+            className="text-sm font-semibold text-marque underline underline-offset-4"
+          >
+            Ouvrir la fiche du client →
+          </Link>
+        </div>
       </div>
     </details>
   );
@@ -158,27 +185,40 @@ export default async function PageAdmin() {
   if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
 
   const [aVenir, passees] = await Promise.all([coursesAVenir(), coursesPassees(50)]);
+  // Les demandes d'horaire en attente passent devant tout : tant qu'elles ne sont
+  // pas tranchées, le client ne sait pas à quelle heure on vient le chercher.
+  const demandes = aVenir.filter((course) => aValider(course).length > 0);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
-      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-glacier-200 pb-6">
-        <div className="flex items-center gap-4">
-          <Logo lang="fr" />
-          <h1 className="font-display text-lg text-alpine">Courses</h1>
-        </div>
+      <Entete email={utilisateur.email} actif="reservations" />
+      <h1 className="sr-only">Réservations</h1>
 
-        <div className="flex items-center gap-4 text-sm">
-          <span className="text-alpine-600">{utilisateur.email}</span>
-          <form action={actionDeconnexion}>
-            <button
-              type="submit"
-              className="rounded border border-glacier-300 px-3 py-1.5 text-alpine-700 transition hover:border-alpine/40 hover:bg-glacier-50"
-            >
-              Se déconnecter
-            </button>
-          </form>
-        </div>
-      </header>
+      {demandes.length > 0 ? (
+        <section className="mt-8">
+          <h2 className="font-display text-lg text-marque">
+            Demandes à valider{" "}
+            <span className="text-sm font-normal text-alpine-600">({demandes.length})</span>
+          </h2>
+          <ul className="mt-3 divide-y divide-glacier-200 overflow-hidden rounded-xl border border-marque/30 bg-white shadow-carte">
+            {demandes.map((course) => (
+              <li key={course.reference}>
+                <Link
+                  href={cheminFiche(course.reference)}
+                  className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-4 py-3 hover:bg-glacier-50"
+                >
+                  <span className="font-semibold text-alpine">
+                    {course.trajet} · {course.client.nom}
+                  </span>
+                  <span className="text-sm text-alpine-700">
+                    {aValider(course).map(decrire).join(" · ")}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {!supabaseConfigure() ? (
         <p className="mt-8 rounded border border-or/40 bg-or-50 px-4 py-3 text-sm leading-relaxed text-alpine-700">

@@ -231,7 +231,8 @@ plusieurs jours ouvrés.
 | Stripe Checkout (création de session, REST) | écrit — `stripe.ts`, activé dès que le barème est validé |
 | Webhook `POST /api/stripe/webhook/` avec signature vérifiée | livré, 6 tests |
 | Page de retour `/booking/confirmed/` | livré, `noindex` |
-| « Gérer ma réservation » `/manage-booking/` (+ FR, DE, IT) — lien signé HMAC, heure et vol modifiables à plus de 24 h | livré le 11 septembre, `noindex` — `PageGestion.tsx`, `dossier.ts` |
+| « Gérer ma réservation » `/manage-booking/` (+ FR, DE, IT) — lien signé HMAC ; heure demandée à plus de 24 h, sens par sens, validée par l'exploitant ; vol corrigé tout de suite | livré le 11 septembre, `noindex` — `PageGestion.tsx`, `dossier.ts`, `/api/gestion` |
+| Fiche client du back-office — formulaire, paiement, historique, demande à valider ou refuser, e-mail de décision au client | livré le 11 septembre — `reservations/[reference]/`, table `modifications` (**migration à passer avant déploiement**) |
 | Schéma Supabase | écrit — `docs/supabase-schema.sql`, **tables à créer** |
 | Back-office des courses | à faire (semaine 4) |
 

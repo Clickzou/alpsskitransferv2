@@ -994,7 +994,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         "If anything changes — a new flight, an extra passenger, a different",
         "address in resort — tell us as early as you can.",
         ...(lien
-          ? ["", "You can move your pick-up time yourself, up to 24 hours before:", lien]
+          ? ["", "To ask for a new pick-up time, up to 24 hours before:", lien]
           : []),
       ]
         .filter((l) => l !== null)
@@ -1020,7 +1020,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         ...(lien
           ? [
               "",
-              "Vous pouvez déplacer vous-même votre heure de prise en charge,",
+              "Pour demander un autre horaire de prise en charge,",
               "jusqu’à 24 heures avant :",
               lien,
             ]
@@ -1049,7 +1049,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         ...(lien
           ? [
               "",
-              "Ihre Abholzeit können Sie bis 24 Stunden vorher selbst ändern:",
+              "Eine andere Abholzeit können Sie bis 24 Stunden vorher anfragen:",
               lien,
             ]
           : []),
@@ -1077,7 +1077,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         ...(lien
           ? [
               "",
-              "Puoi spostare tu stesso l’orario di presa in carico, fino a 24 ore prima:",
+              "Per chiedere un altro orario di presa in carico, fino a 24 ore prima:",
               lien,
             ]
           : []),
@@ -1376,6 +1376,11 @@ export interface TextesGestion {
   modifierTexte: string;
   nouvelHoraire: string;
   nouvelHoraireIndice: string;
+  /* Le retour se prend en station, et se juge sur sa propre date. */
+  nouvelHoraireRetour: string;
+  nouvelHoraireRetourIndice: string;
+  /* L'aller trop proche ou déjà fait : le champ n'est plus proposé, on dit pourquoi. */
+  allerVerrouille: string;
   numeroVol: string;
   facultatif: string;
   enregistrer: string;
@@ -1391,13 +1396,20 @@ export interface TextesGestion {
 
   /* Ce qui s'affiche après. */
   faitTitre: string;
-  faitTexte: (quand: string) => string;
+  /* Seul le vol s'applique tout de suite ; les heures passent par l'exploitant. */
+  faitTexte: string;
+  /* La demande d'horaire, en attente de l'exploitant (décision du 11 septembre 2026). */
+  demandeTitre: string;
+  demandeTexte: string;
+  demandeEnAttente: (quand: string) => string;
+  demandeRemplace: string;
   transmisTitre: string;
   transmisTexte: string;
   nonTransmisTexte: string;
 
   /* Les refus du serveur, dans les mots de la page. */
   erreurTropProche: string;
+  erreurRetourAvantAller: string;
   erreurDate: string;
   erreurLien: string;
   erreurReseau: string;
@@ -1414,7 +1426,7 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     bouton: "Manage my booking",
     fil: "Manage my booking",
     chapo:
-      "Change your pick-up time or correct your flight number — your driver is told straight away.",
+      "Ask for a new pick-up time or correct your flight number — the operator confirms the new time by email.",
     metaDescription: "Change the pick-up time of your airport ski transfer.",
 
     reference: "Reference",
@@ -1444,14 +1456,19 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     indisponibleTexte:
       "Try again in a few minutes. If it is urgent — you are travelling today or tomorrow — call us rather than wait.",
 
-    modifierTitre: "Move your pick-up time",
+    modifierTitre: "Ask for a new pick-up time",
     modifierTexte:
       "The time and the flight number, and nothing else: the vehicle, the journey and the number of passengers all change the price, so those go through us. What you have paid does not move.",
-    nouvelHoraire: "New pick-up time",
-    nouvelHoraireIndice: "Local time at the airport, at least 24 hours from now.",
+    nouvelHoraire: "New pick-up time at the airport",
+    nouvelHoraireIndice: "Local time, at least 24 hours from now.",
+    nouvelHoraireRetour: "New pick-up time in the resort",
+    nouvelHoraireRetourIndice:
+      "For your return. Local time, at least 24 hours from now, and after the outbound journey.",
+    allerVerrouille:
+      "The pick-up at the airport can no longer be moved here — it is less than 24 hours away, or already done. Call us if it needs to change:",
     numeroVol: "Flight number",
     facultatif: "(optional)",
-    enregistrer: "Save the change",
+    enregistrer: "Send the request",
     enregistrement: "Saving…",
 
     tardifTitre: "Less than 24 hours to go — tell us and we will call you",
@@ -1463,9 +1480,14 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     envoyer: "Send this to the operator",
     appeler: "Call us",
 
-    faitTitre: "Your pick-up time has been changed",
-    faitTexte: (quand) =>
-      `Your driver now comes at ${quand}. Nothing else has moved, and there is nothing more to pay.`,
+    faitTitre: "Your flight number is updated",
+    faitTexte: "Your driver has it. Nothing else has moved, and there is nothing more to pay.",
+    demandeTitre: "Your request is with the operator",
+    demandeTexte:
+      "Your new pick-up time applies once the operator confirms it — you will receive an email. Until then, your booking stands as booked.",
+    demandeEnAttente: (quand) => `Requested: ${quand} — awaiting confirmation`,
+    demandeRemplace:
+      "A request is already awaiting confirmation. Sending a new one replaces it.",
     transmisTitre: "Your message is with the operator",
     transmisTexte:
       "They will call you back on the number you gave. Your booking has not been changed in the meantime — they confirm it with you first.",
@@ -1474,6 +1496,7 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
 
     erreurTropProche:
       "That time is less than 24 hours away. Pick a later one, or tell us below and we will arrange it.",
+    erreurRetourAvantAller: "The return has to come after the outbound journey. Check both dates.",
     erreurDate: "That date could not be read. Please check the day and the time.",
     erreurLien: "This link is no longer valid. Open it again from your confirmation email.",
     erreurReseau: "The connection dropped. Try again.",
@@ -1490,7 +1513,7 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     bouton: "Gérer ma réservation",
     fil: "Gérer ma réservation",
     chapo:
-      "Changez votre heure de prise en charge ou corrigez votre numéro de vol — votre chauffeur est prévenu aussitôt.",
+      "Demandez un autre horaire de prise en charge ou corrigez votre numéro de vol — l’exploitant vous confirme le nouvel horaire par e-mail.",
     metaDescription: "Modifiez l’heure de prise en charge de votre transfert.",
 
     reference: "Référence",
@@ -1520,14 +1543,19 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     indisponibleTexte:
       "Réessayez dans quelques minutes. Si c’est urgent — vous partez aujourd’hui ou demain — appelez-nous plutôt que d’attendre.",
 
-    modifierTitre: "Déplacer l’heure de prise en charge",
+    modifierTitre: "Demander un autre horaire",
     modifierTexte:
       "L’heure et le numéro de vol, rien d’autre : le véhicule, le trajet et le nombre de passagers changent le prix, ils passent donc par nous. Ce que vous avez réglé ne bouge pas.",
-    nouvelHoraire: "Nouvelle heure de prise en charge",
-    nouvelHoraireIndice: "Heure locale à l’aéroport, au moins 24 heures à partir de maintenant.",
+    nouvelHoraire: "Nouvelle heure de prise en charge à l’aéroport",
+    nouvelHoraireIndice: "Heure locale, au moins 24 heures à partir de maintenant.",
+    nouvelHoraireRetour: "Nouvelle heure de prise en charge en station",
+    nouvelHoraireRetourIndice:
+      "Pour votre retour. Heure locale, au moins 24 heures à partir de maintenant, et après l’aller.",
+    allerVerrouille:
+      "La prise en charge à l’aéroport ne se déplace plus d’ici — elle est à moins de 24 heures, ou déjà faite. Appelez-nous s’il faut la changer au",
     numeroVol: "Numéro de vol",
     facultatif: "(facultatif)",
-    enregistrer: "Enregistrer la modification",
+    enregistrer: "Envoyer la demande",
     enregistrement: "Enregistrement…",
 
     tardifTitre: "Moins de 24 heures — dites-le-nous, nous vous rappelons",
@@ -1539,9 +1567,14 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     envoyer: "Transmettre à l’exploitant",
     appeler: "Nous appeler",
 
-    faitTitre: "Votre heure de prise en charge est modifiée",
-    faitTexte: (quand) =>
-      `Votre chauffeur vient désormais à ${quand}. Rien d’autre n’a bougé, et il n’y a rien de plus à payer.`,
+    faitTitre: "Votre numéro de vol est mis à jour",
+    faitTexte: "Votre chauffeur l’a. Rien d’autre n’a bougé, et il n’y a rien de plus à payer.",
+    demandeTitre: "Votre demande est chez l’exploitant",
+    demandeTexte:
+      "Le nouvel horaire s’applique dès que l’exploitant l’a confirmé — vous recevrez un e-mail. D’ici là, votre réservation reste telle quelle.",
+    demandeEnAttente: (quand) => `Demandé : ${quand} — en attente de confirmation`,
+    demandeRemplace:
+      "Une demande attend déjà confirmation. En envoyer une nouvelle la remplace.",
     transmisTitre: "Votre message est arrivé chez l’exploitant",
     transmisTexte:
       "Il vous rappelle au numéro que vous avez donné. Votre réservation n’a pas été modifiée entre-temps : il la confirme d’abord avec vous.",
@@ -1550,6 +1583,7 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
 
     erreurTropProche:
       "Cette heure est à moins de 24 heures. Choisissez-en une plus tardive, ou dites-le-nous ci-dessous : nous nous en occupons.",
+    erreurRetourAvantAller: "Le retour doit venir après l’aller. Vérifiez les deux dates.",
     erreurDate: "Cette date n’a pas pu être lue. Vérifiez le jour et l’heure.",
     erreurLien: "Ce lien n’est plus valable. Rouvrez-le depuis votre e-mail de confirmation.",
     erreurReseau: "La connexion s’est interrompue. Réessayez.",
@@ -1567,7 +1601,7 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     bouton: "Buchung verwalten",
     fil: "Buchung verwalten",
     chapo:
-      "Ändern Sie Ihre Abholzeit oder korrigieren Sie Ihre Flugnummer — Ihr Fahrer erfährt es sofort.",
+      "Fragen Sie eine andere Abholzeit an oder korrigieren Sie Ihre Flugnummer — der Betreiber bestätigt die neue Zeit per E-Mail.",
     metaDescription: "Ändern Sie die Abholzeit Ihres Flughafentransfers.",
 
     reference: "Referenz",
@@ -1597,14 +1631,19 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     indisponibleTexte:
       "Versuchen Sie es in einigen Minuten erneut. Wird es dringend — Sie fahren heute oder morgen —, rufen Sie uns lieber an.",
 
-    modifierTitre: "Abholzeit verschieben",
+    modifierTitre: "Andere Abholzeit anfragen",
     modifierTexte:
       "Die Uhrzeit und die Flugnummer, sonst nichts: Fahrzeug, Strecke und Personenzahl ändern den Preis und laufen deshalb über uns. Der bezahlte Betrag bleibt, wie er ist.",
-    nouvelHoraire: "Neue Abholzeit",
-    nouvelHoraireIndice: "Ortszeit am Flughafen, mindestens 24 Stunden ab jetzt.",
+    nouvelHoraire: "Neue Abholzeit am Flughafen",
+    nouvelHoraireIndice: "Ortszeit, mindestens 24 Stunden ab jetzt.",
+    nouvelHoraireRetour: "Neue Abholzeit im Skiort",
+    nouvelHoraireRetourIndice:
+      "Für Ihre Rückfahrt. Ortszeit, mindestens 24 Stunden ab jetzt und nach der Hinfahrt.",
+    allerVerrouille:
+      "Die Abholung am Flughafen lässt sich hier nicht mehr verschieben — sie liegt weniger als 24 Stunden entfernt oder ist schon erfolgt. Rufen Sie uns an, wenn sie sich ändern muss:",
     numeroVol: "Flugnummer",
     facultatif: "(optional)",
-    enregistrer: "Änderung speichern",
+    enregistrer: "Anfrage senden",
     enregistrement: "Wird gespeichert…",
 
     tardifTitre: "Weniger als 24 Stunden — sagen Sie es uns, wir rufen zurück",
@@ -1616,9 +1655,14 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     envoyer: "An den Betreiber senden",
     appeler: "Rufen Sie uns an",
 
-    faitTitre: "Ihre Abholzeit ist geändert",
-    faitTexte: (quand) =>
-      `Ihr Fahrer kommt jetzt um ${quand}. Sonst bleibt alles gleich, und es ist nichts nachzuzahlen.`,
+    faitTitre: "Ihre Flugnummer ist aktualisiert",
+    faitTexte: "Ihr Fahrer hat sie. Sonst bleibt alles gleich, und es ist nichts nachzuzahlen.",
+    demandeTitre: "Ihre Anfrage ist beim Betreiber",
+    demandeTexte:
+      "Die neue Abholzeit gilt, sobald der Betreiber sie bestätigt — Sie erhalten eine E-Mail. Bis dahin bleibt Ihre Buchung, wie sie ist.",
+    demandeEnAttente: (quand) => `Angefragt: ${quand} — wartet auf Bestätigung`,
+    demandeRemplace:
+      "Eine Anfrage wartet bereits auf Bestätigung. Eine neue Anfrage ersetzt sie.",
     transmisTitre: "Ihre Nachricht ist beim Betreiber",
     transmisTexte:
       "Er ruft Sie unter der angegebenen Nummer zurück. Ihre Buchung wurde vorerst nicht geändert — er bestätigt sie zuerst mit Ihnen.",
@@ -1627,6 +1671,8 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
 
     erreurTropProche:
       "Diese Zeit liegt weniger als 24 Stunden entfernt. Wählen Sie eine spätere, oder sagen Sie es uns unten — wir regeln das.",
+    erreurRetourAvantAller:
+      "Die Rückfahrt muss nach der Hinfahrt liegen. Bitte prüfen Sie beide Daten.",
     erreurDate: "Dieses Datum war nicht lesbar. Bitte prüfen Sie Tag und Uhrzeit.",
     erreurLien:
       "Dieser Link ist nicht mehr gültig. Öffnen Sie ihn erneut aus Ihrer Bestätigungs-E-Mail.",
@@ -1645,7 +1691,7 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     bouton: "Gestisci la prenotazione",
     fil: "Gestisci la prenotazione",
     chapo:
-      "Cambia l’orario di presa in carico o correggi il numero del volo — il tuo autista lo sa subito.",
+      "Chiedi un altro orario di presa in carico o correggi il numero del volo — l’operatore ti conferma il nuovo orario via e-mail.",
     metaDescription: "Modifica l’orario di presa in carico del tuo transfer.",
 
     reference: "Riferimento",
@@ -1674,14 +1720,19 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     indisponibleTexte:
       "Riprova tra qualche minuto. Se è urgente — parti oggi o domani — chiamaci invece di aspettare.",
 
-    modifierTitre: "Sposta l’orario di presa in carico",
+    modifierTitre: "Chiedi un altro orario",
     modifierTexte:
       "L’orario e il numero del volo, nient’altro: veicolo, tragitto e numero di passeggeri cambiano il prezzo, quindi passano da noi. Quello che hai pagato resta lo stesso.",
-    nouvelHoraire: "Nuovo orario di presa in carico",
-    nouvelHoraireIndice: "Ora locale in aeroporto, almeno 24 ore da adesso.",
+    nouvelHoraire: "Nuovo orario di presa in carico in aeroporto",
+    nouvelHoraireIndice: "Ora locale, almeno 24 ore da adesso.",
+    nouvelHoraireRetour: "Nuovo orario di presa in carico in località",
+    nouvelHoraireRetourIndice:
+      "Per il ritorno. Ora locale, almeno 24 ore da adesso e dopo l’andata.",
+    allerVerrouille:
+      "La presa in carico in aeroporto non si può più spostare da qui — è a meno di 24 ore, o è già avvenuta. Chiamaci se deve cambiare:",
     numeroVol: "Numero del volo",
     facultatif: "(facoltativo)",
-    enregistrer: "Salva la modifica",
+    enregistrer: "Invia la richiesta",
     enregistrement: "Salvataggio…",
 
     tardifTitre: "Meno di 24 ore — diccelo, ti richiamiamo",
@@ -1693,9 +1744,14 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     envoyer: "Invia all’operatore",
     appeler: "Chiamaci",
 
-    faitTitre: "Il tuo orario di presa in carico è stato modificato",
-    faitTexte: (quand) =>
-      `Il tuo autista ora arriva alle ${quand}. Il resto non cambia e non c’è nulla da pagare in più.`,
+    faitTitre: "Il numero del volo è aggiornato",
+    faitTexte: "Il tuo autista ce l’ha. Il resto non cambia e non c’è nulla da pagare in più.",
+    demandeTitre: "La tua richiesta è arrivata all’operatore",
+    demandeTexte:
+      "Il nuovo orario vale non appena l’operatore lo conferma — riceverai un’e-mail. Fino ad allora la prenotazione resta com’è.",
+    demandeEnAttente: (quand) => `Richiesto: ${quand} — in attesa di conferma`,
+    demandeRemplace:
+      "Una richiesta attende già conferma. Inviarne una nuova la sostituisce.",
     transmisTitre: "Il tuo messaggio è arrivato all’operatore",
     transmisTexte:
       "Ti richiama al numero che hai indicato. Nel frattempo la prenotazione non è stata modificata: prima la conferma con te.",
@@ -1704,6 +1760,7 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
 
     erreurTropProche:
       "Questo orario è a meno di 24 ore. Scegline uno più tardi, oppure diccelo qui sotto: ci pensiamo noi.",
+    erreurRetourAvantAller: "Il ritorno deve essere dopo l’andata. Controlla le due date.",
     erreurDate: "Questa data non è leggibile. Controlla il giorno e l’ora.",
     erreurLien: "Questo link non è più valido. Riaprilo dalla tua e-mail di conferma.",
     erreurReseau: "La connessione si è interrotta. Riprova.",

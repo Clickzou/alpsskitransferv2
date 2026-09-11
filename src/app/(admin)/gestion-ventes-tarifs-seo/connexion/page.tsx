@@ -1,11 +1,27 @@
 import { redirect } from "next/navigation";
 import Logo from "@/components/Logo";
 import { utilisateurCourant } from "@/lib/admin/session";
+import { suiteSure } from "@/lib/admin/suite";
 import FormulaireConnexion from "./FormulaireConnexion";
 
-/** Déjà connecté : on ne montre pas un formulaire à qui n'en a pas besoin. */
-export default async function PageConnexion() {
-  if (await utilisateurCourant()) redirect("/gestion-ventes-tarifs-seo/");
+/**
+ * La connexion au back-office.
+ *
+ * Déjà connecté : on ne montre pas un formulaire à qui n'en a pas besoin.
+ *
+ * `suite` ramène là où l'on allait — la fiche d'un client, depuis le lien de
+ * l'e-mail « à valider ». Il ne peut désigner qu'une page du back-office
+ * (`lib/admin/suite.ts`) : une adresse de retour prise dans l'URL est sinon la
+ * porte d'une redirection vers un faux écran de connexion.
+ */
+export default async function PageConnexion({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const { suite: brute } = await searchParams;
+  const suite = suiteSure(brute);
+  if (await utilisateurCourant()) redirect(suite);
 
   const configure = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -21,12 +37,12 @@ export default async function PageConnexion() {
         <div className="rounded-xl border border-glacier-200 bg-white p-6 shadow-carte">
           <h1 className="font-display text-xl text-alpine">Back-office</h1>
           <p className="mt-1 text-sm text-alpine-600">
-            Les courses à venir et la grille tarifaire.
+            Les réservations, les demandes des clients et la grille tarifaire.
           </p>
 
           <div className="mt-6">
             {configure ? (
-              <FormulaireConnexion />
+              <FormulaireConnexion suite={suite} />
             ) : (
               /*
                 Sans Supabase, il n'y a pas d'authentification possible — et un

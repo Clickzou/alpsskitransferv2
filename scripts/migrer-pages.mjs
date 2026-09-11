@@ -59,6 +59,12 @@ const REFONDUES = new Set([
   // La FAQ : ses questions vivaient dans des accordéons Elementor, donc hors
   // du texte repris. Les régénérer redonnerait des réponses sans questions.
   "general-questions",
+  // Les conditions de vente, les conditions générales et la confidentialité :
+  // corrigées le 11 septembre 2026 — délai de modification, annulation, tarif
+  // d'attente, e-mail de contact. Le WordPress contredisait le site.
+  "ticketing-conditions",
+  "terms-conditions-alps-ski-transfers",
+  "privacy",
 ]);
 
 const migration = await readFile(

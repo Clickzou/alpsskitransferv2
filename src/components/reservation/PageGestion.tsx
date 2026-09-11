@@ -88,6 +88,9 @@ export default async function PageGestion({
               jeton={jeton ?? ""}
               langue={lang}
               tardif={dossier.etat === "tardive"}
+              modifiable={
+                dossier.etat === "ouverte" ? dossier.modifiable : { aller: false, retour: false }
+              }
               lienContact={contact}
             />
           ) : (
