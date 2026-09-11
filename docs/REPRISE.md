@@ -102,6 +102,28 @@ une entreprise individuelle), le format exact de ses numéros, et s'il continue
 de facturer à la main en parallèle — deux systèmes sur une même série de
 numéros finiraient par se chevaucher.
 
+**Prêt, interrupteur éteint** (`FACTURES_ACTIVES`). Stripe Checkout émet la
+facture au paiement, TVA 10 % **incluse** (`STRIPE_TAUX_TVA` — taux créé en mode
+test, `txr_1UEYiGAr5ktb0ZHxR9SVMF5f`, posé sur Vercel) ; le lien part dans
+l'e-mail de confirmation, dans la langue du client ; l'onglet **Factures** liste
+le mois avec ses totaux et l'export CSV pour le comptable ; la fiche client
+montre la facture de sa course. Rien n'est recopié en base : Stripe fait foi.
+
+Pour allumer, dans cet ordre :
+
+1. Les quatre réponses de Nassim (Suisse et Italie, « EI », format des
+   numéros, factures manuelles en parallèle).
+2. Stripe → Paramètres : **Entreprise** (dénomination, adresse, téléphone,
+   e-mail) ; **ID fiscaux** FR87889065165 ; **Factures** — numérotation au
+   niveau du compte, prochain numéro **199** (préfixe selon sa réponse), pied de
+   page avec le SIREN et « EI » ; **E-mails clients** — envoi des factures
+   payées (Stripe n'envoie rien en mode test).
+3. Un paiement de test (4242…) avec `FACTURES_ACTIVES=oui` **en Preview
+   d'abord** : si Stripe refuse un paramètre, c'est la page de paiement qui
+   tombe — on le voit là, pas chez un client.
+4. `FACTURES_ACTIVES=oui` en Production. Au passage en réel, recréer le taux
+   de TVA en mode live et remplacer `STRIPE_TAUX_TVA`.
+
 ## Accès au back-office — fermé le 11 septembre
 
 `https://alpsskitransferv2.vercel.app/gestion-ventes-tarifs-seo/`, deux comptes

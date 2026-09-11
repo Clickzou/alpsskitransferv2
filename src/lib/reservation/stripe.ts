@@ -15,6 +15,19 @@ export function stripeConfigure(): boolean {
   return Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
+/**
+ * Les factures sont-elles émises ?
+ *
+ * Interrupteur `FACTURES_ACTIVES=oui`, et le taux de TVA créé dans Stripe
+ * (`STRIPE_TAUX_TVA` — 10 %, inclus dans les prix affichés). **Éteint par
+ * défaut** : tant que la dénomination, la numérotation et la TVA ne sont pas
+ * réglées avec l'exploitant, mieux vaut pas de facture qu'une facture fausse —
+ * et une facture émise ne se retire pas, elle s'annule par un avoir.
+ */
+export function facturesActives(): boolean {
+  return process.env.FACTURES_ACTIVES === "oui" && Boolean(process.env.STRIPE_TAUX_TVA?.trim());
+}
+
 /** Une course sur la page de paiement. Montant en euros, converti en centimes ici. */
 export interface LigneCheckout {
   intitule: string;
@@ -80,6 +93,28 @@ export async function creerSessionCheckout(
     corps.set(`metadata[${cle}]`, valeur);
   }
 
+  /*
+    La facture — décision de JC et de l'exploitant, 11 septembre 2026.
+
+    Stripe l'émet lui-même après le paiement : numérotation continue, avoirs sur
+    les remboursements, PDF dans la langue de la page. La TVA à 10 % est
+    **incluse** : le client paie exactement le prix affiché, la facture en
+    détaille le HT et la TVA. Le client professionnel coche « j'achète pour une
+    entreprise » et donne sa raison sociale et son numéro de TVA. La référence
+    suit dans les métadonnées de la facture : c'est elle qui relie la facture à
+    sa course, dans l'onglet Factures comme dans la fiche du client.
+  */
+  const factures = facturesActives();
+  if (factures) {
+    const taux = process.env.STRIPE_TAUX_TVA!.trim();
+    demande.lignes.forEach((_, i) => corps.set(`line_items[${i}][tax_rates][0]`, taux));
+    corps.set("invoice_creation[enabled]", "true");
+    corps.set("invoice_creation[invoice_data][metadata][reference]", demande.reference);
+    corps.set("tax_id_collection[enabled]", "true");
+    const langue = demande.metadonnees?.langue;
+    if (langue && ["en", "fr", "de", "it"].includes(langue)) corps.set("locale", langue);
+  }
+
   try {
     const reponse = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
@@ -97,7 +132,8 @@ export async function creerSessionCheckout(
           lisible. Avec le montant, un changement produit une nouvelle session et
           un double clic n'en produit toujours qu'une.
         */
-        "Idempotency-Key": `${demande.reference}-${total(demande.lignes)}`,
+        // L'interrupteur des factures change les paramètres : il change donc la clé.
+        "Idempotency-Key": `${demande.reference}-${total(demande.lignes)}${factures ? "-f" : ""}`,
       },
       body: corps,
       cache: "no-store",
@@ -149,4 +185,34 @@ export function signatureValide(
   const a = Buffer.from(attendue, "utf8");
   const b = Buffer.from(signature, "utf8");
   return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/** Ce que le site garde d'une facture Stripe : son numéro et ses liens. */
+export interface FactureStripe {
+  id: string;
+  numero: string | null;
+  /** La page hébergée par Stripe, où le client voit et télécharge sa facture. */
+  url: string | null;
+  pdf: string | null;
+}
+
+/** Relit une facture Stripe — `null` si Stripe n'est pas configuré ou ne répond pas. */
+export async function lireFacture(id: string): Promise<FactureStripe | null> {
+  if (!stripeConfigure()) return null;
+  try {
+    const reponse = await fetch(`https://api.stripe.com/v1/invoices/${encodeURIComponent(id)}`, {
+      headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+      cache: "no-store",
+    });
+    if (!reponse.ok) return null;
+    const f = (await reponse.json()) as {
+      id: string;
+      number: string | null;
+      hosted_invoice_url: string | null;
+      invoice_pdf: string | null;
+    };
+    return { id: f.id, numero: f.number, url: f.hosted_invoice_url, pdf: f.invoice_pdf };
+  } catch {
+    return null;
+  }
 }

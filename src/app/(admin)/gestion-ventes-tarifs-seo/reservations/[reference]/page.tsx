@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { aValider, decrire, heure, sensDeLaCourse } from "@/lib/admin/affichage";
 import { courseParReference, statutLisible } from "@/lib/admin/courses";
+import { factureDeReference } from "@/lib/admin/factures";
+import { facturesActives } from "@/lib/reservation/stripe";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { actionRefuser, actionValider } from "../../actions";
@@ -93,6 +95,8 @@ export default async function FicheReservation({
 
   const course = await courseParReference(reference);
   if (!course) notFound();
+  // La facture de la course, lue chez Stripe par sa référence.
+  const facture = await factureDeReference(course.reference);
 
   const { fait } = await searchParams;
   const retour = typeof fait === "string" ? RETOURS[fait] : undefined;
@@ -214,15 +218,29 @@ export default async function FicheReservation({
           {course.payeLe ? <Info libelle="Payée le">{heure(course.payeLe)}</Info> : null}
         </Bloc>
 
-        <Bloc titre="Factures">
-          {/*
-            Le module de facturation attend les réponses de l'exploitant sur la
-            TVA (franchise ou 10 %, trajets suisses et italiens). La place est
-            prise ici pour que la fiche n'ait pas à changer de forme ensuite.
-          */}
-          <p className="text-alpine-600">
-            Aucune facture émise : la facturation automatique n’est pas encore en place.
-          </p>
+        <Bloc titre="Facture">
+          {facture ? (
+            <>
+              <p className="font-mono">{facture.numero}</p>
+              <p>
+                {facture.statut} · {facture.ttc.toFixed(2).replace(".", ",")} € TTC, dont{" "}
+                {facture.tva.toFixed(2).replace(".", ",")} € de TVA
+              </p>
+              {facture.pdf ? (
+                <p>
+                  <a className="text-marque underline underline-offset-2" href={facture.pdf}>
+                    Télécharger le PDF
+                  </a>
+                </p>
+              ) : null}
+            </>
+          ) : (
+            <p className="text-alpine-600">
+              {facturesActives()
+                ? "Aucune facture pour cette course."
+                : "Aucune facture : la facturation automatique n’est pas encore allumée."}
+            </p>
+          )}
         </Bloc>
       </div>
 

@@ -13,6 +13,7 @@ import { actionDeconnexion } from "./actions";
  */
 const ONGLETS = [
   { cle: "reservations", nom: "Réservations", href: "/gestion-ventes-tarifs-seo/" },
+  { cle: "factures", nom: "Factures", href: "/gestion-ventes-tarifs-seo/factures/" },
 ];
 
 export default function Entete({

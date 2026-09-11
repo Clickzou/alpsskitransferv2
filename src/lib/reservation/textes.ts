@@ -962,6 +962,8 @@ export const CHEMIN_PANIER: Record<Lang, string> = {
  */
 export interface TextesEmail {
   sujet: (reference: string) => string;
+  /** Le lien vers la facture, quand la facturation est allumée. */
+  facture: (url: string) => string;
   /**
    * `lien` est le lien signé « gérer ma réservation ».
    *
@@ -980,6 +982,7 @@ export interface TextesEmail {
 export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
   en: {
     sujet: (reference) => `Your transfer is confirmed — ${reference}`,
+    facture: (url) => `Your invoice: ${url}`,
     corps: ({ reference, trajet, montant, lien }) =>
       [
         "Your transfer is booked and paid.",
@@ -1010,6 +1013,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
 
   fr: {
     sujet: (reference) => `Votre transfert est confirmé — ${reference}`,
+    facture: (url) => `Votre facture : ${url}`,
     corps: ({ reference, trajet, montant, lien }) =>
       [
         "Votre transfert est réservé et payé.",
@@ -1041,6 +1045,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
 
   de: {
     sujet: (reference) => `Ihr Transfer ist bestätigt — ${reference}`,
+    facture: (url) => `Ihre Rechnung: ${url}`,
     corps: ({ reference, trajet, montant, lien }) =>
       [
         "Ihr Transfer ist gebucht und bezahlt.",
@@ -1071,6 +1076,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
 
   it: {
     sujet: (reference) => `Il tuo transfer è confermato — ${reference}`,
+    facture: (url) => `La tua fattura: ${url}`,
     corps: ({ reference, trajet, montant, lien }) =>
       [
         "Il tuo transfer è prenotato e pagato.",

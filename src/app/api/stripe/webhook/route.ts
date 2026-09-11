@@ -6,7 +6,7 @@ import { SITE } from "@/data/site";
 import { envoyer } from "@/lib/reservation/email";
 import { origineSite } from "@/lib/reservation/config";
 import { lienGestion } from "@/lib/reservation/gestion";
-import { signatureValide } from "@/lib/reservation/stripe";
+import { lireFacture, signatureValide } from "@/lib/reservation/stripe";
 import { corpsAvis, sujetAvis, textesEmail } from "@/lib/reservation/textes";
 import { inserer, lire, mettreAJour } from "@/lib/reservation/supabase";
 
@@ -30,6 +30,8 @@ interface SessionStripe {
   amount_total: number | null;
   currency: string | null;
   payment_intent: string | null;
+  /** La facture émise par Stripe, quand la facturation est allumée. */
+  invoice?: string | null;
   metadata?: Record<string, string>;
 }
 
@@ -201,6 +203,13 @@ export async function POST(requete: Request) {
         ? lienGestion(origineSite(requete), reference, session.metadata?.langue)
         : null;
 
+    /*
+      La facture, quand elle est émise (`facturesActives`). Son lien part dans
+      cet e-mail, dans la langue du client : Stripe peut aussi l'envoyer
+      lui-même — c'est un réglage du compte —, mais ce lien n'en dépend pas.
+    */
+    const facture = session.invoice ? await lireFacture(session.invoice) : null;
+
     await envoyer({
       destinataire: email,
       sujet: mots.sujet(reference ?? ""),
@@ -211,6 +220,7 @@ export async function POST(requete: Request) {
           montant: montant != null ? `${montant} €` : undefined,
           lien: lien ?? undefined,
         }),
+        ...(facture?.url ? ["", mots.facture(facture.url)] : []),
         "",
         `${SITE.nom} — ${SITE.url}`,
       ].join("\n"),
