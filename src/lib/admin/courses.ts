@@ -1,3 +1,4 @@
+import { filtreRecherche, type Critere } from "@/lib/admin/recherche";
 import { airportParSlug } from "@/lib/airports";
 import { lire } from "@/lib/reservation/supabase";
 import { resortParSlug } from "@/lib/resorts";
@@ -265,6 +266,22 @@ export async function courseParReference(reference: string): Promise<Course | nu
   if (!ligne) return null;
   const [course] = await avecHistorique([versCourse(ligne)]);
   return course ?? null;
+}
+
+/**
+ * Les courses qui répondent à une recherche, dans toute la base — ou `null`
+ * quand il n'y a rien à chercher. Tous statuts confondus : le client qui
+ * rappelle a peut-être abandonné son paiement, et c'est justement pour ça.
+ */
+export async function rechercherCourses(critere: Critere): Promise<Course[] | null> {
+  const filtre = filtreRecherche(critere);
+  if (!filtre) return null;
+  const lignes = await lire<LigneBase>("reservations", {
+    tri: { colonne: "aller", croissant: true },
+    parametres: { and: filtre },
+    limite: 200,
+  });
+  return avecHistorique(lignes.map(versCourse));
 }
 
 /** Les courses passées, la plus récente en tête. */

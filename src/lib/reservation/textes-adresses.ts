@@ -29,6 +29,9 @@ export interface TextesAdresses {
   /** Sur la page de confirmation, juste après le paiement. */
   chapoConfirmation: string;
   boutonConfirmation: string;
+  /** Le rappel automatique, trois jours avant, quand une adresse manque encore. */
+  relanceSujet: (reference: string) => string;
+  relanceCorps: (d: { trajet: string; quand: string; lien: string }) => string;
 }
 
 export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
@@ -54,6 +57,16 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     chapoConfirmation:
       "One step left: tell us your address in resort, so your driver knows where to drop you off and pick you up.",
     boutonConfirmation: "Add my address",
+    relanceSujet: (reference) => `Your address in resort is still missing — ${reference}`,
+    relanceCorps: ({ trajet, quand, lien }) =>
+      [
+        "Your transfer is in three days, and we still don’t have your address in resort:",
+        "",
+        `${trajet} — ${quand}`,
+        "",
+        "Your driver needs it to drop you off and to pick you up. It takes a minute:",
+        lien,
+      ].join("\n"),
   },
 
   fr: {
@@ -79,6 +92,16 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     chapoConfirmation:
       "Il reste une étape : votre adresse en station, pour que votre chauffeur sache où vous déposer et où venir vous chercher.",
     boutonConfirmation: "Indiquer mon adresse",
+    relanceSujet: (reference) => `Il nous manque votre adresse en station — ${reference}`,
+    relanceCorps: ({ trajet, quand, lien }) =>
+      [
+        "Votre transfert a lieu dans trois jours, et il nous manque encore votre adresse en station :",
+        "",
+        `${trajet} — ${quand}`,
+        "",
+        "Votre chauffeur en a besoin pour vous déposer et venir vous chercher. C’est l’affaire d’une minute :",
+        lien,
+      ].join("\n"),
   },
 
   de: {
@@ -105,6 +128,16 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     chapoConfirmation:
       "Ein Schritt fehlt noch: Ihre Adresse im Skiort, damit Ihr Fahrer weiß, wo er Sie absetzt und wieder abholt.",
     boutonConfirmation: "Meine Adresse angeben",
+    relanceSujet: (reference) => `Ihre Adresse im Skiort fehlt noch — ${reference}`,
+    relanceCorps: ({ trajet, quand, lien }) =>
+      [
+        "Ihr Transfer ist in drei Tagen, und uns fehlt noch Ihre Adresse im Skiort:",
+        "",
+        `${trajet} — ${quand}`,
+        "",
+        "Ihr Fahrer braucht sie, um Sie abzusetzen und wieder abzuholen. Es dauert eine Minute:",
+        lien,
+      ].join("\n"),
   },
 
   it: {
@@ -130,5 +163,15 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     chapoConfirmation:
       "Manca un ultimo passo: il tuo indirizzo in località, perché l’autista sappia dove lasciarti e dove venirti a prendere.",
     boutonConfirmation: "Indica il mio indirizzo",
+    relanceSujet: (reference) => `Ci manca ancora il tuo indirizzo in località — ${reference}`,
+    relanceCorps: ({ trajet, quand, lien }) =>
+      [
+        "Il tuo transfer è tra tre giorni e ci manca ancora il tuo indirizzo in località:",
+        "",
+        `${trajet} — ${quand}`,
+        "",
+        "Il tuo autista ne ha bisogno per lasciarti e venirti a prendere. Ci vuole un minuto:",
+        lien,
+      ].join("\n"),
   },
 };

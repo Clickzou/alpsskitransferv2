@@ -118,6 +118,11 @@ export async function lire<T>(
     tri?: { colonne: string; croissant?: boolean };
     filtres?: { colonne: string; operateur: string; valeur: string }[];
     limite?: number;
+    /**
+     * Des paramètres PostgREST tels quels — `and=(…)`, `or=(…)` — pour les
+     * filtres qui combinent plusieurs colonnes, comme la recherche du back-office.
+     */
+    parametres?: Record<string, string>;
   } = {},
 ): Promise<T[]> {
   if (!supabaseConfigure()) return [];
@@ -133,6 +138,9 @@ export async function lire<T>(
     }
     for (const filtre of options.filtres ?? []) {
       url.searchParams.set(filtre.colonne, `${filtre.operateur}.${filtre.valeur}`);
+    }
+    for (const [cle, valeur] of Object.entries(options.parametres ?? {})) {
+      url.searchParams.set(cle, valeur);
     }
     if (options.limite) url.searchParams.set("limit", String(options.limite));
 

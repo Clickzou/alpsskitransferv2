@@ -11,6 +11,12 @@ import { cheminConfirmation, origineSite } from "@/lib/reservation/config";
 import { departImminent, jetonGestion } from "@/lib/reservation/gestion";
 import { creerSessionCheckout, stripeConfigure } from "@/lib/reservation/stripe";
 import { corpsAvis, sujetAvis } from "@/lib/reservation/textes";
+import {
+  dateClient,
+  montantClient,
+  recapDemande,
+  textesDemande,
+} from "@/lib/reservation/textes-demande";
 import { inserer, mettreAJour, supabaseConfigure } from "@/lib/reservation/supabase";
 
 /**
@@ -141,6 +147,17 @@ export async function POST(requete: Request) {
   const email = propre(client.email, 160);
   const telephone = propre(client.telephone, 40);
   /*
+    La langue vient du tunnel ; elle n'est pas un identifiant, seulement un
+    aiguillage d'affichage — d'où la liste blanche plutôt qu'une confiance
+    accordée à ce qui arrive. Elle s'enregistre avec la réservation : la relance
+    du matin écrit au client sans session Stripe, depuis la base seule.
+  */
+  const langue = ["en", "fr", "de", "it"].includes(String(corps.langue))
+    ? String(corps.langue)
+    : "en";
+  // Les e-mails au client partent dans cette langue ; ceux de l'exploitant restent en français.
+  const motsClient = textesDemande(langue);
+  /*
     L'adresse en station est facultative depuis le 10 septembre 2026.
 
     Elle était exigée parce que c'est elle qui dit où déposer le client. Mais
@@ -218,6 +235,7 @@ export async function POST(requete: Request) {
       bagages_ski: s.skis,
       enfants: phraseEnfants(client, Boolean(s.retour)),
       message: propre(client.message, 2000),
+      langue,
     };
     const enregistreeSurMesure = await inserer("reservations", ligneSurMesure);
     if (!enregistreeSurMesure && !supabaseConfigure() && !emailConfigure()) {
@@ -245,13 +263,27 @@ export async function POST(requete: Request) {
     await Promise.all([
       envoyer({
         destinataire: email,
-        sujet: `Your transfer request ${ref}`,
+        sujet: motsClient.sujetSurMesure(ref),
         texte: [
-          `Thank you, ${nom}.`,
+          ...motsClient.corpsSurMesure(nom),
           "",
-          "This journey is quoted by hand rather than online — we will come back to you by email with a fixed price. Nothing has been charged.",
-          "",
-          recap,
+          recapDemande(langue, {
+            reference: ref,
+            trajet: `${s.depart} → ${s.arrivee}`,
+            aller: dateClient(langue, s.aller),
+            retour: s.retour ? dateClient(langue, s.retour) : null,
+            trajetRetour: null,
+            vehicule: null,
+            vehiculeRetour: null,
+            passagers: s.passagers,
+            passagersRetour: null,
+            bagages: s.bagages,
+            skis: s.skis,
+            adresse,
+            vol: ligneSurMesure.vol,
+            message: ligneSurMesure.message,
+            total: null,
+          }),
           "",
           `${SITE.nom} — ${SITE.url}`,
         ].join("\n"),
@@ -358,6 +390,7 @@ export async function POST(requete: Request) {
     bagages_ski: Number.isInteger(client.skis) ? client.skis : 0,
     enfants: phraseEnfants(client, Boolean(demande.retour)),
     message: propre(client.message, 2000),
+    langue,
   };
 
   const enregistree = await inserer("reservations", ligne);
@@ -395,32 +428,6 @@ export async function POST(requete: Request) {
     paye: false,
   };
 
-  const recapitulatif = [
-    `Reference: ${ref}`,
-    `Journey: ${intitule}`,
-    `Outbound: ${heure(demande.aller)}`,
-    demande.retour
-      ? `Return: ${heure(demande.retour)}${
-          trajetRetour(demande) ? ` — ${trajetRetour(demande)}` : ""
-        }`
-      : null,
-    `Vehicle: ${demande.categorie} — ${demande.passagers} passenger(s)`,
-    demande.categorieRetour && demande.categorieRetour !== demande.categorie
-      ? `Return vehicle: ${demande.categorieRetour}`
-      : null,
-    demande.passagersRetour && demande.passagersRetour !== demande.passagers
-      ? `Return journey: ${demande.passagersRetour} passenger(s)`
-      : null,
-    `Total: €${devis.total}${demande.retour ? " for both journeys" : ""}`,
-    adresse ? `Address in resort: ${adresse}` : "Address in resort: to be confirmed",
-    ligne.vol ? `Flight: ${ligne.vol}` : null,
-    ligne.bagages_ski ? `Ski or board bags: ${ligne.bagages_ski}` : null,
-    ligne.enfants ? `Children: ${ligne.enfants}` : null,
-    ligne.message ? `Notes: ${ligne.message}` : null,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
   /*
     --- Paiement, quand le barème est validé -----------------------------------
 
@@ -440,14 +447,6 @@ export async function POST(requete: Request) {
   }
   if (devis.encaissable && stripeConfigure() && !perteEnBase) {
     const origine = origineSite(requete);
-    /*
-      La langue vient du tunnel ; elle n'est pas un identifiant, seulement un
-      aiguillage d'affichage — d'où la liste blanche plutôt qu'une confiance
-      accordée à ce qui arrive.
-    */
-    const langue = ["en", "fr", "de", "it"].includes(String(corps.langue))
-      ? String(corps.langue)
-      : "en";
     const session = await creerSessionCheckout({
       reference: ref,
       lignes: [
@@ -489,14 +488,33 @@ export async function POST(requete: Request) {
   const notifications = await Promise.all([
     envoyer({
       destinataire: email,
-      sujet: `Your transfer request ${ref} — ${intitule}`,
+      sujet: motsClient.sujetSansPaiement(ref, intitule),
       texte: [
-        `Thank you, ${nom}.`,
+        ...motsClient.corpsSansPaiement(nom),
         "",
-        "We have your transfer request and will confirm it by email shortly.",
-        "Nothing has been charged.",
-        "",
-        recapitulatif,
+        recapDemande(langue, {
+          reference: ref,
+          trajet: intitule,
+          aller: dateClient(langue, demande.aller),
+          retour: demande.retour ? dateClient(langue, demande.retour) : null,
+          trajetRetour: trajetRetour(demande),
+          vehicule: demande.categorie,
+          vehiculeRetour:
+            demande.categorieRetour && demande.categorieRetour !== demande.categorie
+              ? demande.categorieRetour
+              : null,
+          passagers: demande.passagers,
+          passagersRetour:
+            demande.passagersRetour && demande.passagersRetour !== demande.passagers
+              ? demande.passagersRetour
+              : null,
+          bagages: null,
+          skis: ligne.bagages_ski ?? 0,
+          adresse,
+          vol: ligne.vol,
+          message: ligne.message,
+          total: montantClient(langue, devis.total, Boolean(demande.retour)),
+        }),
         "",
         `${SITE.nom} — ${SITE.url}`,
       ].join("\n"),

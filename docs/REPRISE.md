@@ -11,11 +11,28 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 # Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
-## À FAIRE EN PREMIER — la migration `adresses`, puis le déploiement
+## À FAIRE EN PREMIER — la migration `langue`, puis le déploiement
 
-**Dans cet ordre.** Exécuter `docs/supabase-migration-adresses.sql` (deux
-colonnes : `adresse_retour`, `vol_retour`) avant de déployer le code qui les
-écrit — sans elles, PostgREST refuse toute la mise à jour.
+**Dans cet ordre, impérativement.** Exécuter `docs/supabase-migration-langue.sql`
+avant de déployer : `/api/reservation` écrit désormais la langue du client, et
+sans la colonne PostgREST refuse **toute la ligne** — plus aucune réservation
+ne s'enregistrerait.
+
+**La relance du matin** (`/api/relances`, déclarée dans `vercel.json`, tous les
+jours à 7 h UTC) :
+
+- au client, un rappel dans sa langue trois jours avant sa prochaine prise en
+  charge s'il manque une adresse — une seule fois, noté dans l'historique ;
+- à Nassim, le récapitulatif des courses payées des 48 prochaines heures
+  encore sans adresse, avec le lien vers chaque fiche. Rien si rien ne manque.
+
+Elle est fermée par `CRON_SECRET` (posé sur Vercel, Production) : sans lui
+elle répond 404, sans quoi n'importe qui pourrait faire écrire à tous les
+clients. Les règles sont dans `lib/reservation/relances.ts`, testées.
+
+## ~~La migration `adresses`~~ — passée le 11 septembre
+
+`adresse_retour` et `vol_retour` sont en base.
 
 **L'adresse en station se demande après le paiement** (décision de JC,
 11 septembre) : obligatoire, mais hors du tunnel pour ne pas alourdir l'achat.
@@ -33,8 +50,8 @@ colonnes : `adresse_retour`, `vol_retour`) avant de déployer le code qui les
 - Back-office : « MANQUANTE — à demander au client » en rouge dans les cartes,
   et « adresse manquante » sur la ligne repliée.
 
-**À faire ensuite, si besoin** : une relance automatique au client à J-3 et une
-alerte à Nassim la veille (tâche planifiée Vercel).
+La relance automatique — J-3 au client, récapitulatif à Nassim — est en place :
+voir plus haut.
 
 ## ~~La migration `modifications`~~ — passée le 11 septembre
 
@@ -71,9 +88,19 @@ Ce que le 11 septembre a changé, sur décisions de JC :
 validation, le refus, les deux e-mails au client, et le lien de l'e-mail
 « À VALIDER » session ouverte puis session fermée.
 
-**En attente de Nassim** : la facturation. Il faut savoir s'il est en franchise
-de TVA ou à 10 %, comment traiter les trajets suisses et italiens, et sa
-dénomination exacte (« EI »). Recommandation rendue : factures Stripe Checkout.
+**Facturation — réponses de Nassim, 11 septembre** : il facture la **TVA à
+10 %**, numéro **FR87889065165**. En-tête : **NM-TRANSPORTS 73**, adresse,
+SIREN, TVA, téléphone, e-mail. Sa numérotation en est à **198** : la prochaine
+facture est la **199**. Un **export mensuel** convient à son comptable.
+
+Solution retenue : les factures de Stripe Checkout, avec un taux de TVA de
+10 % **inclus** dans les prix affichés (TTC), le numéro de TVA et le SIREN sur
+la facture, et la place « Factures » de la fiche client reliée à Stripe.
+**Encore à trancher avec lui** : les trajets qui passent par la Suisse ou
+restent en Italie, la mention « EI » après la dénomination (obligatoire pour
+une entreprise individuelle), le format exact de ses numéros, et s'il continue
+de facturer à la main en parallèle — deux systèmes sur une même série de
+numéros finiraient par se chevaucher.
 
 ## Accès au back-office — fermé le 11 septembre
 

@@ -42,6 +42,9 @@ const STATUTS: Record<string, string> = {
 
 /** Une ligne d'historique, lisible d'un coup d'œil : ce qui a bougé, d'où, vers où, et son sort. */
 export function decrire(m: Modification): string {
+  if (m.champ === "relance") {
+    return "Rappel automatique envoyé au client : adresse manquante";
+  }
   if (m.champ === "demande") {
     return `Message à moins de 24 h : « ${m.nouveau ?? "sans message"} »`;
   }

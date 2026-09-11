@@ -7,11 +7,18 @@ import {
   heure,
   sensDeLaCourse,
 } from "@/lib/admin/affichage";
-import { coursesAVenir, coursesPassees, statutLisible, type Course } from "@/lib/admin/courses";
+import {
+  coursesAVenir,
+  coursesPassees,
+  rechercherCourses,
+  statutLisible,
+  type Course,
+} from "@/lib/admin/courses";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
 import CarteSens from "./CarteSens";
+import Recherche from "./Recherche";
 import Entete from "./Entete";
 
 /**
@@ -197,7 +204,11 @@ function Tableau({ titre, courses, vide }: { titre?: string; courses: Course[]; 
   );
 }
 
-export default async function PageAdmin() {
+export default async function PageAdmin({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const utilisateur = await utilisateurCourant();
   if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
 
@@ -215,11 +226,27 @@ export default async function PageAdmin() {
   const aAssurer = aVenir.filter((course) => course.statut !== "en-attente-paiement");
   const nonAboutis = aVenir.filter((course) => course.statut === "en-attente-paiement");
 
+  // Une recherche en cours remplace la vue du jour : elle porte sur toute la base.
+  const params = await searchParams;
+  const texte = (valeur: unknown) => (typeof valeur === "string" ? valeur : "");
+  const critere = { q: texte(params.q), du: texte(params.du), au: texte(params.au) };
+  const resultats = await rechercherCourses(critere);
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
       <Entete email={utilisateur.email} actif="reservations" />
       <h1 className="sr-only">Réservations</h1>
 
+      <Recherche q={critere.q} du={critere.du} au={critere.au} />
+
+      {resultats ? (
+        <Tableau
+          titre="Résultats"
+          courses={resultats}
+          vide="Aucune réservation ne correspond à cette recherche."
+        />
+      ) : (
+        <>
       {demandes.length > 0 ? (
         <section className="mt-8">
           <h2 className="font-display text-lg text-marque">
@@ -279,6 +306,8 @@ export default async function PageAdmin() {
           <Tableau courses={nonAboutis} vide="Aucun paiement non abouti." />
         </details>
       ) : null}
+        </>
+      )}
     </main>
   );
 }

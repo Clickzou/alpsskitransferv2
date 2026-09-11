@@ -33,6 +33,7 @@ create table if not exists reservations (
   adresse       text not null,                     -- adresse exacte en station, à l'aller
   adresse_retour text,                             -- null = même adresse qu'à l'aller
   vol_retour    text,                              -- demandés après le paiement
+  langue        text,                              -- en · fr · de · it, pour écrire au client
   bagages_ski   smallint not null default 0,
   enfants       text,                              -- âges, pour les bons sièges
   message       text,
