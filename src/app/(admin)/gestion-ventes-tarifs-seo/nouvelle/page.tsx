@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { nouvelleReference } from "@/lib/reservation/telephone";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { LIEUX } from "@/lib/reservation/lieux";
 import { facturesActives } from "@/lib/reservation/stripe";
@@ -33,7 +35,13 @@ export default async function PageNouvelle() {
     <main className="mx-auto max-w-5xl px-4 py-8">
       <Entete email={utilisateur.email} actif="reservations" />
 
-      <h1 className="mt-8 font-display text-2xl text-alpine">Nouvelle réservation — prise au téléphone</h1>
+      <p className="mt-6 text-sm">
+        <Link href="/gestion-ventes-tarifs-seo/" className="text-alpine-700 underline underline-offset-2">
+          ← Toutes les réservations
+        </Link>
+      </p>
+
+      <h1 className="mt-4 font-display text-2xl text-alpine">Nouvelle réservation — prise au téléphone</h1>
       <p className="mt-2 max-w-prose text-sm leading-relaxed text-alpine-600">
         Les mêmes champs, les mêmes contrôles et le même prix que sur le site. Le client
         reçoit un e-mail dans sa langue, avec le moyen de payer et son lien pour donner son
@@ -47,6 +55,7 @@ export default async function PageNouvelle() {
         aeroports={liste("aeroport")}
         stations={liste("station")}
         ibanConfigure={Boolean(process.env.IBAN_VIREMENT?.trim())}
+        reference={nouvelleReference()}
       />
     </main>
   );

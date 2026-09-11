@@ -258,12 +258,25 @@ function versCourse(ligne: LigneBase): Course {
  * aujourd'hui, et où. Le passé se consulte, il ne s'affiche pas d'office.
  */
 export async function coursesAVenir(limite = 200): Promise<Course[]> {
+  /*
+    À venir = l'aller **ou** le retour est encore à faire.
+
+    Seul l'aller comptait : le client déjà en station disparaissait dans
+    « Passées » avec son retour — et avec la demande qu'il faisait justement
+    pour décaler ce retour, le cas le plus fréquent (revue du 11 septembre
+    2026). La liste se trie sur la prochaine prise en charge.
+  */
+  const maintenant = new Date();
+  const iso = maintenant.toISOString();
   const lignes = await lire<LigneBase>("reservations", {
     tri: { colonne: "aller", croissant: true },
-    filtres: [{ colonne: "aller", operateur: "gte", valeur: new Date().toISOString() }],
+    parametres: { or: `(aller.gte."${iso}",retour.gte."${iso}")` },
     limite,
   });
-  return avecHistorique(lignes.map(versCourse));
+  const courses = await avecHistorique(lignes.map(versCourse));
+  const prochaine = (c: Course) =>
+    c.aller.getTime() >= maintenant.getTime() || !c.retour ? c.aller.getTime() : c.retour.getTime();
+  return courses.sort((a, b) => prochaine(a) - prochaine(b));
 }
 
 /**
@@ -300,9 +313,11 @@ export async function rechercherCourses(critere: Critere): Promise<Course[] | nu
 
 /** Les courses passées, la plus récente en tête. */
 export async function coursesPassees(limite = 100): Promise<Course[]> {
+  // Passée = l'aller est fait, et le retour aussi (ou il n'y en a pas).
+  const iso = new Date().toISOString();
   const lignes = await lire<LigneBase>("reservations", {
     tri: { colonne: "aller", croissant: false },
-    filtres: [{ colonne: "aller", operateur: "lt", valeur: new Date().toISOString() }],
+    parametres: { and: `(aller.lt."${iso}",or(retour.is.null,retour.lt."${iso}"))` },
     limite,
   });
   return avecHistorique(lignes.map(versCourse));

@@ -36,7 +36,7 @@ describe("csvFactures", () => {
     tva: 59.36,
     ttc: 653,
     devise: "EUR",
-    statut: "payée",
+    statut: "Payée",
     pdf: null,
     url: null,
   };
@@ -44,6 +44,6 @@ describe("csvFactures", () => {
   it("s'ouvre dans Excel en français : point-virgule, virgule décimale, date jour/mois", () => {
     const csv = csvFactures([facture]);
     expect(csv.startsWith("﻿Numéro;Date;Client")).toBe(true);
-    expect(csv).toContain('199;12/09/2026;"Dupont; et fils";dupont@example.fr;AST-9EF8D6;593,64;59,36;653,00;EUR;payée;');
+    expect(csv).toContain('199;12/09/2026;"Dupont; et fils";dupont@example.fr;AST-9EF8D6;593,64;59,36;653,00;EUR;Payée;');
   });
 });

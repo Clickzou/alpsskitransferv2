@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { emailAutorise } from "@/lib/admin/acces";
+import { COOKIE_ACCES, COOKIE_RAFRAICHISSEMENT } from "@/lib/admin/jetons";
 
 /**
  * L'authentification du back-office, sur Supabase Auth, en REST.
@@ -37,8 +38,6 @@ import { emailAutorise } from "@/lib/admin/acces";
  * session dit **qui** consulte le back-office, elle n'est pas la clé du coffre.
  */
 
-const COOKIE_ACCES = "ast_admin";
-const COOKIE_RAFRAICHISSEMENT = "ast_admin_r";
 
 export interface Utilisateur {
   id: string;

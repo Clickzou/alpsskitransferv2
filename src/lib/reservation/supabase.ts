@@ -101,6 +101,46 @@ export async function mettreAJour(
 }
 
 /**
+ * Met à jour sous condition, et dit combien de lignes ont changé — `null` sur
+ * un refus.
+ *
+ * C'est ce qui permet de trancher une fois et une seule : `mettreAJour`
+ * répond « fait » même quand aucune ligne ne correspondait, si bien que deux
+ * clics simultanés sur « Valider » passaient tous deux, et envoyaient deux
+ * e-mails. Filtrée sur l'état attendu (« en attente », « pas encore payée »),
+ * la seconde requête trouve zéro ligne, et l'appelant s'arrête.
+ */
+export async function mettreAJourSi(
+  table: string,
+  filtre: Filtre | Filtre[],
+  champs: Record<string, unknown>,
+): Promise<number | null> {
+  if (!supabaseConfigure()) return null;
+
+  try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}`);
+    for (const f of Array.isArray(filtre) ? filtre : [filtre]) {
+      url.searchParams.set(f.colonne, `${f.operateur ?? "eq"}.${f.valeur}`);
+    }
+    const reponse = await fetch(url, {
+      method: "PATCH",
+      headers: entetes(),
+      body: JSON.stringify(champs),
+      cache: "no-store",
+    });
+    if (!reponse.ok) {
+      console.error(`[supabase] mise à jour conditionnelle refusée sur ${table}`, await reponse.text());
+      return null;
+    }
+    const lignes = (await reponse.json()) as unknown;
+    return Array.isArray(lignes) ? lignes.length : 0;
+  } catch (erreur) {
+    console.error(`[supabase] mise à jour conditionnelle impossible sur ${table}`, erreur);
+    return null;
+  }
+}
+
+/**
  * Lit des lignes d'une table, triées, avec un filtre optionnel.
  *
  * PostgREST prend ses paramètres dans l'URL : `select`, `order`, et un filtre

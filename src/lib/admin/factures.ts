@@ -46,10 +46,10 @@ interface FactureBrute {
 }
 
 const STATUTS: Record<string, string> = {
-  paid: "payée",
-  open: "à régler",
-  void: "annulée",
-  uncollectible: "irrécouvrable",
+  paid: "Payée",
+  open: "À régler",
+  void: "Annulée",
+  uncollectible: "Irrécouvrable",
 };
 
 /** « 2026-09 », ou `null` si la saisie n'est pas un mois. */
@@ -172,6 +172,17 @@ export async function factureDeReference(reference: string): Promise<Facture | n
   });
   const reponse = await lireStripe<{ data: FactureBrute[] }>(`/v1/invoices/search?${parametres}`);
   const facture = reponse?.data?.[0];
+  return facture ? versFacture(facture) : null;
+}
+
+/**
+ * Une facture par son identifiant — celui qu'une réservation téléphonique
+ * garde en base. Plus sûr que la recherche Stripe, qui met jusqu'à une minute
+ * à indexer une facture neuve : juste après la création, la fiche disait
+ * « aucune facture ».
+ */
+export async function factureParId(id: string): Promise<Facture | null> {
+  const facture = await lireStripe<FactureBrute>(`/v1/invoices/${encodeURIComponent(id)}`);
   return facture ? versFacture(facture) : null;
 }
 

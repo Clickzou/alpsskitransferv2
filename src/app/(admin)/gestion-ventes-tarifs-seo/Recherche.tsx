@@ -13,12 +13,20 @@ import { saisieAlpes } from "@/lib/temps";
  * aujourd'hui, demain, cette semaine. Les journées sont celles des Alpes.
  */
 export default function Recherche({ q, du, au }: { q: string; du: string; au: string }) {
-  const jour = (decalage: number) =>
-    saisieAlpes(new Date(Date.now() + decalage * 24 * 3600 * 1000)).slice(0, 10);
+  /*
+    Les jours se comptent sur le calendrier des Alpes, pas en tranches de
+    24 heures : la nuit du changement d'heure, « demain » tombait sinon sur
+    le surlendemain. Et « 7 prochains jours » va d'aujourd'hui à J+6.
+  */
+  const aujourdHui = saisieAlpes(new Date()).slice(0, 10);
+  const jour = (decalage: number) => {
+    const [annee, mois, date] = aujourdHui.split("-").map(Number);
+    return new Date(Date.UTC(annee, mois - 1, date + decalage)).toISOString().slice(0, 10);
+  };
   const raccourcis = [
     { nom: "Aujourd’hui", du: jour(0), au: jour(0) },
     { nom: "Demain", du: jour(1), au: jour(1) },
-    { nom: "7 prochains jours", du: jour(0), au: jour(7) },
+    { nom: "7 prochains jours", du: jour(0), au: jour(6) },
   ];
   const actif = Boolean(q || du || au);
 

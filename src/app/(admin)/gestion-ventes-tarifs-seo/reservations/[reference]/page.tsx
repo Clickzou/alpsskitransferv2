@@ -1,17 +1,26 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { aValider, decrire, heure, sensDeLaCourse } from "@/lib/admin/affichage";
-import { courseParReference, statutLisible } from "@/lib/admin/courses";
-import { factureDeReference } from "@/lib/admin/factures";
-import { facturesActives } from "@/lib/reservation/stripe";
+import {
+  adresseManquante,
+  aValider,
+  decrire,
+  euros,
+  heure,
+  pastilleStatut,
+  sensDeLaCourse,
+} from "@/lib/admin/affichage";
+import { courseParReference } from "@/lib/admin/courses";
+import { factureDeReference, factureParId } from "@/lib/admin/factures";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
+import { facturesActives } from "@/lib/reservation/stripe";
 import {
   actionRefuser,
   actionRenvoyerPaiement,
   actionValider,
   actionVirementRecu,
 } from "../../actions";
+import BoutonConfirmation from "../../BoutonConfirmation";
 import CarteSens from "../../CarteSens";
 import Entete from "../../Entete";
 
@@ -19,10 +28,13 @@ import Entete from "../../Entete";
  * La fiche d'un client — là où mène l'e-mail « à valider ».
  *
  * Demande de JC, 11 septembre 2026 : pour chaque client, toutes les
- * informations du formulaire, le suivi de ses changements d'horaire, et les
- * factures ; et la décision sur une demande en attente, sans avoir à chercher
- * la course dans une liste. La demande est donc **en tête**, avec ses deux
- * boutons : c'est pour elle qu'on ouvre la fiche depuis l'e-mail.
+ * informations du formulaire, le suivi de ses changements, la facture ; et la
+ * décision sur une demande en attente, sans chercher la course dans une liste.
+ *
+ * Elle se lit par rangées (revue du 11 septembre) : Client | Paiement, puis
+ * Aller | Retour côte à côte, puis Message | Facture. La demande à valider est
+ * en tête, l'heure demandée écrite en gros ; les boutons qui écrivent au client
+ * demandent confirmation et ne partent qu'une fois.
  *
  * Les boutons n'envoient que la référence et le lot ; les heures sont relues
  * en base au moment du clic (`actions.ts`).
@@ -36,8 +48,7 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
   },
   "valide-sans-email": {
     alerte: true,
-    texte:
-      "Nouvel horaire validé, mais l’e-mail au client n’a pas pu partir : prévenez-le par téléphone.",
+    texte: "Nouvel horaire validé, mais l’e-mail au client n’a pas pu partir : prévenez-le par téléphone.",
   },
   refuse: {
     alerte: false,
@@ -45,8 +56,7 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
   },
   "refuse-sans-email": {
     alerte: true,
-    texte:
-      "Demande refusée, mais l’e-mail au client n’a pas pu partir : prévenez-le par téléphone.",
+    texte: "Demande refusée, mais l’e-mail au client n’a pas pu partir : prévenez-le par téléphone.",
   },
   perimee: {
     alerte: true,
@@ -60,6 +70,7 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
     alerte: true,
     texte: "Avec cette demande, le retour tomberait avant l’aller : elle ne peut pas être validée.",
   },
+  annulee: { alerte: true, texte: "Cette réservation est annulée : rien ne peut plus y être changé." },
   echec: { alerte: true, texte: "L’enregistrement a échoué. Réessayez dans un instant." },
   cree: {
     alerte: false,
@@ -69,9 +80,21 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
     alerte: true,
     texte: "Réservation créée, mais l’e-mail au client n’a pas pu partir : utilisez « Renvoyer l’e-mail de paiement ».",
   },
+  "cree-sans-lien": {
+    alerte: true,
+    texte: "Réservation créée, mais le lien de paiement n’a pas pu être fabriqué : le client a reçu l’e-mail sans lien. Utilisez « Renvoyer l’e-mail de paiement ».",
+  },
+  "deja-creee": {
+    alerte: true,
+    texte: "Cette réservation avait déjà été créée — le formulaire a été envoyé deux fois. Rien n’a été dupliqué.",
+  },
   "virement-recu": {
     alerte: false,
     texte: "Virement noté : la réservation est payée, et le client a reçu sa confirmation.",
+  },
+  "virement-recu-facture": {
+    alerte: true,
+    texte: "Virement noté et client confirmé — mais Stripe n’a pas marqué la facture payée : vérifiez-la dans Stripe.",
   },
   "deja-payee": { alerte: true, texte: "Cette réservation est déjà payée." },
   renvoye: { alerte: false, texte: "L’e-mail de paiement est reparti chez le client." },
@@ -107,7 +130,13 @@ export default async function FicheReservation({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { reference: brute } = await params;
-  const reference = decodeURIComponent(brute);
+  let reference: string;
+  try {
+    reference = decodeURIComponent(brute);
+  } catch {
+    // Une adresse mal recopiée ne doit pas faire une erreur : la fiche n'existe pas, c'est tout.
+    notFound();
+  }
 
   const utilisateur = await utilisateurCourant();
   if (!utilisateur) {
@@ -118,14 +147,24 @@ export default async function FicheReservation({
 
   const course = await courseParReference(reference);
   if (!course) notFound();
-  // La facture de la course, lue chez Stripe par sa référence.
-  const facture = await factureDeReference(course.reference);
+  // La facture par son identifiant quand on l'a ; sinon par la recherche Stripe.
+  const facture = course.factureStripe
+    ? await factureParId(course.factureStripe)
+    : await factureDeReference(course.reference);
 
   const { fait } = await searchParams;
   const retour = typeof fait === "string" ? RETOURS[fait] : undefined;
-  const attente = aValider(course);
-  const lot = attente[0]?.lot ?? "";
-  const statut = statutLisible(course.statut);
+  // La demande la plus récente : c'est elle que les boutons tranchent.
+  const enAttente = aValider(course);
+  const lot = enAttente[enAttente.length - 1]?.lot ?? "";
+  const attente = enAttente.filter((m) => m.lot === lot);
+  const pastille = pastilleStatut(course);
+  const sens = sensDeLaCourse(course);
+  const devise = course.devise === "EUR" ? "EUR" : course.devise;
+  const boutonPrincipal =
+    "rounded bg-marque px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600";
+  const boutonSecondaire =
+    "rounded border border-glacier-300 px-5 py-2.5 text-sm font-semibold text-alpine-700 transition hover:border-alpine/40 hover:bg-glacier-50";
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
@@ -137,12 +176,16 @@ export default async function FicheReservation({
         </Link>
       </p>
 
-      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-4">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-2xl text-alpine">
           {course.client.nom} · {course.trajet}
         </h1>
-        <p className="text-sm text-alpine-600">
-          <span className="font-mono">{course.reference}</span> · {statut.texte}
+        <p className="flex flex-wrap items-center gap-2 text-sm text-alpine-600">
+          <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${pastille.classes}`}>
+            {pastille.texte}
+          </span>
+          <span className="font-mono">{course.reference}</span>
+          {course.source === "telephone" ? <span>· réservation téléphonique</span> : null}
         </p>
       </div>
 
@@ -151,20 +194,33 @@ export default async function FicheReservation({
           role="status"
           className={`mt-6 rounded border px-4 py-3 text-sm ${
             retour.alerte
-              ? "border-or/40 bg-or-50 text-alpine-700"
-              : "border-alpes/30 bg-alpes-50 text-alpine-700"
+              ? "border-attention-300 bg-attention-50 text-attention-700"
+              : "border-succes-300 bg-succes-50 text-succes-700"
           }`}
         >
           {retour.texte}
         </p>
       ) : null}
 
+      {adresseManquante(course) ? (
+        <p className="mt-6 rounded border border-danger-300 bg-danger-50 px-4 py-3 text-sm font-medium text-danger-700">
+          Adresse manquante — à demander au client :{" "}
+          <a className="underline" href={`tel:${course.client.telephone}`}>
+            {course.client.telephone}
+          </a>
+        </p>
+      ) : null}
+
       {attente.length > 0 ? (
-        <section className="mt-6 rounded-xl border-2 border-marque/40 bg-white p-5 shadow-carte">
-          <h2 className="font-display text-lg text-marque">Demande de changement à valider</h2>
-          <ul className="mt-3 space-y-1 text-sm text-alpine">
+        <section className="mt-6 rounded-xl border-2 border-danger-300 bg-white p-5 shadow-carte">
+          <h2 className="font-display text-lg text-danger">Demande de changement à valider</h2>
+          <ul className="mt-3 space-y-2">
             {attente.map((m, i) => (
-              <li key={i}>{decrire(m)}</li>
+              <li key={i} className="text-base text-alpine">
+                <span className="font-semibold">{m.champ === "retour" ? "Retour" : "Aller"}</span> :{" "}
+                <span className="text-alpine-600">{m.ancien ? heure(new Date(m.ancien)) : "—"}</span>{" "}
+                → <strong>{m.nouveau ? heure(new Date(m.nouveau)) : "—"}</strong>
+              </li>
             ))}
           </ul>
           <p className="mt-2 text-xs text-alpine-600">
@@ -176,22 +232,20 @@ export default async function FicheReservation({
             <form action={actionValider}>
               <input type="hidden" name="reference" value={course.reference} />
               <input type="hidden" name="lot" value={lot} />
-              <button
-                type="submit"
-                className="rounded bg-alpes px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-alpes-700"
-              >
-                Valider le nouvel horaire
-              </button>
+              <BoutonConfirmation
+                libelle="Valider le nouvel horaire"
+                confirmer="Valider le nouvel horaire ? Le client recevra un e-mail de confirmation."
+                className={boutonPrincipal}
+              />
             </form>
             <form action={actionRefuser}>
               <input type="hidden" name="reference" value={course.reference} />
               <input type="hidden" name="lot" value={lot} />
-              <button
-                type="submit"
-                className="rounded border border-marque/40 px-5 py-2.5 text-sm font-semibold text-marque transition hover:bg-marque/5"
-              >
-                Refuser
-              </button>
+              <BoutonConfirmation
+                libelle="Refuser"
+                confirmer="Refuser la demande ? Le client recevra un e-mail : l’horaire d’origine est maintenu."
+                className={boutonSecondaire}
+              />
             </form>
           </div>
           <p className="mt-3 text-xs text-alpine-600">
@@ -200,6 +254,7 @@ export default async function FicheReservation({
         </section>
       ) : null}
 
+      {/* Rangée 1 : qui, et où en est le paiement. */}
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         <Bloc titre="Client">
           <p className="font-medium">{course.client.nom}</p>
@@ -209,46 +264,22 @@ export default async function FicheReservation({
             </a>
           </p>
           <p>
-            <a className="underline" href={`mailto:${course.client.email}`}>
+            <a className="break-all underline" href={`mailto:${course.client.email}`}>
               {course.client.email}
             </a>
           </p>
         </Bloc>
 
-        {/*
-          Chaque sens au complet, même ce qu'il répète de l'autre — la même
-          carte que dans la liste dépliée (`CarteSens`).
-        */}
-        {sensDeLaCourse(course).map((sens) => (
-          <CarteSens key={sens.libelle} sens={sens} />
-        ))}
-        {course.retour ? null : (
-          <Bloc titre="Retour">
-            <p>Aller simple — pas de retour réservé.</p>
-          </Bloc>
-        )}
-
-        <Bloc titre="Message du client">
-          <p className="leading-relaxed">{course.message ?? "—"}</p>
-        </Bloc>
-
         <Bloc titre="Paiement">
-          <Info libelle="Montant">
-            {course.montant} {course.devise === "EUR" ? "€" : course.devise}
-          </Info>
-          <Info libelle="Statut">{statut.texte}</Info>
+          <Info libelle="Montant">{euros(course.montant, devise)}</Info>
+          <Info libelle="État">{pastille.texte}</Info>
           <Info libelle="Réservée le">{heure(course.creeLe)}</Info>
           {course.payeLe ? <Info libelle="Payée le">{heure(course.payeLe)}</Info> : null}
           {course.source === "telephone" ? (
-            <Info libelle="Origine">
-              réservation téléphonique · {course.modePaiement === "virement" ? "virement" : "carte"}
+            <Info libelle="Moyen de paiement">
+              {course.modePaiement === "virement" ? "virement" : "carte"}
             </Info>
           ) : null}
-          {/*
-            Une réservation téléphonique se suit jusqu'au paiement : le virement
-            se note à réception, et l'e-mail de paiement se renvoie au client
-            qui ne l'a pas reçu.
-          */}
           {course.source === "telephone" &&
           course.statut !== "payee" &&
           course.statut !== "annulee" ? (
@@ -256,25 +287,38 @@ export default async function FicheReservation({
               {course.modePaiement === "virement" ? (
                 <form action={actionVirementRecu}>
                   <input type="hidden" name="reference" value={course.reference} />
-                  <button
-                    type="submit"
-                    className="rounded bg-alpes px-4 py-2 text-sm font-semibold text-white transition hover:bg-alpes-700"
-                  >
-                    Virement reçu
-                  </button>
+                  <BoutonConfirmation
+                    libelle="Virement reçu"
+                    confirmer={`Confirmer la réception du virement de ${euros(course.montant, devise)} ? La course passera à « Payée » et le client recevra sa confirmation.`}
+                    className={boutonPrincipal}
+                  />
                 </form>
               ) : null}
               <form action={actionRenvoyerPaiement}>
                 <input type="hidden" name="reference" value={course.reference} />
-                <button
-                  type="submit"
-                  className="rounded border border-glacier-300 px-4 py-2 text-sm text-alpine-700 transition hover:border-alpine/40 hover:bg-glacier-50"
-                >
-                  Renvoyer l’e-mail de paiement
-                </button>
+                <BoutonConfirmation libelle="Renvoyer l’e-mail de paiement" className={boutonSecondaire} />
               </form>
             </div>
           ) : null}
+        </Bloc>
+      </div>
+
+      {/* Rangée 2 : l'aller et le retour côte à côte, chacun au complet. */}
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        {sens.map((s) => (
+          <CarteSens key={s.libelle} sens={s} />
+        ))}
+        {course.retour ? null : (
+          <Bloc titre="Retour">
+            <p>Aller simple — pas de retour réservé.</p>
+          </Bloc>
+        )}
+      </div>
+
+      {/* Rangée 3 : ce que le client a écrit, et la facture. */}
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <Bloc titre="Message du client">
+          <p className="leading-relaxed">{course.message ?? "—"}</p>
         </Bloc>
 
         <Bloc titre="Facture">
@@ -282,8 +326,7 @@ export default async function FicheReservation({
             <>
               <p className="font-mono">{facture.numero}</p>
               <p>
-                {facture.statut} · {facture.ttc.toFixed(2).replace(".", ",")} € TTC, dont{" "}
-                {facture.tva.toFixed(2).replace(".", ",")} € de TVA
+                {facture.statut} · {euros(facture.ttc)} TTC, dont {euros(facture.tva)} de TVA
               </p>
               {facture.pdf ? (
                 <p>
@@ -303,10 +346,8 @@ export default async function FicheReservation({
         </Bloc>
       </div>
 
-      <section className="mt-6 rounded-xl border border-glacier-200 bg-white p-5 shadow-carte">
-        <h2 className="text-xs font-medium uppercase tracking-wide text-alpine-600">
-          Historique des changements
-        </h2>
+      <section className="mt-4 rounded-xl border border-glacier-200 bg-white p-5 shadow-carte">
+        <h2 className="text-xs font-medium uppercase tracking-wide text-alpine-600">Historique</h2>
         {course.historique.length > 0 ? (
           <ul className="mt-3 space-y-1 text-sm text-alpine">
             {course.historique.map((m, i) => (

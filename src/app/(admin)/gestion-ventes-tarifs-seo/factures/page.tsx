@@ -44,7 +44,7 @@ export default async function PageFactures({
   const { mois: brut } = await searchParams;
   const mois = moisValide(brut) ?? moisCourant();
   const factures = await facturesDuMois(mois);
-  const comptees = (factures ?? []).filter((f) => f.statut !== "annulée");
+  const comptees = (factures ?? []).filter((f) => f.statut !== "Annulée");
   const totaux = comptees.reduce(
     (t, f) => ({ ht: t.ht + f.ht, tva: t.tva + f.tva, ttc: t.ttc + f.ttc }),
     { ht: 0, tva: 0, ttc: 0 },

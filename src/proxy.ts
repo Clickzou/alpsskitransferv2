@@ -5,6 +5,44 @@ import {
   REDIRECTIONS_301,
 } from "@/data/redirections";
 import { indexationOuverte } from "@/lib/indexation";
+import {
+  COOKIE_ACCES,
+  COOKIE_RAFRAICHISSEMENT,
+  DUREE_RAFRAICHISSEMENT,
+  echangerRafraichissement,
+  jetonAExpirer,
+  optionsCookie,
+} from "@/lib/admin/jetons";
+
+/**
+ * Prolonge la session du back-office avant que la page ne se rende.
+ *
+ * Le jeton d'accès de Supabase vit une heure. Le renouveler depuis la page est
+ * impossible — une page n'écrit pas de cookie —, si bien que la session
+ * tombait au bout d'une heure. Le proxy, lui, le peut : il échange le jeton de
+ * rafraîchissement, remplace les cookies **de la requête** pour que la page
+ * voie tout de suite le nouveau jeton, et les pose sur la réponse pour le
+ * navigateur. Rien à faire tant que le jeton a plus d'une minute devant lui.
+ */
+async function sessionProlongee(request: NextRequest): Promise<NextResponse | null> {
+  const acces = request.cookies.get(COOKIE_ACCES)?.value;
+  const rafraichissement = request.cookies.get(COOKIE_RAFRAICHISSEMENT)?.value;
+  if (!rafraichissement || !jetonAExpirer(acces)) return null;
+
+  const jetons = await echangerRafraichissement(rafraichissement);
+  if (!jetons) return null;
+
+  request.cookies.set(COOKIE_ACCES, jetons.access_token);
+  request.cookies.set(COOKIE_RAFRAICHISSEMENT, jetons.refresh_token);
+  const reponse = NextResponse.next({ request: { headers: request.headers } });
+  reponse.cookies.set(COOKIE_ACCES, jetons.access_token, optionsCookie(jetons.expires_in));
+  reponse.cookies.set(
+    COOKIE_RAFRAICHISSEMENT,
+    jetons.refresh_token,
+    optionsCookie(DUREE_RAFRAICHISSEMENT),
+  );
+  return reponse;
+}
 
 /**
  * Traitement des anciennes URL WordPress. Convention Next 16 : ce fichier
@@ -41,7 +79,7 @@ function fermerAuxMoteurs(reponse: NextResponse): NextResponse {
   return reponse;
 }
 
-export default function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const chemin = request.nextUrl.pathname.toLowerCase();
   const normalise = normaliser(chemin);
 
@@ -66,6 +104,11 @@ export default function proxy(request: NextRequest) {
     const reponse = NextResponse.next();
     reponse.headers.set("X-Robots-Tag", "noindex, follow");
     return reponse;
+  }
+
+  if (chemin.startsWith("/gestion-ventes-tarifs-seo")) {
+    const prolongee = await sessionProlongee(request);
+    if (prolongee) return fermerAuxMoteurs(prolongee);
   }
 
   return fermerAuxMoteurs(NextResponse.next());

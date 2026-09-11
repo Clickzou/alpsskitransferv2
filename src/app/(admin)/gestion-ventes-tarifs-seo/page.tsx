@@ -4,107 +4,116 @@ import {
   adresseManquante,
   aValider,
   decrire,
+  estAAssurer,
+  euros,
   heure,
+  modifieeParLeClient,
+  pastilleStatut,
   sensDeLaCourse,
 } from "@/lib/admin/affichage";
 import {
   coursesAVenir,
   coursesPassees,
   rechercherCourses,
-  statutLisible,
   type Course,
 } from "@/lib/admin/courses";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
 import CarteSens from "./CarteSens";
-import Recherche from "./Recherche";
 import Entete from "./Entete";
+import Recherche from "./Recherche";
 
 /**
- * La liste des courses.
+ * La liste des courses — la réponse à « qui je conduis, où, et qui je rappelle ».
  *
- * L'ordre des colonnes n'est pas décoratif, c'est la demande de l'exploitant du
- * 10 septembre 2026 : il ne voyait pas la destination et devait rappeler chaque
- * client pour connaître le trajet. Le trajet vient donc juste après l'heure de
- * prise en charge, et l'adresse en station ensuite. Le montant en dernier.
+ * Demande de l'exploitant du 10 septembre 2026 : il ne voyait pas la
+ * destination et devait rappeler chaque client. Le trajet est donc en tête de
+ * chaque ligne, avec le nom et le téléphone du client : on sait qui et où sans
+ * rien déplier (revue du 11 septembre 2026).
  *
- * ## Un aller-retour, c'est deux lignes
+ * Un aller-retour tient sur deux lignes, repliées comme dépliées ; dépliée,
+ * chaque sens dit tout, même ce qu'il répète de l'autre (`sensDeLaCourse`).
  *
- * Remarque de JC, 11 septembre 2026 : « je vois les infos mais je ne comprends
- * pas tout ». La ligne ne montrait que l'aller, et le retour se devinait à
- * travers « 3 pax (7 au retour) » et « retour d'un autre lieu ». Chaque sens a
- * désormais sa ligne, repliée comme dépliée ; dépliée, chacun dit tout, même ce
- * qu'il répète de l'autre (`sensDeLaCourse`).
+ * « À venir » ne montre que les courses **à assurer**. Les paiements
+ * abandonnés et les annulées restent consultables, repliés en bas — dans la
+ * vue du jour comme dans les résultats d'une recherche : mêlés aux vraies
+ * courses, ils envoyaient un chauffeur pour rien.
  */
 
+const LIMITE_PASSEES = 50;
+const LIMITE_A_VENIR = 200;
+
 function LigneCourse({ course }: { course: Course }) {
-  const statut = statutLisible(course.statut);
-  const couleur = {
-    attente: "bg-or-50 text-or-700 border-or/40",
-    confirme: "bg-alpes-50 text-alpes-700 border-alpes/40",
-    annule: "bg-glacier-100 text-alpine-600 border-glacier-300",
-  }[statut.ton];
+  const pastille = pastilleStatut(course);
   const sens = sensDeLaCourse(course);
+  const devise = course.devise === "EUR" ? "EUR" : course.devise;
 
   return (
     <details className="group border-b border-glacier-200 last:border-0">
-      <summary className="grid cursor-pointer list-none gap-3 px-4 py-4 hover:bg-glacier-50 lg:grid-cols-[1fr_15rem] lg:items-start lg:gap-4">
+      <summary className="grid cursor-pointer list-none gap-3 px-4 py-4 hover:bg-glacier-50 lg:grid-cols-[1fr_15rem] lg:items-start lg:gap-4 [&::-webkit-details-marker]:hidden">
         <div className="space-y-2">
+          {/* Qui : on le sait sans déplier. Le chevron dit que la ligne s'ouvre. */}
+          <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-sm">
+            <span
+              aria-hidden="true"
+              className="inline-block text-alpine-600 transition group-open:rotate-90"
+            >
+              ›
+            </span>
+            <span className="font-semibold text-alpine">{course.client.nom}</span>
+            <span className="tabular-nums text-alpine-700">{course.client.telephone}</span>
+            <span className="font-mono text-xs text-alpine-600">{course.reference}</span>
+          </p>
+
           {sens.map((s) => (
             <div
               key={s.libelle}
-              className="grid gap-x-4 gap-y-0.5 lg:grid-cols-[4.5rem_10rem_1fr_1fr_9rem] lg:items-baseline"
+              className="text-sm lg:grid lg:grid-cols-[4.5rem_10rem_1fr_1fr_8rem] lg:items-baseline lg:gap-x-4"
             >
-              <span className="text-xs font-semibold uppercase tracking-wide text-alpine-600">
-                {s.libelle}
-              </span>
-              <span className="font-medium tabular-nums text-alpine">{heure(s.quand)}</span>
-              {/* La destination : la raison d'être de cet écran. */}
-              <span className="font-semibold text-alpine">{s.trajet}</span>
-              <span
-                className={
-                  s.adresseManquante ? "text-sm font-semibold text-marque" : "text-sm text-alpine-700"
-                }
-              >
-                {s.adresse}
-              </span>
-              <span className="text-sm text-alpine-600">
-                {s.passagers} pax · {s.vehicule}
-              </span>
+              {/* Sur téléphone : deux lignes lisibles. Sur ordinateur : cinq colonnes. */}
+              <p className="flex flex-wrap gap-x-2 lg:contents">
+                <span className="text-xs font-semibold uppercase tracking-wide text-alpine-600">
+                  {s.libelle}
+                </span>
+                <span className="font-medium tabular-nums text-alpine">{heure(s.quand)}</span>
+                <span className="font-semibold text-alpine">{s.trajet}</span>
+              </p>
+              <p className="flex flex-wrap gap-x-2 lg:contents">
+                <span className={s.adresseManquante ? "font-semibold text-danger" : "text-alpine-700"}>
+                  {s.adresse}
+                </span>
+                <span aria-hidden="true" className="text-alpine-600 lg:hidden">
+                  ·
+                </span>
+                <span className="text-alpine-600">
+                  {s.passagers} passager{s.passagers > 1 ? "s" : ""} · {s.vehicule}
+                </span>
+              </p>
             </div>
           ))}
 
-          {/* Une demande en attente, ou un changement passé, se voit sans déplier la ligne. */}
           {aValider(course).length > 0 ? (
-            <p className="text-xs font-semibold text-marque">demande de changement à valider</p>
-          ) : course.historique.length > 0 ? (
-            <p className="text-xs text-or-700">modifiée par le client</p>
+            <p className="text-xs font-semibold text-danger">demande de changement à valider</p>
+          ) : modifieeParLeClient(course) ? (
+            <p className="text-xs text-attention-700">modifiée par le client</p>
           ) : null}
-          {/* Sans adresse, le chauffeur ne sait pas où aller : Nassim appelle le client. */}
           {adresseManquante(course) ? (
-            <p className="text-xs font-semibold text-marque">
+            <p className="text-xs font-semibold text-danger">
               adresse manquante — à demander au client
             </p>
           ) : null}
           {course.source === "telephone" ? (
-            <p className="text-xs text-alpine-600">
-              réservation téléphonique
-              {course.statut === "en-attente-paiement"
-                ? course.modePaiement === "virement"
-                  ? " · virement attendu"
-                  : " · lien de paiement envoyé"
-                : ""}
-            </p>
+            <p className="text-xs text-alpine-600">réservation téléphonique</p>
           ) : null}
         </div>
 
         <span className="flex items-center gap-2 lg:justify-end">
-          <span className={`whitespace-nowrap rounded-full border px-2 py-0.5 text-xs ${couleur}`}>
-            {statut.texte}
+          <span className={`whitespace-nowrap rounded-full border px-2 py-0.5 text-xs ${pastille.classes}`}>
+            {pastille.texte}
           </span>
           <span className="whitespace-nowrap text-sm tabular-nums text-alpine-700">
-            {course.montant} {course.devise === "EUR" ? "€" : course.devise}
+            {euros(course.montant, devise)}
           </span>
         </span>
       </summary>
@@ -112,7 +121,7 @@ function LigneCourse({ course }: { course: Course }) {
       <div className="space-y-4 bg-glacier-50 px-4 py-4 text-sm">
         <div className="grid gap-4 md:grid-cols-3">
           <div>
-            <p className="text-xs uppercase tracking-wide text-alpine-600">Passager</p>
+            <p className="text-xs uppercase tracking-wide text-alpine-600">Client</p>
             <p className="mt-1 font-medium">{course.client.nom}</p>
             <p>
               <a className="underline" href={`tel:${course.client.telephone}`}>
@@ -120,7 +129,7 @@ function LigneCourse({ course }: { course: Course }) {
               </a>
             </p>
             <p>
-              <a className="underline" href={`mailto:${course.client.email}`}>
+              <a className="break-all underline" href={`mailto:${course.client.email}`}>
                 {course.client.email}
               </a>
             </p>
@@ -129,7 +138,7 @@ function LigneCourse({ course }: { course: Course }) {
           <div>
             <p className="text-xs uppercase tracking-wide text-alpine-600">Paiement</p>
             <p className="mt-1">
-              {statut.texte} · {course.montant} {course.devise === "EUR" ? "€" : course.devise}
+              {pastille.texte} · {euros(course.montant, devise)}
             </p>
             {course.payeLe ? <p>Payée le {heure(course.payeLe)}</p> : null}
             <p className="mt-1 font-mono text-xs">{course.reference}</p>
@@ -154,9 +163,7 @@ function LigneCourse({ course }: { course: Course }) {
 
         {course.historique.length > 0 ? (
           <div>
-            <p className="text-xs uppercase tracking-wide text-alpine-600">
-              Modifications par le client
-            </p>
+            <p className="text-xs uppercase tracking-wide text-alpine-600">Historique</p>
             <ul className="mt-1 space-y-1">
               {course.historique.map((m, i) => (
                 <li key={i}>
@@ -179,15 +186,25 @@ function LigneCourse({ course }: { course: Course }) {
   );
 }
 
-function Tableau({ titre, courses, vide }: { titre?: string; courses: Course[]; vide: string }) {
+function Tableau({
+  titre,
+  courses,
+  vide,
+  note,
+}: {
+  titre?: string;
+  courses: Course[];
+  vide: string;
+  note?: string | null;
+}) {
   return (
     <section className={titre ? "mt-8" : "mt-3"}>
-      {/* Sans titre quand la section qui l'enveloppe en porte déjà un. */}
       {titre ? (
         <h2 className="font-display text-lg text-alpine">
           {titre} <span className="text-sm font-normal text-alpine-600">({courses.length})</span>
         </h2>
       ) : null}
+      {note ? <p className="mt-1 text-xs text-alpine-600">{note}</p> : null}
 
       <div className="mt-3 overflow-hidden rounded-xl border border-glacier-200 bg-white shadow-carte">
         {courses.length === 0 ? (
@@ -195,12 +212,12 @@ function Tableau({ titre, courses, vide }: { titre?: string; courses: Course[]; 
         ) : (
           <>
             <div className="hidden border-b border-glacier-200 bg-glacier-50 px-4 py-2 text-xs uppercase tracking-wide text-alpine-600 lg:grid lg:grid-cols-[1fr_15rem] lg:gap-4">
-              <div className="grid gap-x-4 lg:grid-cols-[4.5rem_10rem_1fr_1fr_9rem]">
+              <div className="grid gap-x-4 lg:grid-cols-[4.5rem_10rem_1fr_1fr_8rem]">
                 <span>Sens</span>
                 <span>Prise en charge</span>
                 <span>Trajet</span>
                 <span>Adresse en station</span>
-                <span>Groupe</span>
+                <span>Passagers</span>
               </div>
               <span className="text-right">Statut</span>
             </div>
@@ -214,6 +231,24 @@ function Tableau({ titre, courses, vide }: { titre?: string; courses: Course[]; 
   );
 }
 
+/** Les courses sans suite — annulées, paiements abandonnés —, repliées : consultables, pas mêlées. */
+function SansSuite({ courses, contexte }: { courses: Course[]; contexte: string }) {
+  if (courses.length === 0) return null;
+  return (
+    <details className="mt-10">
+      <summary className="cursor-pointer font-display text-lg text-alpine-600 hover:text-alpine">
+        Annulées et paiements non aboutis {contexte}
+        <span className="text-sm font-normal"> ({courses.length})</span>
+      </summary>
+      <p className="mt-2 max-w-prose text-sm leading-relaxed text-alpine-600">
+        Rien à assurer ici : une course annulée, ou un client qui a ouvert la page de paiement
+        sans payer — un client qui a hésité, qu’on peut rappeler.
+      </p>
+      <Tableau courses={courses} vide="Rien ici." />
+    </details>
+  );
+}
+
 export default async function PageAdmin({
   searchParams,
 }: {
@@ -222,29 +257,20 @@ export default async function PageAdmin({
   const utilisateur = await utilisateurCourant();
   if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
 
-  const [aVenir, passees] = await Promise.all([coursesAVenir(), coursesPassees(50)]);
-  // Les demandes d'horaire en attente passent devant tout : tant qu'elles ne sont
-  // pas tranchées, le client ne sait pas à quelle heure on vient le chercher.
-  const demandes = aVenir.filter((course) => aValider(course).length > 0);
-  /*
-    Un paiement non abouti n'est pas une course : le client a ouvert la page
-    Stripe et n'a pas payé. Mêlé aux vraies courses, il envoie un chauffeur pour
-    rien — et les tentatives répétées d'un même client s'y affichaient en double.
-    Il reste consultable, replié en bas : c'est un client qui a hésité, qu'on
-    peut rappeler. Décision de JC, 11 septembre 2026.
-  */
-  // Une réservation téléphonique en attente de virement n'est pas un paiement
-  // abandonné : c'est une course à assurer, dont l'argent arrive par la banque.
-  const nonAbouti = (course: Course) =>
-    course.statut === "en-attente-paiement" && course.source !== "telephone";
-  const aAssurer = aVenir.filter((course) => !nonAbouti(course));
-  const nonAboutis = aVenir.filter(nonAbouti);
-
-  // Une recherche en cours remplace la vue du jour : elle porte sur toute la base.
   const params = await searchParams;
   const texte = (valeur: unknown) => (typeof valeur === "string" ? valeur : "");
   const critere = { q: texte(params.q), du: texte(params.du), au: texte(params.au) };
-  const resultats = await rechercherCourses(critere);
+
+  const [aVenir, passees, resultats] = await Promise.all([
+    coursesAVenir(LIMITE_A_VENIR),
+    coursesPassees(LIMITE_PASSEES),
+    rechercherCourses(critere),
+  ]);
+
+  // Les demandes d'horaire passent devant tout : tant qu'elles ne sont pas
+  // tranchées, le client ne sait pas à quelle heure on vient le chercher.
+  const demandes = aVenir.filter((course) => aValider(course).length > 0);
+  const sansSuite = (liste: Course[]) => liste.filter((c) => !estAAssurer(c));
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
@@ -254,7 +280,7 @@ export default async function PageAdmin({
       <div className="mt-6 flex justify-end">
         <Link
           href="/gestion-ventes-tarifs-seo/nouvelle/"
-          className="rounded bg-marque px-5 py-2 text-sm font-semibold text-white transition hover:bg-marque-600"
+          className="rounded bg-marque px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
         >
           + Nouvelle réservation (téléphone)
         </Link>
@@ -262,73 +288,76 @@ export default async function PageAdmin({
 
       <Recherche q={critere.q} du={critere.du} au={critere.au} />
 
-      {resultats ? (
-        <Tableau
-          titre="Résultats"
-          courses={resultats}
-          vide="Aucune réservation ne correspond à cette recherche."
-        />
-      ) : (
-        <>
-      {demandes.length > 0 ? (
-        <section className="mt-8">
-          <h2 className="font-display text-lg text-marque">
-            Demandes à valider{" "}
-            <span className="text-sm font-normal text-alpine-600">({demandes.length})</span>
-          </h2>
-          <ul className="mt-3 divide-y divide-glacier-200 overflow-hidden rounded-xl border border-marque/30 bg-white shadow-carte">
-            {demandes.map((course) => (
-              <li key={course.reference}>
-                <Link
-                  href={cheminFiche(course.reference)}
-                  className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-4 py-3 hover:bg-glacier-50"
-                >
-                  <span className="font-semibold text-alpine">
-                    {course.trajet} · {course.client.nom}
-                  </span>
-                  <span className="text-sm text-alpine-700">
-                    {aValider(course).map(decrire).join(" · ")}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
       {!supabaseConfigure() ? (
-        <p className="mt-8 rounded border border-or/40 bg-or-50 px-4 py-3 text-sm leading-relaxed text-alpine-700">
-          La base n’est pas configurée sur cet environnement : renseignez
-          <code className="mx-1 rounded bg-white px-1 text-xs">SUPABASE_SERVICE_ROLE_KEY</code>
-          pour voir les courses. Les écrans, eux, fonctionnent.
+        <p className="mt-8 rounded border border-danger-300 bg-danger-50 px-4 py-3 text-sm leading-relaxed text-danger-700">
+          Les réservations ne peuvent pas être lues pour le moment — prévenez Clickzou.
         </p>
       ) : null}
 
-      <Tableau
-        titre="À venir"
-        courses={aAssurer}
-        vide="Aucune course à venir pour le moment."
-      />
+      {resultats ? (
+        <>
+          <Tableau
+            titre="Résultats"
+            courses={resultats.filter(estAAssurer)}
+            vide="Aucune course à assurer ne correspond à cette recherche."
+            note={
+              resultats.length >= 200
+                ? "Les 200 premières seulement — précisez la recherche pour voir la suite."
+                : null
+            }
+          />
+          <SansSuite courses={sansSuite(resultats)} contexte="dans ces résultats" />
+        </>
+      ) : (
+        <>
+          {demandes.length > 0 ? (
+            <section className="mt-8">
+              <h2 className="font-display text-lg text-danger">
+                Demandes à valider{" "}
+                <span className="text-sm font-normal text-alpine-600">({demandes.length})</span>
+              </h2>
+              <ul className="mt-3 divide-y divide-glacier-200 overflow-hidden rounded-xl border border-danger-300 bg-white shadow-carte">
+                {demandes.map((course) => (
+                  <li key={course.reference}>
+                    <Link
+                      href={cheminFiche(course.reference)}
+                      className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-4 py-3 hover:bg-glacier-50"
+                    >
+                      <span className="font-semibold text-alpine">
+                        {course.client.nom} · {course.trajet}
+                      </span>
+                      <span className="text-sm text-alpine-700">
+                        {aValider(course).map(decrire).join(" · ")}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
-      <Tableau
-        titre="Passées"
-        courses={passees}
-        vide="Aucune course passée."
-      />
+          <Tableau
+            titre="À venir"
+            courses={aVenir.filter(estAAssurer)}
+            vide="Aucune course à venir pour le moment."
+            note={
+              aVenir.length >= LIMITE_A_VENIR
+                ? `Les ${LIMITE_A_VENIR} prochaines seulement — utilisez la recherche par dates pour la suite.`
+                : null
+            }
+          />
 
-      {nonAboutis.length > 0 ? (
-        <details className="mt-10">
-          <summary className="cursor-pointer font-display text-lg text-alpine-600 hover:text-alpine">
-            Paiements non aboutis{" "}
-            <span className="text-sm font-normal">({nonAboutis.length})</span>
-          </summary>
-          <p className="mt-2 max-w-prose text-sm leading-relaxed text-alpine-600">
-            Le client a ouvert la page de paiement sans payer. Ces courses ne sont pas à
-            assurer ; elles restent ici pour rappeler un client qui a hésité.
-          </p>
-          <Tableau courses={nonAboutis} vide="Aucun paiement non abouti." />
-        </details>
-      ) : null}
+          <Tableau
+            titre="Passées"
+            courses={passees.filter(estAAssurer)}
+            vide="Aucune course passée."
+            note={`Les ${LIMITE_PASSEES} dernières — pour plus ancien, utilisez la recherche.`}
+          />
+
+          <SansSuite
+            courses={[...aVenir.filter((c) => !estAAssurer(c)), ...sansSuite(passees)]}
+            contexte=""
+          />
         </>
       )}
     </main>

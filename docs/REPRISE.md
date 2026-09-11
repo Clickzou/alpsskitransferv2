@@ -1,7 +1,19 @@
-# Point de reprise — 10 septembre 2026, 23 h 30
+# Point de reprise — vendredi 11 septembre 2026, 22 h 15 → lundi 14
 
-Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
-261 URL vérifiée. **Ce fichier dit où reprendre.**
+**Lundi, commencer par là, en mots simples pour JC** (il était fatigué et n'a
+pas suivi le dernier récapitulatif) :
+
+1. Les corrections du tableau de bord sont **faites et enregistrées (commit
+   local), pas encore poussées**. Build OK, 156 tests OK, aucune migration.
+   → Lui montrer à l'écran (localhost) plutôt que d'expliquer : la liste, une
+   fiche client, le formulaire téléphone. Puis lui demander « je pousse ? ».
+2. Ensuite : l'onglet **Tarifs** (décisions ci-dessous), avec la migration des
+   **valises** dans la même migration.
+3. Ensuite : les prix pour les IA (serveur MCP).
+
+Parler court : une phrase par point, pas de listes techniques.
+
+**Ce fichier dit où reprendre.**
 
 > **Convention de reprise avec JC.**
 > « On en est où ? » → lire ce fichier et résumer l'état, sans rien lancer.
@@ -11,7 +23,43 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 # Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
-## À FAIRE EN PREMIER — la saisie téléphonique : migration, IBAN, webhook
+## À FAIRE EN PREMIER — relire le tableau de bord de bout en bout
+
+**Décision de JC, 11 septembre au soir** : on vérifie d'abord que le tableau de
+bord est « super bien fait » — listes, fiche client, recherche, saisie
+téléphonique, demandes à valider, adresses, historique. **Paiement, TVA et
+Stripe** (interrupteur des factures, réglages du compte, clés réelles) se
+traitent **juste avant la mise en ligne**, pas avant.
+
+**L'onglet Tarifs manque — c'est l'onglet principal** (JC, 11 septembre).
+Décisions : il édite les **règles générales** (prise en charge, €/km, écart
+entre véhicules, majorations samedi/dimanche/nuit, remise aller-retour), les
+**stations et trajets** (coefficient par station, prix fixe par trajet) et des
+**périodes de saison** par dates. Une modification se voit d'abord en
+**aperçu** (avant → après sur des trajets types), puis se **publie** ; chaque
+publication est gardée, et on revient à la précédente en un clic. Les prix
+**déjà payés ou envoyés restent figés** : un tarif ne touche que les nouvelles
+réservations.
+
+**Ensuite — les prix pour les IA** (décision de JC, 11 septembre) : que
+ChatGPT, Perplexity, Claude ou les aperçus IA de Google proposent le bon prix.
+Trois étages, tous alimentés par la **grille publiée** (jamais un prix non
+validé) : (1) « à partir de … € » sur les pages de trajet et de station, en
+données structurées (`Offer` du `TaxiService`), et un `llms.txt` ; (2) le devis
+(`/api/devis`) documenté pour les assistants (OpenAPI signalée dans
+`llms.txt`) ; (3) un **serveur MCP** « obtenir un devis », en lecture seule —
+l'IA propose le prix et le lien pré-rempli, le client réserve.
+
+**Revue du tableau de bord du 11 septembre** — corrigés : « À venir » sur la
+prochaine prise en charge, couleurs d'état, formulaire téléphonique (saisie,
+prix, doublons, dates), session prolongée par le proxy, doubles clics. Reste :
+**les valises** ne sont enregistrées nulle part (migration à faire avec celle
+des tarifs).
+
+## ~~La saisie téléphonique~~ — en ligne le 11 septembre
+
+Migration `telephone` passée, `IBAN_VIREMENT` posée (clé vérifiée, lue par la
+production), `invoice.paid` ajouté à l'endpoint Stripe de test.
 
 Demande de JC, 11 septembre : la plupart des réservations arrivent par
 téléphone. **« + Nouvelle réservation (téléphone) »** dans le back-office

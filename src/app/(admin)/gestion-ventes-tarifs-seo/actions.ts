@@ -11,7 +11,7 @@ import { origineSite } from "@/lib/reservation/config";
 import { cheminFiche, demandesEnAttente, STATUT_ATTENTE } from "@/lib/reservation/demandes";
 import { envoyer } from "@/lib/reservation/email";
 import { lienGestion } from "@/lib/reservation/gestion";
-import { lire, mettreAJour } from "@/lib/reservation/supabase";
+import { lire, mettreAJour, mettreAJourSi } from "@/lib/reservation/supabase";
 import { textesDecision } from "@/lib/reservation/textes-decision";
 import { resortParSlug } from "@/lib/resorts";
 import { formaterAlpes } from "@/lib/temps";
@@ -71,6 +71,7 @@ export async function actionRefuser(donnees: FormData): Promise<void> {
 
 interface Reservation {
   reference: string;
+  statut: string;
   airport: string;
   resort: string;
   aller: string;
@@ -105,6 +106,8 @@ async function trancher(donnees: FormData, decision: "acceptee" | "refusee"): Pr
     limite: 1,
   });
   if (!reservation) return retourFiche("perimee");
+  // Une course annulée ne se déplace plus.
+  if (reservation.statut === "annulee") return retourFiche("annulee");
 
   const nouvelAller = lignes.find((l) => l.champ === "aller")?.nouveau ?? null;
   const nouveauRetour = lignes.find((l) => l.champ === "retour")?.nouveau ?? null;
@@ -126,19 +129,17 @@ async function trancher(donnees: FormData, decision: "acceptee" | "refusee"): Pr
       return retourFiche("passee");
     }
     if (retour && retour.getTime() <= aller.getTime()) return retourFiche("incoherente");
-
-    const champs: Record<string, string> = {};
-    if (nouvelAller) champs.aller = nouvelAller;
-    if (nouveauRetour) champs.retour = nouveauRetour;
-    const ok = await mettreAJour(
-      "reservations",
-      { colonne: "reference", valeur: reference },
-      champs,
-    );
-    if (!ok) return retourFiche("echec");
   }
 
-  await mettreAJour(
+  /*
+    Trancher une fois, et une seule.
+
+    Les lignes passent d'abord de « en attente » à la décision, sous condition :
+    deux clics simultanés — ou « Valider » dans un onglet et « Refuser » dans
+    un autre — ne peuvent pas passer tous deux. Le second trouve zéro ligne en
+    attente et s'arrête : le client ne reçoit jamais deux e-mails contradictoires.
+  */
+  const tranchees = await mettreAJourSi(
     "modifications",
     [
       { colonne: "reference", valeur: reference },
@@ -147,6 +148,32 @@ async function trancher(donnees: FormData, decision: "acceptee" | "refusee"): Pr
     ],
     { statut: decision, traite_le: new Date().toISOString(), traite_par: utilisateur.email },
   );
+  if (tranchees === null) return retourFiche("echec");
+  if (tranchees === 0) return retourFiche("perimee");
+
+  if (decision === "acceptee") {
+    const champs: Record<string, string> = {};
+    if (nouvelAller) champs.aller = nouvelAller;
+    if (nouveauRetour) champs.retour = nouveauRetour;
+    const ok = await mettreAJour(
+      "reservations",
+      { colonne: "reference", valeur: reference },
+      champs,
+    );
+    if (!ok) {
+      // L'heure n'a pas bougé : la demande redevient à valider plutôt que de paraître tranchée.
+      await mettreAJour(
+        "modifications",
+        [
+          { colonne: "reference", valeur: reference },
+          { colonne: "lot", valeur: lot },
+          { colonne: "statut", valeur: decision },
+        ],
+        { statut: STATUT_ATTENTE, traite_le: null, traite_par: null },
+      );
+      return retourFiche("echec");
+    }
+  }
 
   /*
     La réponse au client, dans la langue de sa demande.
@@ -258,13 +285,23 @@ export async function actionVirementRecu(donnees: FormData): Promise<void> {
   const r = await lireReservation(reference);
   if (!r) return retourFiche("perimee");
   if (r.statut === "payee") return retourFiche("deja-payee");
+  if (r.statut === "annulee") return retourFiche("annulee");
 
-  const ok = await mettreAJour(
+  /*
+    Une seule fois : la réservation ne passe à « payée » que si elle ne l'était
+    pas. Un double clic trouve zéro ligne à changer, et le client ne reçoit pas
+    deux confirmations.
+  */
+  const payees = await mettreAJourSi(
     "reservations",
-    { colonne: "reference", valeur: reference },
+    [
+      { colonne: "reference", valeur: reference },
+      { colonne: "statut", operateur: "in", valeur: "(en-attente-paiement,devis-a-confirmer)" },
+    ],
     { statut: "payee", paye_le: new Date().toISOString() },
   );
-  if (!ok) return retourFiche("echec");
+  if (payees === null) return retourFiche("echec");
+  if (payees === 0) return retourFiche("deja-payee");
 
   await inserer("paiements", {
     reference,
@@ -274,7 +311,21 @@ export async function actionVirementRecu(donnees: FormData): Promise<void> {
     devise: r.devise ?? "EUR",
     statut: "paye",
   });
-  if (r.facture_stripe) await marquerFacturePayee(r.facture_stripe);
+  /*
+    La facture passe à « payée » chez Stripe. Si Stripe refuse, elle resterait
+    payable par carte : l'exploitant doit le savoir, pour la vérifier.
+  */
+  const factureNonMarquee = r.facture_stripe ? !(await marquerFacturePayee(r.facture_stripe)) : false;
+  if (factureNonMarquee) {
+    await inserer("modifications", {
+      reference,
+      champ: "paiement",
+      ancien: null,
+      nouveau: "Stripe n’a pas marqué la facture payée — à vérifier dans Stripe",
+      statut: "appliquee",
+      source: "exploitant",
+    });
+  }
   await inserer("modifications", {
     reference,
     champ: "paiement",
@@ -285,7 +336,7 @@ export async function actionVirementRecu(donnees: FormData): Promise<void> {
   });
 
   // La confirmation au client, comme après un paiement en ligne.
-  const langue = r.langue ?? "en";
+  const langue = r.langue ?? "fr";
   const mots = textesEmail(langue);
   const facture = r.facture_stripe ? await lireFacture(r.facture_stripe) : null;
   const lien = lienGestion(await origineActions(), reference, langue);
@@ -305,7 +356,7 @@ export async function actionVirementRecu(donnees: FormData): Promise<void> {
     ].join("\n"),
   });
 
-  return retourFiche("virement-recu");
+  return retourFiche(factureNonMarquee ? "virement-recu-facture" : "virement-recu");
 }
 
 /**

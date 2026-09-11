@@ -13,11 +13,8 @@ import { devisReservation } from "@/lib/reservation/devis";
 import { envoyer } from "@/lib/reservation/email";
 import { phraseEnfants } from "@/lib/reservation/enfants";
 import { jetonGestion, lienGestion } from "@/lib/reservation/gestion";
-import {
-  creerFactureTelephone,
-  creerSessionCheckout,
-} from "@/lib/reservation/stripe";
-import { inserer, mettreAJour } from "@/lib/reservation/supabase";
+import { creerFactureTelephone, creerSessionCheckout } from "@/lib/reservation/stripe";
+import { inserer, lire, mettreAJour } from "@/lib/reservation/supabase";
 import {
   echeanceVirement,
   joursJusqua,
@@ -38,21 +35,33 @@ import { textesTelephone } from "@/lib/reservation/textes-telephone";
  * L'exploitant remplit les mêmes champs que le client sur le site, et la
  * demande passe par **les mêmes contrôles** (`validerDemande`) et **le même
  * calcul de prix** (`devisReservation`) : deux moteurs, ce serait deux prix.
- * Il peut corriger le prix de la grille — un geste commercial, un cas
- * particulier — et la correction est notée dans l'historique.
+ * Il peut corriger le prix de la grille, et la correction est notée dans
+ * l'historique.
  *
- * Puis la course se paie :
- * - **facturation allumée** : une facture Stripe, numérotée dans la série du
- *   site ; sa page en ligne se paie par carte, et pour un virement elle porte
- *   l'IBAN et l'échéance ;
- * - **facturation éteinte** : un lien de paiement Stripe Checkout pour la
- *   carte, et l'IBAN seul dans l'e-mail pour un virement.
+ * Puis la course se paie : une facture Stripe quand la facturation est
+ * allumée (sa page se paie par carte ; pour un virement elle porte l'IBAN et
+ * l'échéance), sinon un lien Stripe Checkout pour la carte et l'IBAN seul dans
+ * l'e-mail pour un virement. Le client reçoit un e-mail dans sa langue, avec
+ * son lien « gérer ma réservation ».
  *
- * Le client reçoit un e-mail dans sa langue, avec son lien « gérer ma
- * réservation » — l'adresse en station s'y donne, comme sur le site.
+ * ## Les garde-fous (revue du 11 septembre 2026)
+ *
+ * - Un départ dans le passé est refusé : une faute de frappe sur l'année
+ *   rangeait la course dans « Passées » et écrivait au client pour une date
+ *   révolue.
+ * - Un prix illisible, nul ou négatif est refusé au lieu d'être remplacé en
+ *   silence par la grille ; un prix calculé sur un autre trajet est refusé ;
+ *   un écart de plus de moitié avec la grille doit être confirmé.
+ * - Les enfants de chaque sens ne dépassent pas les passagers de ce sens, et
+ *   « enfants au retour » laissé vide reprend ceux de l'aller.
+ * - La référence vient du formulaire, tirée à l'ouverture de la page : un
+ *   second envoi retrouve la réservation au lieu d'en créer une autre.
+ * - Un échec partiel — lien de paiement, facture — se dit, dans la fiche et
+ *   dans l'historique.
  */
 
 const LANGUES = ["en", "fr", "de", "it"];
+const PROBLEME_TECHNIQUE = "Un problème technique empêche d’enregistrer la réservation. Réessayez ; si cela se répète, prévenez Clickzou.";
 
 function champ(donnees: FormData, cle: string, taille = 200): string {
   return String(donnees.get(cle) ?? "")
@@ -72,6 +81,16 @@ export async function actionCreerTelephone(
 ): Promise<string | null> {
   const utilisateur = await utilisateurCourant();
   if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
+
+  // La référence tirée à l'ouverture de la page : un second envoi la retrouve.
+  const referenceSaisie = champ(donnees, "reference", 20);
+  const ref = /^AST-[0-9A-F]{6}$/.test(referenceSaisie) ? referenceSaisie : nouvelleReference();
+  const [existante] = await lire<{ reference: string }>("reservations", {
+    colonnes: "reference",
+    filtres: [{ colonne: "reference", operateur: "eq", valeur: ref }],
+    limite: 1,
+  });
+  if (existante) redirect(`${cheminFiche(ref)}?fait=deja-creee`);
 
   const allerRetour = donnees.get("allerRetour") === "on";
 
@@ -96,9 +115,25 @@ export async function actionCreerTelephone(
   });
   if (!valide.ok) return valide.message;
   if ("surMesure" in valide) {
-    return "Ce trajet n’a pas de prix dans la grille : choisissez un aéroport et une station du catalogue.";
+    return "Ce trajet n’a pas de prix dans la grille : choisissez un aéroport et une station de la liste.";
   }
   const { demande } = valide;
+  if (demande.aller.getTime() <= Date.now()) {
+    return "La date de l’aller est déjà passée : vérifiez le jour et l’année.";
+  }
+
+  // Les enfants de chaque sens, bornés par les passagers de ce sens.
+  const enfantsAller = Math.max(0, Math.floor(nombre(donnees, "enfants")));
+  const enfantsRetour =
+    String(donnees.get("enfantsRetour") ?? "").trim() === ""
+      ? enfantsAller
+      : Math.max(0, Math.floor(nombre(donnees, "enfantsRetour")));
+  if (enfantsAller > demande.passagers) {
+    return "Il y a plus d’enfants que de passagers à l’aller : vérifiez le nombre de passagers.";
+  }
+  if (demande.retour && enfantsRetour > (demande.passagersRetour ?? demande.passagers)) {
+    return "Il y a plus d’enfants que de passagers au retour : vérifiez le nombre de passagers.";
+  }
 
   const grille = devisReservation(demande);
   if (!grille.ok) {
@@ -109,8 +144,27 @@ export async function actionCreerTelephone(
         : "Pas de prix dans la grille pour ce trajet.";
   }
   const prixGrille = grille.devis.total;
-  const saisi = Number(String(donnees.get("prix") ?? "").replace(",", "."));
-  const montant = Number.isFinite(saisi) && saisi > 0 ? Math.round(saisi * 100) / 100 : prixGrille;
+
+  // Le prix : vide = la grille ; sinon un montant lisible, calculé sur ce trajet-ci.
+  const brutPrix = String(donnees.get("prix") ?? "")
+    .replace(/[\s  €]/g, "")
+    .replace(",", ".");
+  let montant = prixGrille;
+  if (brutPrix !== "") {
+    const saisi = Number(brutPrix);
+    if (!Number.isFinite(saisi) || saisi <= 0) {
+      return "Le prix saisi n’est pas lisible : écrivez un montant en euros, par exemple 320 ou 320,50 — ou laissez vide pour le prix de la grille.";
+    }
+    montant = Math.round(saisi * 100) / 100;
+    const affiche = Number(String(donnees.get("prixGrilleAffiche") ?? ""));
+    if (Number.isFinite(affiche) && affiche > 0 && affiche !== prixGrille) {
+      return `Le trajet a changé depuis le calcul : la grille donne maintenant ${prixGrille} €. Recalculez le prix.`;
+    }
+    const ecart = Math.abs(montant - prixGrille) / prixGrille;
+    if (ecart > 0.5 && donnees.get("confirmerPrix") !== "on") {
+      return `Le prix saisi (${montant} €) s’écarte de plus de moitié de la grille (${prixGrille} €). Cochez « Je confirme ce prix » pour le garder.`;
+    }
+  }
 
   const nom = champ(donnees, "nom", 120);
   const email = champ(donnees, "email", 160);
@@ -118,10 +172,11 @@ export async function actionCreerTelephone(
   if (!nom || !email.includes("@") || !telephone) {
     return "Le nom, l’e-mail et le téléphone du client sont obligatoires.";
   }
-  const langue = LANGUES.includes(champ(donnees, "langue", 2)) ? champ(donnees, "langue", 2) : "fr";
+  const langueSaisie = champ(donnees, "langue", 2);
+  if (!LANGUES.includes(langueSaisie)) return "Choisissez la langue des e-mails du client.";
+  const langue = langueSaisie;
   const mode: ModePaiement = donnees.get("mode") === "virement" ? "virement" : "carte";
 
-  const ref = nouvelleReference();
   const aeroport = airportParSlug(demande.airport)!;
   const station = resortParSlug(demande.resort)!;
   const intitule = `${aeroport.name} → ${station.name}`;
@@ -164,8 +219,8 @@ export async function actionCreerTelephone(
     vol_retour: allerRetour ? champ(donnees, "volRetour", 20) || null : null,
     bagages_ski: demande.skis ?? 0,
     enfants: phraseEnfants(
-      nombre(donnees, "enfants"),
-      nombre(donnees, "enfantsRetour"),
+      enfantsAller,
+      enfantsRetour,
       champ(donnees, "ages", 120) || null,
       Boolean(demande.retour),
     ),
@@ -175,7 +230,8 @@ export async function actionCreerTelephone(
     mode_paiement: mode,
   };
   if (!(await inserer("reservations", ligne))) {
-    return "La réservation n’a pas pu être enregistrée : la base ne répond pas, ou la migration « téléphone » n’est pas passée.";
+    console.error(`[telephone] ${ref} non enregistrée`);
+    return PROBLEME_TECHNIQUE;
   }
 
   const entetes = await headers();
@@ -195,6 +251,7 @@ export async function actionCreerTelephone(
   const echeanceLisible = jourClient(langue, echeance);
   const iban = process.env.IBAN_VIREMENT?.trim() || null;
   const mots = textesTelephone(langue);
+  const notes: string[] = [];
 
   // La facture, quand la facturation est allumée : sa page en ligne se paie par carte.
   const facture = await creerFactureTelephone({
@@ -209,7 +266,12 @@ export async function actionCreerTelephone(
   });
   let lienPaiement = facture?.url ?? null;
   if (facture) {
-    await mettreAJour("reservations", { colonne: "reference", valeur: ref }, { facture_stripe: facture.id });
+    const garde = await mettreAJour(
+      "reservations",
+      { colonne: "reference", valeur: ref },
+      { facture_stripe: facture.id },
+    );
+    if (!garde) notes.push(`facture ${facture.id} non rattachée à la réservation — à vérifier`);
   } else if (mode === "carte") {
     // Facturation éteinte : la page de paiement du site, comme pour une réservation en ligne.
     const jeton = jetonGestion(ref);
@@ -226,6 +288,7 @@ export async function actionCreerTelephone(
       await mettreAJour("reservations", { colonne: "reference", valeur: ref }, { session_stripe: session.id });
     }
   }
+  if (mode === "carte" && !lienPaiement) notes.push("lien de paiement NON créé");
 
   const envoye = await envoyer({
     destinataire: email,
@@ -266,6 +329,7 @@ export async function actionCreerTelephone(
       `${SITE.nom} — ${SITE.url}`,
     ].join("\n"),
   });
+  if (!envoye) notes.push("e-mail au client NON envoyé");
 
   await inserer("modifications", {
     reference: ref,
@@ -276,7 +340,7 @@ export async function actionCreerTelephone(
       mode === "virement" ? "paiement par virement" : "lien de paiement par carte",
       montant !== prixGrille ? `prix de la grille ${prixGrille} € corrigé à ${montant} €` : null,
       facture ? `facture ${facture.numero ?? facture.id}` : null,
-      envoye ? null : "e-mail au client NON envoyé",
+      ...notes,
     ]
       .filter(Boolean)
       .join(" · "),
@@ -285,5 +349,6 @@ export async function actionCreerTelephone(
     source: "exploitant",
   });
 
-  redirect(`${cheminFiche(ref)}?fait=${envoye ? "cree" : "cree-sans-email"}`);
+  const fait = !envoye ? "cree-sans-email" : mode === "carte" && !lienPaiement ? "cree-sans-lien" : "cree";
+  redirect(`${cheminFiche(ref)}?fait=${fait}`);
 }

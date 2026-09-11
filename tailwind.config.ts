@@ -56,14 +56,27 @@ const config: Config = {
           50: "#F8F2E7",
         },
         /*
-         * La couleur d'action — la seule qui appelle au clic. Magenta par
-         * défaut, vert sur la home tant que l'essai de palette dure.
+         * La couleur d'action — la seule qui appelle au clic. Verte sur tout le
+         * site depuis le 10 septembre 2026 (voir `globals.css`) : elle ne sert
+         * donc plus à signaler une alerte.
          */
         marque: {
           DEFAULT: "rgb(var(--c-marque) / <alpha-value>)",
           600: "rgb(var(--c-marque-600) / <alpha-value>)",
           300: "rgb(var(--c-marque-300) / <alpha-value>)",
         },
+        /*
+         * Les états — revue du tableau de bord, 11 septembre 2026.
+         *
+         * L'action étant passée au vert, les alertes écrites en `marque`
+         * s'affichaient en vert comme les boutons, et « Payée » se distinguait
+         * à peine d'« En attente ». Trois couleurs réservées aux états, jamais
+         * aux boutons : le rouge dit « à faire », l'orange « en attente », le
+         * vert « réglé ».
+         */
+        danger: { DEFAULT: "#B42318", 700: "#912018", 300: "#FDA29B", 50: "#FEF3F2" },
+        attention: { DEFAULT: "#B54708", 700: "#93370D", 300: "#FEC84B", 50: "#FFFAEB" },
+        succes: { DEFAULT: "#067647", 700: "#05603A", 300: "#75E0A7", 50: "#ECFDF3" },
       },
       /*
        * Une seule famille — Outfit, celle du site actuel et du logo. Les deux
