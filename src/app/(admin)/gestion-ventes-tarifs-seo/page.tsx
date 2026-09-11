@@ -31,7 +31,7 @@ function LigneCourse({ course }: { course: Course }) {
 
   return (
     <details className="group border-b border-glacier-200 last:border-0">
-      <summary className="grid cursor-pointer list-none gap-2 px-4 py-4 hover:bg-glacier-50 lg:grid-cols-[10rem_1fr_1fr_7rem_9rem] lg:items-baseline lg:gap-4">
+      <summary className="grid cursor-pointer list-none gap-2 px-4 py-4 hover:bg-glacier-50 lg:grid-cols-[10rem_1fr_1fr_8rem_15rem] lg:items-baseline lg:gap-4">
         <span className="font-medium tabular-nums text-alpine">{heure(course.aller)}</span>
 
         {/* La destination : la raison d'être de cet écran. */}
@@ -64,10 +64,10 @@ function LigneCourse({ course }: { course: Course }) {
         </span>
 
         <span className="flex items-center gap-2">
-          <span className={`rounded-full border px-2 py-0.5 text-xs ${couleur}`}>
+          <span className={`whitespace-nowrap rounded-full border px-2 py-0.5 text-xs ${couleur}`}>
             {statut.texte}
           </span>
-          <span className="text-sm tabular-nums text-alpine-700">
+          <span className="whitespace-nowrap text-sm tabular-nums text-alpine-700">
             {course.montant} {course.devise === "EUR" ? "€" : course.devise}
           </span>
         </span>
@@ -151,19 +151,22 @@ function LigneCourse({ course }: { course: Course }) {
   );
 }
 
-function Tableau({ titre, courses, vide }: { titre: string; courses: Course[]; vide: string }) {
+function Tableau({ titre, courses, vide }: { titre?: string; courses: Course[]; vide: string }) {
   return (
-    <section className="mt-8">
-      <h2 className="font-display text-lg text-alpine">
-        {titre} <span className="text-sm font-normal text-alpine-600">({courses.length})</span>
-      </h2>
+    <section className={titre ? "mt-8" : "mt-3"}>
+      {/* Sans titre quand la section qui l'enveloppe en porte déjà un. */}
+      {titre ? (
+        <h2 className="font-display text-lg text-alpine">
+          {titre} <span className="text-sm font-normal text-alpine-600">({courses.length})</span>
+        </h2>
+      ) : null}
 
       <div className="mt-3 overflow-hidden rounded-xl border border-glacier-200 bg-white shadow-carte">
         {courses.length === 0 ? (
           <p className="px-4 py-8 text-center text-sm text-alpine-600">{vide}</p>
         ) : (
           <>
-            <div className="hidden border-b border-glacier-200 bg-glacier-50 px-4 py-2 text-xs uppercase tracking-wide text-alpine-600 lg:grid lg:grid-cols-[10rem_1fr_1fr_7rem_9rem] lg:gap-4">
+            <div className="hidden border-b border-glacier-200 bg-glacier-50 px-4 py-2 text-xs uppercase tracking-wide text-alpine-600 lg:grid lg:grid-cols-[10rem_1fr_1fr_8rem_15rem] lg:gap-4">
               <span>Prise en charge</span>
               <span>Trajet</span>
               <span>Adresse en station</span>
@@ -188,6 +191,15 @@ export default async function PageAdmin() {
   // Les demandes d'horaire en attente passent devant tout : tant qu'elles ne sont
   // pas tranchées, le client ne sait pas à quelle heure on vient le chercher.
   const demandes = aVenir.filter((course) => aValider(course).length > 0);
+  /*
+    Un paiement non abouti n'est pas une course : le client a ouvert la page
+    Stripe et n'a pas payé. Mêlé aux vraies courses, il envoie un chauffeur pour
+    rien — et les tentatives répétées d'un même client s'y affichaient en double.
+    Il reste consultable, replié en bas : c'est un client qui a hésité, qu'on
+    peut rappeler. Décision de JC, 11 septembre 2026.
+  */
+  const aAssurer = aVenir.filter((course) => course.statut !== "en-attente-paiement");
+  const nonAboutis = aVenir.filter((course) => course.statut === "en-attente-paiement");
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
@@ -230,7 +242,7 @@ export default async function PageAdmin() {
 
       <Tableau
         titre="À venir"
-        courses={aVenir}
+        courses={aAssurer}
         vide="Aucune course à venir pour le moment."
       />
 
@@ -239,6 +251,20 @@ export default async function PageAdmin() {
         courses={passees}
         vide="Aucune course passée."
       />
+
+      {nonAboutis.length > 0 ? (
+        <details className="mt-10">
+          <summary className="cursor-pointer font-display text-lg text-alpine-600 hover:text-alpine">
+            Paiements non aboutis{" "}
+            <span className="text-sm font-normal">({nonAboutis.length})</span>
+          </summary>
+          <p className="mt-2 max-w-prose text-sm leading-relaxed text-alpine-600">
+            Le client a ouvert la page de paiement sans payer. Ces courses ne sont pas à
+            assurer ; elles restent ici pour rappeler un client qui a hésité.
+          </p>
+          <Tableau courses={nonAboutis} vide="Aucun paiement non abouti." />
+        </details>
+      ) : null}
     </main>
   );
 }
