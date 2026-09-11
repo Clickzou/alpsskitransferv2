@@ -50,6 +50,25 @@ validation, le refus, les deux e-mails au client, et le lien de l'e-mail
 de TVA ou à 10 %, comment traiter les trajets suisses et italiens, et sa
 dénomination exacte (« EI »). Recommandation rendue : factures Stripe Checkout.
 
+## Accès au back-office — fermé le 11 septembre
+
+`https://alpsskitransferv2.vercel.app/gestion-ventes-tarifs-seo/`, deux comptes
+Supabase Auth créés par JC : `contact@alpsskitransfers.com` (Nassim) et
+`jc@clickzou.fr`. Les mots de passe ne sont nulle part dans le dépôt ni dans
+la conversation.
+
+**L'inscription libre était ouverte** sur le projet Supabase : avec la clé
+publique du site, n'importe qui pouvait se créer un compte et lire toutes les
+réservations — et l'adresse du back-office est dans ce dépôt public. Aucun
+compte n'existait encore. Deux verrous désormais :
+
+- l'inscription est **désactivée** dans Supabase (Authentication → Sign In /
+  Providers) ;
+- `ADMIN_EMAILS` (`lib/admin/acces.ts`) : seules ces adresses entrent, même
+  avec un compte valide. **Fermé si la variable est vide.** Ajouter quelqu'un,
+  c'est créer son compte dans Supabase **et** ajouter son adresse ici, sur
+  Vercel, puis redéployer.
+
 ## ~~L'espace « ma réservation »~~ — construit le 11 septembre
 
 Les quatre URL répondent — `/manage-booking/`, `/fr/gerer-ma-reservation/`,

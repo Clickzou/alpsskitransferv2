@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { emailAutorise } from "@/lib/admin/acces";
 
 /**
  * L'authentification du back-office, sur Supabase Auth, en REST.
@@ -98,6 +99,9 @@ export async function connexion(email: string, motDePasse: string): Promise<stri
       expires_in?: number;
     };
     if (!donnees.access_token || !donnees.refresh_token) return "Identifiants incorrects.";
+    // Un compte Supabase n'est pas un droit d'entrée : seule la liste en donne un.
+    // Même message que pour un mot de passe faux, pour ne rien apprendre à qui essaie.
+    if (!emailAutorise(email)) return "Identifiants incorrects.";
 
     await poserCookies(donnees.access_token, donnees.refresh_token, donnees.expires_in ?? 3600);
     return null;
@@ -151,6 +155,7 @@ async function rafraichir(): Promise<Utilisateur | null> {
       user?: { id: string; email: string };
     };
     if (!donnees.access_token || !donnees.refresh_token || !donnees.user) return null;
+    if (!emailAutorise(donnees.user.email)) return null;
 
     await poserCookies(donnees.access_token, donnees.refresh_token, donnees.expires_in ?? 3600);
     return { id: donnees.user.id, email: donnees.user.email };
@@ -180,7 +185,8 @@ export async function utilisateurCourant(): Promise<Utilisateur | null> {
       });
       if (reponse.ok) {
         const donnees = (await reponse.json()) as { id: string; email: string };
-        return { id: donnees.id, email: donnees.email };
+        // Revérifiée à chaque page : retirer une adresse de la liste ferme sa session aussitôt.
+        return emailAutorise(donnees.email) ? { id: donnees.id, email: donnees.email } : null;
       }
     } catch (erreur) {
       console.error("[admin] vérification de session impossible", erreur);

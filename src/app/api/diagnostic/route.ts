@@ -58,6 +58,7 @@ const ATTENDUES: { nom: string; role: string; prefixe?: boolean }[] = [
   { nom: "EMAIL_EXPEDITEUR", role: "expéditeur des e-mails" },
   { nom: "EMAIL_EXPLOITANT", role: "destinataires de l'avis de course" },
   { nom: "SECRET_GESTION", role: "liens « gérer ma réservation »" },
+  { nom: "ADMIN_EMAILS", role: "adresses autorisées dans le back-office" },
   { nom: "BAREME_VALIDE", role: "autorisation d'encaisser" },
   { nom: "NEXT_PUBLIC_MOTEUR_RESERVATION", role: "moteur interne ou repli WooCommerce" },
   { nom: "NEXT_PUBLIC_INDEXATION", role: "ouverture aux moteurs de recherche" },
