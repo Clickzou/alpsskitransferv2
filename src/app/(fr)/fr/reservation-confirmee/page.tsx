@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import { BoutonAction, HeroInterieur, Section } from "@/components/gabarit/Sections";
 import { T } from "@/lib/intl/textes";
 import { cheminConfirmation } from "@/lib/reservation/config";
+import { CHEMIN_GESTION } from "@/lib/reservation/gestion";
+import { TEXTES_GESTION } from "@/lib/reservation/textes";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -35,6 +37,12 @@ export default async function PageConfirmation({
 }) {
   const params = await searchParams;
   const reference = typeof params.ref === "string" ? params.ref : null;
+  const jeton = typeof params.j === "string" ? params.j : null;
+  /* Sans jeton, pas de lien : après un paiement, un 404 serait le pire accueil. */
+  const lienGerer =
+    reference && jeton
+      ? `${CHEMIN_GESTION.fr}?ref=${encodeURIComponent(reference)}&j=${encodeURIComponent(jeton)}`
+      : null;
   const t = T("fr");
 
   return (
@@ -72,9 +80,21 @@ export default async function PageConfirmation({
               </Link>le plus tôt possible.
             </p>
 
-            <div className="pt-2">
-              <BoutonAction href="/fr/">Retour au site</BoutonAction>
-            </div>
+            {lienGerer ? (
+              <div className="space-y-3 pt-2">
+                <p>{TEXTES_GESTION.fr.chapo}</p>
+                <BoutonAction href={lienGerer}>{TEXTES_GESTION.fr.bouton}</BoutonAction>
+                <p>
+                  <Link className="text-marque underline underline-offset-4" href="/fr/">
+                    {TEXTES_GESTION.fr.retourSite}
+                  </Link>
+                </p>
+              </div>
+            ) : (
+              <div className="pt-2">
+                <BoutonAction href="/fr/">Retour au site</BoutonAction>
+              </div>
+            )}
           </div>
         </Section>
       </main>

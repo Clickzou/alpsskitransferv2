@@ -4,6 +4,8 @@ import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
 import { SITE } from "@/data/site";
 import { envoyer } from "@/lib/reservation/email";
+import { origineSite } from "@/lib/reservation/config";
+import { lienGestion } from "@/lib/reservation/gestion";
 import { signatureValide } from "@/lib/reservation/stripe";
 import { corpsAvis, sujetAvis, textesEmail } from "@/lib/reservation/textes";
 import { inserer, lire, mettreAJour } from "@/lib/reservation/supabase";
@@ -186,6 +188,19 @@ export async function POST(requete: Request) {
     const mots = textesEmail(session.metadata?.langue);
     const trajet = trajetLisible;
 
+    /*
+      Le lien « gérer ma réservation ».
+
+      C'est le seul endroit d'où il part : l'e-mail de confirmation est le
+      message qu'on ressort à l'aéroport, et le lien signé n'a pas d'autre
+      porte. Il ne vaut que pour une réservation réellement en base — un
+      paiement de panier n'en crée pas — d'où la condition sur la ligne relue.
+    */
+    const lien =
+      reference && reservation
+        ? lienGestion(origineSite(requete), reference, session.metadata?.langue)
+        : null;
+
     await envoyer({
       destinataire: email,
       sujet: mots.sujet(reference ?? ""),
@@ -194,6 +209,7 @@ export async function POST(requete: Request) {
           reference: reference ?? "",
           trajet,
           montant: montant != null ? `${montant} €` : undefined,
+          lien: lien ?? undefined,
         }),
         "",
         `${SITE.nom} — ${SITE.url}`,

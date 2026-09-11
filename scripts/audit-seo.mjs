@@ -162,7 +162,7 @@ function analyser(html) {
 
 const urls = await urlsDuSitemap();
 // Les pages du tunnel ne sont pas au sitemap (noindex voulu) : on les mesure quand même.
-const supplementaires = ["/booking/", "/booking/confirmed/"];
+const supplementaires = ["/booking/", "/booking/confirmed/", "/manage-booking/"];
 const aCrawler = [...urls, ...supplementaires];
 
 const pages = [];

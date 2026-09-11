@@ -317,3 +317,22 @@ export function lienIndexAeroports(lang: Lang): string {
     ? "/airport-ski-transfers/"
     : `/${lang}/${SEGMENT_AEROPORTS[lang as LangueSecondaire]}/`;
 }
+
+/**
+ * La page de contact de la langue.
+ *
+ * Le slug est un mot du marché, comme partout ailleurs — `kontakt`, `contatti`
+ * — et il était recopié à la main dans chaque page qui renvoie vers nous :
+ * confirmation de paiement, gestion de réservation. Une faute de frappe y
+ * enverrait un client sur un 404 juste après un paiement, c'est-à-dire au seul
+ * moment où il cherche à nous joindre.
+ */
+export function lienContact(lang: Lang): string {
+  const chemins: Record<Lang, string> = {
+    en: "/contact/",
+    fr: "/fr/contact/",
+    de: "/de/kontakt/",
+    it: "/it/contatti/",
+  };
+  return chemins[lang] ?? chemins.en;
+}

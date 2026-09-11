@@ -8,7 +8,7 @@ import { emailConfigure, envoyer } from "@/lib/reservation/email";
 import { validerDemande } from "@/lib/reservation/demande";
 import { devisReservation } from "@/lib/reservation/devis";
 import { cheminConfirmation, origineSite } from "@/lib/reservation/config";
-import { departImminent } from "@/lib/reservation/gestion";
+import { departImminent, jetonGestion } from "@/lib/reservation/gestion";
 import { creerSessionCheckout, stripeConfigure } from "@/lib/reservation/stripe";
 import { corpsAvis, sujetAvis } from "@/lib/reservation/textes";
 import { inserer, mettreAJour, supabaseConfigure } from "@/lib/reservation/supabase";
@@ -454,7 +454,19 @@ export async function POST(requete: Request) {
         },
       ],
       email,
-      urlSucces: `${origine}${cheminConfirmation(langue)}?ref=${ref}`,
+      /*
+        Le jeton de gestion voyage jusqu'à la page de retour, qui en fait le
+        lien « gérer ma réservation ».
+
+        Il est calculé **ici**, côté serveur, et pas par la page de confirmation
+        à partir du `ref` qu'elle reçoit : cette page s'atteint en tapant son
+        URL, et une référence se devine par essais successifs. Une page qui
+        signerait ce qu'on lui présente ouvrirait la réservation de n'importe
+        qui — c'est exactement ce que le HMAC existe pour empêcher.
+      */
+      urlSucces: `${origine}${cheminConfirmation(langue)}?ref=${ref}${
+        jetonGestion(ref) ? `&j=${jetonGestion(ref)}` : ""
+      }`,
       urlAnnulation: `${origine}/book-ski-transfer-tickets/?from=${demande.airport}&to=${demande.resort}`,
       metadonnees: { airport: demande.airport, resort: demande.resort, langue },
     });

@@ -1,4 +1,4 @@
-import { FUSEAU_ALPES } from "@/lib/temps";
+import { FUSEAU_ALPES, instantAlpes } from "@/lib/temps";
 import { NextResponse } from "next/server";
 import { envoyer } from "@/lib/reservation/email";
 import { jetonValide, modifiableEnLigne } from "@/lib/reservation/gestion";
@@ -51,12 +51,22 @@ interface Ligne {
   client_telephone: string;
 }
 
-/** `YYYY-MM-DDTHH:mm` local, comme le produit un champ `datetime-local`. */
+/**
+ * `YYYY-MM-DDTHH:mm`, comme le produit un champ `datetime-local`.
+ *
+ * L'heure saisie est celle de **l'aéroport**, jamais celle du serveur. Elle
+ * était construite par `new Date(annee, mois, jour, heure, minute)`, qui
+ * l'interprète dans le fuseau de la machine : Europe/Paris en développement,
+ * **UTC sur Vercel**. Un client qui déplaçait sa prise en charge à 14 h la
+ * voyait enregistrée à 16 h l'été — et le chauffeur la lisait ainsi. C'est le
+ * défaut que `lib/temps` corrige partout ailleurs ; il restait ici, sur le seul
+ * écran dont l'unique objet est de choisir une heure.
+ */
 function dateLocale(valeur: unknown): Date | null {
   if (typeof valeur !== "string") return null;
   const m = valeur.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
   if (!m) return null;
-  const d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+  const d = instantAlpes(+m[1], +m[2], +m[3], +m[4], +m[5]);
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
@@ -110,8 +120,21 @@ export async function POST(requete: Request) {
   }`;
 
   if (!modifiableEnLigne(new Date(reservation.aller))) {
-    const message =
+    const ecrit =
       typeof corps.message === "string" ? corps.message.trim().slice(0, 2000) : "";
+
+    /*
+      Le formulaire de la page bascule sur un message libre en deçà de vingt-quatre
+      heures — mais la bascule se décide à l'affichage, et la barre peut être
+      franchie entre le moment où la page s'ouvre et celui où l'on valide. Le
+      client a alors envoyé un horaire et aucun message, et l'exploitant recevait
+      « Ce qu'il demande : (aucun message) ». L'horaire demandé dit exactement la
+      même chose, en actionnable.
+    */
+    const horaireDemande = dateLocale(corps.aller);
+    const message =
+      ecrit ||
+      (horaireDemande ? `Nouvel horaire demandé : ${quand(horaireDemande)}` : "");
 
     const exploitantUrgent = process.env.EMAIL_EXPLOITANT;
     const envoye = exploitantUrgent

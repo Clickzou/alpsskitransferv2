@@ -961,13 +961,25 @@ export const CHEMIN_PANIER: Record<Lang, string> = {
  */
 export interface TextesEmail {
   sujet: (reference: string) => string;
-  corps: (details: { reference: string; trajet?: string; montant?: string }) => string;
+  /**
+   * `lien` est le lien signé « gérer ma réservation ».
+   *
+   * Il n'est pas toujours là : sans `SECRET_GESTION`, il ne peut pas être
+   * fabriqué, et un e-mail qui annoncerait une page inaccessible serait pire
+   * que le silence. L'absence se voit donc ici, pas dans le webhook.
+   */
+  corps: (details: {
+    reference: string;
+    trajet?: string;
+    montant?: string;
+    lien?: string;
+  }) => string;
 }
 
 export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
   en: {
     sujet: (reference) => `Your transfer is confirmed — ${reference}`,
-    corps: ({ reference, trajet, montant }) =>
+    corps: ({ reference, trajet, montant, lien }) =>
       [
         "Your transfer is booked and paid.",
         "",
@@ -981,6 +993,9 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         "",
         "If anything changes — a new flight, an extra passenger, a different",
         "address in resort — tell us as early as you can.",
+        ...(lien
+          ? ["", "You can move your pick-up time yourself, up to 24 hours before:", lien]
+          : []),
       ]
         .filter((l) => l !== null)
         .join("\n"),
@@ -988,7 +1003,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
 
   fr: {
     sujet: (reference) => `Votre transfert est confirmé — ${reference}`,
-    corps: ({ reference, trajet, montant }) =>
+    corps: ({ reference, trajet, montant, lien }) =>
       [
         "Votre transfert est réservé et payé.",
         "",
@@ -1002,6 +1017,14 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         "",
         "Si quelque chose change — un autre vol, un passager de plus, une autre",
         "adresse en station — dites-le-nous le plus tôt possible.",
+        ...(lien
+          ? [
+              "",
+              "Vous pouvez déplacer vous-même votre heure de prise en charge,",
+              "jusqu’à 24 heures avant :",
+              lien,
+            ]
+          : []),
       ]
         .filter((l) => l !== null)
         .join("\n"),
@@ -1009,7 +1032,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
 
   de: {
     sujet: (reference) => `Ihr Transfer ist bestätigt — ${reference}`,
-    corps: ({ reference, trajet, montant }) =>
+    corps: ({ reference, trajet, montant, lien }) =>
       [
         "Ihr Transfer ist gebucht und bezahlt.",
         "",
@@ -1023,6 +1046,13 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         "",
         "Ändert sich etwas — ein anderer Flug, eine Person mehr, eine andere",
         "Adresse im Skiort —, sagen Sie uns so früh wie möglich Bescheid.",
+        ...(lien
+          ? [
+              "",
+              "Ihre Abholzeit können Sie bis 24 Stunden vorher selbst ändern:",
+              lien,
+            ]
+          : []),
       ]
         .filter((l) => l !== null)
         .join("\n"),
@@ -1030,7 +1060,7 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
 
   it: {
     sujet: (reference) => `Il tuo transfer è confermato — ${reference}`,
-    corps: ({ reference, trajet, montant }) =>
+    corps: ({ reference, trajet, montant, lien }) =>
       [
         "Il tuo transfer è prenotato e pagato.",
         "",
@@ -1044,6 +1074,13 @@ export const TEXTES_EMAIL: Record<Lang, TextesEmail> = {
         "",
         "Se qualcosa cambia — un altro volo, un passeggero in più, un altro",
         "indirizzo in località — diccelo il prima possibile.",
+        ...(lien
+          ? [
+              "",
+              "Puoi spostare tu stesso l’orario di presa in carico, fino a 24 ore prima:",
+              lien,
+            ]
+          : []),
       ]
         .filter((l) => l !== null)
         .join("\n"),
@@ -1285,5 +1322,396 @@ export const TEXTES_IMMINENT: Record<Lang, { titre: string; texte: string }> = {
       "preavviso il sito non può confermare che un autista sia libero. Chiamaci, la " +
       "risposta arriva in trenta secondi — spesso si può fare, ma non incassiamo prima " +
       "di esserne certi.",
+  },
+};
+
+/* ------------------------------------------------ « gérer ma réservation » */
+
+/**
+ * La page qu'on ouvre depuis son e-mail de confirmation.
+ *
+ * Elle ne fait qu'**une** chose — déplacer l'heure de prise en charge et
+ * corriger le numéro de vol — et elle le dit d'entrée. Tout le reste (véhicule,
+ * trajet, passagers) change le prix : ce n'est plus une modification, c'est une
+ * autre réservation, et cela passe par nous.
+ *
+ * Les mots sont ceux du client, pas ceux du métier : « votre réservation », pas
+ * « votre dossier ». Et quand la réponse est non — lien périmé, course passée,
+ * départ dans moins de vingt-quatre heures — la page donne le téléphone plutôt
+ * qu'un mur.
+ */
+export interface TextesGestion {
+  titre: string;
+  bouton: string;
+  fil: string;
+  chapo: string;
+  metaDescription: string;
+
+  /* Le dossier relu en base. */
+  reference: string;
+  aller: string;
+  retour: string;
+  vehicule: string;
+  passagers: (n: number) => string;
+  vol: string;
+  sansVol: string;
+  montant: string;
+  paye: string;
+  aRegler: string;
+
+  /* Les cas où il n'y a rien à modifier. */
+  lienInvalideTitre: string;
+  lienInvalideTexte: string;
+  introuvableTitre: string;
+  introuvableTexte: string;
+  annuleeTitre: string;
+  annuleeTexte: string;
+  passeeTitre: string;
+  passeeTexte: string;
+  indisponibleTitre: string;
+  indisponibleTexte: string;
+
+  /* Le formulaire. */
+  modifierTitre: string;
+  modifierTexte: string;
+  nouvelHoraire: string;
+  nouvelHoraireIndice: string;
+  numeroVol: string;
+  facultatif: string;
+  enregistrer: string;
+  enregistrement: string;
+
+  /* Moins de vingt-quatre heures : on signale, on ne modifie plus. */
+  tardifTitre: string;
+  tardifTexte: string;
+  votreDemande: string;
+  votreDemandeIndice: string;
+  envoyer: string;
+  appeler: string;
+
+  /* Ce qui s'affiche après. */
+  faitTitre: string;
+  faitTexte: (quand: string) => string;
+  transmisTitre: string;
+  transmisTexte: string;
+  nonTransmisTexte: string;
+
+  /* Les refus du serveur, dans les mots de la page. */
+  erreurTropProche: string;
+  erreurDate: string;
+  erreurLien: string;
+  erreurReseau: string;
+  erreurEnregistrement: string;
+
+  autreChangement: string;
+  ecrire: string;
+  retourSite: string;
+}
+
+export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
+  en: {
+    titre: "Your booking",
+    bouton: "Manage my booking",
+    fil: "Manage my booking",
+    chapo:
+      "Change your pick-up time or correct your flight number — your driver is told straight away.",
+    metaDescription: "Change the pick-up time of your airport ski transfer.",
+
+    reference: "Reference",
+    aller: "Pick-up",
+    retour: "Return",
+    vehicule: "Vehicle",
+    passagers: (n) => (n > 1 ? `${n} passengers` : "1 passenger"),
+    vol: "Flight",
+    sansVol: "not given",
+    montant: "Amount",
+    paye: "paid",
+    aRegler: "to pay",
+
+    lienInvalideTitre: "This link no longer works",
+    lienInvalideTexte:
+      "It has to be opened from your confirmation email, exactly as it was sent — the address gets cut short when it is copied by hand. Write to us with your reference and we will make the change for you.",
+    introuvableTitre: "We cannot find this booking",
+    introuvableTexte:
+      "It may have been made under another reference. Send us the confirmation email and we will sort it out.",
+    annuleeTitre: "This booking has been cancelled",
+    annuleeTexte:
+      "Nothing more can be changed here. If that is a mistake, tell us today — a driver is easier to call back than to find twice.",
+    passeeTitre: "This journey has already taken place",
+    passeeTexte:
+      "There is nothing left to change. If you need a receipt or another transfer, we are one message away.",
+    indisponibleTitre: "We cannot reach your booking right now",
+    indisponibleTexte:
+      "Try again in a few minutes. If it is urgent — you are travelling today or tomorrow — call us rather than wait.",
+
+    modifierTitre: "Move your pick-up time",
+    modifierTexte:
+      "The time and the flight number, and nothing else: the vehicle, the journey and the number of passengers all change the price, so those go through us. What you have paid does not move.",
+    nouvelHoraire: "New pick-up time",
+    nouvelHoraireIndice: "Local time at the airport, at least 24 hours from now.",
+    numeroVol: "Flight number",
+    facultatif: "(optional)",
+    enregistrer: "Save the change",
+    enregistrement: "Saving…",
+
+    tardifTitre: "Less than 24 hours to go — tell us and we will call you",
+    tardifTexte:
+      "At this notice the change is not made from the website: your driver's day is already built around this journey. Write what you need below and the operator has it straight away — or call, which is faster.",
+    votreDemande: "What needs to change",
+    votreDemandeIndice:
+      "A new landing time, a cancelled flight, one passenger more — say it plainly.",
+    envoyer: "Send this to the operator",
+    appeler: "Call us",
+
+    faitTitre: "Your pick-up time has been changed",
+    faitTexte: (quand) =>
+      `Your driver now comes at ${quand}. Nothing else has moved, and there is nothing more to pay.`,
+    transmisTitre: "Your message is with the operator",
+    transmisTexte:
+      "They will call you back on the number you gave. Your booking has not been changed in the meantime — they confirm it with you first.",
+    nonTransmisTexte:
+      "We could not deliver it. Please call us — at this notice, do not rely on an email.",
+
+    erreurTropProche:
+      "That time is less than 24 hours away. Pick a later one, or tell us below and we will arrange it.",
+    erreurDate: "That date could not be read. Please check the day and the time.",
+    erreurLien: "This link is no longer valid. Open it again from your confirmation email.",
+    erreurReseau: "The connection dropped. Try again.",
+    erreurEnregistrement: "We could not save the change. Try again, or call us.",
+
+    autreChangement:
+      "Anything else — another vehicle, another resort, one passenger more — is a new price, so it goes through us.",
+    ecrire: "Write to us",
+    retourSite: "Back to the site",
+  },
+
+  fr: {
+    titre: "Votre réservation",
+    bouton: "Gérer ma réservation",
+    fil: "Gérer ma réservation",
+    chapo:
+      "Changez votre heure de prise en charge ou corrigez votre numéro de vol — votre chauffeur est prévenu aussitôt.",
+    metaDescription: "Modifiez l’heure de prise en charge de votre transfert.",
+
+    reference: "Référence",
+    aller: "Prise en charge",
+    retour: "Retour",
+    vehicule: "Véhicule",
+    passagers: (n) => (n > 1 ? `${n} passagers` : "1 passager"),
+    vol: "Vol",
+    sansVol: "non renseigné",
+    montant: "Montant",
+    paye: "réglé",
+    aRegler: "à régler",
+
+    lienInvalideTitre: "Ce lien ne fonctionne plus",
+    lienInvalideTexte:
+      "Il s’ouvre depuis votre e-mail de confirmation, tel qu’il vous a été envoyé — l’adresse se coupe quand on la recopie à la main. Écrivez-nous avec votre référence, nous ferons la modification pour vous.",
+    introuvableTitre: "Nous ne retrouvons pas cette réservation",
+    introuvableTexte:
+      "Elle a peut-être été faite sous une autre référence. Transmettez-nous l’e-mail de confirmation, nous nous en occupons.",
+    annuleeTitre: "Cette réservation est annulée",
+    annuleeTexte:
+      "Il n’y a plus rien à modifier ici. Si c’est une erreur, dites-le-nous aujourd’hui : un chauffeur se rappelle plus facilement qu’il ne se trouve deux fois.",
+    passeeTitre: "Ce trajet a déjà eu lieu",
+    passeeTexte:
+      "Il n’y a plus rien à changer. Pour un justificatif ou un nouveau transfert, écrivez-nous.",
+    indisponibleTitre: "Votre réservation est momentanément inaccessible",
+    indisponibleTexte:
+      "Réessayez dans quelques minutes. Si c’est urgent — vous partez aujourd’hui ou demain — appelez-nous plutôt que d’attendre.",
+
+    modifierTitre: "Déplacer l’heure de prise en charge",
+    modifierTexte:
+      "L’heure et le numéro de vol, rien d’autre : le véhicule, le trajet et le nombre de passagers changent le prix, ils passent donc par nous. Ce que vous avez réglé ne bouge pas.",
+    nouvelHoraire: "Nouvelle heure de prise en charge",
+    nouvelHoraireIndice: "Heure locale à l’aéroport, au moins 24 heures à partir de maintenant.",
+    numeroVol: "Numéro de vol",
+    facultatif: "(facultatif)",
+    enregistrer: "Enregistrer la modification",
+    enregistrement: "Enregistrement…",
+
+    tardifTitre: "Moins de 24 heures — dites-le-nous, nous vous rappelons",
+    tardifTexte:
+      "À cette échéance, la modification ne se fait pas depuis le site : la journée de votre chauffeur est déjà construite autour de ce trajet. Écrivez ce dont vous avez besoin, l’exploitant le reçoit immédiatement — ou appelez, c’est plus rapide.",
+    votreDemande: "Ce qui doit changer",
+    votreDemandeIndice:
+      "Une autre heure d’atterrissage, un vol annulé, un passager de plus — dites-le simplement.",
+    envoyer: "Transmettre à l’exploitant",
+    appeler: "Nous appeler",
+
+    faitTitre: "Votre heure de prise en charge est modifiée",
+    faitTexte: (quand) =>
+      `Votre chauffeur vient désormais à ${quand}. Rien d’autre n’a bougé, et il n’y a rien de plus à payer.`,
+    transmisTitre: "Votre message est arrivé chez l’exploitant",
+    transmisTexte:
+      "Il vous rappelle au numéro que vous avez donné. Votre réservation n’a pas été modifiée entre-temps : il la confirme d’abord avec vous.",
+    nonTransmisTexte:
+      "Nous n’avons pas pu le transmettre. Appelez-nous — à cette échéance, ne comptez pas sur un e-mail.",
+
+    erreurTropProche:
+      "Cette heure est à moins de 24 heures. Choisissez-en une plus tardive, ou dites-le-nous ci-dessous : nous nous en occupons.",
+    erreurDate: "Cette date n’a pas pu être lue. Vérifiez le jour et l’heure.",
+    erreurLien: "Ce lien n’est plus valable. Rouvrez-le depuis votre e-mail de confirmation.",
+    erreurReseau: "La connexion s’est interrompue. Réessayez.",
+    erreurEnregistrement:
+      "Nous n’avons pas pu enregistrer la modification. Réessayez, ou appelez-nous.",
+
+    autreChangement:
+      "Tout le reste — un autre véhicule, une autre station, un passager de plus — change le prix : cela passe par nous.",
+    ecrire: "Nous écrire",
+    retourSite: "Retour au site",
+  },
+
+  de: {
+    titre: "Ihre Buchung",
+    bouton: "Buchung verwalten",
+    fil: "Buchung verwalten",
+    chapo:
+      "Ändern Sie Ihre Abholzeit oder korrigieren Sie Ihre Flugnummer — Ihr Fahrer erfährt es sofort.",
+    metaDescription: "Ändern Sie die Abholzeit Ihres Flughafentransfers.",
+
+    reference: "Referenz",
+    aller: "Abholung",
+    retour: "Rückfahrt",
+    vehicule: "Fahrzeug",
+    passagers: (n) => (n > 1 ? `${n} Personen` : "1 Person"),
+    vol: "Flug",
+    sansVol: "nicht angegeben",
+    montant: "Betrag",
+    paye: "bezahlt",
+    aRegler: "zu zahlen",
+
+    lienInvalideTitre: "Dieser Link funktioniert nicht mehr",
+    lienInvalideTexte:
+      "Er öffnet sich aus Ihrer Bestätigungs-E-Mail heraus, genau so, wie er versendet wurde — von Hand abgetippt wird die Adresse abgeschnitten. Schreiben Sie uns mit Ihrer Referenz, wir ändern es für Sie.",
+    introuvableTitre: "Wir finden diese Buchung nicht",
+    introuvableTexte:
+      "Vielleicht wurde sie unter einer anderen Referenz angelegt. Leiten Sie uns die Bestätigungs-E-Mail weiter, wir kümmern uns darum.",
+    annuleeTitre: "Diese Buchung ist storniert",
+    annuleeTexte:
+      "Hier lässt sich nichts mehr ändern. Ist das ein Irrtum, sagen Sie es uns noch heute: ein Fahrer lässt sich leichter zurückholen als ein zweites Mal finden.",
+    passeeTitre: "Diese Fahrt hat bereits stattgefunden",
+    passeeTexte:
+      "Es gibt nichts mehr zu ändern. Für einen Beleg oder einen weiteren Transfer schreiben Sie uns einfach.",
+    indisponibleTitre: "Ihre Buchung ist gerade nicht erreichbar",
+    indisponibleTexte:
+      "Versuchen Sie es in einigen Minuten erneut. Wird es dringend — Sie fahren heute oder morgen —, rufen Sie uns lieber an.",
+
+    modifierTitre: "Abholzeit verschieben",
+    modifierTexte:
+      "Die Uhrzeit und die Flugnummer, sonst nichts: Fahrzeug, Strecke und Personenzahl ändern den Preis und laufen deshalb über uns. Der bezahlte Betrag bleibt, wie er ist.",
+    nouvelHoraire: "Neue Abholzeit",
+    nouvelHoraireIndice: "Ortszeit am Flughafen, mindestens 24 Stunden ab jetzt.",
+    numeroVol: "Flugnummer",
+    facultatif: "(optional)",
+    enregistrer: "Änderung speichern",
+    enregistrement: "Wird gespeichert…",
+
+    tardifTitre: "Weniger als 24 Stunden — sagen Sie es uns, wir rufen zurück",
+    tardifTexte:
+      "So kurzfristig wird die Änderung nicht über die Website gemacht: der Tag Ihres Fahrers ist bereits um diese Fahrt herum geplant. Schreiben Sie unten, was Sie brauchen — der Betreiber bekommt es sofort. Ein Anruf geht schneller.",
+    votreDemande: "Was sich ändern soll",
+    votreDemandeIndice:
+      "Eine andere Landezeit, ein gestrichener Flug, eine Person mehr — sagen Sie es einfach.",
+    envoyer: "An den Betreiber senden",
+    appeler: "Rufen Sie uns an",
+
+    faitTitre: "Ihre Abholzeit ist geändert",
+    faitTexte: (quand) =>
+      `Ihr Fahrer kommt jetzt um ${quand}. Sonst bleibt alles gleich, und es ist nichts nachzuzahlen.`,
+    transmisTitre: "Ihre Nachricht ist beim Betreiber",
+    transmisTexte:
+      "Er ruft Sie unter der angegebenen Nummer zurück. Ihre Buchung wurde vorerst nicht geändert — er bestätigt sie zuerst mit Ihnen.",
+    nonTransmisTexte:
+      "Wir konnten sie nicht zustellen. Bitte rufen Sie an — so kurzfristig ist eine E-Mail kein Verlass.",
+
+    erreurTropProche:
+      "Diese Zeit liegt weniger als 24 Stunden entfernt. Wählen Sie eine spätere, oder sagen Sie es uns unten — wir regeln das.",
+    erreurDate: "Dieses Datum war nicht lesbar. Bitte prüfen Sie Tag und Uhrzeit.",
+    erreurLien:
+      "Dieser Link ist nicht mehr gültig. Öffnen Sie ihn erneut aus Ihrer Bestätigungs-E-Mail.",
+    erreurReseau: "Die Verbindung ist abgebrochen. Versuchen Sie es erneut.",
+    erreurEnregistrement:
+      "Wir konnten die Änderung nicht speichern. Versuchen Sie es erneut oder rufen Sie an.",
+
+    autreChangement:
+      "Alles andere — ein anderes Fahrzeug, ein anderer Skiort, eine Person mehr — ergibt einen neuen Preis und läuft über uns.",
+    ecrire: "Schreiben Sie uns",
+    retourSite: "Zurück zur Website",
+  },
+
+  it: {
+    titre: "La tua prenotazione",
+    bouton: "Gestisci la prenotazione",
+    fil: "Gestisci la prenotazione",
+    chapo:
+      "Cambia l’orario di presa in carico o correggi il numero del volo — il tuo autista lo sa subito.",
+    metaDescription: "Modifica l’orario di presa in carico del tuo transfer.",
+
+    reference: "Riferimento",
+    aller: "Presa in carico",
+    retour: "Ritorno",
+    vehicule: "Veicolo",
+    passagers: (n) => (n > 1 ? `${n} passeggeri` : "1 passeggero"),
+    vol: "Volo",
+    sansVol: "non indicato",
+    montant: "Importo",
+    paye: "pagato",
+    aRegler: "da pagare",
+
+    lienInvalideTitre: "Questo link non funziona più",
+    lienInvalideTexte:
+      "Va aperto dalla tua e-mail di conferma, così com’è stato inviato: ricopiandolo a mano l’indirizzo si tronca. Scrivici con il tuo riferimento e facciamo noi la modifica.",
+    introuvableTitre: "Non troviamo questa prenotazione",
+    introuvableTexte:
+      "Potrebbe essere stata fatta con un altro riferimento. Inoltraci l’e-mail di conferma e ce ne occupiamo.",
+    annuleeTitre: "Questa prenotazione è annullata",
+    annuleeTexte:
+      "Qui non c’è più nulla da modificare. Se è un errore, diccelo oggi stesso: un autista si richiama più facilmente di quanto non si trovi due volte.",
+    passeeTitre: "Questo tragitto è già avvenuto",
+    passeeTexte: "Non c’è più nulla da cambiare. Per una ricevuta o un altro transfer, scrivici.",
+    indisponibleTitre: "La tua prenotazione non è raggiungibile in questo momento",
+    indisponibleTexte:
+      "Riprova tra qualche minuto. Se è urgente — parti oggi o domani — chiamaci invece di aspettare.",
+
+    modifierTitre: "Sposta l’orario di presa in carico",
+    modifierTexte:
+      "L’orario e il numero del volo, nient’altro: veicolo, tragitto e numero di passeggeri cambiano il prezzo, quindi passano da noi. Quello che hai pagato resta lo stesso.",
+    nouvelHoraire: "Nuovo orario di presa in carico",
+    nouvelHoraireIndice: "Ora locale in aeroporto, almeno 24 ore da adesso.",
+    numeroVol: "Numero del volo",
+    facultatif: "(facoltativo)",
+    enregistrer: "Salva la modifica",
+    enregistrement: "Salvataggio…",
+
+    tardifTitre: "Meno di 24 ore — diccelo, ti richiamiamo",
+    tardifTexte:
+      "Con questo preavviso la modifica non si fa dal sito: la giornata del tuo autista è già costruita attorno a questo tragitto. Scrivi qui sotto di cosa hai bisogno, l’operatore lo riceve subito — oppure chiama, è più rapido.",
+    votreDemande: "Che cosa deve cambiare",
+    votreDemandeIndice:
+      "Un altro orario di atterraggio, un volo cancellato, un passeggero in più — dillo semplicemente.",
+    envoyer: "Invia all’operatore",
+    appeler: "Chiamaci",
+
+    faitTitre: "Il tuo orario di presa in carico è stato modificato",
+    faitTexte: (quand) =>
+      `Il tuo autista ora arriva alle ${quand}. Il resto non cambia e non c’è nulla da pagare in più.`,
+    transmisTitre: "Il tuo messaggio è arrivato all’operatore",
+    transmisTexte:
+      "Ti richiama al numero che hai indicato. Nel frattempo la prenotazione non è stata modificata: prima la conferma con te.",
+    nonTransmisTexte:
+      "Non siamo riusciti a consegnarlo. Chiamaci — con questo preavviso, non affidarti a un’e-mail.",
+
+    erreurTropProche:
+      "Questo orario è a meno di 24 ore. Scegline uno più tardi, oppure diccelo qui sotto: ci pensiamo noi.",
+    erreurDate: "Questa data non è leggibile. Controlla il giorno e l’ora.",
+    erreurLien: "Questo link non è più valido. Riaprilo dalla tua e-mail di conferma.",
+    erreurReseau: "La connessione si è interrotta. Riprova.",
+    erreurEnregistrement: "Non siamo riusciti a salvare la modifica. Riprova, oppure chiamaci.",
+
+    autreChangement:
+      "Tutto il resto — un altro veicolo, un’altra località, un passeggero in più — è un prezzo nuovo: passa da noi.",
+    ecrire: "Scrivici",
+    retourSite: "Torna al sito",
   },
 };

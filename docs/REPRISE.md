@@ -11,29 +11,33 @@ Tout est enregistré, le build passe : 367 pages, **83 tests**, couverture des
 
 # Reprise du 10 septembre 2026 au soir — le moteur tient debout
 
-## À FAIRE EN PREMIER — l'espace « ma réservation » n'existe pas
+## ~~L'espace « ma réservation »~~ — construit le 11 septembre
 
-Après paiement, la page de confirmation propose « Back to the site ». Elle doit
-proposer **« Gérer ma réservation »** — décision de JC, 10 septembre au soir.
+Les quatre URL répondent — `/manage-booking/`, `/fr/gerer-ma-reservation/`,
+`/de/buchung-verwalten/`, `/it/gestisci-prenotazione/` — une seule page
+(`PageGestion`), `force-dynamic` et `noindex`. `chargerDossier()`
+(`src/lib/reservation/dossier.ts`) vérifie le jeton **avant** toute lecture et
+rend un état nommé : lien invalide, base muette, introuvable, annulée, passée,
+tardive (< 24 h : message à l'exploitant + téléphone), ouverte (heure et vol
+modifiables). La course reste affichée quand on refuse, pour qu'on la reconnaisse.
 
-**Mais la page n'existe pas.** Elle a été conçue et jamais construite :
+Le lien est branché aux deux endroits : **l'URL de retour Stripe** porte le jeton
+calculé par `/api/reservation` (jamais par la page, qui s'atteint en tapant son
+URL), et **l'e-mail de paiement** du webhook le contient dans les quatre langues.
+Sans jeton — paiement de panier, visite directe — la confirmation garde son
+ancien bouton.
 
-- `CHEMIN_GESTION` (`src/lib/reservation/gestion.ts`) déclare les quatre URL —
-  `/manage-booking/`, `/fr/gerer-ma-reservation/`, `/de/buchung-verwalten/`,
-  `/it/gestisci-prenotazione/` ;
-- `lienGestion()` sait fabriquer le lien signé `?ref=…&j=…` — **et n'est appelé
-  nulle part** ;
-- `/api/gestion/` sait déjà relire une réservation, changer son horaire, refuser
-  en deçà de `PREAVIS_HEURES` (24 h) et prévenir l'exploitant ;
-- aucune route ne répond à ces quatre URL.
+Corrigé en chemin : `/api/gestion` construisait l'heure saisie dans le fuseau
+du serveur — **UTC sur Vercel**, donc 14 h enregistrées 16 h l'été.
 
-Ce qu'il reste à écrire : la page elle-même, dans les quatre langues. Elle lit
-`ref` et `j`, vérifie le jeton, affiche la course, propose le nouvel horaire, et
-renvoie au téléphone quand le départ est à moins de 24 h. Puis brancher le lien
-sur les deux confirmations — celle du tunnel et l'e-mail de paiement.
+**Vérifié en local** sur AST-62B62B : deux sens, deux véhicules, deux effectifs,
+formulaire ouvert ; lien absent ou faux refusé dans les quatre langues.
+**Pas encore fait** : une modification réelle enregistrée puis relue, et le lien
+cliqué depuis un vrai e-mail, sur la production (`SECRET_GESTION` à vérifier
+sur Vercel avec la sonde).
 
-**Tant qu'elle n'existe pas, ne pas changer le bouton** : il pointerait sur un
-404 juste après un paiement.
+Les aéroports s'affichent sous leur nom anglais dans les quatre langues — comme
+dans le tunnel et l'e-mail : il n'existe pas de registre de noms traduits.
 
 ## ~~La migration~~ — passée le 10 septembre au soir
 

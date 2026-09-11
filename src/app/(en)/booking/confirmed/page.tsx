@@ -4,6 +4,8 @@ import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { BoutonAction, HeroInterieur, Section } from "@/components/gabarit/Sections";
+import { CHEMIN_GESTION } from "@/lib/reservation/gestion";
+import { TEXTES_GESTION } from "@/lib/reservation/textes";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -29,6 +31,16 @@ export default async function PageConfirmation({
 }) {
   const params = await searchParams;
   const reference = typeof params.ref === "string" ? params.ref : null;
+  /*
+    Le jeton de gestion, posé dans l'URL de retour par la route de réservation.
+    Absent — une visite directe, un paiement de panier — le bouton reste celui
+    d'avant : mieux vaut pas de lien qu'un lien vers un 404 après un paiement.
+  */
+  const jeton = typeof params.j === "string" ? params.j : null;
+  const lienGerer =
+    reference && jeton
+      ? `${CHEMIN_GESTION.en}?ref=${encodeURIComponent(reference)}&j=${encodeURIComponent(jeton)}`
+      : null;
 
   return (
     <>
@@ -69,7 +81,19 @@ export default async function PageConfirmation({
               </Link>{" "}
               as early as you can.
             </p>
-            <BoutonAction href="/">Back to the site</BoutonAction>
+            {lienGerer ? (
+              <div className="space-y-3 pt-2">
+                <p>{TEXTES_GESTION.en.chapo}</p>
+                <BoutonAction href={lienGerer}>{TEXTES_GESTION.en.bouton}</BoutonAction>
+                <p>
+                  <Link className="text-marque underline underline-offset-4" href="/">
+                    {TEXTES_GESTION.en.retourSite}
+                  </Link>
+                </p>
+              </div>
+            ) : (
+              <BoutonAction href="/">Back to the site</BoutonAction>
+            )}
           </div>
         </Section>
       </main>
