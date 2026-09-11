@@ -32,9 +32,13 @@ du serveur — **UTC sur Vercel**, donc 14 h enregistrées 16 h l'été.
 
 **Vérifié en local** sur AST-62B62B : deux sens, deux véhicules, deux effectifs,
 formulaire ouvert ; lien absent ou faux refusé dans les quatre langues.
-**Pas encore fait** : une modification réelle enregistrée puis relue, et le lien
-cliqué depuis un vrai e-mail, sur la production (`SECRET_GESTION` à vérifier
-sur Vercel avec la sonde).
+**En production aussi, le 11 septembre** : `SECRET_GESTION` n'y valait pas la
+valeur locale (la sonde répondait 404). Remplacée par la CLI en Production et
+Preview, redéployée : la sonde répond, commit `0d1b076`, et AST-62B62B s'ouvre
+sur `alpsskitransferv2.vercel.app` avec un jeton calculé en local.
+**Pas encore fait** : une modification réelle enregistrée puis relue, avec
+l'avis « HORAIRE MODIFIÉ » à l'exploitant, et le lien cliqué depuis un vrai
+e-mail de paiement.
 
 Les aéroports s'affichent sous leur nom anglais dans les quatre langues — comme
 dans le tunnel et l'e-mail : il n'existe pas de registre de noms traduits.
