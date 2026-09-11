@@ -58,7 +58,11 @@ function phraseEnfants(client: Coordonnees, allerRetour: boolean): string {
   const ages = propre(client.enfants, 120);
   const suffixe = ages ? ` (${ages})` : "";
 
-  if (aller === 0 && retour === 0) return ages;
+  /*
+    Des âges sans nombre : la phrase le dit. Seuls, « 5 » se lisait « 5 enfants »
+    dans le back-office (`enfantsLisibles`), qui ne pouvait pas faire la différence.
+  */
+  if (aller === 0 && retour === 0) return ages ? `âges : ${ages}` : "";
   /*
     On ne répète les deux comptes que lorsqu'ils diffèrent : « aller 2 · retour 1 »
     dit quelque chose, « aller 2 · retour 2 » fait relire deux fois la même

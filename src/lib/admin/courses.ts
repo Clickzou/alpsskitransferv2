@@ -71,6 +71,9 @@ export interface Course {
    * inversé. `null` autrement : l'écran n'a alors rien à ajouter.
    */
   trajetRetour: string | null;
+  /** Où repart le client, et vers quel aéroport — toujours renseignés quand il y a un retour. */
+  stationRetour: string;
+  aeroportRetour: string;
   vehicule: string;
   /** Le véhicule du retour quand il diffère — `null` s'il est le même. */
   vehiculeRetour: string | null;
@@ -202,6 +205,8 @@ function versCourse(ligne: LigneBase): Course {
             ligne.retour_airport ?? ligne.airport,
           )}`
         : null,
+    stationRetour: nomStation(ligne.retour_resort ?? ligne.resort),
+    aeroportRetour: nomAeroport(ligne.retour_airport ?? ligne.airport),
     vehicule: ligne.vehicule,
     vehiculeRetour:
       ligne.vehicule_retour && ligne.vehicule_retour !== ligne.vehicule

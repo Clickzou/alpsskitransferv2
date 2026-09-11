@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { aValider, decrire, heure } from "@/lib/admin/affichage";
+import { aValider, decrire, heure, sensDeLaCourse } from "@/lib/admin/affichage";
 import { courseParReference, statutLisible } from "@/lib/admin/courses";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { actionRefuser, actionValider } from "../../actions";
+import CarteSens from "../../CarteSens";
 import Entete from "../../Entete";
 
 /**
@@ -187,36 +188,21 @@ export default async function FicheReservation({
           </p>
         </Bloc>
 
-        <Bloc titre="Aller">
-          <p className="font-medium">{heure(course.aller)}</p>
-          <p>{course.trajet}</p>
-          <Info libelle="Adresse en station">{course.adresse || "—"}</Info>
-          <Info libelle="Vol">{course.vol ?? "—"}</Info>
-          <Info libelle="Groupe">
-            {course.passagers} pax · {course.vehicule}
-          </Info>
-        </Bloc>
+        {/*
+          Chaque sens au complet, même ce qu'il répète de l'autre — la même
+          carte que dans la liste dépliée (`CarteSens`).
+        */}
+        {sensDeLaCourse(course).map((sens) => (
+          <CarteSens key={sens.libelle} sens={sens} />
+        ))}
+        {course.retour ? null : (
+          <Bloc titre="Retour">
+            <p>Aller simple — pas de retour réservé.</p>
+          </Bloc>
+        )}
 
-        <Bloc titre="Retour">
-          {course.retour ? (
-            <>
-              <p className="font-medium">{heure(course.retour)}</p>
-              {/* Le trajet du retour ne s'écrit que s'il diffère de l'aller inversé. */}
-              <p>{course.trajetRetour ?? `${course.arrivee} → ${course.depart}`}</p>
-              <Info libelle="Groupe">
-                {course.passagersRetour ?? course.passagers} pax ·{" "}
-                {course.vehiculeRetour ?? course.vehicule}
-              </Info>
-            </>
-          ) : (
-            <p>Aller simple</p>
-          )}
-        </Bloc>
-
-        <Bloc titre="Bagages, enfants, message">
-          <Info libelle="Housses à skis">{course.bagagesSki}</Info>
-          <Info libelle="Enfants">{course.enfants ?? "—"}</Info>
-          <Info libelle="Message">{course.message ?? "—"}</Info>
+        <Bloc titre="Message du client">
+          <p className="leading-relaxed">{course.message ?? "—"}</p>
         </Bloc>
 
         <Bloc titre="Paiement">

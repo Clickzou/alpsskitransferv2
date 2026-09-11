@@ -9,6 +9,7 @@
  */
 
 import type { Lang } from "@/lib/i18n";
+import { enfantsLisibles } from "@/lib/reservation/enfants";
 
 export type LangueTunnel = Lang;
 
@@ -1199,7 +1200,7 @@ export function corpsAvis(course: CourseAvis): string {
 
   const complements = [
     course.bagagesSki ? `Housses à skis : ${course.bagagesSki}` : null,
-    course.enfants ? `Enfants : ${course.enfants} · sièges à prévoir` : null,
+    course.enfants ? `Nombre d’enfants et âges : ${enfantsLisibles(course.enfants)} · sièges à prévoir` : null,
   ].filter((l) => l !== null);
   if (complements.length > 0) lignes.push("", ...complements);
 

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { aValider, decrire, heure } from "@/lib/admin/affichage";
+import { aValider, decrire, heure, sensDeLaCourse } from "@/lib/admin/affichage";
 import { coursesAVenir, coursesPassees, statutLisible, type Course } from "@/lib/admin/courses";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
+import CarteSens from "./CarteSens";
 import Entete from "./Entete";
 
 /**
@@ -12,13 +13,16 @@ import Entete from "./Entete";
  *
  * L'ordre des colonnes n'est pas décoratif, c'est la demande de l'exploitant du
  * 10 septembre 2026 : il ne voyait pas la destination et devait rappeler chaque
- * client pour connaître le trajet. Le trajet est donc la deuxième colonne,
- * juste après l'heure de prise en charge, et l'adresse exacte en station la
- * troisième. Tout le reste vient après, y compris le montant.
+ * client pour connaître le trajet. Le trajet vient donc juste après l'heure de
+ * prise en charge, et l'adresse en station ensuite. Le montant en dernier.
  *
- * Les colonnes qui ne servent qu'occasionnellement — l'âge des enfants, le
- * message libre — sont dans le repli de chaque ligne : présentes, mais elles ne
- * volent pas la largeur à ce qu'on lit tous les jours.
+ * ## Un aller-retour, c'est deux lignes
+ *
+ * Remarque de JC, 11 septembre 2026 : « je vois les infos mais je ne comprends
+ * pas tout ». La ligne ne montrait que l'aller, et le retour se devinait à
+ * travers « 3 pax (7 au retour) » et « retour d'un autre lieu ». Chaque sens a
+ * désormais sa ligne, repliée comme dépliée ; dépliée, chacun dit tout, même ce
+ * qu'il répète de l'autre (`sensDeLaCourse`).
  */
 
 function LigneCourse({ course }: { course: Course }) {
@@ -28,42 +32,39 @@ function LigneCourse({ course }: { course: Course }) {
     confirme: "bg-alpes-50 text-alpes-700 border-alpes/40",
     annule: "bg-glacier-100 text-alpine-600 border-glacier-300",
   }[statut.ton];
+  const sens = sensDeLaCourse(course);
 
   return (
     <details className="group border-b border-glacier-200 last:border-0">
-      <summary className="grid cursor-pointer list-none gap-2 px-4 py-4 hover:bg-glacier-50 lg:grid-cols-[10rem_1fr_1fr_8rem_15rem] lg:items-baseline lg:gap-4">
-        <span className="font-medium tabular-nums text-alpine">{heure(course.aller)}</span>
+      <summary className="grid cursor-pointer list-none gap-3 px-4 py-4 hover:bg-glacier-50 lg:grid-cols-[1fr_15rem] lg:items-start lg:gap-4">
+        <div className="space-y-2">
+          {sens.map((s) => (
+            <div
+              key={s.libelle}
+              className="grid gap-x-4 gap-y-0.5 lg:grid-cols-[4.5rem_10rem_1fr_1fr_9rem] lg:items-baseline"
+            >
+              <span className="text-xs font-semibold uppercase tracking-wide text-alpine-600">
+                {s.libelle}
+              </span>
+              <span className="font-medium tabular-nums text-alpine">{heure(s.quand)}</span>
+              {/* La destination : la raison d'être de cet écran. */}
+              <span className="font-semibold text-alpine">{s.trajet}</span>
+              <span className="text-sm text-alpine-700">{s.adresse}</span>
+              <span className="text-sm text-alpine-600">
+                {s.passagers} pax · {s.vehicule}
+              </span>
+            </div>
+          ))}
 
-        {/* La destination : la raison d'être de cet écran. */}
-        <span className="font-semibold text-alpine">
-          {course.trajet}
           {/* Une demande en attente, ou un changement passé, se voit sans déplier la ligne. */}
           {aValider(course).length > 0 ? (
-            <span className="mt-0.5 block text-xs font-semibold text-marque">
-              demande à valider
-            </span>
+            <p className="text-xs font-semibold text-marque">demande de changement à valider</p>
           ) : course.historique.length > 0 ? (
-            <span className="mt-0.5 block text-xs font-normal text-or-700">
-              modifiée par le client
-            </span>
+            <p className="text-xs text-or-700">modifiée par le client</p>
           ) : null}
-        </span>
+        </div>
 
-        <span className="text-sm text-alpine-700">{course.adresse}</span>
-
-        <span className="text-sm text-alpine-600">
-          {course.passagers} pax
-          {course.passagersRetour ? ` (${course.passagersRetour} au retour)` : ""} ·{" "}
-          {course.vehicule}
-          {course.bagagesSki > 0 ? ` · ${course.bagagesSki} ski` : ""}
-          {/* Une course qui repart d'ailleurs se prépare autrement : on le voit
-              sans déplier la ligne. */}
-          {course.trajetRetour ? (
-            <span className="mt-0.5 block text-xs text-or-700">retour d’un autre lieu</span>
-          ) : null}
-        </span>
-
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-2 lg:justify-end">
           <span className={`whitespace-nowrap rounded-full border px-2 py-0.5 text-xs ${couleur}`}>
             {statut.texte}
           </span>
@@ -73,57 +74,51 @@ function LigneCourse({ course }: { course: Course }) {
         </span>
       </summary>
 
-      <div className="grid gap-4 bg-glacier-50 px-4 py-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-alpine-600">Passager</p>
-          <p className="mt-1 font-medium">{course.client.nom}</p>
-          <p>
-            <a className="underline" href={`tel:${course.client.telephone}`}>
-              {course.client.telephone}
-            </a>
-          </p>
-          <p>
-            <a className="underline" href={`mailto:${course.client.email}`}>
-              {course.client.email}
-            </a>
-          </p>
+      <div className="space-y-4 bg-glacier-50 px-4 py-4 text-sm">
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-alpine-600">Passager</p>
+            <p className="mt-1 font-medium">{course.client.nom}</p>
+            <p>
+              <a className="underline" href={`tel:${course.client.telephone}`}>
+                {course.client.telephone}
+              </a>
+            </p>
+            <p>
+              <a className="underline" href={`mailto:${course.client.email}`}>
+                {course.client.email}
+              </a>
+            </p>
+          </div>
+
+          <div>
+            <p className="text-xs uppercase tracking-wide text-alpine-600">Paiement</p>
+            <p className="mt-1">
+              {statut.texte} · {course.montant} {course.devise === "EUR" ? "€" : course.devise}
+            </p>
+            {course.payeLe ? <p>Payée le {heure(course.payeLe)}</p> : null}
+            <p className="mt-1 font-mono text-xs">{course.reference}</p>
+          </div>
+
+          <div>
+            <p className="text-xs uppercase tracking-wide text-alpine-600">Message du client</p>
+            <p className="mt-1 leading-relaxed">{course.message ?? "—"}</p>
+          </div>
         </div>
 
-        <div>
-          <p className="text-xs uppercase tracking-wide text-alpine-600">Vol</p>
-          <p className="mt-1">{course.vol ?? "—"}</p>
-          <p className="mt-3 text-xs uppercase tracking-wide text-alpine-600">Retour</p>
-          <p className="mt-1">{course.retour ? heure(course.retour) : "Aller simple"}</p>
-          {/* Le trajet du retour ne s'écrit que s'il diffère de l'aller inversé. */}
-          {course.trajetRetour ? (
-            <p className="font-medium text-alpine">{course.trajetRetour}</p>
-          ) : null}
-          {/* Deux véhicules : le retour n'est pas toujours le même groupe. */}
-          {course.vehiculeRetour ? (
-            <p className="text-alpine-700">Véhicule : {course.vehiculeRetour}</p>
-          ) : null}
-        </div>
-
-        <div>
-          <p className="text-xs uppercase tracking-wide text-alpine-600">Enfants</p>
-          <p className="mt-1">{course.enfants ?? "—"}</p>
-          <p className="mt-3 text-xs uppercase tracking-wide text-alpine-600">Référence</p>
-          <p className="mt-1 font-mono text-xs">{course.reference}</p>
-        </div>
-
-        <div>
-          <p className="text-xs uppercase tracking-wide text-alpine-600">Message</p>
-          <p className="mt-1 leading-relaxed">{course.message ?? "—"}</p>
-          {course.payeLe ? (
-            <>
-              <p className="mt-3 text-xs uppercase tracking-wide text-alpine-600">Payée le</p>
-              <p className="mt-1">{heure(course.payeLe)}</p>
-            </>
-          ) : null}
+        <div className="grid gap-4 md:grid-cols-2">
+          {sens.map((s) => (
+            <CarteSens key={s.libelle} sens={s} />
+          ))}
+          {course.retour ? null : (
+            <p className="rounded-lg border border-dashed border-glacier-300 p-4 text-alpine-600">
+              Aller simple — pas de retour réservé.
+            </p>
+          )}
         </div>
 
         {course.historique.length > 0 ? (
-          <div className="sm:col-span-2 lg:col-span-4">
+          <div>
             <p className="text-xs uppercase tracking-wide text-alpine-600">
               Modifications par le client
             </p>
@@ -138,14 +133,12 @@ function LigneCourse({ course }: { course: Course }) {
           </div>
         ) : null}
 
-        <div className="sm:col-span-2 lg:col-span-4">
-          <Link
-            href={cheminFiche(course.reference)}
-            className="text-sm font-semibold text-marque underline underline-offset-4"
-          >
-            Ouvrir la fiche du client →
-          </Link>
-        </div>
+        <Link
+          href={cheminFiche(course.reference)}
+          className="inline-block text-sm font-semibold text-marque underline underline-offset-4"
+        >
+          Ouvrir la fiche du client →
+        </Link>
       </div>
     </details>
   );
@@ -166,12 +159,15 @@ function Tableau({ titre, courses, vide }: { titre?: string; courses: Course[]; 
           <p className="px-4 py-8 text-center text-sm text-alpine-600">{vide}</p>
         ) : (
           <>
-            <div className="hidden border-b border-glacier-200 bg-glacier-50 px-4 py-2 text-xs uppercase tracking-wide text-alpine-600 lg:grid lg:grid-cols-[10rem_1fr_1fr_8rem_15rem] lg:gap-4">
-              <span>Prise en charge</span>
-              <span>Trajet</span>
-              <span>Adresse en station</span>
-              <span>Groupe</span>
-              <span>Statut</span>
+            <div className="hidden border-b border-glacier-200 bg-glacier-50 px-4 py-2 text-xs uppercase tracking-wide text-alpine-600 lg:grid lg:grid-cols-[1fr_15rem] lg:gap-4">
+              <div className="grid gap-x-4 lg:grid-cols-[4.5rem_10rem_1fr_1fr_9rem]">
+                <span>Sens</span>
+                <span>Prise en charge</span>
+                <span>Trajet</span>
+                <span>Adresse en station</span>
+                <span>Groupe</span>
+              </div>
+              <span className="text-right">Statut</span>
             </div>
             {courses.map((course) => (
               <LigneCourse key={course.reference} course={course} />
