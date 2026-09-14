@@ -42,6 +42,7 @@ export interface TextesUI {
     paysDesservis: string;
     nousEcrire: string;
     droits: string;
+    creePar: string;
   };
 
   /* ------------------------------------------------------------- gabarits */
@@ -139,6 +140,7 @@ const EN: TextesUI = {
     paysDesservis: "Countries served",
     nousEcrire: "Get in touch",
     droits: "All rights reserved.",
+    creePar: "Website created by",
   },
 
   pretAReserver: "Ready to book?",
@@ -244,6 +246,7 @@ const FR: TextesUI = {
     paysDesservis: "Pays desservis",
     nousEcrire: "Nous écrire",
     droits: "Tous droits réservés.",
+    creePar: "Site créé par",
   },
 
   pretAReserver: "Prêt à réserver ?",
@@ -356,6 +359,7 @@ const DE: TextesUI = {
     paysDesservis: "Zielländer",
     nousEcrire: "Schreiben Sie uns",
     droits: "Alle Rechte vorbehalten.",
+    creePar: "Website erstellt von",
   },
 
   pretAReserver: "Bereit zum Buchen?",
@@ -468,6 +472,7 @@ const IT: TextesUI = {
     paysDesservis: "Paesi serviti",
     nousEcrire: "Scrivici",
     droits: "Tutti i diritti riservati.",
+    creePar: "Sito realizzato da",
   },
 
   pretAReserver: "Pronto a prenotare?",

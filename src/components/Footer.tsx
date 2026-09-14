@@ -125,7 +125,10 @@ export default function Footer({ lang, appel = true }: { lang: Lang; appel?: boo
         </nav>
 
         <p className="mt-8 text-xs text-glacier-400">
-          © {new Date().getFullYear()} {SITE.nom}. {t.pied.droits} — Website created by Clickzou
+          © {new Date().getFullYear()} {SITE.nom}. {t.pied.droits} — {t.pied.creePar}{" "}
+          <a href="https://clickzou.fr/" className="underline hover:text-white">
+            Clickzou
+          </a>
         </p>
         {/*
           L'identité de l'éditeur. « Alps Ski Transfers » est une marque : le
