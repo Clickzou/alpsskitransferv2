@@ -1,6 +1,8 @@
 "use client";
 
 import { startTransition, useActionState, useRef, useState } from "react";
+import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
+import type { Lieu } from "@/lib/reservation/lieux";
 import { actionCreerTelephone } from "./actions";
 
 /**
@@ -24,12 +26,14 @@ import { actionCreerTelephone } from "./actions";
  *   autre trajet.
  * - **Créer deux fois.** La référence est tirée à l'ouverture de la page : un
  *   second envoi retrouve la réservation au lieu d'en créer une autre.
+ *
+ * ## Les lieux (demande de JC, 14 septembre 2026)
+ *
+ * Les champs de lieu sont ceux du site (`ChampLieu`) : aéroport, station, ou
+ * adresse — un hôtel à Lyon, une gare, un chalet. Un aéroport et une station de
+ * la liste donnent le prix de la grille ; une adresse n'en a pas, et le prix
+ * convenu au téléphone devient obligatoire.
  */
-
-interface Option {
-  slug: string;
-  nom: string;
-}
 
 const VEHICULES = [
   { valeur: "standard", nom: "Standard (8 places)" },
@@ -67,19 +71,29 @@ const ETIQUETTE = "block text-xs font-medium uppercase tracking-wide text-alpine
 const BLOC = "rounded-xl border border-glacier-200 bg-white p-5 shadow-carte";
 const TITRE = "font-display text-lg text-alpine";
 
-/** Défini hors du formulaire : sinon React le recrée à chaque frappe et vide la liste. */
-function Liste({ nom, options, vide, requis = true }: { nom: string; options: Option[]; vide?: string; requis?: boolean }) {
+const VIDE: ValeurLieu = { slug: null, texte: "" };
+
+/**
+ * Ce que le serveur reçoit d'un lieu : le slug s'il est au registre, et le
+ * texte complet — avec le code postal et la commune d'une adresse tapée à la
+ * main, que le complément du champ a demandés à part.
+ */
+function LieuCache({ nom, valeur }: { nom: string; valeur: ValeurLieu }) {
+  const commune = [valeur.codePostal, valeur.ville].map((x) => x?.trim()).filter(Boolean).join(" ");
+  const texte =
+    !valeur.slug && commune && !valeur.texte.includes(commune)
+      ? `${valeur.texte.trim()}, ${commune}`
+      : valeur.texte.trim();
   return (
-    <select name={nom} required={requis} defaultValue="" className={CHAMP}>
-      <option value="">{vide ?? "— choisir —"}</option>
-      {options.map((o) => (
-        <option key={o.slug} value={o.slug}>
-          {o.nom}
-        </option>
-      ))}
-    </select>
+    <>
+      <input type="hidden" name={nom} value={valeur.slug ?? ""} />
+      <input type="hidden" name={`${nom}Text`} value={texte} />
+    </>
   );
 }
+
+/** Le texte à envoyer au calcul du prix : le slug, sinon ce qui est tapé. */
+const pourDevis = (valeur: ValeurLieu) => valeur.slug ?? (valeur.texte.trim() || undefined);
 
 function Requis() {
   return (
@@ -91,13 +105,12 @@ function Requis() {
 }
 
 export default function FormulaireTelephone({
-  aeroports,
-  stations,
+  lieux,
   ibanConfigure,
   reference,
 }: {
-  aeroports: Option[];
-  stations: Option[];
+  /** Les aéroports et les stations du registre, comme dans la recherche du site. */
+  lieux: Lieu[];
   ibanConfigure: boolean;
   /** Tirée à l'ouverture de la page : deux envois ne créent qu'une réservation. */
   reference: string;
@@ -109,6 +122,10 @@ export default function FormulaireTelephone({
   const [prix, setPrix] = useState("");
   const [prixGrille, setPrixGrille] = useState<number | null>(null);
   const [calcul, setCalcul] = useState<string | null>(null);
+  const [depart, setDepart] = useState<ValeurLieu>(VIDE);
+  const [arrivee, setArrivee] = useState<ValeurLieu>(VIDE);
+  const [retourDepart, setRetourDepart] = useState<ValeurLieu>(VIDE);
+  const [retourArrivee, setRetourArrivee] = useState<ValeurLieu>(VIDE);
 
   function envoyer(evenement: React.FormEvent<HTMLFormElement>) {
     evenement.preventDefault();
@@ -116,14 +133,35 @@ export default function FormulaireTelephone({
     startTransition(() => action(donnees));
   }
 
+  function trajetModifie() {
+    if (prixGrille === null) return;
+    setPrix("");
+    setPrixGrille(null);
+    setCalcul("Le trajet a changé : recalculez le prix.");
+  }
+
   function surChangement(evenement: React.FormEvent<HTMLFormElement>) {
     const nom = (evenement.target as HTMLInputElement).name;
-    if (CHAMPS_DU_TRAJET.has(nom) && prixGrille !== null) {
-      setPrix("");
-      setPrixGrille(null);
-      setCalcul("Le trajet a changé : recalculez le prix.");
-    }
+    if (CHAMPS_DU_TRAJET.has(nom)) trajetModifie();
   }
+
+  /*
+    La grille ne chiffre qu'un aéroport vers une station — et un retour entre
+    lieux de la liste. Tout le reste se dit tout de suite, avant « Calculer ».
+  */
+  const typeDe = (valeur: ValeurLieu) =>
+    valeur.slug ? lieux.find((l) => l.slug === valeur.slug)?.type : undefined;
+  const retourDeGrille = (valeur: ValeurLieu) => !valeur.texte.trim() || Boolean(valeur.slug);
+  const deGrille =
+    typeDe(depart) === "aeroport" &&
+    typeDe(arrivee) === "station" &&
+    (!allerRetour || (retourDeGrille(retourDepart) && retourDeGrille(retourArrivee)));
+
+  /** Un lieu qui change efface le prix calculé, comme les autres champs du trajet. */
+  const changerLieu = (setter: (v: ValeurLieu) => void) => (valeur: ValeurLieu) => {
+    setter(valeur);
+    trajetModifie();
+  };
 
   async function calculerPrix() {
     const form = formulaire.current;
@@ -136,8 +174,8 @@ export default function FormulaireTelephone({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          from: valeur("from"),
-          to: valeur("to"),
+          from: pourDevis(depart),
+          to: pourDevis(arrivee),
           when: valeur("when"),
           passengers: valeur("passengers"),
           bags: valeur("bags"),
@@ -145,14 +183,20 @@ export default function FormulaireTelephone({
           ...(allerRetour
             ? {
                 returnWhen: valeur("returnWhen"),
-                returnFrom: valeur("returnFrom"),
-                returnTo: valeur("returnTo"),
+                returnFrom: pourDevis(retourDepart),
+                returnTo: pourDevis(retourArrivee),
                 returnPassengers: valeur("returnPassengers"),
               }
             : {}),
         }),
       });
       const donnees = await reponse.json();
+      if (donnees.devisSurMesure && reponse.ok) {
+        setCalcul(
+          "Ce trajet passe par une adresse ou un lieu hors de la grille : pas de prix automatique. Saisissez le prix convenu avec le client.",
+        );
+        return;
+      }
       if (!reponse.ok) {
         setCalcul(donnees.erreur ?? "Pas de prix pour ce trajet.");
         return;
@@ -216,14 +260,37 @@ export default function FormulaireTelephone({
       <section className={BLOC}>
         <h2 className={TITRE}>L’aller</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <label className={ETIQUETTE}>
-            Aéroport de départ<Requis />
-            <Liste nom="from" options={aeroports} />
-          </label>
-          <label className={ETIQUETTE}>
-            Station d’arrivée<Requis />
-            <Liste nom="to" options={stations} />
-          </label>
+          <div>
+            <ChampLieu
+              id="depart"
+              lieux={lieux}
+              valeur={depart}
+              onChange={changerLieu(setDepart)}
+              etiquette="Lieu de prise en charge *"
+              placeholder="Aéroport, station, ou adresse avec code postal"
+              langue="fr"
+              requis
+            />
+            <LieuCache nom="from" valeur={depart} />
+          </div>
+          <div>
+            <ChampLieu
+              id="arrivee"
+              lieux={lieux}
+              valeur={arrivee}
+              onChange={changerLieu(setArrivee)}
+              etiquette="Lieu de dépose *"
+              placeholder="Station, ou adresse avec code postal et commune"
+              langue="fr"
+              requis
+            />
+            <LieuCache nom="to" valeur={arrivee} />
+          </div>
+          {depart.texte && arrivee.texte && !deGrille ? (
+            <p className="text-xs text-attention-700 md:col-span-2">
+              Trajet hors grille : pas de prix automatique, saisissez le prix convenu plus bas.
+            </p>
+          ) : null}
           <label className={ETIQUETTE}>
             Prise en charge (heure locale)<Requis />
             <input name="when" type="datetime-local" required className={CHAMP} />
@@ -247,7 +314,10 @@ export default function FormulaireTelephone({
             </select>
           </label>
           <label className={`${ETIQUETTE} md:col-span-2`}>
-            Adresse en station <span className="normal-case">(facultatif — le client pourra la donner)</span>
+            Adresse en station{" "}
+            <span className="normal-case">
+              (facultatif — le client pourra la donner ; inutile si la dépose est déjà une adresse)
+            </span>
             <input name="adresse" maxLength={300} placeholder="Chalet, hôtel ou résidence" className={CHAMP} />
           </label>
         </div>
@@ -275,14 +345,30 @@ export default function FormulaireTelephone({
               Vol retour <span className="normal-case">(facultatif)</span>
               <input name="volRetour" maxLength={20} className={CHAMP} />
             </label>
-            <label className={ETIQUETTE}>
-              Station de départ du retour
-              <Liste nom="returnFrom" options={stations} vide="— la même qu’à l’aller —" requis={false} />
-            </label>
-            <label className={ETIQUETTE}>
-              Aéroport d’arrivée du retour
-              <Liste nom="returnTo" options={aeroports} vide="— le même qu’à l’aller —" requis={false} />
-            </label>
+            <div>
+              <ChampLieu
+                id="retour-depart"
+                lieux={lieux}
+                valeur={retourDepart}
+                onChange={changerLieu(setRetourDepart)}
+                etiquette="Prise en charge du retour"
+                placeholder="vide = le lieu de dépose de l’aller"
+                langue="fr"
+              />
+              <LieuCache nom="returnFrom" valeur={retourDepart} />
+            </div>
+            <div>
+              <ChampLieu
+                id="retour-arrivee"
+                lieux={lieux}
+                valeur={retourArrivee}
+                onChange={changerLieu(setRetourArrivee)}
+                etiquette="Dépose du retour"
+                placeholder="vide = le lieu de prise en charge de l’aller"
+                langue="fr"
+              />
+              <LieuCache nom="returnTo" valeur={retourArrivee} />
+            </div>
             <label className={ETIQUETTE}>
               Passagers au retour
               <input name="returnPassengers" type="number" min={1} max={8} placeholder="les mêmes" className={CHAMP} />

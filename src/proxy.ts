@@ -106,9 +106,17 @@ export default async function proxy(request: NextRequest) {
     return reponse;
   }
 
+  /*
+    Le back-office est fermé aux moteurs **toujours** — demande de JC,
+    14 septembre 2026. Le `noindex, nofollow` de son layout ne couvre que le
+    HTML ; l'en-tête couvre aussi l'export CSV des factures et les
+    redirections vers la connexion, et ne dépend pas de l'interrupteur
+    d'indexation du site public.
+  */
   if (chemin.startsWith("/gestion-ventes-tarifs-seo")) {
-    const prolongee = await sessionProlongee(request);
-    if (prolongee) return fermerAuxMoteurs(prolongee);
+    const reponse = (await sessionProlongee(request)) ?? NextResponse.next();
+    reponse.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return reponse;
   }
 
   return fermerAuxMoteurs(NextResponse.next());
