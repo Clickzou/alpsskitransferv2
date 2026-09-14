@@ -53,6 +53,8 @@ interface LigneBase {
   mode_paiement: string | null;
   facture_stripe: string | null;
   langue: string | null;
+  /** Absente avant la migration du 14 septembre 2026. */
+  bagages?: number | null;
   bagages_ski: number;
   enfants: string | null;
   message: string | null;
@@ -93,6 +95,8 @@ export interface Course {
   vehicule: string;
   /** Le véhicule du retour quand il diffère — `null` s'il est le même. */
   vehiculeRetour: string | null;
+  /** Valises et sacs, hors bagages à main. */
+  bagages: number;
   bagagesSki: number;
   vol: string | null;
   client: { nom: string; email: string; telephone: string };
@@ -234,6 +238,7 @@ function versCourse(ligne: LigneBase): Course {
       ligne.vehicule_retour && ligne.vehicule_retour !== ligne.vehicule
         ? ligne.vehicule_retour
         : null,
+    bagages: ligne.bagages ?? 0,
     bagagesSki: ligne.bagages_ski,
     vol: ligne.vol,
     client: {

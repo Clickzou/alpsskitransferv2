@@ -1,8 +1,13 @@
-import { COEFFICIENTS } from "@/data/coefficients";
-import { TARIFS } from "@/data/tarifs";
-import { BAREME_DEFAUT, type CategorieVehicule } from "@/lib/tarification/bareme";
+import type { CategorieVehicule } from "@/lib/tarification/bareme";
 import { calculer, type Devis } from "@/lib/tarification/calcul";
 import { distanceCalculee, distancePubliee } from "@/lib/tarification/distance";
+import {
+  coefficientDe,
+  GRILLE_DEFAUT,
+  prixFixeDe,
+  saisonDu,
+  type Grille,
+} from "@/lib/tarification/grille";
 
 /**
  * Le devis d'une réservation — un aller, éventuellement un retour.
@@ -117,22 +122,26 @@ export const CAPACITE_BAGAGES: Record<CategorieVehicule, number> = {
 };
 
 /** Coefficient de destination, 1 quand la station n'en a pas. */
-export function coefficientDestination(resort: string): number {
-  return COEFFICIENTS.find((c) => c.resort === resort)?.coefficient ?? 1;
+export function coefficientDestination(resort: string, grille: Grille = GRILLE_DEFAUT): number {
+  return coefficientDe(grille, resort);
 }
 
 /**
- * Prix fixe convenu pour ce trajet, s'il en existe un **et qu'il est validé**.
+ * Prix fixe convenu pour ce trajet et ce véhicule, s'il en existe un.
  *
- * Les 89 tarifs extraits du site actuel sont tous en `valide: false` : ce sont des
- * prix publiés, relevés dans le texte des pages, pas une grille confirmée par le
- * client. Tant qu'ils ne sont pas validés, ils ne fixent pas un prix — sinon la
- * refonte reconduirait les incohérences de l'ancien site, où deux trajets de
- * longueur comparable vont du simple au double.
+ * Par défaut, la grille ne reprend que les prix de l'ancien site **validés** —
+ * aucun ne l'est : ce sont des prix relevés dans le texte des pages, pas une
+ * grille confirmée par le client, et ils reconduiraient les incohérences de
+ * l'ancien site, où deux trajets de longueur comparable vont du simple au
+ * double. Les prix fixes se posent désormais depuis l'onglet Tarifs.
  */
-export function prixFixe(airport: string, resort: string): number | null {
-  const tarif = TARIFS.find((t) => t.airport === airport && t.resort === resort);
-  return tarif?.valide && tarif.prive ? tarif.prive : null;
+export function prixFixe(
+  airport: string,
+  resort: string,
+  categorie: CategorieVehicule = "standard",
+  grille: Grille = GRILLE_DEFAUT,
+): number | null {
+  return prixFixeDe(grille, airport, resort, categorie);
 }
 
 function distanceDuTrajet(airport: string, resort: string) {
@@ -146,9 +155,15 @@ function distanceDuTrajet(airport: string, resort: string) {
  * Fonction pure : aucun appel réseau, aucune horloge. Une distance introuvable
  * renvoie un échec plutôt qu'un prix approximatif — le parcours dégrade alors
  * vers une demande de devis.
+ *
+ * La grille est passée par l'appelant, qui la lit en base
+ * (`grilleActive()`) : le calcul reste pur, et l'aperçu de l'onglet Tarifs
+ * chiffre les mêmes trajets avec deux grilles côte à côte. Sans grille, ce
+ * sont les valeurs du code.
  */
 export function devisReservation(
   demande: DemandeReservation,
+  grille: Grille = GRILLE_DEFAUT,
 ): { ok: true; devis: DevisReservation } | { ok: false; echec: EchecDevis } {
   /*
     Chaque sens tient dans son propre véhicule.
@@ -199,8 +214,7 @@ export function devisReservation(
     return { ok: false, echec: { raison: "distance-inconnue" } };
   }
 
-  const coefficient = coefficientDestination(demande.resort);
-  const fixe = prixFixe(demande.airport, demande.resort);
+  const coefficient = coefficientDe(grille, demande.resort);
 
   // Chaque sens est calculé avec sa propre date : un retour le samedi à 6 h n'est
   // pas un aller du mercredi remisé. `calculer` reste appelé en aller simple, la
@@ -208,21 +222,28 @@ export function devisReservation(
   const ligne = (sens: "aller" | "retour", depart: Date): LigneDevis => {
     const retour = sens === "retour";
     const d = retour ? distanceRetour! : distance;
+    const categorie = retour ? categorieRetour : demande.categorie;
     return {
       sens,
       depart,
       km: d.km,
       sourceDistance: d.source,
-      devis: calculer({
-        km: d.km,
-        categorie: retour ? categorieRetour : demande.categorie,
-        depart,
-        passagers: retour ? passagersRetour : demande.passagers,
-        partage: demande.partage ?? false,
-        allerRetour: false,
-        coefficient: retour ? coefficientDestination(resortRetour) : coefficient,
-        prixFixe: retour ? prixFixe(airportRetour, resortRetour) : fixe,
-      }),
+      devis: calculer(
+        {
+          km: d.km,
+          categorie,
+          depart,
+          passagers: retour ? passagersRetour : demande.passagers,
+          partage: demande.partage ?? false,
+          allerRetour: false,
+          coefficient: retour ? coefficientDe(grille, resortRetour) : coefficient,
+          prixFixe: retour
+            ? prixFixeDe(grille, airportRetour, resortRetour, categorie)
+            : prixFixeDe(grille, demande.airport, demande.resort, categorie),
+          saison: saisonDu(grille, depart),
+        },
+        grille.bareme,
+      ),
     };
   };
 
@@ -232,7 +253,7 @@ export function devisReservation(
   const brut = lignes.reduce((somme, l) => somme + l.devis.total, 0);
   const remiseAllerRetour =
     lignes.length === 2
-      ? Math.round((lignes[1].devis.total * BAREME_DEFAUT.remiseAllerRetour) / 100)
+      ? Math.round((lignes[1].devis.total * grille.bareme.remiseAllerRetour) / 100)
       : 0;
 
   return {
@@ -240,7 +261,7 @@ export function devisReservation(
     devis: {
       lignes,
       total: brut - remiseAllerRetour,
-      devise: BAREME_DEFAUT.devise,
+      devise: grille.bareme.devise,
       remiseAllerRetour,
       coefficient,
       prixFixe: lignes.some((l) => l.devis.prixFixe),

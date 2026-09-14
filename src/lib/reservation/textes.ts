@@ -1142,6 +1142,8 @@ export interface CourseAvis {
   /** Le groupe du retour quand il diffère : le chauffeur prépare sa journée avec. */
   passagersRetour?: number | null;
   vol?: string | null;
+  /** Valises et sacs, hors bagages à main — le coffre se prépare avec. */
+  bagages?: number | null;
   bagagesSki?: number | null;
   enfants?: string | null;
   message?: string | null;
@@ -1217,6 +1219,7 @@ export function corpsAvis(course: CourseAvis): string {
   );
 
   const complements = [
+    course.bagages ? `Valises : ${course.bagages}` : null,
     course.bagagesSki ? `Housses à skis : ${course.bagagesSki}` : null,
     course.enfants ? `Nombre d’enfants et âges : ${enfantsLisibles(course.enfants)} · sièges à prévoir` : null,
   ].filter((l) => l !== null);

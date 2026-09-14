@@ -34,6 +34,8 @@ import {
 } from "@/lib/reservation/textes-demande";
 import { textesTelephone } from "@/lib/reservation/textes-telephone";
 import type { CategorieVehicule } from "@/lib/tarification/bareme";
+import type { Grille } from "@/lib/tarification/grille";
+import { grilleActive } from "@/lib/tarification/grilles-publiees";
 
 /**
  * Créer une réservation prise au téléphone — demande de JC, 11 septembre 2026.
@@ -125,8 +127,8 @@ function nomStation(slug: string): string {
 }
 
 /** Un trajet aéroport → station de la liste : le prix de la grille. */
-function courseDeGrille(demande: DemandeReservation): CourseSaisie | string {
-  const grille = devisReservation(demande);
+function courseDeGrille(demande: DemandeReservation, tarifs: Grille): CourseSaisie | string {
+  const grille = devisReservation(demande, tarifs);
   if (!grille.ok) {
     return grille.echec.raison === "trop-de-passagers"
       ? "Trop de passagers pour ce véhicule : choisissez-en un plus grand."
@@ -292,7 +294,9 @@ export async function actionCreerTelephone(
   if (!valide.ok) return valide.message;
 
   const course =
-    "surMesure" in valide ? courseHorsGrille(donnees, allerRetour) : courseDeGrille(valide.demande);
+    "surMesure" in valide
+      ? courseHorsGrille(donnees, allerRetour)
+      : courseDeGrille(valide.demande, await grilleActive());
   if (typeof course === "string") return course;
   if (course.aller.getTime() <= Date.now()) {
     return "La date de l’aller est déjà passée : vérifiez le jour et l’année.";
@@ -389,6 +393,7 @@ export async function actionCreerTelephone(
     adresse,
     adresse_retour: adresseRetour || null,
     vol_retour: allerRetour ? champ(donnees, "volRetour", 20) || null : null,
+    bagages: course.bagages,
     bagages_ski: course.skis,
     enfants: phraseEnfants(
       enfantsAller,

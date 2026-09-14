@@ -6,6 +6,7 @@ import { resortParSlug } from "@/lib/resorts";
 import { CATEGORIES, validerDemande } from "@/lib/reservation/demande";
 import { CAPACITE, CAPACITE_BAGAGES, devisReservation } from "@/lib/reservation/devis";
 import { distanceCalculee, distancePubliee } from "@/lib/tarification/distance";
+import { grilleActive } from "@/lib/tarification/grilles-publiees";
 
 /**
  * Devis d'un transfert — le prix vient d'ici, jamais du navigateur.
@@ -48,6 +49,7 @@ export async function POST(requete: Request) {
   }
 
   const { demande } = valide;
+  const grille = await grilleActive();
   const aeroport = airportParSlug(demande.airport)!;
   const station = resortParSlug(demande.resort)!;
   const distance =
@@ -101,7 +103,7 @@ export async function POST(requete: Request) {
           chiffrer.
         */
         ...(sens === "aller" ? { retour: null, passagersRetour: null } : {}),
-      });
+      }, grille);
       if (!resultat.ok) return null;
 
       const ligne = resultat.devis.lignes.find((l) => l.sens === sens);
@@ -123,7 +125,7 @@ export async function POST(requete: Request) {
   const optionsRetour = demande.retour ? optionsDuSens("retour") : [];
 
   if (options.length === 0 || (demande.retour && optionsRetour.length === 0)) {
-    const echec = devisReservation(demande);
+    const echec = devisReservation(demande, grille);
     const raison = !echec.ok ? echec.echec.raison : "distance-inconnue";
     const message =
       raison === "trop-de-passagers"

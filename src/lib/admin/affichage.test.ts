@@ -38,6 +38,7 @@ function course(champs: Partial<Course>): Course {
     aeroportRetour: "Geneva Airport",
     vehicule: "standard",
     vehiculeRetour: null,
+    bagages: 0,
     bagagesSki: 0,
     vol: null,
     client: { nom: "Test", email: "test@example.com", telephone: "+33600000000" },

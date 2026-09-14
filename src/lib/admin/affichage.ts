@@ -154,6 +154,7 @@ export interface Sens {
   vehicule: string;
   enfants: string;
   ages: string;
+  valises: string;
   housses: string;
 }
 
@@ -180,6 +181,7 @@ export function sensDeLaCourse(course: Course, maintenant = new Date()): Sens[] 
   const enfants = enfantsParSens(course.enfants);
   const ages = enfants.ages ? agesLisibles(enfants.ages) : "—";
   const housses = course.bagagesSki > 0 ? String(course.bagagesSki) : "aucune";
+  const valises = course.bagages > 0 ? String(course.bagages) : "aucune";
   const compte = (n: number | null) =>
     n === null ? "non précisé" : n === 0 ? "aucun" : `${n} enfant${n > 1 ? "s" : ""}`;
   const aSurveiller = estAAssurer(course);
@@ -201,6 +203,7 @@ export function sensDeLaCourse(course: Course, maintenant = new Date()): Sens[] 
     vehicule: categorie(course.vehicule),
     enfants: compte(enfants.aller),
     ages,
+    valises,
     housses,
   };
   if (!course.retour) return [aller];
@@ -225,6 +228,7 @@ export function sensDeLaCourse(course: Course, maintenant = new Date()): Sens[] 
       vehicule: categorie(course.vehiculeRetour ?? course.vehicule),
       enfants: compte(enfants.retour),
       ages,
+      valises,
       housses,
     },
   ];

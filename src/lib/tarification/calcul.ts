@@ -36,6 +36,12 @@ export interface DemandeTransfert {
   coefficient?: number;
   /** Prix fixe convenu pour ce trajet, s'il en existe un. Il prime sur le calcul. */
   prixFixe?: number | null;
+  /**
+   * La période de saison du départ, s'il en tombe une (`grille.ts`). Elle
+   * s'ajoute aux majorations du jour et de la nuit, en pourcentage du prix de
+   * base — négative pour une basse saison.
+   */
+  saison?: { nom: string; majoration: number } | null;
 }
 
 export interface Devis {
@@ -98,6 +104,10 @@ export function calculer(demande: DemandeTransfert, bareme: Bareme = BAREME_DEFA
   if (estDeNuit(demande.depart, bareme)) {
     const montant = (base * bareme.majorations.nuit) / 100;
     majorations.push({ libelle: "Nuit", montant: arrondi(montant) });
+  }
+  if (demande.saison && demande.saison.majoration !== 0) {
+    const montant = (base * demande.saison.majoration) / 100;
+    majorations.push({ libelle: demande.saison.nom, montant: arrondi(montant) });
   }
 
   const aller = arrondi(base + majorations.reduce((somme, m) => somme + m.montant, 0));

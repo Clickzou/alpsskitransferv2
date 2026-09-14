@@ -213,6 +213,8 @@ export async function POST(requete: Request) {
         vehicule_retour: string | null;
         passagers: number;
         passagers_retour: number | null;
+        /** Absente avant la migration du 14 septembre 2026. */
+        bagages?: number;
         bagages_ski: number;
         enfants: string | null;
         message: string | null;
@@ -344,6 +346,7 @@ export async function POST(requete: Request) {
       passagers: reservation?.passagers ?? 0,
       passagersRetour: reservation?.passagers_retour ?? null,
       vol: reservation?.vol ?? null,
+      bagages: reservation?.bagages ?? null,
       bagagesSki: reservation?.bagages_ski ?? null,
       enfants: reservation?.enfants ?? null,
       message: reservation?.message ?? null,

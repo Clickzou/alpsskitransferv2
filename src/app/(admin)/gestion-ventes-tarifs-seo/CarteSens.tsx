@@ -16,6 +16,7 @@ export default function CarteSens({ sens }: { sens: Sens }) {
     ["Véhicule", sens.vehicule],
     ["Enfants", sens.enfants],
     ["Âges des enfants", sens.ages],
+    ["Valises", sens.valises],
     ["Housses à skis", sens.housses],
   ];
 

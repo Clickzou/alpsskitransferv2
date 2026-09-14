@@ -37,6 +37,7 @@ create table if not exists reservations (
   source        text not null default 'site',     -- site · telephone
   mode_paiement text,                              -- carte · virement (réservations téléphoniques)
   facture_stripe text,                             -- in_… : facture d'une réservation téléphonique
+  bagages       smallint not null default 0,       -- valises et sacs, hors bagages à main
   bagages_ski   smallint not null default 0,
   enfants       text,                              -- âges, pour les bons sièges
   message       text,
@@ -85,6 +86,16 @@ create table if not exists tarifs (
   unique (airport, resort, vehicule, type_jour)
 );
 
+-- Les grilles publiées depuis l'onglet Tarifs, une ligne par publication :
+-- la plus récente fait les prix. Voir `supabase-migration-tarifs.sql`.
+create table if not exists grilles_tarifaires (
+  id          bigint generated always as identity primary key,
+  contenu     jsonb not null,
+  note        text,
+  publie_par  text not null,
+  publie_le   timestamptz not null default now()
+);
+
 -- Les demandes de changement faites depuis le lien de gestion, et leur sort :
 -- une heure se demande et l'exploitant la valide ; le vol s'applique tout de
 -- suite. Voir `supabase-migration-modifications.sql`.
@@ -115,3 +126,4 @@ alter table reservations  enable row level security;
 alter table paiements     enable row level security;
 alter table tarifs        enable row level security;
 alter table modifications enable row level security;
+alter table grilles_tarifaires enable row level security;

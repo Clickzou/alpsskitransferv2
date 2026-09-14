@@ -6,6 +6,7 @@ import { airportParSlug } from "@/lib/airports";
 import { origineSite } from "@/lib/reservation/config";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 import { devisReservation } from "@/lib/reservation/devis";
+import { grilleActive } from "@/lib/tarification/grilles-publiees";
 import { creerSessionCheckout, stripeConfigure, type LigneCheckout } from "@/lib/reservation/stripe";
 import { MAX_LIGNES } from "@/lib/reservation/panier";
 import { resortParSlug } from "@/lib/resorts";
@@ -94,6 +95,7 @@ export async function POST(requete: Request) {
   const chiffrees: { ligne: LigneEntrante; total: number; encaissable: boolean }[] = [];
   const refusees: { ligne: LigneEntrante; motif: string }[] = [];
 
+  const grille = await grilleActive();
   for (const ligne of brutes) {
     const categorie = CATEGORIES.includes(ligne.categorie) ? ligne.categorie : "standard";
     const depart = new Date(ligne.when);
@@ -110,7 +112,7 @@ export async function POST(requete: Request) {
       categorie,
       bagages: Number(ligne.bags) || 0,
       skis: Number(ligne.skis) || 0,
-    });
+    }, grille);
 
     if (!resultat.ok) {
       refusees.push({ ligne, motif: resultat.echec.raison });

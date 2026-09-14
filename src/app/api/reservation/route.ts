@@ -7,6 +7,7 @@ import { resortParSlug } from "@/lib/resorts";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 import { validerDemande } from "@/lib/reservation/demande";
 import { devisReservation } from "@/lib/reservation/devis";
+import { grilleActive } from "@/lib/tarification/grilles-publiees";
 import { cheminConfirmation, origineSite } from "@/lib/reservation/config";
 import { departImminent, jetonGestion } from "@/lib/reservation/gestion";
 import { creerSessionCheckout, stripeConfigure } from "@/lib/reservation/stripe";
@@ -232,6 +233,7 @@ export async function POST(requete: Request) {
       client_telephone: telephone,
       vol: propre(client.vol, 20),
       adresse,
+      bagages: s.bagages,
       bagages_ski: s.skis,
       enfants: phraseEnfants(client, Boolean(s.retour)),
       message: propre(client.message, 2000),
@@ -321,7 +323,7 @@ export async function POST(requete: Request) {
     );
   }
 
-  const resultat = devisReservation(demande);
+  const resultat = devisReservation(demande, await grilleActive());
   if (!resultat.ok) {
     return NextResponse.json(
       {
@@ -387,6 +389,12 @@ export async function POST(requete: Request) {
     client_telephone: telephone,
     vol: propre(client.vol, 20),
     adresse,
+    /*
+      Les valises, que le devis a déjà comptées pour choisir le coffre : elles
+      n'étaient écrites nulle part, et le chauffeur les découvrait à l'aéroport.
+      Colonne ajoutée par `supabase-migration-tarifs.sql`.
+    */
+    bagages: demande.bagages ?? 0,
     bagages_ski: Number.isInteger(client.skis) ? client.skis : 0,
     enfants: phraseEnfants(client, Boolean(demande.retour)),
     message: propre(client.message, 2000),
@@ -421,6 +429,7 @@ export async function POST(requete: Request) {
     vehiculeRetour: demande.categorieRetour ?? null,
     passagers: demande.passagers,
     vol: ligne.vol,
+    bagages: ligne.bagages,
     bagagesSki: ligne.bagages_ski,
     enfants: ligne.enfants,
     message: ligne.message,
@@ -508,7 +517,7 @@ export async function POST(requete: Request) {
             demande.passagersRetour && demande.passagersRetour !== demande.passagers
               ? demande.passagersRetour
               : null,
-          bagages: null,
+          bagages: ligne.bagages,
           skis: ligne.bagages_ski ?? 0,
           adresse,
           vol: ligne.vol,

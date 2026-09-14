@@ -7,12 +7,13 @@ import { actionDeconnexion } from "./actions";
  *
  * Les réservations et les tarifs sont deux métiers : le suivi des clients se
  * consulte tous les jours, la grille se retouche quelques fois par saison.
- * Demande de JC, 11 septembre 2026 : deux onglets distincts. Celui des tarifs
- * s'ajoutera à cette liste quand son écran existera — pas avant : un onglet
- * qui mène à une page vide est une promesse non tenue.
+ * Demande de JC, 11 septembre 2026 : des onglets distincts. Un onglet ne
+ * s'ajoute qu'avec son écran : un onglet qui mène à une page vide est une
+ * promesse non tenue.
  */
 const ONGLETS = [
   { cle: "reservations", nom: "Réservations", href: "/gestion-ventes-tarifs-seo/" },
+  { cle: "tarifs", nom: "Tarifs", href: "/gestion-ventes-tarifs-seo/tarifs/" },
   { cle: "factures", nom: "Factures", href: "/gestion-ventes-tarifs-seo/factures/" },
 ];
 
