@@ -1,3 +1,34 @@
+# Point de reprise — lundi 14 septembre 2026, après-midi
+
+**JC a demandé d'enchaîner les onglets et de tout tester à la fin.** Rien de ce
+qui suit n'est poussé depuis `4d68de3` (bouton « Demander l'adresse ») :
+
+1. `025b77c` — saisie téléphonique : aéroport, station **ou adresse** (champs du
+   site) ; hors grille, le prix convenu est obligatoire. Back-office en
+   `X-Robots-Tag: noindex, nofollow` quoi qu'il arrive.
+2. `df1345e` — **onglet Tarifs** : grille publiée en base (barème, saisons,
+   coefficients, prix fixes par véhicule), aperçu avant → après obligatoire,
+   historique et retour à une version. **Valises** enregistrées.
+3. Le commit suivant — **onglet Stats SEO** : ventes du site sur 28 jours (base),
+   Search Console et Analytics 4 par compte de service, sans SDK.
+
+**Avant de pousser, dans cet ordre :** exécuter
+`docs/supabase-migration-tarifs.sql` dans Supabase — sans la colonne `bagages`,
+plus aucune réservation ne s'enregistre.
+
+**Pour brancher Google :** `GSC_CREDENTIALS_B64` (même compte de service que le
+site Clickzou), `GA_PROPERTY_ID`, et `GSC_SITE_URL` si la propriété n'est pas
+`sc-domain:alpsskitransfers.com` ; ajouter le compte de service en « Restreint »
+dans Search Console et en « Lecteur » dans Analytics. Testé le 14 : Google
+accepte le compte, et refuse la propriété tant qu'il n'y est pas ajouté. Le
+nouveau site n'a **aucune balise Analytics** : à poser avec le bandeau cookies.
+
+**Tests à faire à la fin :** course téléphonique vers une adresse ; Tarifs —
+modifier, aperçu, publier, vérifier un prix sur le site, revenir à la version
+précédente ; Stats SEO une fois Google branché.
+
+---
+
 # Point de reprise — vendredi 11 septembre 2026, 22 h 15 → lundi 14
 
 **Lundi, commencer par là, en mots simples pour JC** (il était fatigué et n'a

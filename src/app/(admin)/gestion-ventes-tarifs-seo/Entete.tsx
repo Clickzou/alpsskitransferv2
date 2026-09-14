@@ -15,6 +15,7 @@ const ONGLETS = [
   { cle: "reservations", nom: "Réservations", href: "/gestion-ventes-tarifs-seo/" },
   { cle: "tarifs", nom: "Tarifs", href: "/gestion-ventes-tarifs-seo/tarifs/" },
   { cle: "factures", nom: "Factures", href: "/gestion-ventes-tarifs-seo/factures/" },
+  { cle: "seo", nom: "Stats SEO", href: "/gestion-ventes-tarifs-seo/seo/" },
 ];
 
 export default function Entete({
