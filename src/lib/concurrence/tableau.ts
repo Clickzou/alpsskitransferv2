@@ -52,8 +52,14 @@ export interface Filtres {
 
 export function filtresDe(params: Record<string, string | string[] | undefined>): Filtres {
   const jour = params.jour === "samedi" ? "samedi" : "mercredi";
-  const passagers = params.passagers === "2" ? 2 : params.passagers === "8" ? 8 : 4;
   const gamme = params.gamme === "premium" ? "premium" : "standard";
+  /*
+    Pas de premium pour huit : nos Business et Premium prennent sept et quatre
+    passagers (revue de JC, 14 septembre 2026). Une adresse qui le demande
+    retombe sur quatre passagers.
+  */
+  const demande = params.passagers === "2" ? 2 : params.passagers === "8" ? 8 : 4;
+  const passagers = gamme === "premium" && demande === 8 ? 4 : demande;
   return { jour, passagers, gamme };
 }
 

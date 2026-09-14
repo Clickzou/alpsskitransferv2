@@ -252,7 +252,8 @@ export default async function PageConcurrence({
           ))}
         </span>
         <span className="flex gap-2">
-          {(["2", "4", "8"] as const).map((p) => (
+          {/* Huit passagers n'existent qu'en standard : aucun de nos véhicules premium ne les prend. */}
+          {(filtres.gamme === "premium" ? (["2", "4"] as const) : (["2", "4", "8"] as const)).map((p) => (
             <Link key={p} href={avec("passagers", p)} className={puce(String(filtres.passagers) === p)}>
               {p} passagers
             </Link>
@@ -260,7 +261,15 @@ export default async function PageConcurrence({
         </span>
         <span className="flex gap-2">
           {(["standard", "premium"] as const).map((g) => (
-            <Link key={g} href={avec("gamme", g)} className={puce(filtres.gamme === g)}>
+            <Link
+              key={g}
+              href={
+                g === "premium" && filtres.passagers === 8
+                  ? lien({ jour: filtres.jour, passagers: "4", gamme: "premium" })
+                  : avec("gamme", g)
+              }
+              className={puce(filtres.gamme === g)}
+            >
               {g === "standard" ? "Standard" : "Premium"}
             </Link>
           ))}
