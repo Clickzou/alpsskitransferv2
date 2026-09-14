@@ -96,7 +96,13 @@ export async function releverLot(lot: number, maintenant = new Date()) {
       }
     }
     // Trajet par trajet : une fonction coupée en route garde ce qu'elle a déjà lu.
-    await ecrireLignes("concurrence_releves", lignes, "releve_le,airport,resort,jour,passagers,source,gamme");
+    // L'heure d'écriture est reposée à chaque fois : c'est elle qui dit l'avancement d'un relevé rejoué.
+    const ecrit = new Date().toISOString();
+    await ecrireLignes(
+      "concurrence_releves",
+      lignes.map((l) => ({ ...l, cree_le: ecrit })),
+      "releve_le,airport,resort,jour,passagers,source,gamme",
+    );
   }
 
   return { lot, trajets: trajets.length, prixTrouves, erreurs: [...erreurs] };

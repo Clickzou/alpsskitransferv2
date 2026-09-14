@@ -80,6 +80,49 @@ async function lignesDu(date: string, f: Filtres): Promise<LigneReleve[]> {
 }
 
 /**
+ * Où en est le relevé du jour : combien de trajets suivis ont déjà leurs prix,
+ * et s'il tourne encore — une ligne écrite il y a moins de six minutes, alors
+ * que tous les trajets ne sont pas faits. Un lot dure trois minutes : au-delà
+ * de six sans rien écrire, la chaîne s'est arrêtée.
+ */
+export async function avancementReleve(total: number, maintenant = new Date()) {
+  const aujourdhui = isoAlpesDuJour(maintenant);
+  const lignes = await lire<{ airport: string; resort: string; cree_le: string }>("concurrence_releves", {
+    colonnes: "airport,resort,cree_le",
+    filtres: [
+      { colonne: "releve_le", operateur: "eq", valeur: aujourdhui },
+      // Une ligne par trajet suffit à le compter : mercredi, 2 passagers, alps2alps, standard.
+      { colonne: "jour", operateur: "eq", valeur: "mercredi" },
+      { colonne: "passagers", operateur: "eq", valeur: "2" },
+      { colonne: "source", operateur: "eq", valeur: "alps2alps" },
+      { colonne: "gamme", operateur: "eq", valeur: "standard" },
+    ],
+    limite: 500,
+  });
+  /*
+    Le relevé en cours est la dernière série d'écritures sans trou de plus de
+    six minutes : un relevé rejoué dans la journée réécrit ses lignes, et
+    compter toutes celles du jour le dirait fini dès son premier lot.
+  */
+  const instants = lignes
+    .map((l) => ({ cle: `${l.airport}|${l.resort}`, t: new Date(l.cree_le).getTime() }))
+    .sort((a, b) => b.t - a.t);
+  const serie = new Set<string>();
+  for (let i = 0; i < instants.length; i += 1) {
+    if (i > 0 && instants[i - 1].t - instants[i].t > 6 * 60 * 1000) break;
+    serie.add(instants[i].cle);
+  }
+  const derniere = instants[0]?.t ?? 0;
+  const faits = serie.size;
+  const enCours = faits < total && derniere > 0 && maintenant.getTime() - derniere < 6 * 60 * 1000;
+  return { faits, total, enCours };
+}
+
+function isoAlpesDuJour(d: Date): string {
+  return d.toLocaleDateString("sv-SE", { timeZone: "Europe/Paris" });
+}
+
+/**
  * Le dernier relevé, **s'il a moins de trois jours** : recaler nos tarifs sur
  * des prix d'il y a une semaine suivrait des concurrents qui ont peut-être
  * déjà bougé. Toutes les lignes, tous jours, groupes et gammes confondus.

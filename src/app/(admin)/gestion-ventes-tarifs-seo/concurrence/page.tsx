@@ -5,13 +5,14 @@ import { airportParSlug } from "@/lib/airports";
 import { CODES_LIEUX, CONCURRENTS } from "@/lib/concurrence/lieux";
 import { planAlignement } from "@/lib/concurrence/alignement";
 import { trajetsSuivis } from "@/lib/concurrence/releve";
-import { dernierReleve, filtresDe, tableauConcurrence } from "@/lib/concurrence/tableau";
+import { avancementReleve, dernierReleve, filtresDe, tableauConcurrence } from "@/lib/concurrence/tableau";
+import Rafraichir from "./Rafraichir";
 import type { Creneau } from "@/lib/tarification/grille";
 import { resortParSlug } from "@/lib/resorts";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
 import BoutonConfirmation from "../BoutonConfirmation";
 import Entete from "../Entete";
-import { actionAjouterTrajet, actionMettreAJourTarifs, actionReleverMaintenant, actionRetirerTrajet } from "./actions";
+import { actionAjouterTrajet, actionMettreAJourTarifs, actionReleverTout, actionRetirerTrajet } from "./actions";
 
 const MOMENTS: Record<Creneau, string> = {
   semaineJour: "semaine, jour",
@@ -40,7 +41,8 @@ const RETOURS: Record<string, { alerte: boolean; texte: (detail: string) => stri
   "releve-trop-ancien": { alerte: true, texte: () => "Le dernier relevé a plus de trois jours : relancez un relevé avant de mettre à jour les tarifs." },
   "ecart-illisible": { alerte: true, texte: () => "L’écart n’est pas lisible : écrivez un nombre d’euros, par exemple 5." },
   "grille-refusee": { alerte: true, texte: (d) => `La grille n’a pas été publiée : ${d}` },
-  "releve-lance": { alerte: false, texte: () => "Relevé lancé sur les cinq premiers trajets : rechargez la page dans trois minutes. Le reste se relève cette nuit." },
+  "releve-lance": { alerte: false, texte: () => "Relevé lancé sur tous les trajets. L’avancement s’affiche ci-dessous dans une minute." },
+  "releve-deja-en-cours": { alerte: true, texte: () => "Un relevé tourne déjà : attendez qu’il se termine." },
   "trajet-ajoute": { alerte: false, texte: () => "Trajet ajouté : il sera relevé cette nuit." },
   "trajet-retire": { alerte: false, texte: () => "Trajet retiré de la liste suivie." },
   "trajet-inconnu": { alerte: true, texte: () => "Ce lieu n’est pas connu des concurrents : impossible de le relever." },
@@ -69,6 +71,7 @@ export default async function PageConcurrence({
     dernierReleve(),
     trajetsSuivis(),
   ]);
+  const avancement = await avancementReleve(suivis.length);
   // L'aperçu du bouton : ce que « Mettre à jour » poserait, avec cet écart, sur le dernier relevé.
   const plan = releve ? planAlignement(grille, suivis, releve.lignes, ecart) : null;
   const baisses = plan?.changements.filter((c) => c.avant !== null && c.apres < c.avant) ?? [];
@@ -101,14 +104,36 @@ export default async function PageConcurrence({
               : "Aucun relevé pour le moment : le premier a lieu cette nuit."}
           </p>
         </div>
-        <form action={actionReleverMaintenant}>
-          <BoutonConfirmation
-            libelle="Relever maintenant (5 trajets)"
-            enCours="Lancement…"
-            className="rounded border border-glacier-300 px-3 py-1.5 text-sm font-semibold text-alpine-700 hover:bg-glacier-50"
-          />
-        </form>
+        {avancement.enCours ? null : (
+          <form action={actionReleverTout}>
+            <BoutonConfirmation
+              libelle="Relever tous les trajets maintenant"
+              enCours="Lancement…"
+              confirmer={`Relever les ${avancement.total} trajets maintenant ? Environ ${Math.ceil(avancement.total / 5) * 3} minutes, en arrière-plan : vous pouvez quitter la page.`}
+              className="rounded border border-glacier-300 px-3 py-1.5 text-sm font-semibold text-alpine-700 hover:bg-glacier-50"
+            />
+          </form>
+        )}
       </div>
+
+      {avancement.enCours ? (
+        <div className="mt-4 rounded border border-alpes/40 bg-alpes-50/60 px-4 py-3 text-sm text-alpine">
+          <Rafraichir />
+          <p className="font-semibold">
+            Relevé en cours : {avancement.faits} / {avancement.total} trajets — encore environ{" "}
+            {Math.max(1, Math.ceil((avancement.total - avancement.faits) / 5) * 3)} minutes.
+          </p>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-glacier-200">
+            <div
+              className="h-full rounded-full bg-alpes transition-all"
+              style={{ width: `${Math.round((avancement.faits / Math.max(1, avancement.total)) * 100)}%` }}
+            />
+          </div>
+          <p className="mt-1 text-xs text-alpine-600">
+            La page se met à jour toute seule. Attendez la fin avant de mettre à jour les tarifs.
+          </p>
+        </div>
+      ) : null}
 
       {retour ? (
         <p

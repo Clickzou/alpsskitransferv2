@@ -1,12 +1,13 @@
 "use server";
 
-import { after } from "next/server";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { origineSite } from "@/lib/reservation/config";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { appliquerPlan, planAlignement } from "@/lib/concurrence/alignement";
 import { CODES_LIEUX, TRAJETS_PAR_DEFAUT } from "@/lib/concurrence/lieux";
-import { releverLot, trajetsSuivis } from "@/lib/concurrence/releve";
-import { dernierReleve } from "@/lib/concurrence/tableau";
+import { trajetsSuivis } from "@/lib/concurrence/releve";
+import { avancementReleve, dernierReleve } from "@/lib/concurrence/tableau";
 import { ecrireLignes, lire, supprimer } from "@/lib/reservation/supabase";
 import { validerGrille } from "@/lib/tarification/grille";
 import { grilleActive, publierGrille } from "@/lib/tarification/grilles-publiees";
@@ -91,15 +92,30 @@ export async function actionRetirerTrajet(donnees: FormData): Promise<void> {
 }
 
 /**
- * « Relever maintenant » : le premier lot de cinq trajets, en arrière-plan —
- * la page répond tout de suite, les prix arrivent en deux à trois minutes. Le
- * reste de la liste attend la nuit : tout relever d'un coup ferait des
- * centaines de demandes en rafale chez les concurrents.
+ * « Relever tous les trajets maintenant » — demande de JC, 14 septembre 2026.
+ *
+ * Lance la chaîne de lots (`/api/concurrence?chaine=1`) : chaque lot relève
+ * cinq trajets dans sa propre fonction puis lance le suivant, au même rythme
+ * espacé que la nuit — vingt-cinq minutes pour cinquante trajets. Refusé si un
+ * relevé tourne déjà : deux chaînes doubleraient les demandes chez les
+ * concurrents.
  */
-export async function actionReleverMaintenant(): Promise<void> {
+export async function actionReleverTout(): Promise<void> {
   await exigerSession();
-  after(async () => {
-    await releverLot(0);
-  });
-  redirect(`${ICI}?fait=releve-lance`);
+  const total = (await trajetsSuivis()).length;
+  if ((await avancementReleve(total)).enCours) redirect(`${ICI}?fait=releve-deja-en-cours`);
+
+  const secret = process.env.CRON_SECRET?.trim();
+  if (!secret) redirect(`${ICI}?fait=echec`);
+  const entetes = await headers();
+  const origine = origineSite(
+    new Request(`${entetes.get("x-forwarded-proto") ?? "http"}://${entetes.get("host") ?? "localhost"}`),
+  );
+  const lance = await fetch(`${origine}/api/concurrence?lot=0&chaine=1`, {
+    headers: { authorization: `Bearer ${secret}` },
+    cache: "no-store",
+  })
+    .then((r) => r.status === 202)
+    .catch(() => false);
+  redirect(`${ICI}?fait=${lance ? "releve-lance" : "echec"}`);
 }
