@@ -54,6 +54,7 @@ export interface PrixReleve {
   jour: Jour;
   date_trajet: string;
   passagers: number;
+  source: "alps2alps" | "alpy";
   gamme: Gamme;
   prix: number | string | null;
 }
@@ -64,8 +65,10 @@ export interface Changement {
   trajet: string;
   categorie: CategorieVehicule;
   creneau: Creneau;
-  /** Le concurrent le moins cher. */
+  /** Le prix du concurrent le moins cher. */
   reference: number | null;
+  /** Qui est ce concurrent — on le cite dans l'aperçu. */
+  concurrent: PrixReleve["source"] | null;
   avant: number | null;
   apres: number;
 }
@@ -119,7 +122,9 @@ export function planAlignement(
         );
         if (lignes.length === 0) continue;
         touche = true;
-        const reference = Math.min(...lignes.map((l) => Number(l.prix)));
+        const moinsCher = lignes.reduce((min, l) => (Number(l.prix) < Number(min.prix) ? l : min));
+        const reference = Number(moinsCher.prix);
+        const concurrent = moinsCher.source;
         const dateTrajet = lignes[0].date_trajet ?? null;
         const jourIso = dateTrajet ?? dateDuJour(jour, maintenant).toISOString().slice(0, 10);
         const cible = Math.max(1, Math.round(reference - ecart));
@@ -127,12 +132,12 @@ export function planAlignement(
         const creneaux = CRENEAUX_DU_JOUR[jour];
         const propositions: Changement[] = [
           {
-            airport, resort, trajet, categorie, creneau: creneaux.jour, reference,
+            airport, resort, trajet, categorie, creneau: creneaux.jour, reference, concurrent,
             avant: prixActuel(grille, airport, resort, categorie, aHeure(jourIso, 10)),
             apres: cible,
           },
           {
-            airport, resort, trajet, categorie, creneau: creneaux.nuit, reference,
+            airport, resort, trajet, categorie, creneau: creneaux.nuit, reference, concurrent,
             avant: prixActuel(grille, airport, resort, categorie, aHeure(jourIso, 23)),
             apres: cible,
           },

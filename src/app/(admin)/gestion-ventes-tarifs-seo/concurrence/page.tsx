@@ -32,6 +32,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 const ICI = "/gestion-ventes-tarifs-seo/concurrence/";
+const NOM_CONCURRENT = Object.fromEntries(CONCURRENTS.map((c) => [c.cle, c.nom])) as Record<string, string>;
 
 const RETOURS: Record<string, { alerte: boolean; texte: (detail: string) => string }> = {
   "tarifs-mis-a-jour": { alerte: false, texte: (n) => `Tarifs mis à jour : ${n} prix recalés et grille publiée. L’onglet Tarifs permet de revenir à la version précédente.` },
@@ -281,12 +282,16 @@ export default async function PageConcurrence({
                           <td
                             key={v.cle}
                             className="px-3 py-1.5 text-right tabular-nums"
-                            title={c.reference !== null ? `Concurrent le moins cher : ${Math.round(c.reference)} €` : undefined}
                           >
                             <span className="text-alpine-600">{c.avant ?? "—"} €</span> →{" "}
                             <strong className={c.raison ? "text-attention-700 line-through" : baisse ? "text-succes-700" : "text-danger-700"}>
                               {c.apres} €
                             </strong>
+                            {c.reference !== null && c.concurrent ? (
+                              <span className="block text-xs text-alpine-600">
+                                {NOM_CONCURRENT[c.concurrent]} {Math.round(c.reference)} €
+                              </span>
+                            ) : null}
                             {c.raison ? <span className="block text-xs text-attention-700">non posé : {c.raison}</span> : null}
                           </td>
                         );
@@ -297,8 +302,8 @@ export default async function PageConcurrence({
               </table>
             </div>
             <p className="mt-2 text-xs text-alpine-600">
-              En vert, le prix baisse ; en rouge, il monte. Survolez un prix pour voir le concurrent le moins cher. Le
-              week-end et la nuit suivent la même règle.
+              En vert, le prix baisse ; en rouge, il monte. Sous chaque prix, le concurrent le moins cher qui sert de
+              référence. Le week-end et la nuit suivent la même règle.
             </p>
             </details>
             <form action={actionMettreAJourTarifs} className="mt-4">

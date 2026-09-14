@@ -15,6 +15,7 @@ const releve = (jour: "mercredi" | "samedi", gamme: "standard" | "premium", prix
   jour,
   date_trajet: jour === "mercredi" ? "2026-10-07" : "2026-10-10",
   passagers,
+  source: "alps2alps",
   gamme,
   prix,
 });
