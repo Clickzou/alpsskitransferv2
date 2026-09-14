@@ -258,5 +258,73 @@
   "aeroport-paris-charles-de-gaulle-airport": {
     "width": 724,
     "height": 482
+  },
+  "blog-chambery-airport-ski-resorts": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-closest-ski-resorts-to-geneva": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-family-ski-transfers": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-flight-delayed-ski-transfer": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-geneva-or-lyon-three-valleys": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-geneva-to-chamonix": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-geneva-to-verbier": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-geneva-to-zermatt": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-grenoble-airport-ski-resorts": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-how-ski-transfer-prices-work": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-private-or-shared-transfer": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-saturday-changeover-day": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-skis-snowboards-transfer": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-snow-chains-winter-tyres": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-transfer-train-or-rental-car": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-turin-airport-ski-resorts": {
+    "width": 1400,
+    "height": 778
+  },
+  "blog-zurich-or-geneva-swiss-resorts": {
+    "width": 1400,
+    "height": 778
   }
 }

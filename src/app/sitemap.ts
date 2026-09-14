@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/seo";
 import { CHEMINS_NOINDEX } from "@/data/redirections";
 import { AIRPORTS } from "@/lib/airports";
-import { articlesPublies } from "@/lib/articles";
+import { articlesPublies, nombrePagesBlog } from "@/lib/articles";
 import { PAGES } from "@/lib/pages";
 import { pagesDeLaLangue } from "@/lib/pages/intl";
 import { PAYS } from "@/lib/pays";
@@ -32,6 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const racines = [
     { path: "/", priorite: 1.0, frequence: "weekly" as const },
     { path: "/blog/", priorite: 0.7, frequence: "weekly" as const },
+    // Les pages suivantes de l'index du blog : sans elles, les articles anciens ne sont qu'à un lien de page en page.
+    ...Array.from({ length: Math.max(0, nombrePagesBlog() - 1) }, (_, i) => ({
+      path: `/blog/page/${i + 2}/`,
+      priorite: 0.4,
+      frequence: "weekly" as const,
+    })),
   ];
 
   // Hubs pays : têtes de silo, cibles de 13 redirections. Un pays sans station ni

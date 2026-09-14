@@ -1,0 +1,70 @@
+[
+ {
+  "nom": "geneva-or-lyon-three-valleys",
+  "prompt": "A winding mountain road climbing out of a deep snowy French Alpine valley in late-morning light, a dark minivan in the mid-distance on cleared damp tarmac, snowbanks on both sides, larch and fir slopes, high white peaks under a clear blue sky, wide angle."
+ },
+ {
+  "nom": "zurich-or-geneva-swiss-resorts",
+  "prompt": "A broad Swiss Alpine valley in winter seen from a slight height, a motorway along the valley floor beside a frozen river, snow-covered villages of wooden chalets on the lower slopes, jagged snowy peaks in soft afternoon light, no identifiable landmark mountain."
+ },
+ {
+  "nom": "turin-airport-ski-resorts",
+  "prompt": "A sunny Italian Alpine valley in winter, a mountain road with hairpin bends leading up towards a small stone-and-timber village, snow-covered larch forest, deep blue sky, distant rounded snowy summits, warm light."
+ },
+ {
+  "nom": "grenoble-airport-ski-resorts",
+  "prompt": "An aerial perspective of a steep series of switchback hairpin bends climbing a snowy mountainside above a valley floor in winter sunshine, a single dark van on one bend, fir trees dusted with snow, a bright high snowy plateau above."
+ },
+ {
+  "nom": "chambery-airport-ski-resorts",
+  "prompt": "A long lake in a wide Alpine valley in winter seen from a low hillside, snow-covered forested mountains on both sides, a small white passenger jet high in the sky descending over the lake in the distance, soft morning mist on the water, low winter sun, no runway visible."
+ },
+ {
+  "nom": "flight-delayed-ski-transfer",
+  "prompt": "View through large airport terminal windows at dusk in winter, snow falling over the apron, a de-icing vehicle spraying a parked airliner without markings, blurred warm terminal lights in the foreground, distant snowy mountains."
+ },
+ {
+  "nom": "closest-ski-resorts-to-geneva",
+  "prompt": "Aerial landscape of a winding valley motorway leading from a lowland plain towards snow-covered Alpine peaks in mid-winter, small villages and forests along the valley, crisp blue sky, late-morning light."
+ },
+ {
+  "nom": "snow-chains-winter-tyres",
+  "prompt": "A dark minibus stopped in a lay-by on a snow-covered Alpine mountain road at early dusk, snow chains laid out on the snow beside a rear wheel, hairpin bends climbing a forested valley behind, light snowfall, road marker posts through fresh snow, cold blue light with warm headlights."
+ },
+ {
+  "nom": "skis-snowboards-transfer",
+  "prompt": "The open rear boot of a black passenger van parked in a snowy Alpine village, neatly loaded with padded ski bags, a snowboard bag and wheeled suitcases, snow-covered chalets and pine slopes softly out of focus behind, crisp winter morning light."
+ },
+ {
+  "nom": "family-ski-transfers",
+  "prompt": "A black people carrier parked outside a wooden chalet in a snowy mountain village in late afternoon, a folded pushchair, small children's skis and suitcases on the snow by the open sliding door, a child booster seat visible inside, warm light in the chalet windows."
+ },
+ {
+  "nom": "saturday-changeover-day",
+  "prompt": "A long line of cars and minibuses with headlights on climbing a winding snow-lined valley road towards a ski resort at dusk, snowy forests on both sides, lights of a resort village high above, cool blue-hour tones."
+ },
+ {
+  "nom": "private-or-shared-transfer",
+  "prompt": "A single dark people carrier parked outside a snow-covered wooden chalet at dusk, warm light in the windows, ski bags being unloaded from the open tailgate, fresh snow on pine trees and mountains behind."
+ },
+ {
+  "nom": "transfer-train-or-rental-car",
+  "prompt": "A wide Alpine valley in winter, a snow-cleared mountain road with hairpin bends climbing a forested slope, a small red regional train crossing the valley floor below, snow-capped peaks in soft morning light."
+ },
+ {
+  "nom": "how-ski-transfer-prices-work",
+  "prompt": "A dark minibus driving up a gritted mountain road between high snowbanks, winter tyres clearly visible, the winding road continuing towards a generic ski village high in the valley, overcast winter light."
+ },
+ {
+  "nom": "geneva-to-zermatt",
+  "prompt": "Early-morning winter scene in a narrow Swiss Alpine valley, a small red mountain shuttle train waiting at a covered station platform, luggage trolleys holding ski bags and suitcases, snow-covered larch slopes rising steeply on both sides in soft haze."
+ },
+ {
+  "nom": "geneva-to-chamonix",
+  "prompt": "A dark people carrier with its boot open outside a snow-covered wooden chalet in a wide Alpine valley, ski bags and suitcases on the cleared ground, glaciated granite peaks rising behind under a clear blue winter sky."
+ },
+ {
+  "nom": "geneva-to-verbier",
+  "prompt": "A winding mountain road with hairpin bends climbing from a snowy valley floor towards a sunny terrace of chalets, a gondola line crossing the slope above, late-afternoon winter light, high snow-capped ridges in the distance."
+ }
+]

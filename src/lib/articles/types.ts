@@ -35,6 +35,21 @@ export interface Article {
    * seulement pour l'audience.
    */
   stationsLiees?: string[];
+  /**
+   * Les pages de trajet que l'article sert — Genève → Val Thorens. C'est le
+   * maillage qui compte le plus : les pages de trajet sont celles qui vendent,
+   * et celles où l'audit du 4 septembre 2026 trouve le site absent. Chaque page
+   * de trajet affiche en retour les articles qui la citent.
+   */
+  trajetsLies?: { airport: string; resort: string }[];
+  /**
+   * « À retenir » : trois à cinq faits autonomes, chiffrés, en tête d'article.
+   * C'est le passage qu'un moteur de réponse (aperçus IA de Google, ChatGPT,
+   * Perplexity) extrait et cite : il doit se comprendre sans le reste.
+   */
+  aRetenir?: string[];
+  /** Les questions réellement posées, balisées `FAQPage`. Réponses courtes et autonomes. */
+  faq?: { question: string; reponse: string }[];
   brouillon?: boolean;
   /** Les traductions de l'article, par langue. Absente = pas de version. */
   traductions?: Partial<Record<LangueSecondaire, TraductionArticle>>;

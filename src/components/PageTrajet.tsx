@@ -17,6 +17,7 @@ import {
   Section,
 } from "@/components/gabarit/Sections";
 import { DISTANCES } from "@/data/distances";
+import { articlesDuTrajet } from "@/lib/articles";
 import { airportParSlug } from "@/lib/airports";
 import { duree } from "@/lib/airports/dessertes";
 import { alternativesTrajet } from "@/lib/intl/liens";
@@ -56,6 +57,7 @@ export default function PageTrajet({
   const court = aeroport.name.replace(" Airport", "");
 
   const distance = DISTANCES.find((d) => d.airport === airport && d.resort === resort);
+  const articles = articlesDuTrajet(airport, resort);
 
   // Les autres aéroports qui desservent la station, du plus proche au plus loin.
   const autres = transfersDeLaStation(station.slug)
@@ -197,6 +199,20 @@ export default function PageTrajet({
         ) : null}
 
         <Faq items={trajet.faq} titre={`Frequently asked questions — ${court} to ${station.name}`} />
+
+        {/* Le maillage retour : les guides qui citent ce trajet, puis ceux de sa station. */}
+        {articles.length > 0 ? (
+          <Section fond="glacier">
+            <EnTeteSection surtitre="Blog" titre={`Guides for the ${court} to ${station.name} transfer`} />
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {articles.map((a) => (
+                <li key={a.slug}>
+                  <CarteLien href={`/blog/${a.slug}/`} titre={a.titre} action="Read" />
+                </li>
+              ))}
+            </ul>
+          </Section>
+        ) : null}
 
         <AppelAction
           titre={`Book your transfer from ${aeroport.name} to ${station.name}`}

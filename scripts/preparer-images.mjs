@@ -205,6 +205,25 @@ for (const [slug, fichier] of Object.entries(VISUELS_AEROPORTS)) {
 }
 void DESTINATIONS;
 
+/*
+ * Les visuels du blog, générés par `npm run images:blog` dans `pHOTOS/blog/`.
+ * Tout fichier du dossier est repris sous `blog-{nom}` : un article nouveau n'a
+ * pas à passer par cette table.
+ */
+try {
+  for (const fichier of await readdir(path.join(SOURCE, "blog"))) {
+    if (!/\.(jpe?g|png|webp)$/i.test(fichier)) continue;
+    IMAGES.push({
+      source: path.join("blog", fichier),
+      nom: `blog-${fichier.replace(/\.[a-z]+$/i, "")}`,
+      largeur: 1400,
+      qualite: 70,
+    });
+  }
+} catch {
+  // Pas encore de visuel de blog généré : rien à préparer.
+}
+
 await mkdir(SORTIE, { recursive: true });
 
 const manquantes = [];
