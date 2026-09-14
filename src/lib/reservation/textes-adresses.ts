@@ -29,7 +29,10 @@ export interface TextesAdresses {
   /** Sur la page de confirmation, juste après le paiement. */
   chapoConfirmation: string;
   boutonConfirmation: string;
-  /** Le rappel automatique, trois jours avant, quand une adresse manque encore. */
+  /**
+   * La demande d'adresse : le rappel automatique trois jours avant, ou le bouton
+   * du back-office à n'importe quel moment — d'où un texte qui ne compte pas les jours.
+   */
   relanceSujet: (reference: string) => string;
   relanceCorps: (d: { trajet: string; quand: string; lien: string }) => string;
 }
@@ -60,7 +63,7 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     relanceSujet: (reference) => `Your address in resort is still missing — ${reference}`,
     relanceCorps: ({ trajet, quand, lien }) =>
       [
-        "Your transfer is in three days, and we still don’t have your address in resort:",
+        "Your transfer is coming up, and we still don’t have your address in resort:",
         "",
         `${trajet} — ${quand}`,
         "",
@@ -95,7 +98,7 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     relanceSujet: (reference) => `Il nous manque votre adresse en station — ${reference}`,
     relanceCorps: ({ trajet, quand, lien }) =>
       [
-        "Votre transfert a lieu dans trois jours, et il nous manque encore votre adresse en station :",
+        "Votre transfert approche, et il nous manque encore votre adresse en station :",
         "",
         `${trajet} — ${quand}`,
         "",
@@ -131,7 +134,7 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     relanceSujet: (reference) => `Ihre Adresse im Skiort fehlt noch — ${reference}`,
     relanceCorps: ({ trajet, quand, lien }) =>
       [
-        "Ihr Transfer ist in drei Tagen, und uns fehlt noch Ihre Adresse im Skiort:",
+        "Ihr Transfer steht bald an, und uns fehlt noch Ihre Adresse im Skiort:",
         "",
         `${trajet} — ${quand}`,
         "",
@@ -166,7 +169,7 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     relanceSujet: (reference) => `Ci manca ancora il tuo indirizzo in località — ${reference}`,
     relanceCorps: ({ trajet, quand, lien }) =>
       [
-        "Il tuo transfer è tra tre giorni e ci manca ancora il tuo indirizzo in località:",
+        "Il tuo transfer si avvicina e ci manca ancora il tuo indirizzo in località:",
         "",
         `${trajet} — ${quand}`,
         "",

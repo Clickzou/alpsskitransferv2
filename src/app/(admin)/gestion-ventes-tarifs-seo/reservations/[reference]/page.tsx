@@ -22,6 +22,7 @@ import {
 } from "../../actions";
 import BoutonConfirmation from "../../BoutonConfirmation";
 import CarteSens from "../../CarteSens";
+import DemanderAdresse from "../../DemanderAdresse";
 import Entete from "../../Entete";
 
 /**
@@ -98,6 +99,26 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
   },
   "deja-payee": { alerte: true, texte: "Cette réservation est déjà payée." },
   renvoye: { alerte: false, texte: "L’e-mail de paiement est reparti chez le client." },
+  "adresse-demandee": {
+    alerte: false,
+    texte: "L’e-mail est parti : le client a reçu, dans sa langue, le lien pour donner son adresse en station.",
+  },
+  "adresse-deja-demandee": {
+    alerte: true,
+    texte: "L’adresse vient déjà d’être demandée il y a moins de dix minutes : aucun second e-mail n’est parti.",
+  },
+  "adresse-deja-donnee": {
+    alerte: false,
+    texte: "Le client a déjà donné son adresse : aucun e-mail n’est parti.",
+  },
+  "adresse-course-passee": {
+    alerte: true,
+    texte: "Cette course est passée : aucun e-mail n’est parti.",
+  },
+  "adresse-echec": {
+    alerte: true,
+    texte: "L’e-mail n’a pas pu partir : vérifiez l’adresse e-mail du client, ou appelez-le.",
+  },
   "renvoi-echec": {
     alerte: true,
     texte: "L’e-mail de paiement n’a pas pu partir : vérifiez l’adresse du client, ou appelez-le.",
@@ -203,12 +224,15 @@ export default async function FicheReservation({
       ) : null}
 
       {adresseManquante(course) ? (
-        <p className="mt-6 rounded border border-danger-300 bg-danger-50 px-4 py-3 text-sm font-medium text-danger-700">
-          Adresse manquante — à demander au client :{" "}
-          <a className="underline" href={`tel:${course.client.telephone}`}>
-            {course.client.telephone}
-          </a>
-        </p>
+        <div className="mt-6 space-y-3 rounded border border-danger-300 bg-danger-50 px-4 py-3">
+          <p className="text-sm font-medium text-danger-700">
+            Adresse manquante — à demander au client :{" "}
+            <a className="underline" href={`tel:${course.client.telephone}`}>
+              {course.client.telephone}
+            </a>
+          </p>
+          <DemanderAdresse course={course} />
+        </div>
       ) : null}
 
       {attente.length > 0 ? (

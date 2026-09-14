@@ -80,6 +80,21 @@ export function modifieeParLeClient(course: Course): boolean {
 
 /* ------------------------------------------------------------ historique */
 
+/** La ligne d'historique du bouton « Demander l'adresse au client ». */
+export const CHAMP_DEMANDE_ADRESSE = "demande-adresse";
+
+/**
+ * Quand l'adresse a été demandée au client pour la dernière fois — à la main
+ * ou par la relance du matin. Le bouton l'affiche, pour qu'on n'écrive pas
+ * deux fois au client sans le savoir.
+ */
+export function derniereDemandeAdresse(course: Course): Date | null {
+  const demandes = course.historique.filter(
+    (m) => m.champ === CHAMP_DEMANDE_ADRESSE || m.champ === "relance",
+  );
+  return demandes.length > 0 ? demandes[demandes.length - 1].le : null;
+}
+
 const CHAMPS: Record<string, string> = {
   aller: "Aller",
   retour: "Retour",
@@ -101,7 +116,9 @@ const STATUTS: Record<string, string> = {
 /** Une ligne d'historique, lisible d'un coup d'œil : ce qui a bougé, d'où, vers où, et son sort. */
 export function decrire(m: Modification): string {
   // La création d'une réservation téléphonique et ses paiements se disent en toutes lettres.
-  if (m.champ === "creation" || m.champ === "paiement") return m.nouveau ?? "";
+  if (m.champ === "creation" || m.champ === "paiement" || m.champ === CHAMP_DEMANDE_ADRESSE) {
+    return m.nouveau ?? "";
+  }
   if (m.champ === "relance") {
     return "Rappel automatique envoyé au client : adresse manquante";
   }

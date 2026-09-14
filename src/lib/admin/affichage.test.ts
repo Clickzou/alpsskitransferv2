@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   adresseManquante,
+  CHAMP_DEMANDE_ADRESSE,
+  decrire,
+  derniereDemandeAdresse,
   estAAssurer,
   euros,
   heure,
@@ -50,6 +53,40 @@ function course(champs: Partial<Course>): Course {
 }
 
 const sansEspacesFines = (texte: string) => texte.replace(/[  ]/g, " ");
+
+describe("derniereDemandeAdresse", () => {
+  const ligne = (champ: string, le: Date) => ({
+    champ,
+    ancien: null,
+    nouveau: null,
+    statut: "transmise",
+    lot: null,
+    langue: "fr",
+    source: "exploitant",
+    le,
+  });
+
+  it("retient la plus récente, à la main comme par la relance du matin", () => {
+    expect(derniereDemandeAdresse(course({}))).toBeNull();
+    expect(
+      derniereDemandeAdresse(
+        course({
+          historique: [
+            ligne("relance", dans(-48)),
+            ligne("vol", dans(-30)),
+            ligne(CHAMP_DEMANDE_ADRESSE, dans(-2)),
+          ],
+        }),
+      ),
+    ).toEqual(dans(-2));
+  });
+
+  it("dit la demande en toutes lettres dans l'historique", () => {
+    expect(decrire({ ...ligne(CHAMP_DEMANDE_ADRESSE, maintenant), nouveau: "Adresse demandée" })).toBe(
+      "Adresse demandée",
+    );
+  });
+});
 
 describe("euros", () => {
   it("écrit les montants à la française", () => {

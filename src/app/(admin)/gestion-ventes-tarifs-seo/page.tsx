@@ -21,6 +21,7 @@ import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
 import CarteSens from "./CarteSens";
+import DemanderAdresse from "./DemanderAdresse";
 import Entete from "./Entete";
 import Recherche from "./Recherche";
 
@@ -119,6 +120,8 @@ function LigneCourse({ course }: { course: Course }) {
       </summary>
 
       <div className="space-y-4 bg-glacier-50 px-4 py-4 text-sm">
+        {adresseManquante(course) ? <DemanderAdresse course={course} /> : null}
+
         <div className="grid gap-4 md:grid-cols-3">
           <div>
             <p className="text-xs uppercase tracking-wide text-alpine-600">Client</p>

@@ -25,10 +25,21 @@ export default function Entete({
 }) {
   return (
     <header className="border-b border-glacier-200">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* Trois colonnes sur ordinateur, pour que la mention reste au centre quelle que soit la largeur de l'e-mail. */}
+      <div className="flex flex-wrap items-center justify-between gap-4 md:grid md:grid-cols-[1fr_auto_1fr]">
         <Logo lang="fr" />
 
-        <div className="flex items-center gap-4 text-sm">
+        <p className="order-last w-full text-center text-sm text-alpine-600 md:order-none md:w-auto">
+          Tableau de bord créé par{" "}
+          <a
+            href="https://clickzou.fr/"
+            className="font-semibold text-alpine underline underline-offset-2 hover:text-marque"
+          >
+            Clickzou
+          </a>
+        </p>
+
+        <div className="flex items-center gap-4 text-sm md:justify-self-end">
           <span className="text-alpine-600">{email}</span>
           <form action={actionDeconnexion}>
             <button

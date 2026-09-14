@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { airportParSlug } from "@/lib/airports";
-import { LOCALES, type Lang } from "@/lib/i18n";
 import { origineSite } from "@/lib/reservation/config";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { envoyer } from "@/lib/reservation/email";
-import { lienGestion } from "@/lib/reservation/gestion";
+import { envoyerDemandeAdresse } from "@/lib/reservation/rappel-adresse";
 import {
   aRappeler,
   aSignaler,
@@ -12,9 +11,8 @@ import {
   type LigneRelance,
 } from "@/lib/reservation/relances";
 import { inserer, lire } from "@/lib/reservation/supabase";
-import { TEXTES_ADRESSES } from "@/lib/reservation/textes-adresses";
 import { resortParSlug } from "@/lib/resorts";
-import { FUSEAU_ALPES, formaterAlpes } from "@/lib/temps";
+import { FUSEAU_ALPES } from "@/lib/temps";
 
 /**
  * La relance du matin — tâche planifiée Vercel (`vercel.json`), chaque jour.
@@ -37,8 +35,6 @@ import { FUSEAU_ALPES, formaterAlpes } from "@/lib/temps";
  * GET /api/relances
  */
 export const dynamic = "force-dynamic";
-
-const LANGUES: Lang[] = ["en", "fr", "de", "it"];
 
 export async function GET(requete: Request) {
   const secret = process.env.CRON_SECRET?.trim();
@@ -85,28 +81,7 @@ export async function GET(requete: Request) {
   let rappels = 0;
   for (const l of aRelancer) {
     if (dejaRelancees.has(l.reference)) continue;
-    const langue = LANGUES.includes(l.langue as Lang) ? (l.langue as Lang) : "en";
-    const lien = lienGestion(origine, l.reference, langue);
-    const prise = prochainePrise(l, maintenant);
-    if (!lien || !prise) continue;
-
-    const mots = TEXTES_ADRESSES[langue];
-    const envoye = await envoyer({
-      destinataire: l.client_email,
-      sujet: mots.relanceSujet(l.reference),
-      texte: mots.relanceCorps({
-        trajet: trajet(l),
-        quand: formaterAlpes(prise, LOCALES[langue], {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        lien: `${lien}#adresses`,
-      }),
-    });
-    if (!envoye) continue;
+    if (!(await envoyerDemandeAdresse(l, origine, maintenant))) continue;
 
     rappels += 1;
     await inserer("modifications", {
@@ -115,7 +90,7 @@ export async function GET(requete: Request) {
       ancien: null,
       nouveau: "rappel d’adresse envoyé au client",
       statut: "transmise",
-      langue,
+      langue: l.langue,
       source: "exploitant",
     });
   }

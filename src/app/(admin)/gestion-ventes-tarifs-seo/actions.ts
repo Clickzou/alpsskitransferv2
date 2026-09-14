@@ -27,6 +27,9 @@ import {
   recapDemande,
 } from "@/lib/reservation/textes-demande";
 import { echeanceVirement } from "@/lib/reservation/telephone";
+import { CHAMP_DEMANDE_ADRESSE } from "@/lib/admin/affichage";
+import { envoyerDemandeAdresse } from "@/lib/reservation/rappel-adresse";
+import { adresseManque, prochainePrise, type LigneRelance } from "@/lib/reservation/relances";
 import { cheminConfirmation } from "@/lib/reservation/config";
 import { jetonGestion } from "@/lib/reservation/gestion";
 
@@ -462,4 +465,65 @@ export async function actionRenvoyerPaiement(donnees: FormData): Promise<void> {
   });
 
   return retourFiche(envoye ? "renvoye" : "renvoi-echec");
+}
+
+/* ------------------------------------------------------ adresse en station */
+
+/** Deux clics — ou deux onglets — dans cet intervalle n'envoient qu'un e-mail. */
+const INTERVALLE_DEMANDE_ADRESSE = 10 * 60 * 1000;
+
+/**
+ * « Demander l'adresse au client » — le même e-mail que la relance du matin,
+ * envoyé tout de suite (demande de JC, 14 septembre 2026).
+ *
+ * Tout se relit en base au clic : si le client a donné son adresse entre-temps,
+ * ou si la course est annulée ou passée, rien ne part. La relance automatique
+ * de J-3 n'en tient pas compte et part quand même : elle rappelle, elle ne
+ * double pas un geste de la minute.
+ */
+export async function actionDemanderAdresse(donnees: FormData): Promise<void> {
+  const utilisateur = await utilisateurCourant();
+  if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
+
+  const reference = String(donnees.get("reference") ?? "");
+  const retourFiche = (fait: string): never => redirect(`${cheminFiche(reference)}?fait=${fait}`);
+
+  const [ligne] = await lire<LigneRelance>("reservations", {
+    colonnes:
+      "reference,statut,airport,resort,aller,retour,retour_resort,adresse,adresse_retour,client_nom,client_email,client_telephone,langue",
+    filtres: [{ colonne: "reference", operateur: "eq", valeur: reference }],
+    limite: 1,
+  });
+  if (!ligne) return retourFiche("perimee");
+  if (ligne.statut === "annulee") return retourFiche("annulee");
+  if (!adresseManque(ligne)) return retourFiche("adresse-deja-donnee");
+  if (!prochainePrise(ligne)) return retourFiche("adresse-course-passee");
+
+  const [derniere] = await lire<{ cree_le: string }>("modifications", {
+    colonnes: "cree_le",
+    filtres: [
+      { colonne: "reference", operateur: "eq", valeur: reference },
+      { colonne: "champ", operateur: "eq", valeur: CHAMP_DEMANDE_ADRESSE },
+    ],
+    tri: { colonne: "cree_le", croissant: false },
+    limite: 1,
+  });
+  if (derniere && Date.now() - new Date(derniere.cree_le).getTime() < INTERVALLE_DEMANDE_ADRESSE) {
+    return retourFiche("adresse-deja-demandee");
+  }
+
+  const envoye = await envoyerDemandeAdresse(ligne, await origineActions());
+  if (!envoye) return retourFiche("adresse-echec");
+
+  await inserer("modifications", {
+    reference,
+    champ: CHAMP_DEMANDE_ADRESSE,
+    ancien: null,
+    nouveau: `Adresse demandée au client par e-mail — par ${utilisateur.email}`,
+    statut: "transmise",
+    langue: ligne.langue,
+    source: "exploitant",
+  });
+
+  return retourFiche("adresse-demandee");
 }
