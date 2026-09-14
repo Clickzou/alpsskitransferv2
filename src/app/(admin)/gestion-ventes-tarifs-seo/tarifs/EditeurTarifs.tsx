@@ -459,8 +459,48 @@ export default function EditeurTarifs({
         </button>
       </section>
 
+      {/*
+        La barre du bas — revue de JC, 14 septembre 2026 : il changeait un
+        coefficient en haut de la page et ne trouvait pas de quoi valider, la
+        publication étant quatre sections plus bas. Dès qu'une valeur change,
+        la barre reste à l'écran et mène à l'aperçu.
+      */}
+      {modifie && !apercuAJour ? (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-glacier-200 bg-white/95 px-4 py-3 shadow-flottant backdrop-blur-sm">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
+            <p className="text-sm font-semibold text-alpine">
+              Modifications non publiées — rien ne change pour les clients tant que vous n’avez pas publié.
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setBrouillon(initial);
+                  setApercu(null);
+                  setErreurs([]);
+                }}
+                className={BOUTON_SECONDAIRE}
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                disabled={enCours}
+                onClick={() => {
+                  voirApercu();
+                  document.getElementById("publier")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="rounded bg-marque px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:opacity-60"
+              >
+                {enCours ? "Calcul…" : "Voir l’aperçu et publier"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {/* ------------------------------------------- aperçu et publication */}
-      <section className={`${CARTE} border-2 border-alpes/30`}>
+      <section id="publier" className={`${CARTE} mb-24 scroll-mt-6 border-2 border-alpes/30`}>
         <h2 className="font-display text-lg text-alpine">Voir, puis publier</h2>
         <p className="mt-1 text-sm text-alpine-600">
           {modifie
