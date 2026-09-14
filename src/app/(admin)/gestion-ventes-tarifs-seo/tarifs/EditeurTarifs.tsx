@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
+import Visuel, { type NomVisuel } from "@/components/Visuel";
 import type { LigneApercu } from "@/lib/tarification/apercu";
 import type { CategorieVehicule } from "@/lib/tarification/bareme";
 import type { Grille } from "@/lib/tarification/grille";
@@ -40,6 +41,15 @@ const CATEGORIES: { cle: CategorieVehicule; nom: string }[] = [
   { cle: "premium", nom: "Premium" },
 ];
 
+/** Ce que la page sait d'un véhicule : son modèle, sa photo, et ce qu'il emporte. */
+export interface FicheVehicule {
+  cle: CategorieVehicule;
+  modele: string;
+  image: NomVisuel;
+  places: number;
+  bagages: number;
+}
+
 const t = (n: number | undefined) => (n === undefined ? "" : String(n).replace(".", ","));
 const parVehicule = (valeurs: Partial<Record<CategorieVehicule, number>>) =>
   ({ standard: t(valeurs.standard), business: t(valeurs.business), premium: t(valeurs.premium) });
@@ -74,10 +84,12 @@ export default function EditeurTarifs({
   grille,
   stations,
   aeroports,
+  vehicules,
 }: {
   grille: Grille;
   stations: { slug: string; nom: string }[];
   aeroports: { slug: string; nom: string }[];
+  vehicules: FicheVehicule[];
 }) {
   const router = useRouter();
   const initial = useMemo(() => versBrouillon(grille, stations), [grille, stations]);
@@ -165,18 +177,49 @@ export default function EditeurTarifs({
       <section className={CARTE}>
         <h2 className="font-display text-lg text-alpine">Règles générales</h2>
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[32rem] text-sm">
+          <table className="w-full min-w-[40rem] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wide text-alpine-600">
                 <th className="py-1 pr-3 font-medium">Véhicule</th>
+                <th className="py-1 pr-3 font-medium">Passagers</th>
                 <th className="py-1 pr-3 font-medium">Prise en charge</th>
                 <th className="py-1 font-medium">Prix au kilomètre</th>
               </tr>
             </thead>
             <tbody>
-              {CATEGORIES.map((c) => (
-                <tr key={c.cle}>
-                  <td className="py-1.5 pr-3 font-semibold text-alpine">{c.nom}</td>
+              {CATEGORIES.map((c) => {
+                const fiche = vehicules.find((v) => v.cle === c.cle);
+                return (
+                <tr key={c.cle} className="border-t border-glacier-100">
+                  <td className="py-2 pr-3">
+                    <span className="flex items-center gap-3">
+                      {fiche ? (
+                        // La voiture entière, jamais recadrée — comme dans le tunnel.
+                        <span className="relative block h-14 w-24 shrink-0 overflow-hidden rounded bg-white">
+                          <Visuel
+                            nom={fiche.image}
+                            alt={fiche.modele}
+                            sizes="6rem"
+                            className="absolute inset-0 h-full w-full object-contain"
+                          />
+                        </span>
+                      ) : null}
+                      <span>
+                        <span className="block font-semibold text-alpine">{c.nom}</span>
+                        {fiche ? <span className="block text-xs text-alpine-600">{fiche.modele}</span> : null}
+                      </span>
+                    </span>
+                  </td>
+                  <td className="py-2 pr-3 text-alpine">
+                    {fiche ? (
+                      <>
+                        <span className="block font-semibold">{fiche.places} places</span>
+                        <span className="block text-xs text-alpine-600">{fiche.bagages} bagages max.</span>
+                      </>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                   <td className="py-1.5 pr-3">
                     {nombreChamp(
                       brouillon.bareme.priseEnCharge[c.cle],
@@ -194,7 +237,8 @@ export default function EditeurTarifs({
                     )}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>

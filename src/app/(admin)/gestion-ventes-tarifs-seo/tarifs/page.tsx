@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { AIRPORTS } from "@/lib/airports";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { euros, heure } from "@/lib/admin/affichage";
-import { devisReservation } from "@/lib/reservation/devis";
+import { VEHICULES } from "@/data/accueil";
+import { CAPACITE, CAPACITE_BAGAGES, devisReservation } from "@/lib/reservation/devis";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
 import { RESORTS_MIGRES } from "@/lib/resorts";
 import { baremeValide } from "@/lib/tarification/bareme";
@@ -12,7 +13,7 @@ import { composantesAlpes, instantAlpes } from "@/lib/temps";
 import BoutonConfirmation from "../BoutonConfirmation";
 import Entete from "../Entete";
 import { actionRevenirGrille } from "./actions";
-import EditeurTarifs from "./EditeurTarifs";
+import EditeurTarifs, { type FicheVehicule } from "./EditeurTarifs";
 
 /**
  * L'onglet Tarifs — « l'onglet principal » (JC, 11 septembre 2026).
@@ -91,6 +92,15 @@ export default async function PageTarifs({
   const aeroports = AIRPORTS.map((a) => ({ slug: a.slug, nom: a.name })).sort((x, y) =>
     x.nom.localeCompare(y.nom, "fr"),
   );
+
+  // Les véhicules de la home, avec les capacités que le devis applique vraiment.
+  const vehicules: FicheVehicule[] = VEHICULES.categories.map((v) => ({
+    cle: v.cle,
+    modele: v.modele,
+    image: v.image.nom,
+    places: CAPACITE[v.cle],
+    bagages: CAPACITE_BAGAGES[v.cle],
+  }));
 
   const carte = "rounded-xl border border-glacier-200 bg-white p-5 shadow-carte";
 
@@ -184,7 +194,7 @@ export default async function PageTarifs({
         </p>
       </section>
 
-      <EditeurTarifs grille={grille} stations={stations} aeroports={aeroports} />
+      <EditeurTarifs grille={grille} stations={stations} aeroports={aeroports} vehicules={vehicules} />
 
       <section className={`mt-6 ${carte}`}>
         <h2 className="font-display text-lg text-alpine">Historique des publications</h2>
