@@ -42,6 +42,7 @@ export default function Remboursement({
   suggestion,
   moyen,
   annulee,
+  ouvert: ouvertAuDepart = false,
 }: {
   reference: string;
   /** Ce qui reste à rendre, en euros. */
@@ -49,8 +50,10 @@ export default function Remboursement({
   suggestion: { montant: number; motif: string };
   moyen: "carte" | "virement";
   annulee: boolean;
+  /** Formulaire déplié d'emblée — quand on arrive du bouton « Rembourser » de la liste. */
+  ouvert?: boolean;
 }) {
-  const [ouvert, setOuvert] = useState(false);
+  const [ouvert, setOuvert] = useState(ouvertAuDepart);
   // « La totalité » cochée d'office quand c'est ce qui est proposé.
   const [mode, setMode] = useState<"total" | "montant">(
     suggestion.montant >= disponible ? "total" : "montant",

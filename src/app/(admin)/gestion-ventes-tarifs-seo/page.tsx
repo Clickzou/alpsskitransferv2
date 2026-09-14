@@ -145,6 +145,19 @@ function LigneCourse({ course }: { course: Course }) {
             </p>
             {course.payeLe ? <p>Payée le {heure(course.payeLe)}</p> : null}
             <p className="mt-1 font-mono text-xs">{course.reference}</p>
+            {/*
+              Le remboursement se fait sur la fiche, où l'on voit ce qui a déjà été
+              rendu et les frais Stripe ; la liste y mène, formulaire ouvert
+              (revue de JC, 14 septembre 2026 : il le cherchait ici).
+            */}
+            {course.payeLe ? (
+              <Link
+                href={`${cheminFiche(course.reference)}?rembourser=1#paiement`}
+                className="mt-2 inline-block rounded border border-danger-300 px-3 py-1 text-xs font-semibold text-danger-700 hover:bg-danger-50"
+              >
+                Rembourser le client →
+              </Link>
+            ) : null}
           </div>
 
           <div>

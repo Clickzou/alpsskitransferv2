@@ -148,7 +148,11 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
 
 function Bloc({ titre, children }: { titre: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-glacier-200 bg-white p-5 shadow-carte">
+    // L'ancre `#paiement` : le bouton « Rembourser » de la liste mène droit au bloc.
+    <section
+      id={titre === "Paiement" ? "paiement" : undefined}
+      className="scroll-mt-6 rounded-xl border border-glacier-200 bg-white p-5 shadow-carte"
+    >
       <h2 className="text-xs font-medium uppercase tracking-wide text-alpine-600">{titre}</h2>
       <div className="mt-3 space-y-1 text-sm text-alpine">{children}</div>
     </section>
@@ -194,7 +198,7 @@ export default async function FicheReservation({
     ? await factureParId(course.factureStripe)
     : await factureDeReference(course.reference);
 
-  const { fait, detail } = await searchParams;
+  const { fait, detail, rembourser } = await searchParams;
   const retour =
     fait === "remboursement-refuse"
       ? { alerte: true, texte: `Rien n’a été remboursé. ${typeof detail === "string" ? detail : ""}` }
@@ -355,6 +359,7 @@ export default async function FicheReservation({
               suggestion={suggestionRemboursement(etatPaiement, course.aller)}
               moyen={course.paiementStripe ? "carte" : "virement"}
               annulee={course.statut === "annulee"}
+              ouvert={rembourser === "1"}
             />
           ) : course.payeLe && course.paiementStripe ? (
             <p className="mt-3 text-xs text-attention-700">
