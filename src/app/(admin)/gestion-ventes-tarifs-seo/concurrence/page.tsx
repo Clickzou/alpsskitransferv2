@@ -5,7 +5,13 @@ import { airportParSlug } from "@/lib/airports";
 import { CODES_LIEUX, CONCURRENTS } from "@/lib/concurrence/lieux";
 import { planAlignement } from "@/lib/concurrence/alignement";
 import { trajetsSuivis } from "@/lib/concurrence/releve";
-import { avancementReleve, dernierReleve, filtresDe, tableauConcurrence } from "@/lib/concurrence/tableau";
+import {
+  avancementReleve,
+  dernierReleve,
+  filtresDe,
+  tableauConcurrence,
+  VEHICULES_COMPARES,
+} from "@/lib/concurrence/tableau";
 import Rafraichir from "./Rafraichir";
 import type { Creneau } from "@/lib/tarification/grille";
 import { resortParSlug } from "@/lib/resorts";
@@ -89,7 +95,7 @@ export default async function PageConcurrence({
   const puce = (actif: boolean) =>
     `rounded-full border px-3 py-1 text-sm ${actif ? "border-alpine bg-alpine text-white" : "border-glacier-300 text-alpine-700 hover:bg-glacier-50"}`;
   const avec = (cle: string, valeur: string) =>
-    lien({ jour: filtres.jour, passagers: String(filtres.passagers), gamme: filtres.gamme, [cle]: valeur });
+    lien({ jour: filtres.jour, passagers: String(filtres.passagers), vehicule: filtres.vehicule, [cle]: valeur });
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
@@ -251,26 +257,26 @@ export default async function PageConcurrence({
             </Link>
           ))}
         </span>
-        <span className="flex gap-2">
-          {/* Huit passagers n'existent qu'en standard : aucun de nos véhicules premium ne les prend. */}
-          {(filtres.gamme === "premium" ? (["2", "4"] as const) : (["2", "4", "8"] as const)).map((p) => (
-            <Link key={p} href={avec("passagers", p)} className={puce(String(filtres.passagers) === p)}>
-              {p} passagers
+        <span className="flex flex-wrap gap-2">
+          {VEHICULES_COMPARES.map((v) => (
+            <Link
+              key={v.cle}
+              // Huit passagers n'entrent pas dans un Business ni un Premium : on retombe sur quatre.
+              href={lien({
+                jour: filtres.jour,
+                passagers: v.places < filtres.passagers ? "4" : String(filtres.passagers),
+                vehicule: v.cle,
+              })}
+              className={puce(filtres.vehicule === v.cle)}
+            >
+              {v.nom} ({v.places} places)
             </Link>
           ))}
         </span>
         <span className="flex gap-2">
-          {(["standard", "premium"] as const).map((g) => (
-            <Link
-              key={g}
-              href={
-                g === "premium" && filtres.passagers === 8
-                  ? lien({ jour: filtres.jour, passagers: "4", gamme: "premium" })
-                  : avec("gamme", g)
-              }
-              className={puce(filtres.gamme === g)}
-            >
-              {g === "standard" ? "Standard" : "Premium"}
+          {(filtres.vehicule === "standard" ? (["2", "4", "8"] as const) : (["2", "4"] as const)).map((p) => (
+            <Link key={p} href={avec("passagers", p)} className={puce(String(filtres.passagers) === p)}>
+              {p} passagers
             </Link>
           ))}
         </span>
@@ -298,8 +304,9 @@ export default async function PageConcurrence({
       </div>
 
       <p className="mt-4 text-xs leading-relaxed text-alpine-600">
-        Comparaison à 10 h, trois semaines à l’avance, par véhicule. « Standard » : l’offre la moins chère qui
-        tient le groupe ; « Premium » : leur haut de gamme, face à nos Business et Premium
+        Comparaison à 10 h, trois semaines à l’avance, par véhicule. Notre Standard face à leur offre la moins
+        chère qui tient le groupe ; nos Business et Premium face à leur haut de gamme (minivan premium chez
+        alps2alps, Mercedes chez Alpy)
         {ancien ? ` — tendance comparée au relevé du ${dateLisible(ancien)}` : ""}.{" "}
         <Link href="/gestion-ventes-tarifs-seo/tarifs/" className="underline">
           Voir les tarifs
@@ -310,7 +317,8 @@ export default async function PageConcurrence({
         {dateTrajet && dernier ? (
           <>
             <strong>Prix d’un transfert le {dateLisible(dateTrajet)} à 10 h</strong>, pour {filtres.passagers}{" "}
-            passagers, en gamme {filtres.gamme === "standard" ? "standard" : "premium"} — tels que les concurrents
+            passagers, notre {VEHICULES_COMPARES.find((v) => v.cle === filtres.vehicule)?.nom} face à leur{" "}
+            {filtres.gamme === "standard" ? "offre standard" : "haut de gamme"} — tels que les concurrents
             les affichaient le {dateLisible(dernier)}. Nos prix sont calculés pour cette même date.
           </>
         ) : (

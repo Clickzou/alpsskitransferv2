@@ -4,7 +4,8 @@ import { resortParSlug } from "@/lib/resorts";
 import type { CategorieVehicule } from "@/lib/tarification/bareme";
 import type { Grille } from "@/lib/tarification/grille";
 import { instantAlpes } from "@/lib/temps";
-import { dateDuJour, notrePrix, type Gamme } from "./comparaison";
+import { devisReservation } from "@/lib/reservation/devis";
+import { dateDuJour, type Gamme } from "./comparaison";
 import type { Jour } from "./lieux";
 import { trajetsSuivis } from "./releve";
 
@@ -47,20 +48,30 @@ export interface LigneComparaison {
 export interface Filtres {
   jour: Jour;
   passagers: 2 | 4 | 8;
+  /** Notre véhicule comparé — revue de JC, 14 septembre 2026 : le Business ne se voyait nulle part. */
+  vehicule: CategorieVehicule;
+  /** L'offre concurrente qui lui fait face : standard pour notre Standard, haut de gamme sinon. */
   gamme: Gamme;
 }
 
+export const VEHICULES_COMPARES: { cle: CategorieVehicule; nom: string; places: number }[] = [
+  { cle: "standard", nom: "Standard", places: 8 },
+  { cle: "business", nom: "Business", places: 7 },
+  { cle: "premium", nom: "Premium", places: 4 },
+];
+
 export function filtresDe(params: Record<string, string | string[] | undefined>): Filtres {
   const jour = params.jour === "samedi" ? "samedi" : "mercredi";
-  const gamme = params.gamme === "premium" ? "premium" : "standard";
+  const vehicule: CategorieVehicule =
+    params.vehicule === "business" ? "business" : params.vehicule === "premium" || params.gamme === "premium" ? "premium" : "standard";
   /*
-    Pas de premium pour huit : nos Business et Premium prennent sept et quatre
-    passagers (revue de JC, 14 septembre 2026). Une adresse qui le demande
-    retombe sur quatre passagers.
+    Huit passagers n'entrent que dans notre Standard : le Business en prend
+    sept, le Premium quatre. Une adresse qui demande l'impossible retombe sur
+    quatre passagers.
   */
   const demande = params.passagers === "2" ? 2 : params.passagers === "8" ? 8 : 4;
-  const passagers = gamme === "premium" && demande === 8 ? 4 : demande;
-  return { jour, passagers, gamme };
+  const passagers = vehicule !== "standard" && demande === 8 ? 4 : demande;
+  return { jour, passagers, vehicule, gamme: vehicule === "standard" ? "standard" : "premium" };
 }
 
 const JOUR_MS = 24 * 3600 * 1000;
@@ -174,7 +185,8 @@ export async function tableauConcurrence(grille: Grille, f: Filtres, maintenant 
           return instantAlpes(a, m, j, 10, 0);
         })()
       : dateDuJour(f.jour, maintenant);
-    const nous = notrePrix(grille, airport, resort, f.passagers, f.gamme, depart);
+    const devis = devisReservation({ airport, resort, categorie: f.vehicule, passagers: f.passagers, aller: depart }, grille);
+    const nous = devis.ok ? { prix: devis.devis.total, categorie: f.vehicule } : null;
     const meilleur = minimum(nombre(a2a?.prix), nombre(alpy?.prix));
     return {
       airport,
