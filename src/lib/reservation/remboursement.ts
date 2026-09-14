@@ -1,13 +1,12 @@
 /**
  * Le remboursement d'une course — demande de JC, 14 septembre 2026.
  *
- * Le montant se **propose** selon les conditions de vente (article 3.1), et
- * l'exploitant peut toujours le forcer :
+ * Le montant se **propose**, et l'exploitant peut toujours le forcer :
  *
- * - plus de 24 heures avant la prise en charge : tout, moins les frais de
- *   transaction — ceux que Stripe a réellement prélevés sur ce paiement, et
- *   qu'il ne rend pas quand on rembourse ;
- * - dans les 24 heures, ou course commencée : rien.
+ * - plus de 24 heures avant l'aller : la totalité, frais compris — les
+ *   conditions de vente permettraient de retenir les frais de transaction,
+ *   l'exploitant a choisi de ne pas le faire ;
+ * - dans les 24 heures, ou aller déjà fait : rien (article 3.1).
  *
  * Ces règles sont ici, sans accès réseau, pour être testées.
  */
@@ -54,16 +53,18 @@ export function suggestionRemboursement(
     };
   }
 
-  // Les frais ne se retirent qu'une fois : un second remboursement les a déjà vus partir.
-  const frais = etat.dejaRembourse > 0 ? 0 : (etat.frais ?? 0);
+  /*
+    La totalité, frais compris — décision de l'exploitant, 14 septembre 2026 :
+    le client est remboursé en entier, même si les conditions de vente
+    permettraient de retenir les frais. Stripe, lui, ne rend pas ses frais :
+    on le dit, pour que ce que coûte le remboursement ne soit pas une surprise.
+  */
   return {
-    montant: Math.max(0, arrondi(reste - frais)),
+    montant: reste,
     motif:
-      etat.frais === null
-        ? "Plus de 24 h avant la prise en charge : tout, moins les frais de paiement — que Stripe n’a pas donnés ici, vérifiez le montant."
-        : frais > 0
-          ? `Plus de 24 h avant la prise en charge : tout, moins les frais de paiement retenus par Stripe (${euros(frais)}).`
-          : "Plus de 24 h avant la prise en charge : le reste dû.",
+      etat.frais && etat.dejaRembourse === 0
+        ? `Plus de 24 h avant l’aller : la totalité. Stripe garde ses frais sur ce paiement (${euros(etat.frais)}) : ils restent à votre charge.`
+        : "Plus de 24 h avant l’aller : la totalité.",
   };
 }
 

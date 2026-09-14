@@ -5,18 +5,18 @@ const maintenant = new Date("2026-12-10T10:00:00Z");
 const dans = (heures: number) => new Date(maintenant.getTime() + heures * 3600 * 1000);
 
 describe("remboursement", () => {
-  it("propose tout moins les frais de Stripe à plus de 24 h", () => {
-    const s = suggestionRemboursement({ paye: 588, dejaRembourse: 0, frais: 9.07 }, dans(48), maintenant);
-    expect(s.montant).toBe(578.93);
-    expect(s.motif).toContain("9,07 €");
+  it("propose la totalité à plus de 24 h, et signale les frais que Stripe garde", () => {
+    const s = suggestionRemboursement({ paye: 588, dejaRembourse: 0, frais: 18.77 }, dans(48), maintenant);
+    expect(s.montant).toBe(588);
+    expect(s.motif).toContain("18,77 €");
   });
 
-  it("ne propose rien dans les 24 h, ni une fois la course commencée", () => {
+  it("ne propose rien dans les 24 h, ni une fois l'aller fait", () => {
     expect(suggestionRemboursement({ paye: 588, dejaRembourse: 0, frais: 9 }, dans(12), maintenant).montant).toBe(0);
     expect(suggestionRemboursement({ paye: 588, dejaRembourse: 0, frais: 9 }, dans(-5), maintenant).montant).toBe(0);
   });
 
-  it("ne retire pas les frais deux fois", () => {
+  it("propose ce qui reste après un premier remboursement", () => {
     const s = suggestionRemboursement({ paye: 588, dejaRembourse: 100, frais: 9 }, dans(48), maintenant);
     expect(s.montant).toBe(488);
   });

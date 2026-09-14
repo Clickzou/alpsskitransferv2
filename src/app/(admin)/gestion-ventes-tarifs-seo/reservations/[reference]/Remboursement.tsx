@@ -51,7 +51,10 @@ export default function Remboursement({
   annulee: boolean;
 }) {
   const [ouvert, setOuvert] = useState(false);
-  const [mode, setMode] = useState<"total" | "montant">("montant");
+  // « La totalité » cochée d'office quand c'est ce qui est proposé.
+  const [mode, setMode] = useState<"total" | "montant">(
+    suggestion.montant >= disponible ? "total" : "montant",
+  );
   const [montant, setMontant] = useState(String(suggestion.montant).replace(".", ","));
   const [annuler, setAnnuler] = useState(false);
 
