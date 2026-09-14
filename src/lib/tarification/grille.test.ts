@@ -58,9 +58,27 @@ describe("grille tarifaire", () => {
 
   it("donne un prix fixe par véhicule, et laisse les autres au calcul", () => {
     const g = copie();
-    g.prixFixes = [{ airport: "geneva-airport", resort: "val-thorens", prix: { standard: 300 } }];
+    g.prixFixes = [{ airport: "geneva-airport", resort: "val-thorens", prix: { standard: { semaineJour: 300 } } }];
     expect(total(base, g)).toBe(300);
     expect(total({ ...base, categorie: "premium" }, g)).toBe(total({ ...base, categorie: "premium" }));
+  });
+
+  it("prend le prix du moment tel quel, et majore le prix de semaine quand le moment est vide", () => {
+    const g = copie();
+    const samediNuit = instantAlpes(2027, 1, 16, 23, 0);
+    g.prixFixes = [{ airport: "geneva-airport", resort: "val-thorens", prix: { standard: { semaineJour: 300 } } }];
+    // Samedi 17 % + nuit 20 % sur 300 €.
+    expect(total({ ...base, aller: samediNuit }, g)).toBe(300 + 51 + 60);
+    g.prixFixes[0].prix.standard!.weekendNuit = 380;
+    expect(total({ ...base, aller: samediNuit }, g)).toBe(380);
+    expect(total(base, g)).toBe(300);
+  });
+
+  it("relit un ancien prix fixe à un seul montant comme le prix « semaine, jour »", () => {
+    const g = copie() as unknown as { prixFixes: unknown[] };
+    g.prixFixes = [{ airport: "geneva-airport", resort: "val-thorens", prix: { standard: 300 } }];
+    const relue = validerGrille(g);
+    expect(relue.ok && relue.grille.prixFixes[0].prix.standard).toEqual({ semaineJour: 300 });
   });
 
   it("refuse un taux au kilomètre tapé sans virgule", () => {
@@ -83,7 +101,7 @@ describe("grille tarifaire", () => {
 
   it("refuse un prix fixe sans trajet", () => {
     const g = copie();
-    g.prixFixes = [{ airport: "", resort: "val-thorens", prix: { standard: 300 } }];
+    g.prixFixes = [{ airport: "", resort: "val-thorens", prix: { standard: { semaineJour: 300 } } }];
     expect(validerGrille(g).ok).toBe(false);
   });
 });

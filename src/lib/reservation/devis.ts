@@ -141,7 +141,7 @@ export function prixFixe(
   categorie: CategorieVehicule = "standard",
   grille: Grille = GRILLE_DEFAUT,
 ): number | null {
-  return prixFixeDe(grille, airport, resort, categorie);
+  return prixFixeDe(grille, airport, resort, categorie)?.prix ?? null;
 }
 
 function distanceDuTrajet(airport: string, resort: string) {
@@ -223,6 +223,9 @@ export function devisReservation(
     const retour = sens === "retour";
     const d = retour ? distanceRetour! : distance;
     const categorie = retour ? categorieRetour : demande.categorie;
+    const fixe = retour
+      ? prixFixeDe(grille, airportRetour, resortRetour, categorie, depart)
+      : prixFixeDe(grille, demande.airport, demande.resort, categorie, depart);
     return {
       sens,
       depart,
@@ -237,9 +240,8 @@ export function devisReservation(
           partage: demande.partage ?? false,
           allerRetour: false,
           coefficient: retour ? coefficientDe(grille, resortRetour) : coefficient,
-          prixFixe: retour
-            ? prixFixeDe(grille, airportRetour, resortRetour, categorie)
-            : prixFixeDe(grille, demande.airport, demande.resort, categorie),
+          prixFixe: fixe?.prix ?? null,
+          majorationsIncluses: fixe?.majorationsIncluses ?? false,
           saison: saisonDu(grille, depart),
         },
         grille.bareme,

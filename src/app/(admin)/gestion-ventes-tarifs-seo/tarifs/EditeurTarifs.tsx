@@ -5,7 +5,7 @@ import { useMemo, useState, useTransition } from "react";
 import Visuel, { type NomVisuel } from "@/components/Visuel";
 import type { LigneApercu } from "@/lib/tarification/apercu";
 import type { CategorieVehicule } from "@/lib/tarification/bareme";
-import type { Grille } from "@/lib/tarification/grille";
+import type { Creneau, Grille } from "@/lib/tarification/grille";
 import { actionApercuGrille, actionPublierGrille } from "./actions";
 
 /**
@@ -31,7 +31,7 @@ interface Brouillon {
     remiseAllerRetour: Texte;
   };
   coefficients: Record<string, Texte>;
-  prixFixes: { airport: string; resort: string; prix: Record<CategorieVehicule, Texte> }[];
+  prixFixes: { airport: string; resort: string; prix: Record<CategorieVehicule, Record<Creneau, Texte>> }[];
   saisons: { nom: string; debut: string; fin: string; majoration: Texte }[];
 }
 
@@ -40,6 +40,21 @@ const CATEGORIES: { cle: CategorieVehicule; nom: string }[] = [
   { cle: "business", nom: "Business" },
   { cle: "premium", nom: "Premium" },
 ];
+
+/** Les quatre moments d'un prix fixe — recopiés de `grille.ts`, qui ne part pas dans le navigateur. */
+const CRENEAUX: { cle: Creneau; nom: string }[] = [
+  { cle: "semaineJour", nom: "Semaine, jour" },
+  { cle: "semaineNuit", nom: "Semaine, nuit" },
+  { cle: "weekendJour", nom: "Week-end, jour" },
+  { cle: "weekendNuit", nom: "Week-end, nuit" },
+];
+
+const momentsVides = (): Record<Creneau, Texte> => ({
+  semaineJour: "",
+  semaineNuit: "",
+  weekendJour: "",
+  weekendNuit: "",
+});
 
 /** Ce que la page sait d'un véhicule : son modèle, sa photo, et ce qu'il emporte. */
 export interface FicheVehicule {
@@ -53,6 +68,9 @@ export interface FicheVehicule {
 const t = (n: number | undefined) => (n === undefined ? "" : String(n).replace(".", ","));
 const parVehicule = (valeurs: Partial<Record<CategorieVehicule, number>>) =>
   ({ standard: t(valeurs.standard), business: t(valeurs.business), premium: t(valeurs.premium) });
+
+const moments = (valeurs: Partial<Record<Creneau, number>> | undefined) =>
+  Object.fromEntries(Object.entries(valeurs ?? {}).map(([k, v]) => [k, t(v)])) as Partial<Record<Creneau, Texte>>;
 
 function versBrouillon(g: Grille, stations: { slug: string }[]): Brouillon {
   return {
@@ -68,7 +86,15 @@ function versBrouillon(g: Grille, stations: { slug: string }[]): Brouillon {
       remiseAllerRetour: t(g.bareme.remiseAllerRetour),
     },
     coefficients: Object.fromEntries(stations.map((s) => [s.slug, t(g.coefficients[s.slug] ?? 1)])),
-    prixFixes: g.prixFixes.map((p) => ({ airport: p.airport, resort: p.resort, prix: parVehicule(p.prix) })),
+    prixFixes: g.prixFixes.map((p) => ({
+      airport: p.airport,
+      resort: p.resort,
+      prix: {
+        standard: { ...momentsVides(), ...moments(p.prix.standard) },
+        business: { ...momentsVides(), ...moments(p.prix.business) },
+        premium: { ...momentsVides(), ...moments(p.prix.premium) },
+      },
+    })),
     saisons: g.saisons.map((s) => ({ ...s, majoration: t(s.majoration) })),
   };
 }
@@ -345,13 +371,16 @@ export default function EditeurTarifs({
       {/* ---------------------------------------------------- prix fixes */}
       <section className={CARTE}>
         <h2 className="font-display text-lg text-alpine">Prix fixes par trajet</h2>
-        <p className="mt-1 text-sm text-alpine-600">
-          Un prix convenu remplace le calcul pour ce trajet et ce véhicule — les majorations du samedi, de la
-          nuit et de la saison s’y ajoutent. Un véhicule laissé vide suit le calcul.
+        <p className="mt-1 text-sm leading-relaxed text-alpine-600">
+          Un prix convenu remplace le calcul pour ce trajet et ce véhicule. Une case remplie est le prix de ce
+          moment, majorations du week-end et de la nuit comprises. Une case vide part du prix « Semaine, jour »
+          et y ajoute les majorations du barème. Un véhicule sans prix « Semaine, jour » suit le calcul. La
+          majoration de saison s’ajoute dans tous les cas.
         </p>
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-4">
           {brouillon.prixFixes.map((p, i) => (
-            <div key={i} className="grid items-end gap-2 lg:grid-cols-[1fr_1fr_6rem_6rem_6rem_auto]">
+            <div key={i} className="rounded-lg border border-glacier-200 p-3">
+            <div className="grid items-end gap-2 sm:grid-cols-[1fr_1fr_auto]">
               <label className={ETIQUETTE}>
                 Aéroport
                 <select value={p.airport} onChange={(e) => changer((b) => void (b.prixFixes[i].airport = e.target.value))} className={CHAMP}>
@@ -374,22 +403,55 @@ export default function EditeurTarifs({
                   ))}
                 </select>
               </label>
-              {CATEGORIES.map((c) => (
-                <label key={c.cle} className={ETIQUETTE}>
-                  {c.nom}
-                  {nombreChamp(p.prix[c.cle], (v) => changer((b) => void (b.prixFixes[i].prix[c.cle] = v)), `Prix ${c.nom}`, "€")}
-                </label>
-              ))}
               <button type="button" onClick={() => changer((b) => void b.prixFixes.splice(i, 1))} className={BOUTON_SECONDAIRE}>
                 Retirer
               </button>
+            </div>
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full min-w-[34rem] text-sm">
+                <thead>
+                  <tr className="text-left text-xs uppercase tracking-wide text-alpine-600">
+                    <th className="py-1 pr-3 font-medium">Véhicule</th>
+                    {CRENEAUX.map((m) => (
+                      <th key={m.cle} className="py-1 pr-3 font-medium">
+                        {m.nom}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {CATEGORIES.map((c) => (
+                    <tr key={c.cle}>
+                      <td className="py-1 pr-3 font-semibold text-alpine">{c.nom}</td>
+                      {CRENEAUX.map((m) => (
+                        <td key={m.cle} className="py-1 pr-3">
+                          {nombreChamp(
+                            p.prix[c.cle][m.cle],
+                            (v) => changer((b) => void (b.prixFixes[i].prix[c.cle][m.cle] = v)),
+                            `Prix ${c.nom}, ${m.nom}`,
+                            "€",
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             </div>
           ))}
         </div>
         <button
           type="button"
           onClick={() =>
-            changer((b) => void b.prixFixes.push({ airport: "", resort: "", prix: { standard: "", business: "", premium: "" } }))
+            changer(
+              (b) =>
+                void b.prixFixes.push({
+                  airport: "",
+                  resort: "",
+                  prix: { standard: momentsVides(), business: momentsVides(), premium: momentsVides() },
+                }),
+            )
           }
           className={`mt-3 ${BOUTON_SECONDAIRE}`}
         >

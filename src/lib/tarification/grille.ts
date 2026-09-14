@@ -23,11 +23,31 @@ import { BAREME_DEFAUT, type Bareme, type CategorieVehicule } from "./bareme";
 
 export const CATEGORIES_GRILLE: CategorieVehicule[] = ["standard", "business", "premium"];
 
-/** Un prix convenu pour un trajet, par véhicule. Un véhicule sans prix suit le calcul. */
+/**
+ * Les quatre moments d'un prix fixe — demande de JC, 14 septembre 2026 : un
+ * trajet ne se vend pas le même prix en semaine et le week-end, de jour et de
+ * nuit. Le week-end, c'est le samedi et le dimanche ; la nuit, la plage du barème.
+ */
+export type Creneau = "semaineJour" | "semaineNuit" | "weekendJour" | "weekendNuit";
+export const CRENEAUX: Creneau[] = ["semaineJour", "semaineNuit", "weekendJour", "weekendNuit"];
+export const LIBELLES_CRENEAUX: Record<Creneau, string> = {
+  semaineJour: "semaine, jour",
+  semaineNuit: "semaine, nuit",
+  weekendJour: "week-end, jour",
+  weekendNuit: "week-end, nuit",
+};
+
+/**
+ * Un prix convenu pour un trajet, par véhicule et par moment.
+ *
+ * Un moment rempli est le prix, majorations du jour et de la nuit comprises.
+ * Un moment vide part du prix « semaine, jour » et y ajoute les majorations du
+ * barème. Un véhicule sans prix « semaine, jour » ni prix du moment suit le calcul.
+ */
 export interface PrixFixeTrajet {
   airport: string;
   resort: string;
-  prix: Partial<Record<CategorieVehicule, number>>;
+  prix: Partial<Record<CategorieVehicule, Partial<Record<Creneau, number>>>>;
 }
 
 /** Une période de l'année où les prix changent — vacances scolaires, Noël, basse saison. */
@@ -59,7 +79,11 @@ export const GRILLE_DEFAUT: Grille = {
   prixFixes: TARIFS.filter((t) => t.valide && t.prive).map((t) => ({
     airport: t.airport,
     resort: t.resort,
-    prix: { standard: t.prive!, business: t.prive!, premium: t.prive! },
+    prix: {
+      standard: { semaineJour: t.prive! },
+      business: { semaineJour: t.prive! },
+      premium: { semaineJour: t.prive! },
+    },
   })),
   saisons: [],
 };
@@ -68,15 +92,34 @@ export function coefficientDe(grille: Grille, resort: string): number {
   return grille.coefficients[resort] ?? 1;
 }
 
+/** Le moment d'un départ, à l'heure des Alpes. */
+export function creneauDu(grille: Grille, depart: Date): Creneau {
+  const c = composantesAlpes(depart);
+  const weekend = c.jourSemaine === 0 || c.jourSemaine === 6;
+  const { debut, fin } = grille.bareme.plageNuit;
+  const nuit = debut > fin ? c.heure >= debut || c.heure < fin : c.heure >= debut && c.heure < fin;
+  return `${weekend ? "weekend" : "semaine"}${nuit ? "Nuit" : "Jour"}` as Creneau;
+}
+
+/**
+ * Le prix fixe d'un départ, s'il y en a un, et s'il inclut déjà les
+ * majorations du jour et de la nuit (`majorationsIncluses`) : c'est le cas
+ * quand le prix de ce moment précis est rempli.
+ */
 export function prixFixeDe(
   grille: Grille,
   airport: string,
   resort: string,
   categorie: CategorieVehicule,
-): number | null {
+  depart?: Date,
+): { prix: number; majorationsIncluses: boolean } | null {
   const trajet = grille.prixFixes.find((p) => p.airport === airport && p.resort === resort);
   const prix = trajet?.prix[categorie];
-  return prix && prix > 0 ? prix : null;
+  if (!prix) return null;
+  const moment = depart ? prix[creneauDu(grille, depart)] : undefined;
+  if (moment && moment > 0) return { prix: moment, majorationsIncluses: true };
+  const base = prix.semaineJour;
+  return base && base > 0 ? { prix: base, majorationsIncluses: false } : null;
 }
 
 /** « 2026-12-19 » du départ, à l'heure des Alpes — c'est le jour du client qui compte. */
@@ -171,10 +214,20 @@ export function validerGrille(brut: unknown): Resultat {
     if (vus.has(cle)) erreurs.push(`${libelle} : ce trajet a déjà un prix fixe plus haut.`);
     vus.add(cle);
     const prixBrut = (ligne?.prix ?? {}) as Record<string, unknown>;
-    const prix: Partial<Record<CategorieVehicule, number>> = {};
+    const prix: PrixFixeTrajet["prix"] = {};
+    const vide = (v: unknown) => v === "" || v === null || v === undefined;
     for (const c of CATEGORIES_GRILLE) {
-      if (prixBrut[c] === "" || prixBrut[c] === null || prixBrut[c] === undefined) continue;
-      prix[c] = Math.round(nombre(prixBrut[c], `${libelle} (${c})`, 1, 10000));
+      // Un nombre seul — la forme d'avant les quatre moments — vaut « semaine, jour ».
+      const brutVehicule =
+        typeof prixBrut[c] === "number" || typeof prixBrut[c] === "string"
+          ? { semaineJour: prixBrut[c] }
+          : ((prixBrut[c] ?? {}) as Record<string, unknown>);
+      const moments: Partial<Record<Creneau, number>> = {};
+      for (const m of CRENEAUX) {
+        if (vide(brutVehicule[m])) continue;
+        moments[m] = Math.round(nombre(brutVehicule[m], `${libelle} (${c}, ${LIBELLES_CRENEAUX[m]})`, 1, 10000));
+      }
+      if (Object.keys(moments).length > 0) prix[c] = moments;
     }
     if (Object.keys(prix).length === 0) erreurs.push(`${libelle} : donnez au moins un prix.`);
     prixFixes.push({ airport, resort, prix });

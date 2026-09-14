@@ -37,6 +37,11 @@ export interface DemandeTransfert {
   /** Prix fixe convenu pour ce trajet, s'il en existe un. Il prime sur le calcul. */
   prixFixe?: number | null;
   /**
+   * Le prix fixe est celui du moment exact (semaine ou week-end, jour ou
+   * nuit) : les majorations du jour et de la nuit y sont déjà.
+   */
+  majorationsIncluses?: boolean;
+  /**
    * La période de saison du départ, s'il en tombe une (`grille.ts`). Elle
    * s'ajoute aux majorations du jour et de la nuit, en pourcentage du prix de
    * base — négative pour une basse saison.
@@ -94,14 +99,15 @@ export function calculer(demande: DemandeTransfert, bareme: Bareme = BAREME_DEFA
   const base = prixFixe ? demande.prixFixe! : (priseEnCharge + kilometrage) * coefficient;
 
   const jour = composantesAlpes(demande.depart).jourSemaine;
-  if (jour === 6) {
+  const inclus = prixFixe && demande.majorationsIncluses === true;
+  if (!inclus && jour === 6) {
     const montant = (base * bareme.majorations.samedi) / 100;
     majorations.push({ libelle: "Samedi", montant: arrondi(montant) });
-  } else if (jour === 0) {
+  } else if (!inclus && jour === 0) {
     const montant = (base * bareme.majorations.dimanche) / 100;
     majorations.push({ libelle: "Dimanche", montant: arrondi(montant) });
   }
-  if (estDeNuit(demande.depart, bareme)) {
+  if (!inclus && estDeNuit(demande.depart, bareme)) {
     const montant = (base * bareme.majorations.nuit) / 100;
     majorations.push({ libelle: "Nuit", montant: arrondi(montant) });
   }

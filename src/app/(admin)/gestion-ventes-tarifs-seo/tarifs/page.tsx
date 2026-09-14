@@ -145,7 +145,9 @@ export default async function PageTarifs({
           </li>
           <li>
             <strong className="text-alpine">Un prix fixe</strong> posé sur un trajet remplace les deux étapes
-            précédentes pour ce véhicule.
+            précédentes pour ce véhicule. S’il est donné pour le moment du départ (semaine ou week-end, jour ou
+            nuit), il comprend déjà les majorations du week-end et de la nuit ; sinon on part du prix « semaine,
+            jour » et on les ajoute.
           </li>
           <li>
             <strong className="text-alpine">+ les majorations</strong>, en pourcentage du prix de base : samedi{" "}
