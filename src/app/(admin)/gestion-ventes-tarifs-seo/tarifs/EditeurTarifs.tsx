@@ -111,11 +111,21 @@ export default function EditeurTarifs({
   stations,
   aeroports,
   vehicules,
+  coefficientsBase,
+  alignement,
 }: {
   grille: Grille;
   stations: { slug: string; nom: string }[];
   aeroports: { slug: string; nom: string }[];
   vehicules: FicheVehicule[];
+  /** Les coefficients d'origine, ceux du code : la « base » vers laquelle on revient. */
+  coefficientsBase: Record<string, number>;
+  /**
+   * Pour chaque station dont des trajets ont un prix fixe, le coefficient qui
+   * donnerait ces prix — « concurrence ≈ 1,07 sur 3 trajets ». Calculé sur la
+   * grille publiée.
+   */
+  alignement: Record<string, { equivalent: number; trajets: number }>;
 }) {
   const router = useRouter();
   const initial = useMemo(() => versBrouillon(grille, stations), [grille, stations]);
@@ -352,19 +362,76 @@ export default function EditeurTarifs({
           aria-label="Chercher une station"
           className={`mt-3 max-w-xs ${CHAMP}`}
         />
-        <div className="mt-3 grid gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
-          {stationsVisibles.map((s) => (
-            <label key={s.slug} className="grid grid-cols-[1fr_5.5rem] items-center gap-2 text-sm text-alpine">
-              <span className="truncate">{s.nom}</span>
-              <input
-                value={brouillon.coefficients[s.slug] ?? "1"}
-                onChange={(e) => changer((b) => void (b.coefficients[s.slug] = e.target.value))}
-                inputMode="decimal"
-                aria-label={`Coefficient de ${s.nom}`}
-                className={CHAMP}
-              />
-            </label>
-          ))}
+        {/*
+          La base et l'alignement — demande de JC, 14 septembre 2026 : voir, pour
+          chaque station, le coefficient d'origine, ce que l'alignement sur la
+          concurrence en a fait, et pouvoir y revenir. « Revenir à la base »
+          remet le coefficient d'origine et retire les prix fixes des trajets de
+          la station ; comme toute modification, il se publie par la barre du bas.
+        */}
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() =>
+              changer((b) => {
+                for (const s of stations) b.coefficients[s.slug] = t(coefficientsBase[s.slug] ?? 1);
+                b.prixFixes = [];
+              })
+            }
+            className={BOUTON_SECONDAIRE}
+          >
+            Tout revenir à la base (coefficients d’origine, sans prix fixes)
+          </button>
+          <span className="text-xs text-alpine-600">
+            {Object.keys(alignement).length} station{Object.keys(alignement).length > 1 ? "s ont" : " a"} des prix
+            alignés sur la concurrence.
+          </span>
+        </div>
+        <div className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+          {stationsVisibles.map((s) => {
+            const base = coefficientsBase[s.slug] ?? 1;
+            const actuel = Number((brouillon.coefficients[s.slug] ?? "1").replace(",", "."));
+            const prixAlignes = brouillon.prixFixes.filter((p) => p.resort === s.slug).length;
+            const aligne = alignement[s.slug];
+            const differe = actuel !== base || prixAlignes > 0;
+            return (
+              <div key={s.slug} className="grid grid-cols-[1fr_5.5rem] items-center gap-x-2 text-sm text-alpine">
+                <span className="min-w-0">
+                  <span className="block truncate">{s.nom}</span>
+                  <span className="block text-xs text-alpine-600">
+                    base {t(base)}
+                    {aligne && prixAlignes > 0 ? (
+                      <span className="text-alpes">
+                        {" "}
+                        · concurrence ≈ {t(aligne.equivalent)} ({aligne.trajets} trajet{aligne.trajets > 1 ? "s" : ""})
+                      </span>
+                    ) : null}
+                  </span>
+                  {differe ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        changer((b) => {
+                          b.coefficients[s.slug] = t(base);
+                          b.prixFixes = b.prixFixes.filter((p) => p.resort !== s.slug);
+                        })
+                      }
+                      className="text-xs text-alpine-700 underline"
+                    >
+                      Revenir à la base
+                    </button>
+                  ) : null}
+                </span>
+                <input
+                  value={brouillon.coefficients[s.slug] ?? "1"}
+                  onChange={(e) => changer((b) => void (b.coefficients[s.slug] = e.target.value))}
+                  inputMode="decimal"
+                  aria-label={`Coefficient de ${s.nom}`}
+                  className={CHAMP}
+                />
+              </div>
+            );
+          })}
         </div>
       </section>
 

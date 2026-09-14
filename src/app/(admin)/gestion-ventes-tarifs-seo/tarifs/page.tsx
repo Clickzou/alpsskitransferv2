@@ -7,7 +7,7 @@ import { CAPACITE, CAPACITE_BAGAGES, devisReservation } from "@/lib/reservation/
 import { supabaseConfigure } from "@/lib/reservation/supabase";
 import { RESORTS_MIGRES } from "@/lib/resorts";
 import { baremeValide } from "@/lib/tarification/bareme";
-import { coefficientDe, type Grille } from "@/lib/tarification/grille";
+import { coefficientDe, GRILLE_DEFAUT, type Grille } from "@/lib/tarification/grille";
 import { grilleActive, historiqueGrilles } from "@/lib/tarification/grilles-publiees";
 import { composantesAlpes, instantAlpes } from "@/lib/temps";
 import BoutonConfirmation from "../BoutonConfirmation";
@@ -70,6 +70,42 @@ function exemple(grille: Grille) {
     samedi: samedi.devis.total,
     majorationsMercredi: l.devis.detail.majorations,
   };
+}
+
+/**
+ * Le coefficient que les prix fixes d'une station reviennent à appliquer —
+ * demande de JC, 14 septembre 2026 : voir ce que l'alignement sur la
+ * concurrence a fait de chaque station. Pour chaque trajet à prix fixe, le
+ * prix « Standard, semaine, jour » posé est rapporté au prix que donnerait le
+ * calcul sans prix fixe, puis multiplié par le coefficient en vigueur ; la
+ * moyenne des trajets de la station fait l'équivalent.
+ */
+function alignementParStation(grille: Grille): Record<string, { equivalent: number; trajets: number }> {
+  const sansFixes: Grille = { ...grille, prixFixes: [] };
+  let mercredi = new Date(Date.now() + 7 * 24 * 3600 * 1000);
+  while (composantesAlpes(mercredi).jourSemaine !== 3) mercredi = new Date(mercredi.getTime() + 24 * 3600 * 1000);
+  const c = composantesAlpes(mercredi);
+  const depart = instantAlpes(c.annee, c.mois, c.jour, 10, 0);
+
+  const ratios = new Map<string, number[]>();
+  for (const p of grille.prixFixes) {
+    const fixe = p.prix.standard?.semaineJour;
+    if (!fixe) continue;
+    const calcul = devisReservation(
+      { airport: p.airport, resort: p.resort, categorie: "standard", passagers: 1, aller: depart },
+      sansFixes,
+    );
+    if (!calcul.ok || calcul.devis.total <= 0) continue;
+    const liste = ratios.get(p.resort) ?? [];
+    liste.push((coefficientDe(grille, p.resort) * fixe) / calcul.devis.total);
+    ratios.set(p.resort, liste);
+  }
+  return Object.fromEntries(
+    [...ratios].map(([resort, liste]) => [
+      resort,
+      { equivalent: Math.round((liste.reduce((s, r) => s + r, 0) / liste.length) * 100) / 100, trajets: liste.length },
+    ]),
+  );
 }
 
 export default async function PageTarifs({
@@ -196,7 +232,14 @@ export default async function PageTarifs({
         </p>
       </section>
 
-      <EditeurTarifs grille={grille} stations={stations} aeroports={aeroports} vehicules={vehicules} />
+      <EditeurTarifs
+        grille={grille}
+        stations={stations}
+        aeroports={aeroports}
+        vehicules={vehicules}
+        coefficientsBase={GRILLE_DEFAUT.coefficients}
+        alignement={alignementParStation(grille)}
+      />
 
       <section className={`mt-6 ${carte}`}>
         <h2 className="font-display text-lg text-alpine">Historique des publications</h2>
