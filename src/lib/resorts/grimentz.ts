@@ -12,7 +12,7 @@ export const grimentz: Resort = {
     "Private transfers to Grimentz and Zinal from Geneva (197 km, 2 h 35), Zurich, Milan and Sion. Fixed price per vehicle, ski and board bags included.",
   h1: "Grimentz Ski Transfers – Private Airport Transfers to the Val d’Anniviers",
   chapo:
-    "Grimentz sits at 1,570 m in the Val d’Anniviers, above Sierre in the Valais. Geneva is 197 km away, about 2 hours 35 minutes; Zurich around 290 km and 3 h 20; Milan Malpensa 210 km and 3 h 15 through the Simplon; Sion, in the valley below, only 42 km and 45 minutes but with almost no scheduled flights. The last 25 km climb from the Rhône valley into the side valley — the part of the journey that decides the timing in winter. We drive door to door with winter tyres and chains, at a price fixed per vehicle and quoted before you book.",
+    "Grimentz sits at 1,570 m in the Val d’Anniviers, above Sierre in the Valais. Geneva is 197 km away, about 2 hours 35 minutes; Zurich around 322 km and 4 h 10; Milan Malpensa 210 km and 3 h 15 through the Simplon; Sion, in the valley below, only 42 km and 45 minutes but with almost no scheduled flights. The last 25 km climb from the Rhône valley into the side valley — the part of the journey that decides the timing in winter. We drive door to door with winter tyres and chains, at a price fixed per vehicle and quoted before you book.",
 
   airports: ["geneva-airport", "zurich-airport", "milan-malpensa-airport"],
 
@@ -41,7 +41,7 @@ export const grimentz: Resort = {
       texte:
         "The valley airport, three-quarters of an hour away, but with almost no scheduled service — relevant for private aviation.",
     },
-    { type: "titre3", texte: "Zurich (ZRH) — about 290 km, 3 h 20" },
+    { type: "titre3", texte: "Zurich (ZRH) — about 322 km, 4 h 10" },
     {
       type: "paragraphe",
       texte:

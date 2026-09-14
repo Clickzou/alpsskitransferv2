@@ -5,6 +5,7 @@ import { airportParSlug } from "@/lib/airports";
 import { SLUG_PAYS, resortParSlug } from "@/lib/resorts";
 import { TRANSFERS, airportDepuisSegment, segmentTrajet, transferParSlugs } from "@/lib/transfers";
 import { pageMetadata } from "@/lib/seo";
+import { prixDepuis, titreAvecPrix } from "@/lib/tarification/prix-depuis";
 
 /**
  * Page de trajet — page fille, sous sa station.
@@ -15,6 +16,12 @@ import { pageMetadata } from "@/lib/seo";
  * `components/PageTrajet` — cette route ne fait que résoudre les segments.
  */
 export const dynamicParams = false;
+/*
+  Le prix « à partir de » vient de la grille publiée : la page se reconstruit
+  au plus une fois par heure, pour qu'un tarif publié ou aligné sur la
+  concurrence se retrouve dans le title sans redéploiement.
+*/
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return TRANSFERS.flatMap((t) => {
@@ -48,9 +55,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const donnees = await resoudre(params);
   if (!donnees) return {};
+  const prix = await prixDepuis(donnees.airport, donnees.resort);
+  const accroche = prix !== null ? `From €${prix} per vehicle. ` : "";
   return pageMetadata({
-    title: donnees.trajet.metaTitre,
-    description: donnees.trajet.metaDescription,
+    title: titreAvecPrix(donnees.trajet.metaTitre, prix),
+    description:
+      (accroche + donnees.trajet.metaDescription).length <= 155
+        ? accroche + donnees.trajet.metaDescription
+        : donnees.trajet.metaDescription,
     path: donnees.chemin,
     lang: "en",
   });
@@ -64,6 +76,11 @@ export default async function Page({
   const donnees = await resoudre(params);
   if (!donnees) notFound();
   return (
-    <PageTrajet silo={donnees.silo} resort={donnees.resort} airport={donnees.airport} />
+    <PageTrajet
+      silo={donnees.silo}
+      resort={donnees.resort}
+      airport={donnees.airport}
+      prixDepuis={await prixDepuis(donnees.airport, donnees.resort)}
+    />
   );
 }

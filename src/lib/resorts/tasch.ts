@@ -30,7 +30,7 @@ export const tasch: Resort = {
     { type: "liste", items: ["Modern, well-equipped vehicles with ample space for ski gear", "Experienced drivers familiar with winter conditions", "Flexible options to match your schedule"] },
     { type: "titre2", texte: "Fast & Direct Transfers from Major Airports" },
     { type: "paragraphe", texte: "Our Täsch ski transfers operate from key Swiss and European airports, ensuring a hassle-free arrival:" },
-    { type: "paragraphe", texte: "✅ Geneva Airport (GVA) to Täsch – Approx. 3h 30m✅ Zurich Airport (ZRH) to Täsch– Approx.3h 45m✅ Milan Malpensa Airport (MXP) to Täsch – Approx. 3h✅ Sion Airport (SIR) to Täsch– Approx. 1h 30m" },
+    { type: "paragraphe", texte: "✅ Geneva Airport (GVA) to Täsch – Approx. 3h 30m✅ Zurich Airport (ZRH) to Täsch– Approx. 4h 10m✅ Milan Malpensa Airport (MXP) to Täsch – Approx. 3h✅ Sion Airport (SIR) to Täsch– Approx. 1h 30m" },
     { type: "paragraphe", texte: "We also offer custom transfers from Bern, Basel, and Turin, making travel to Täsch as smooth and efficient as possible." },
     { type: "titre2", texte: "Täsch to Zermatt – The Final Stretch to the Slopes" },
     { type: "paragraphe", texte: "Once you arrive in Täsch, the Matterhorn Gotthard Bahn takes you on the last 12-minute journey to Zermatt. Trains run every 20 minutes, ensuring minimal waiting times. If you prefer, we can also arrange a private taxi from Täsch to your hotel in Zermatt for a fully seamless experience." },

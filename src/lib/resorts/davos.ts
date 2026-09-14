@@ -44,7 +44,7 @@ export const davos: Resort = {
     { type: "paragraphe", texte: "If you’re planning to visit other ski destinations near Davos, we also offer ski transfers to nearby resorts, including:" },
     { type: "liste", items: ["Lech & Zürs (Austria) – 3h"] },
     { type: "paragraphe", texte: "Extend your Swiss Alps adventure with easy connections to other top ski resorts." },
-    { type: "liste", items: ["Zurich Airport: Approximately 153.9 km from Davos, with transfer times around 2 hours.", "Geneva Airport: Offers transfers to Davos, though the distance is greater compared to Zurich.", "Friedrichshafen Airport: Another option for reaching Davos."] },
+    { type: "liste", items: ["Zurich Airport: Approximately 166 km from Davos, with transfer times around 2 hours and 35 minutes.", "Geneva Airport: Offers transfers to Davos, though the distance is greater compared to Zurich.", "Friedrichshafen Airport: Another option for reaching Davos."] },
     { type: "paragraphe", texte: "Airport transfers from these locations can be arranged through various transfer companies." },
     { type: "liste", items: ["Comfort and Privacy: Exclusive use of the vehicle ensures a comfortable journey.", "Direct Routes: Travel directly to your destination without additional stops.", "Flexibility: Schedule pickups and drop-offs according to your convenience.", "Reliability: Professional drivers monitor flight schedules to accommodate any delays."] },
     { type: "paragraphe", texte: "These benefits make private transfers a premium choice for travelers seeking a hassle-free experience." },
@@ -58,7 +58,7 @@ export const davos: Resort = {
   faq: [
     { question: "How to Book Your Davos Ski Transfer?", reponse: "Booking your Davos ski transfer is simple and takes just a few minutes:" },
     { question: "What are private airport ski transfers?", reponse: "Private airport ski transfers are personalized transportation services that take you directly from the airport to your chosen ski resort. A private transfer gives you exclusive use of the vehicle, with the comfort and flexibility that follow. For instance, a private transfer from Zurich Airport to Davos provides a direct route without additional stops, allowing you to relax and enjoy the journey." },
-    { question: "What are the costs of ski transfers?", reponse: "The cost of ski transfers varies based on factors such as distance, vehicle type, and the vehicle category. For example, a private transfer from Zurich to Davos may start at around €76 per person. The price is quoted per vehicle rather than per seat, so it does not change with the number of passengers. It’s important to compare prices and services to find an option that fits your budget." },
+    { question: "What are the costs of ski transfers?", reponse: "The cost of ski transfers varies based on factors such as distance, vehicle type, and the vehicle category. The price is quoted per vehicle rather than per seat, so it does not change with the number of passengers. It’s important to compare prices and services to find an option that fits your budget." },
     { question: "Which airports offer ski transfers to Davos?", reponse: "Several airports provide convenient access to Davos, including:" },
     { question: "What are the benefits of private transfers?", reponse: "Opting for a private transfer offers several advantages:" },
     { question: "Which ski resorts are accessible by transfer from Davos?", reponse: "Davos serves as a gateway to several popular ski resorts, including:" },

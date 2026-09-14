@@ -442,7 +442,7 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
       {
         question: "Is Malpensa a good airport for Zermatt?",
         reponse:
-          "It is the closest of the major airports: about 3 hours to Täsch through the Simplon, then the twelve-minute shuttle train. Geneva takes 3 h 10 and Zurich 3 h 20.",
+          "It is the closest of the major airports: about 3 hours to Täsch through the Simplon, then the twelve-minute shuttle train. Geneva takes 3 h 10 and Zurich about 4 h 10.",
       },
       {
         question: "Are tolls and the Swiss vignette included?",

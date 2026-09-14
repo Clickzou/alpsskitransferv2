@@ -12,7 +12,7 @@ export const champery: Resort = {
     "Private transfers to Champéry from Geneva (128 km, 1 h 45), Zurich, Sion and Milan. Swiss side of the Portes du Soleil. Fixed price per vehicle.",
   h1: "Champéry Ski Transfers – Private Airport Transfers to the Portes du Soleil",
   chapo:
-    "Champéry is the Swiss gateway to the Portes du Soleil, at 1,050 m at the head of the Val-d’Illiez. Geneva is 128 km away, about 1 hour 45 minutes; Sion 58 km and under an hour but with almost no scheduled flights; Zurich around 300 km and 3 h 30. The approach leaves the Rhône motorway at Monthey and climbs a valley road — no high pass, and a crossing of the French border only if you choose to make it. We drive door to door at a price fixed per vehicle and quoted before you book, ski bags included, with your flight tracked.",
+    "Champéry is the Swiss gateway to the Portes du Soleil, at 1,050 m at the head of the Val-d’Illiez. Geneva is 128 km away, about 1 hour 45 minutes; Sion 58 km and under an hour but with almost no scheduled flights; Zurich around 253 km and 3 h 20. The approach leaves the Rhône motorway at Monthey and climbs a valley road — no high pass, and a crossing of the French border only if you choose to make it. We drive door to door at a price fixed per vehicle and quoted before you book, ski bags included, with your flight tracked.",
 
   airports: ["geneva-airport", "zurich-airport", "milan-malpensa-airport"],
 
@@ -41,7 +41,7 @@ export const champery: Resort = {
       texte:
         "Much closer, and a genuinely short transfer, but with almost no scheduled service. Private aviation only, in practice.",
     },
-    { type: "titre3", texte: "Zurich (ZRH) — about 300 km, 3 h 30" },
+    { type: "titre3", texte: "Zurich (ZRH) — about 253 km, 3 h 20" },
     {
       type: "paragraphe",
       texte:

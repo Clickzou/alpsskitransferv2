@@ -19,7 +19,7 @@ export const zermatt: Resort = {
     "Private transfers to Zermatt via Täsch from Geneva, Zurich, Milan and Sion. Car-free resort: we drive to Täsch, the shuttle train takes 12 minutes.",
   h1: "Zermatt Ski Transfers – Private Airport Transfers to Täsch and Zermatt",
   chapo:
-    "Zermatt is car-free, so every road transfer ends at Täsch, 5 km down the valley, where the shuttle train runs to the resort in 12 minutes. Geneva is 237 km from Täsch, about 3 hours 10 minutes; Zurich 250 km and around 3 h 20; Milan Malpensa 195 km and 3 h 05 through the Simplon; Sion, in the Rhône valley below, only 82 km and 1 h 20. We drive to the Täsch terminal, help you onto the train with your luggage and skis, and can arrange a resort electro-taxi at the other end. The price is fixed per vehicle and quoted before you book, ski bags included, and your driver tracks your flight.",
+    "Zermatt is car-free, so every road transfer ends at Täsch, 5 km down the valley, where the shuttle train runs to the resort in 12 minutes. Geneva is 237 km from Täsch, about 3 hours 10 minutes; Zurich 251 km and around 4 h 15; Milan Malpensa 195 km and 3 h 05 through the Simplon; Sion, in the Rhône valley below, only 82 km and 1 h 20. We drive to the Täsch terminal, help you onto the train with your luggage and skis, and can arrange a resort electro-taxi at the other end. The price is fixed per vehicle and quoted before you book, ski bags included, and your driver tracks your flight.",
 
   airports: ["geneva-airport", "zurich-airport", "milan-malpensa-airport", "bergamo-airport"],
 
@@ -42,7 +42,7 @@ export const zermatt: Resort = {
       texte:
         "The most used route: motorway along Lake Geneva and up the Rhône valley to Visp, then 30 km up the Mattertal. Flights all week from most European cities.",
     },
-    { type: "titre3", texte: "Zurich (ZRH) — about 250 km, 3 h 20" },
+    { type: "titre3", texte: "Zurich (ZRH) — about 251 km, 4 h 15" },
     {
       type: "paragraphe",
       texte:
@@ -114,7 +114,7 @@ export const zermatt: Resort = {
     {
       question: "Which airport is best for Zermatt?",
       reponse:
-        "Geneva for the widest European choice (3 h 10), Zurich for long-haul (about 3 h 20), Milan Malpensa for the shortest drive and often the cheapest fare (3 h 05, through the Simplon).",
+        "Geneva for the widest European choice (3 h 10), Zurich for long-haul (about 4 h 15), Milan Malpensa for the shortest drive and often the cheapest fare (3 h 05, through the Simplon).",
     },
     {
       question: "What happens with our luggage and skis at Täsch?",

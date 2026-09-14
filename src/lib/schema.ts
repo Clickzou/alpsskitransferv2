@@ -133,6 +133,32 @@ export function serviceLocalSchema({
   return noeud;
 }
 
+/**
+ * Un trajet vendu, avec son prix de départ — ce que les moteurs de réponse
+ * lisent pour citer « à partir de … € ». Le prix vient de `prixDepuis`, donc de
+ * la grille publiée.
+ */
+export function trajetSchema(t: { nom: string; chemin: string; prix: number | null }) {
+  return {
+    "@type": "TaxiService",
+    "@id": `${absoluteUrl(t.chemin)}#service`,
+    name: t.nom,
+    url: absoluteUrl(t.chemin),
+    provider: { "@id": `${SITE.url}/#exploitant` },
+    ...(t.prix !== null
+      ? {
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "EUR",
+            price: t.prix,
+            description: "Private transfer, standard vehicle up to 8 passengers, weekday daytime pick-up",
+            url: absoluteUrl(t.chemin),
+          },
+        }
+      : {}),
+  };
+}
+
 export function filArianeSchema(elements: { nom: string; path: string }[]) {
   return {
     "@type": "BreadcrumbList",

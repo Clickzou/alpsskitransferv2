@@ -92,7 +92,7 @@ export const PAGE_TRANSFERTS_PRIVES = {
       {
         titre: "Transparent pricing",
         texte:
-          "One fixed price per vehicle, tolls included, given before you book. No hidden fees and no surge pricing on changeover Saturdays.",
+          "One fixed price per vehicle, tolls included, given before you book. No hidden fees: Saturday and night rates are set in advance and included in that price, never raised on the day.",
       },
     ] as PointService[],
   },

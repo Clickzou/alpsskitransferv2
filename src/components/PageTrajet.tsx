@@ -24,7 +24,7 @@ import { alternativesTrajet } from "@/lib/intl/liens";
 import { PAYS } from "@/lib/pays";
 import { lienReservation } from "@/lib/reservation/config";
 import { SLUG_PAYS, resortParSlug } from "@/lib/resorts";
-import { faqSchema, filArianeSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
+import { faqSchema, filArianeSchema, grapheJsonLd, organisationSchema, trajetSchema } from "@/lib/schema";
 import { segmentTrajet, transferParSlugs, transfersDeLaStation } from "@/lib/transfers";
 
 /* ------------------------------------------------------------------ trajet */
@@ -42,10 +42,13 @@ export default function PageTrajet({
   silo,
   resort,
   airport,
+  prixDepuis = null,
 }: {
   silo: string;
   resort: string;
   airport: string;
+  /** Le prix « à partir de », Standard en semaine de jour, calculé sur la grille publiée. */
+  prixDepuis?: number | null;
 }) {
   const station = resortParSlug(resort)!;
   const trajet = transferParSlugs(airport, resort)!;
@@ -105,7 +108,10 @@ export default function PageTrajet({
               ...(distance?.minutes
                 ? [{ libelle: "Drive time", valeur: duree(distance.minutes) }]
                 : []),
-              { libelle: "Price", valeur: "Fixed, per vehicle" },
+              {
+                libelle: "Price",
+                valeur: prixDepuis !== null ? `From €${prixDepuis} per vehicle` : "Fixed, per vehicle",
+              },
             ]}
           />
 
@@ -225,6 +231,7 @@ export default function PageTrajet({
           organisationSchema(),
           filArianeSchema(filAriane.map((e) => ({ nom: e.nom, path: e.chemin }))),
           faqSchema(trajet.faq),
+          trajetSchema({ nom: `${aeroport.name} to ${station.name} transfer`, chemin, prix: prixDepuis }),
         )}
       />
     </>

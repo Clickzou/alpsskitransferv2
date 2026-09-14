@@ -37,7 +37,7 @@ export const grindelwald: Resort = {
     { type: "liste", items: ["Flight tracking to adjust for any delays.", "Assistance at any time during your transfer.", "Flexible booking options for last-minute changes."] },
     { type: "titre2", texte: "Grindelwald Ski Transfers from Major Airports" },
     { type: "paragraphe", texte: "Our Grindelwald ski transfers operate from Switzerland’s main international airports, ensuring a comfortable and direct journey to the resort:" },
-    { type: "paragraphe", texte: "✅ Zurich Airport (ZRH) → Grindelwald – 2h30✅ Geneva Airport (GVA) → Grindelwald – 3h30✅ Basel Airport (BSL) → Grindelwald – 2h30✅ Bern Airport (BRN) → Grindelwald – 1h30" },
+    { type: "paragraphe", texte: "✅ Zurich Airport (ZRH) → Grindelwald – 2h40✅ Geneva Airport (GVA) → Grindelwald – 3h30✅ Basel Airport (BSL) → Grindelwald – 2h30✅ Bern Airport (BRN) → Grindelwald – 1h30" },
     { type: "paragraphe", texte: "We provide seamless connections for travelers arriving from Europe, the UK, and worldwide destinations, ensuring you reach Grindelwald quickly and comfortably." },
     { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions Grindelwald Ski Transfers" },
