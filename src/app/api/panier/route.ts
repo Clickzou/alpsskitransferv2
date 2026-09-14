@@ -7,6 +7,7 @@ import { origineSite } from "@/lib/reservation/config";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 import { devisReservation } from "@/lib/reservation/devis";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
+import { limiteDevis } from "@/lib/reservation/limite";
 import { creerSessionCheckout, stripeConfigure, type LigneCheckout } from "@/lib/reservation/stripe";
 import { MAX_LIGNES } from "@/lib/reservation/panier";
 import { resortParSlug } from "@/lib/resorts";
@@ -63,6 +64,10 @@ function heure(iso: string): string {
 }
 
 export async function POST(requete: Request) {
+  // Le panier chiffre aussi : il partage la limite du devis.
+  const limite = await limiteDevis(requete);
+  if (limite) return limite;
+
   let corps: unknown;
   try {
     corps = await requete.json();

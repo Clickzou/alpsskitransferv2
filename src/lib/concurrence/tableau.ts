@@ -79,6 +79,21 @@ async function lignesDu(date: string, f: Filtres): Promise<LigneReleve[]> {
   });
 }
 
+/**
+ * Le dernier relevé, **s'il a moins de trois jours** : recaler nos tarifs sur
+ * des prix d'il y a une semaine suivrait des concurrents qui ont peut-être
+ * déjà bougé. Toutes les lignes, tous jours, groupes et gammes confondus.
+ */
+export async function dernierReleve(maintenant = new Date()): Promise<{ date: string; lignes: LigneReleve[] } | null> {
+  const date = await dateReleve(false);
+  if (!date || maintenant.getTime() - new Date(`${date}T12:00:00Z`).getTime() > 3.5 * JOUR_MS) return null;
+  const lignes = await lire<LigneReleve>("concurrence_releves", {
+    filtres: [{ colonne: "releve_le", operateur: "eq", valeur: date }],
+    limite: 5000,
+  });
+  return { date, lignes };
+}
+
 export async function tableauConcurrence(grille: Grille, f: Filtres, maintenant = new Date()) {
   const dernier = await dateReleve(false);
   const il30j = new Date(maintenant.getTime() - 30 * JOUR_MS).toISOString().slice(0, 10);

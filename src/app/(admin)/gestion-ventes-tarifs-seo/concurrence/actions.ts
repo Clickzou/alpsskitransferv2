@@ -3,12 +3,12 @@
 import { after } from "next/server";
 import { redirect } from "next/navigation";
 import { utilisateurCourant } from "@/lib/admin/session";
-import { CRENEAU_DU_JOUR, prixSous } from "@/lib/concurrence/comparaison";
+import { appliquerPlan, planAlignement } from "@/lib/concurrence/alignement";
 import { CODES_LIEUX, TRAJETS_PAR_DEFAUT } from "@/lib/concurrence/lieux";
 import { releverLot, trajetsSuivis } from "@/lib/concurrence/releve";
-import { tableauConcurrence, type Filtres } from "@/lib/concurrence/tableau";
+import { dernierReleve } from "@/lib/concurrence/tableau";
 import { ecrireLignes, lire, supprimer } from "@/lib/reservation/supabase";
-import { validerGrille, type Grille } from "@/lib/tarification/grille";
+import { validerGrille } from "@/lib/tarification/grille";
 import { grilleActive, publierGrille } from "@/lib/tarification/grilles-publiees";
 
 /**
@@ -24,60 +24,34 @@ async function exigerSession() {
   return utilisateur;
 }
 
-const retour = (filtres: Filtres, fait: string, detail?: string): never =>
-  redirect(
-    `${ICI}?jour=${filtres.jour}&passagers=${filtres.passagers}&gamme=${filtres.gamme}&fait=${fait}${
-      detail ? `&detail=${encodeURIComponent(detail)}` : ""
-    }`,
-  );
-
 /**
- * « Être X € moins cher » sur les trajets cochés — demande de JC, 14 septembre 2026.
+ * « Mettre à jour tous nos tarifs » — demande de JC, 14 septembre 2026.
  *
- * Tout se recalcule ici, rien n'est pris du navigateur que les trajets, l'écart
- * et les filtres : le prix du concurrent le moins cher vient du dernier relevé,
- * notre véhicule de la grille en vigueur. Chaque trajet reçoit un prix fixe pour
- * ce véhicule et ce moment — le mercredi en « semaine, jour », le samedi en
- * « week-end, jour » —, et le tout se publie en une seule version de la grille,
- * que l'onglet Tarifs permet d'annuler en un clic.
+ * Un seul geste pour tous les trajets suivis, tous les véhicules, en semaine
+ * comme le week-end, de jour comme de nuit : chaque prix est recalé à X € sous
+ * le concurrent le moins cher, à la hausse comme à la baisse
+ * (`planAlignement`). Rien ne vient du navigateur que l'écart : le plan se
+ * recalcule ici sur le dernier relevé et la grille en vigueur, puis se publie
+ * en une seule version de la grille, que l'onglet Tarifs défait en un clic.
  */
-export async function actionAligner(donnees: FormData): Promise<void> {
+export async function actionMettreAJourTarifs(donnees: FormData): Promise<void> {
   const utilisateur = await exigerSession();
-  const filtres: Filtres = {
-    jour: donnees.get("jour") === "samedi" ? "samedi" : "mercredi",
-    passagers: donnees.get("passagers") === "2" ? 2 : donnees.get("passagers") === "8" ? 8 : 4,
-    gamme: donnees.get("gamme") === "premium" ? "premium" : "standard",
-  };
   const ecart = Number(String(donnees.get("ecart") ?? "").replace(",", "."));
-  if (!Number.isFinite(ecart) || ecart < 0 || ecart > 500) return retour(filtres, "ecart-illisible");
-  const choisis = new Set(donnees.getAll("trajet").map(String));
-  if (choisis.size === 0) return retour(filtres, "rien-choisi");
+  const retour = (fait: string, detail?: string): never =>
+    redirect(`${ICI}?ecart=${Number.isFinite(ecart) ? ecart : 5}&fait=${fait}${detail ? `&detail=${encodeURIComponent(detail)}` : ""}`);
+  if (!Number.isFinite(ecart) || ecart < -500 || ecart > 500) return retour("ecart-illisible");
 
-  const grille = await grilleActive();
-  const { lignes } = await tableauConcurrence(grille, filtres);
-  const nouvelle: Grille = JSON.parse(JSON.stringify(grille));
-  const creneau = CRENEAU_DU_JOUR[filtres.jour];
-  let alignes = 0;
+  const [grille, trajets, releve] = await Promise.all([grilleActive(), trajetsSuivis(), dernierReleve()]);
+  if (!releve) return retour("releve-trop-ancien");
+  const plan = planAlignement(grille, trajets, releve.lignes, ecart);
+  if (plan.changements.length === 0) return retour("rien-a-changer");
 
-  for (const l of lignes) {
-    if (!choisis.has(`${l.airport}|${l.resort}`) || !l.nous) continue;
-    const prix = prixSous([l.alps2alps.prix, l.alpy.prix], ecart);
-    if (prix === null) continue;
-    let fixe = nouvelle.prixFixes.find((p) => p.airport === l.airport && p.resort === l.resort);
-    if (!fixe) {
-      fixe = { airport: l.airport, resort: l.resort, prix: {} };
-      nouvelle.prixFixes.push(fixe);
-    }
-    fixe.prix[l.nous.categorie] = { ...(fixe.prix[l.nous.categorie] ?? {}), [creneau]: prix };
-    alignes += 1;
-  }
-  if (alignes === 0) return retour(filtres, "rien-a-aligner");
-
-  const valide = validerGrille(nouvelle);
-  if (!valide.ok) return retour(filtres, "grille-refusee", valide.erreurs[0]);
-  const note = `Concurrence : ${alignes} trajet${alignes > 1 ? "s" : ""} à ${ecart} € sous le moins cher (${filtres.jour}, ${filtres.passagers} passagers, ${filtres.gamme})`;
+  const valide = validerGrille(appliquerPlan(grille, plan));
+  if (!valide.ok) return retour("grille-refusee", valide.erreurs[0]);
+  const hausses = plan.changements.filter((c) => c.avant !== null && c.apres > c.avant).length;
+  const note = `Concurrence : tarifs recalés à ${ecart} € sous le moins cher (relevé du ${releve.date}) — ${plan.changements.length} prix, dont ${hausses} hausses`;
   const publiee = await publierGrille(valide.grille, utilisateur.email, note);
-  return retour(filtres, publiee ? "aligne" : "echec", String(alignes));
+  return retour(publiee ? "tarifs-mis-a-jour" : "echec", String(plan.changements.length));
 }
 
 /** La liste suivie vit en base dès sa première modification : on y recopie la liste par défaut. */

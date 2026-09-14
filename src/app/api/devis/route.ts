@@ -7,6 +7,7 @@ import { CATEGORIES, validerDemande } from "@/lib/reservation/demande";
 import { CAPACITE, CAPACITE_BAGAGES, devisReservation } from "@/lib/reservation/devis";
 import { distanceCalculee, distancePubliee } from "@/lib/tarification/distance";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
+import { limiteDevis } from "@/lib/reservation/limite";
 
 /**
  * Devis d'un transfert — le prix vient d'ici, jamais du navigateur.
@@ -25,6 +26,10 @@ import { grilleActive } from "@/lib/tarification/grilles-publiees";
 export const dynamic = "force-dynamic";
 
 export async function POST(requete: Request) {
+  // Trente devis par heure et par connexion : un client n'y arrive pas, un relevé en masse si.
+  const limite = await limiteDevis(requete);
+  if (limite) return limite;
+
   let corps: unknown;
   try {
     corps = await requete.json();
