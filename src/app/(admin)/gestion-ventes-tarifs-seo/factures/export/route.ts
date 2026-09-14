@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { csvFactures, facturesDuMois, moisCourant, moisValide } from "@/lib/admin/factures";
+import { remboursementsDuMois } from "@/lib/admin/remboursements";
 import { utilisateurCourant } from "@/lib/admin/session";
 
 /**
@@ -18,12 +19,12 @@ export async function GET(requete: Request) {
   }
 
   const mois = moisValide(new URL(requete.url).searchParams.get("mois")) ?? moisCourant();
-  const factures = await facturesDuMois(mois);
+  const [factures, remboursements] = await Promise.all([facturesDuMois(mois), remboursementsDuMois(mois)]);
   if (!factures) {
     return NextResponse.json({ erreur: "Stripe ne répond pas." }, { status: 503 });
   }
 
-  return new NextResponse(csvFactures(factures), {
+  return new NextResponse(csvFactures(factures, remboursements), {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="factures-${mois}.csv"`,

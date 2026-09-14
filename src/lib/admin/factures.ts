@@ -191,7 +191,10 @@ export async function factureParId(id: string): Promise<Facture | null> {
  * français : point-virgule entre les colonnes, virgule décimale, date au format
  * jour/mois/année, et la marque UTF-8 en tête pour que les accents s'affichent.
  */
-export function csvFactures(factures: Facture[]): string {
+export function csvFactures(
+  factures: Facture[],
+  remboursements: { reference: string; montant: number; devise: string; le: Date; moyen: string }[] = [],
+): string {
   const nombre = (n: number) => n.toFixed(2).replace(".", ",");
   const cellule = (v: string) => (/[;"\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
   const date = (d: Date) => {
@@ -218,6 +221,28 @@ export function csvFactures(factures: Facture[]): string {
         .map(cellule)
         .join(";"),
     ),
+    /*
+      Les remboursements du mois, en négatif, pour que le comptable les déduise.
+      Les prix sont TTC avec 10 % de TVA incluse : la part HT s'en déduit.
+    */
+    ...remboursements.map((r) => {
+      const ht = Math.round((r.montant / 1.1) * 100) / 100;
+      return [
+        "Remboursement",
+        date(r.le),
+        "",
+        "",
+        r.reference,
+        nombre(-ht),
+        nombre(-(Math.round((r.montant - ht) * 100) / 100)),
+        nombre(-r.montant),
+        r.devise,
+        r.moyen === "carte" ? "Remboursé par carte" : "Remboursé par virement",
+        "",
+      ]
+        .map(cellule)
+        .join(";");
+    }),
   ];
   return `\uFEFF${lignes.join("\r\n")}\r\n`;
 }

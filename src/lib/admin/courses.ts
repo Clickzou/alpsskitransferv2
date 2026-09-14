@@ -52,6 +52,7 @@ interface LigneBase {
   source: string | null;
   mode_paiement: string | null;
   facture_stripe: string | null;
+  paiement_stripe?: string | null;
   langue: string | null;
   /** Absente avant la migration du 14 septembre 2026. */
   bagages?: number | null;
@@ -88,6 +89,8 @@ export interface Course {
   /** carte · virement, pour une réservation téléphonique. */
   modePaiement: string | null;
   factureStripe: string | null;
+  /** Le paiement Stripe (pi_…) quand la course a été payée par carte — ce qui se rembourse. */
+  paiementStripe: string | null;
   langue: string | null;
   /** Où repart le client, et vers quel aéroport — toujours renseignés quand il y a un retour. */
   stationRetour: string;
@@ -230,6 +233,7 @@ function versCourse(ligne: LigneBase): Course {
     source: ligne.source ?? "site",
     modePaiement: ligne.mode_paiement ?? null,
     factureStripe: ligne.facture_stripe ?? null,
+    paiementStripe: ligne.paiement_stripe ?? null,
     langue: ligne.langue ?? null,
     stationRetour: nomStation(ligne.retour_resort ?? ligne.resort),
     aeroportRetour: nomAeroport(ligne.retour_airport ?? ligne.airport),

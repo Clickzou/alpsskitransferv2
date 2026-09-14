@@ -16,7 +16,16 @@ import { textesDecision } from "@/lib/reservation/textes-decision";
 import { resortParSlug } from "@/lib/resorts";
 import { formaterAlpes } from "@/lib/temps";
 import { SITE } from "@/data/site";
-import { lireFacture, marquerFacturePayee, creerSessionCheckout } from "@/lib/reservation/stripe";
+import {
+  creerSessionCheckout,
+  lireFacture,
+  lirePaiementStripe,
+  marquerFacturePayee,
+  rembourserStripe,
+} from "@/lib/reservation/stripe";
+import { montantRemboursable } from "@/lib/reservation/remboursement";
+import { dejaRembourse } from "@/lib/admin/remboursements";
+import { textesRemboursement } from "@/lib/reservation/textes-remboursement";
 import { inserer } from "@/lib/reservation/supabase";
 import { textesEmail } from "@/lib/reservation/textes";
 import { textesTelephone } from "@/lib/reservation/textes-telephone";
@@ -465,6 +474,118 @@ export async function actionRenvoyerPaiement(donnees: FormData): Promise<void> {
   });
 
   return retourFiche(envoye ? "renvoye" : "renvoi-echec");
+}
+
+/* ------------------------------------------------------------ remboursement */
+
+/**
+ * « Rembourser le client » — demande de JC, 14 septembre 2026.
+ *
+ * Tout se relit au clic : le montant payé et déjà rendu chez Stripe pour une
+ * carte, en base pour un virement. Pour une carte, Stripe rembourse — une seule
+ * fois, grâce à la clé d'idempotence ; pour un virement, Stripe n'y peut rien :
+ * l'exploitant fait le virement lui-même, et le bouton le note.
+ *
+ * Le remboursement s'enregistre dans `paiements` (statut `rembourse`, ce que
+ * lit l'onglet Factures), dans l'historique, et part au client par e-mail. La
+ * course n'est annulée que si la case est cochée : un geste commercial sur un
+ * retard ne supprime pas le retour.
+ */
+export async function actionRembourser(donnees: FormData): Promise<void> {
+  const utilisateur = await utilisateurCourant();
+  if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
+
+  const reference = String(donnees.get("reference") ?? "");
+  const retourFiche = (fait: string): never => redirect(`${cheminFiche(reference)}?fait=${fait}`);
+
+  const [r] = await lire<{
+    reference: string;
+    statut: string;
+    airport: string;
+    resort: string;
+    montant: number | string;
+    devise: string | null;
+    paye_le: string | null;
+    paiement_stripe: string | null;
+    client_email: string;
+    langue: string | null;
+  }>("reservations", {
+    colonnes: "reference,statut,airport,resort,montant,devise,paye_le,paiement_stripe,client_email,langue",
+    filtres: [{ colonne: "reference", operateur: "eq", valeur: reference }],
+    limite: 1,
+  });
+  if (!r) return retourFiche("perimee");
+  if (!r.paye_le) return retourFiche("remboursement-non-paye");
+
+  const carte = Boolean(r.paiement_stripe);
+  const stripe = carte ? await lirePaiementStripe(r.paiement_stripe!) : null;
+  if (carte && !stripe) return retourFiche("remboursement-echec");
+  const etat = stripe
+    ? { paye: stripe.paye, dejaRembourse: stripe.rembourse, frais: stripe.frais }
+    : { paye: Number(r.montant), dejaRembourse: await dejaRembourse(reference), frais: null };
+
+  const montant = montantRemboursable(donnees.get("montant"), etat);
+  if (typeof montant === "string") {
+    return redirect(`${cheminFiche(reference)}?fait=remboursement-refuse&detail=${encodeURIComponent(montant)}`);
+  }
+
+  let identifiant: string | null = null;
+  if (carte) {
+    const remboursement = await rembourserStripe(r.paiement_stripe!, montant, reference, etat.dejaRembourse);
+    if (!remboursement) return retourFiche("remboursement-echec");
+    identifiant = remboursement.id;
+  }
+
+  const annuler = donnees.get("annuler") === "on" && r.statut !== "annulee";
+  await inserer("paiements", {
+    reference,
+    session_stripe: null,
+    paiement_stripe: r.paiement_stripe,
+    montant,
+    devise: r.devise ?? "EUR",
+    statut: "rembourse",
+  });
+  if (annuler) {
+    await mettreAJour("reservations", { colonne: "reference", valeur: reference }, { statut: "annulee" });
+  }
+
+  const lisible = `${String(montant).replace(".", ",")} €`;
+  const envoye = await envoyer({
+    destinataire: r.client_email,
+    sujet: textesRemboursement(r.langue).sujet(reference),
+    texte: [
+      textesRemboursement(r.langue).corps({
+        reference,
+        trajet: `${airportParSlug(r.airport)?.name ?? r.airport} → ${resortParSlug(r.resort)?.name ?? r.resort}`,
+        montant: lisible,
+        moyen: carte ? "carte" : "virement",
+        annulee: annuler,
+        telephone: ENTREPRISE.telephoneAffiche,
+      }),
+      "",
+      `${SITE.nom} — ${SITE.url}`,
+    ].join("\n"),
+  });
+
+  await inserer("modifications", {
+    reference,
+    champ: "paiement",
+    ancien: null,
+    nouveau: [
+      carte
+        ? `Remboursement de ${lisible} par Stripe (${identifiant})`
+        : `Remboursement de ${lisible} par virement, noté`,
+      `par ${utilisateur.email}`,
+      annuler ? "course annulée" : null,
+      envoye ? null : "e-mail au client NON parti",
+    ]
+      .filter(Boolean)
+      .join(" · "),
+    statut: "appliquee",
+    source: "exploitant",
+  });
+
+  return retourFiche(envoye ? (carte ? "rembourse" : "rembourse-note") : "rembourse-sans-email");
 }
 
 /* ------------------------------------------------------ adresse en station */

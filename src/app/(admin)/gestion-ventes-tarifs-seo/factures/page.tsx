@@ -8,6 +8,7 @@ import {
   moisValide,
   moisVoisin,
 } from "@/lib/admin/factures";
+import { remboursementsDuMois } from "@/lib/admin/remboursements";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { facturesActives } from "@/lib/reservation/stripe";
@@ -43,7 +44,8 @@ export default async function PageFactures({
 
   const { mois: brut } = await searchParams;
   const mois = moisValide(brut) ?? moisCourant();
-  const factures = await facturesDuMois(mois);
+  const [factures, remboursements] = await Promise.all([facturesDuMois(mois), remboursementsDuMois(mois)]);
+  const totalRembourse = remboursements.reduce((s, r) => s + r.montant, 0);
   const comptees = (factures ?? []).filter((f) => f.statut !== "Annulée");
   const totaux = comptees.reduce(
     (t, f) => ({ ht: t.ht + f.ht, tva: t.tva + f.tva, ttc: t.ttc + f.ttc }),
@@ -83,7 +85,7 @@ export default async function PageFactures({
           </Link>
         </div>
 
-        {factures && factures.length > 0 ? (
+        {factures && (factures.length > 0 || remboursements.length > 0) ? (
           <a
             href={`${ICI}export/?mois=${mois}`}
             className="rounded bg-marque px-5 py-2 text-sm font-semibold text-white transition hover:bg-marque-600"
@@ -167,6 +169,56 @@ export default async function PageFactures({
           </table>
         )}
       </div>
+
+      {/* Les remboursements du mois — cartes et virements, lus en base ; l'export les déduit. */}
+      <section className="mt-8">
+        <h2 className="font-display text-lg text-alpine">
+          Remboursements de {libelleMois(mois)}{" "}
+          <span className="text-sm font-normal text-alpine-600">({remboursements.length})</span>
+        </h2>
+        <div className="mt-3 overflow-x-auto rounded-xl border border-glacier-200 bg-white shadow-carte">
+          {remboursements.length === 0 ? (
+            <p className="px-4 py-6 text-center text-sm text-alpine-600">Aucun remboursement ce mois-ci.</p>
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="bg-glacier-50 text-left text-xs uppercase tracking-wide text-alpine-600">
+                <tr>
+                  <th className="px-4 py-2 font-medium">Date</th>
+                  <th className="px-4 py-2 font-medium">Course</th>
+                  <th className="px-4 py-2 font-medium">Moyen</th>
+                  <th className="px-4 py-2 text-right font-medium">Montant TTC</th>
+                </tr>
+              </thead>
+              <tbody>
+                {remboursements.map((r, i) => (
+                  <tr key={i} className="border-t border-glacier-200">
+                    <td className="whitespace-nowrap px-4 py-3 tabular-nums">{heure(r.le)}</td>
+                    <td className="px-4 py-3">
+                      <Link href={cheminFiche(r.reference)} className="font-mono text-xs underline">
+                        {r.reference}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3">{r.moyen === "carte" ? "Carte (Stripe)" : "Virement"}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-danger-700">
+                      −{euros(r.montant)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t-2 border-glacier-300 font-semibold">
+                  <td className="px-4 py-3" colSpan={3}>
+                    Total remboursé
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-danger-700">
+                    −{euros(totalRembourse)}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          )}
+        </div>
+      </section>
     </main>
   );
 }

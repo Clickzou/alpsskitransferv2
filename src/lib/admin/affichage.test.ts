@@ -33,6 +33,7 @@ function course(champs: Partial<Course>): Course {
     source: "site",
     modePaiement: null,
     factureStripe: null,
+    paiementStripe: null,
     langue: "fr",
     stationRetour: "Les Gets",
     aeroportRetour: "Geneva Airport",

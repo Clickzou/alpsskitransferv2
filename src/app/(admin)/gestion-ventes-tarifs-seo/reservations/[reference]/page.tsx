@@ -23,6 +23,10 @@ import {
 import BoutonConfirmation from "../../BoutonConfirmation";
 import CarteSens from "../../CarteSens";
 import DemanderAdresse from "../../DemanderAdresse";
+import { remboursementsDe } from "@/lib/admin/remboursements";
+import { disponible, suggestionRemboursement } from "@/lib/reservation/remboursement";
+import { lirePaiementStripe } from "@/lib/reservation/stripe";
+import Remboursement from "./Remboursement";
 import Entete from "../../Entete";
 
 /**
@@ -119,6 +123,23 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
     alerte: true,
     texte: "L’e-mail n’a pas pu partir : vérifiez l’adresse e-mail du client, ou appelez-le.",
   },
+  rembourse: {
+    alerte: false,
+    texte: "Remboursement envoyé par Stripe. Le client a reçu un e-mail ; sa banque l’affichera sous 5 à 10 jours ouvrés.",
+  },
+  "rembourse-note": {
+    alerte: false,
+    texte: "Remboursement par virement noté. Le client a reçu un e-mail.",
+  },
+  "rembourse-sans-email": {
+    alerte: true,
+    texte: "Remboursement fait, mais l’e-mail au client n’a pas pu partir : prévenez-le par téléphone.",
+  },
+  "remboursement-echec": {
+    alerte: true,
+    texte: "Stripe n’a pas accepté le remboursement : rien n’a été rendu. Réessayez, ou vérifiez le paiement dans Stripe.",
+  },
+  "remboursement-non-paye": { alerte: true, texte: "Cette course n’est pas payée : il n’y a rien à rembourser." },
   "renvoi-echec": {
     alerte: true,
     texte: "L’e-mail de paiement n’a pas pu partir : vérifiez l’adresse du client, ou appelez-le.",
@@ -173,8 +194,28 @@ export default async function FicheReservation({
     ? await factureParId(course.factureStripe)
     : await factureDeReference(course.reference);
 
-  const { fait } = await searchParams;
-  const retour = typeof fait === "string" ? RETOURS[fait] : undefined;
+  const { fait, detail } = await searchParams;
+  const retour =
+    fait === "remboursement-refuse"
+      ? { alerte: true, texte: `Rien n’a été remboursé. ${typeof detail === "string" ? detail : ""}` }
+      : typeof fait === "string"
+        ? RETOURS[fait]
+        : undefined;
+
+  /*
+    Le remboursement : ce qui a été payé et déjà rendu, lu chez Stripe pour une
+    carte (avec les frais qu'il a retenus), en base pour un virement.
+  */
+  const remboursements = course.payeLe ? await remboursementsDe(course.reference) : [];
+  const stripe = course.payeLe && course.paiementStripe ? await lirePaiementStripe(course.paiementStripe) : null;
+  const etatPaiement = stripe
+    ? { paye: stripe.paye, dejaRembourse: stripe.rembourse, frais: stripe.frais }
+    : {
+        paye: course.montant,
+        dejaRembourse: remboursements.reduce((s, r) => s + r.montant, 0),
+        frais: null,
+      };
+  const rembourseTotal = etatPaiement.dejaRembourse;
   // La demande la plus récente : c'est elle que les boutons tranchent.
   const enAttente = aValider(course);
   const lot = enAttente[enAttente.length - 1]?.lot ?? "";
@@ -299,6 +340,27 @@ export default async function FicheReservation({
           <Info libelle="État">{pastille.texte}</Info>
           <Info libelle="Réservée le">{heure(course.creeLe)}</Info>
           {course.payeLe ? <Info libelle="Payée le">{heure(course.payeLe)}</Info> : null}
+          {rembourseTotal > 0 ? (
+            <Info libelle="Remboursé">
+              <strong className="text-danger-700">{euros(rembourseTotal, devise)}</strong>
+              {remboursements.length > 0
+                ? ` (${remboursements.map((r) => `${euros(r.montant, devise)} le ${heure(r.le)}`).join(", ")})`
+                : ""}
+            </Info>
+          ) : null}
+          {course.payeLe && (course.paiementStripe ? stripe : true) ? (
+            <Remboursement
+              reference={course.reference}
+              disponible={disponible(etatPaiement)}
+              suggestion={suggestionRemboursement(etatPaiement, course.aller)}
+              moyen={course.paiementStripe ? "carte" : "virement"}
+              annulee={course.statut === "annulee"}
+            />
+          ) : course.payeLe && course.paiementStripe ? (
+            <p className="mt-3 text-xs text-attention-700">
+              Stripe ne répond pas : le remboursement n’est pas disponible pour le moment.
+            </p>
+          ) : null}
           {course.source === "telephone" ? (
             <Info libelle="Moyen de paiement">
               {course.modePaiement === "virement" ? "virement" : "carte"}

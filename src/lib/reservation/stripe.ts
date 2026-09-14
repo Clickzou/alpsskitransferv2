@@ -331,6 +331,76 @@ export async function marquerFacturePayee(id: string): Promise<boolean> {
   return reponse !== null;
 }
 
+/** Ce que Stripe sait d'un paiement : l'encaissé, le déjà rendu, et ses frais — en euros. */
+export interface PaiementStripe {
+  paye: number;
+  rembourse: number;
+  /** `null` quand la transaction n'est pas encore comptabilisée chez Stripe. */
+  frais: number | null;
+}
+
+/**
+ * Relit un paiement chez Stripe, avec les frais réellement prélevés — ce que les
+ * conditions de vente appellent « frais de transaction », et que Stripe ne rend
+ * pas quand on rembourse.
+ */
+export async function lirePaiementStripe(paymentIntent: string): Promise<PaiementStripe | null> {
+  if (!stripeConfigure()) return null;
+  try {
+    const parametres = new URLSearchParams({ "expand[]": "latest_charge.balance_transaction" });
+    const reponse = await fetch(
+      `https://api.stripe.com/v1/payment_intents/${encodeURIComponent(paymentIntent)}?${parametres}`,
+      { headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` }, cache: "no-store" },
+    );
+    if (!reponse.ok) {
+      console.error("[stripe] lecture du paiement refusée", await reponse.text());
+      return null;
+    }
+    const p = (await reponse.json()) as {
+      amount_received: number;
+      latest_charge?: {
+        amount_refunded?: number;
+        balance_transaction?: { fee?: number } | string | null;
+      } | null;
+    };
+    const transaction = p.latest_charge?.balance_transaction;
+    return {
+      paye: p.amount_received / 100,
+      rembourse: (p.latest_charge?.amount_refunded ?? 0) / 100,
+      frais: transaction && typeof transaction === "object" && typeof transaction.fee === "number"
+        ? transaction.fee / 100
+        : null,
+    };
+  } catch (erreur) {
+    console.error("[stripe] paiement injoignable", erreur);
+    return null;
+  }
+}
+
+/**
+ * Rembourse tout ou partie d'un paiement. La clé d'idempotence est tirée de
+ * la réservation, du montant et de ce qui était déjà rendu : un double clic ne
+ * rembourse qu'une fois, un second remboursement voulu passe.
+ */
+export async function rembourserStripe(
+  paymentIntent: string,
+  montant: number,
+  reference: string,
+  dejaRembourse: number,
+): Promise<{ id: string; status: string } | null> {
+  const centimes = Math.round(montant * 100);
+  return ecrireStripe<{ id: string; status: string }>(
+    "/v1/refunds",
+    new URLSearchParams({
+      payment_intent: paymentIntent,
+      amount: String(centimes),
+      reason: "requested_by_customer",
+      "metadata[reference]": reference,
+    }),
+    `remboursement-${reference}-${centimes}-${Math.round(dejaRembourse * 100)}`,
+  );
+}
+
 /** Relit une facture Stripe — `null` si Stripe n'est pas configuré ou ne répond pas. */
 export async function lireFacture(id: string): Promise<FactureStripe | null> {
   if (!stripeConfigure()) return null;
