@@ -1,3 +1,34 @@
+# Point de reprise — lundi 14 septembre 2026, 21 h 30 → mardi 15
+
+**Mardi : on fait tous les tests avec JC** (sa décision). Tout est poussé et en
+ligne (`8592506`), les trois migrations du jour sont passées (tarifs, concurrence,
+limites). Parler court, montrer à l'écran, un test à la fois.
+
+**La liste des tests, dans cet ordre :**
+
+1. **Réservations** — « Demander l'adresse au client » (e-mail dans la langue) ;
+   « Rembourser le client → » depuis la liste : fiche ouverte, formulaire déplié,
+   rembourser 10 € sur une course de test (Stripe test), vérifier e-mail,
+   historique, et la ligne dans l'onglet Factures.
+2. **Téléphone** — une course aéroport → station (prix de grille), une course
+   station → aéroport (prix inversé), une course vers une adresse (prix saisi),
+   un nom tapé sans cliquer la suggestion.
+3. **Tarifs** — modifier une valeur, barre du bas, aperçu, publier ; vérifier le
+   prix sur le site ; « Revenir à cette version ». Coefficients : « base » et
+   « Revenir à la base ». Prix fixe à quatre moments.
+4. **Concurrence** — le relevé de la nuit a-t-il tourné (tâches Vercel de 2 h à
+   5 h 40) et Alpy a-t-il des prix (bloqué en 403 le 14 après ~150 recherches ;
+   réduit à 4 passagers, 6 s d'écart) ? « Voir les nouveaux tarifs », puis
+   « Appliquer ces nouveaux tarifs » avec 5 € ; vérifier dans Tarifs « concurrence
+   ≈ … » ; revenir à la version précédente. « Relever tous les trajets
+   maintenant » : barre d'avancement.
+5. **Limite de devis** — 31 devis en une heure depuis une même connexion hors
+   back-office → le 31ᵉ doit répondre « Too many price requests ».
+
+**Stats SEO attend la mise en ligne sur le domaine** (décision de JC).
+
+---
+
 # Point de reprise — lundi 14 septembre 2026, après-midi
 
 **JC a demandé d'enchaîner les onglets et de tout tester à la fin.** Rien de ce
