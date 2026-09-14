@@ -12,20 +12,12 @@ import {
   tableauConcurrence,
   VEHICULES_COMPARES,
 } from "@/lib/concurrence/tableau";
-import Rafraichir from "./Rafraichir";
-import type { Creneau } from "@/lib/tarification/grille";
 import { resortParSlug } from "@/lib/resorts";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
 import BoutonConfirmation from "../BoutonConfirmation";
 import Entete from "../Entete";
 import { actionAjouterTrajet, actionMettreAJourTarifs, actionReleverTout, actionRetirerTrajet } from "./actions";
-
-const MOMENTS: Record<Creneau, string> = {
-  semaineJour: "semaine, jour",
-  semaineNuit: "semaine, nuit",
-  weekendJour: "week-end, jour",
-  weekendNuit: "week-end, nuit",
-};
+import Rafraichir from "./Rafraichir";
 import TableauConcurrence from "./TableauConcurrence";
 
 /**
@@ -80,8 +72,34 @@ export default async function PageConcurrence({
   const avancement = await avancementReleve(suivis.length);
   // L'aperçu du bouton : ce que « Mettre à jour » poserait, avec cet écart, sur le dernier relevé.
   const plan = releve ? planAlignement(grille, suivis, releve.lignes, ecart) : null;
-  const baisses = plan?.changements.filter((c) => c.avant !== null && c.apres < c.avant) ?? [];
-  const hausses = plan?.changements.filter((c) => c.avant !== null && c.apres > c.avant) ?? [];
+  // L'aperçu lisible : par trajet, le prix « semaine, jour » de chaque véhicule, avant → après.
+  const propositions = plan
+    ? [...plan.changements.map((c) => ({ ...c, raison: null as string | null })), ...plan.ecartes]
+    : [];
+  const lignesApercu = suivis.map(({ airport, resort }) => {
+    const trajet = `${airportParSlug(airport)?.name ?? airport} → ${resortParSlug(resort)?.name ?? resort}`;
+    const pour = (categorie: string) =>
+      propositions.find(
+        (c) => c.airport === airport && c.resort === resort && c.categorie === categorie && c.creneau === "semaineJour",
+      ) ?? null;
+    return {
+      cle: `${airport}|${resort}`,
+      trajet,
+      sansConcurrent: plan?.sansReference.includes(trajet) ?? false,
+      parVehicule: { standard: pour("standard"), business: pour("business"), premium: pour("premium") } as Record<
+        string,
+        (typeof propositions)[number] | null
+      >,
+    };
+  });
+  const standards = lignesApercu.map((l) => l.parVehicule.standard);
+  const apercu = {
+    lignes: lignesApercu,
+    baisses: standards.filter((c) => c && !c.raison && c.avant !== null && c.apres < c.avant).length,
+    hausses: standards.filter((c) => c && !c.raison && c.avant !== null && c.apres > c.avant).length,
+    sansConcurrent: lignesApercu.filter((l) => l.sansConcurrent).length,
+    inchanges: lignesApercu.filter((l) => !l.sansConcurrent && !l.parVehicule.standard).length,
+  };
   const retour = typeof params.fait === "string" ? RETOURS[params.fait] : undefined;
   const detail = typeof params.detail === "string" ? params.detail : "";
 
@@ -172,6 +190,12 @@ export default async function PageConcurrence({
           </li>
         </ul>
 
+        {/*
+          L'aperçu — revue de JC, 14 septembre 2026 : « 494 prix changeraient »
+          ne se lisait pas. Il se lit maintenant trajet par trajet, en semaine
+          et de jour, le prix d'aujourd'hui → celui d'après pour chaque
+          véhicule ; le week-end et la nuit suivent la même règle.
+        */}
         <form method="get" action={ICI} className="mt-4 flex flex-wrap items-center gap-2 text-sm text-alpine">
           Nos prix à
           <input
@@ -183,64 +207,102 @@ export default async function PageConcurrence({
           />
           € en dessous du concurrent le moins cher
           <button type="submit" className="rounded border border-glacier-300 px-3 py-1.5 font-semibold text-alpine-700 hover:bg-glacier-50">
-            Voir l’effet
+            Recalculer l’aperçu
           </button>
         </form>
 
         {!plan ? (
           <p className="mt-4 text-sm text-attention-700">
-            Pas de relevé récent (moins de trois jours) : lancez « Relever maintenant » ou attendez celui de cette nuit.
+            Pas de relevé récent (moins de trois jours) : lancez « Relever tous les trajets maintenant » ou attendez
+            celui de cette nuit.
           </p>
         ) : (
           <>
-            <p className="mt-4 text-sm text-alpine">
-              Avec {ecart} € : <strong>{plan.changements.length} prix</strong> changeraient —{" "}
-              <span className="text-succes-700">{baisses.length} baisses</span>,{" "}
-              <span className="text-danger-700">{hausses.length} hausses</span>
-              {plan.ecartes.length ? `, ${plan.ecartes.length} écartés par un garde-fou` : ""}
-              {plan.sansReference.length ? `, ${plan.sansReference.length} trajets sans prix concurrent laissés tels quels` : ""}.
+            {/* Le résumé en premier, en gros — revue de JC, 14 septembre 2026. */}
+            <p className="mt-5 text-sm font-semibold text-alpine">
+              Si vous appliquez « {ecart} € en dessous du concurrent le moins cher », sur les {apercu.lignes.length}{" "}
+              trajets suivis (Standard, en semaine) :
             </p>
-            {plan.changements.length > 0 ? (
-              <details className="mt-2 text-sm">
-                <summary className="cursor-pointer text-alpine-700 underline">Voir le détail des prix</summary>
-                <div className="mt-2 max-h-96 overflow-auto rounded border border-glacier-200">
-                  <table className="w-full min-w-[40rem] text-xs">
-                    <thead className="sticky top-0 bg-glacier-50 text-left uppercase tracking-wide text-alpine-600">
-                      <tr>
-                        <th className="px-2 py-1.5 font-medium">Trajet</th>
-                        <th className="px-2 py-1.5 font-medium">Véhicule</th>
-                        <th className="px-2 py-1.5 font-medium">Moment</th>
-                        <th className="px-2 py-1.5 text-right font-medium">Concurrent</th>
-                        <th className="px-2 py-1.5 text-right font-medium">Avant → après</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        ...plan.changements.map((c) => ({ ...c, raison: null as string | null })),
-                        ...plan.ecartes,
-                      ].map((c, i) => (
-                        <tr key={i} className={`border-t border-glacier-100 ${c.raison ? "bg-attention-50" : ""}`}>
-                          <td className="px-2 py-1">{c.trajet}</td>
-                          <td className="px-2 py-1">{c.categorie}</td>
-                          <td className="px-2 py-1">{MOMENTS[c.creneau]}</td>
-                          <td className="px-2 py-1 text-right tabular-nums">{c.reference !== null ? `${Math.round(c.reference)} €` : "—"}</td>
-                          <td className="px-2 py-1 text-right tabular-nums">
-                            {c.avant ?? "—"} € → <strong>{c.apres} €</strong>
-                            {c.raison ? <span className="block text-attention-700">non posé : {c.raison}</span> : null}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </details>
+            <div className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-lg border border-succes-300 bg-succes-50 p-4">
+                <p className="font-display text-3xl tabular-nums text-succes-700">{apercu.baisses}</p>
+                <p className="text-sm text-succes-700">trajets baissent</p>
+              </div>
+              <div className="rounded-lg border border-danger-300 bg-danger-50 p-4">
+                <p className="font-display text-3xl tabular-nums text-danger-700">{apercu.hausses}</p>
+                <p className="text-sm text-danger-700">trajets montent</p>
+              </div>
+              <div className="rounded-lg border border-glacier-200 bg-glacier-50 p-4">
+                <p className="font-display text-3xl tabular-nums text-alpine">{apercu.inchanges}</p>
+                <p className="text-sm text-alpine-700">déjà au bon prix</p>
+              </div>
+              <div className="rounded-lg border border-glacier-200 bg-glacier-50 p-4">
+                <p className="font-display text-3xl tabular-nums text-alpine-600">{apercu.sansConcurrent}</p>
+                <p className="text-sm text-alpine-600">sans prix concurrent, ne bougent pas</p>
+              </div>
+            </div>
+            {plan.ecartes.length ? (
+              <p className="mt-2 text-xs text-attention-700">
+                {plan.ecartes.length} prix ne seront pas posés : l’écart avec le prix actuel est trop grand (baisse de
+                plus de moitié ou prix doublé) — ils sont barrés dans le tableau.
+              </p>
             ) : null}
+            <p className="mt-4 text-xs font-medium uppercase tracking-wide text-alpine-600">Le détail, trajet par trajet</p>
+            <div className="mt-3 max-h-[28rem] overflow-auto rounded border border-glacier-200">
+              <table className="w-full min-w-[44rem] text-sm">
+                <thead className="sticky top-0 bg-glacier-50 text-left text-xs uppercase tracking-wide text-alpine-600">
+                  <tr>
+                    <th className="px-3 py-2 font-medium">Trajet (semaine, jour)</th>
+                    {VEHICULES_COMPARES.map((v) => (
+                      <th key={v.cle} className="px-3 py-2 text-right font-medium">
+                        {v.nom} : aujourd’hui → après
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {apercu.lignes.map((l) => (
+                    <tr key={l.cle} className="border-t border-glacier-100">
+                      <td className="px-3 py-1.5 text-alpine">{l.trajet}</td>
+                      {VEHICULES_COMPARES.map((v) => {
+                        const c = l.parVehicule[v.cle];
+                        if (!c) {
+                          return (
+                            <td key={v.cle} className="px-3 py-1.5 text-right text-xs text-alpine-500">
+                              {l.sansConcurrent ? "pas de prix concurrent" : "inchangé"}
+                            </td>
+                          );
+                        }
+                        const baisse = c.avant !== null && c.apres < c.avant;
+                        return (
+                          <td
+                            key={v.cle}
+                            className="px-3 py-1.5 text-right tabular-nums"
+                            title={c.reference !== null ? `Concurrent le moins cher : ${Math.round(c.reference)} €` : undefined}
+                          >
+                            <span className="text-alpine-600">{c.avant ?? "—"} €</span> →{" "}
+                            <strong className={c.raison ? "text-attention-700 line-through" : baisse ? "text-succes-700" : "text-danger-700"}>
+                              {c.apres} €
+                            </strong>
+                            {c.raison ? <span className="block text-xs text-attention-700">non posé : {c.raison}</span> : null}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-2 text-xs text-alpine-600">
+              En vert, le prix baisse ; en rouge, il monte. Survolez un prix pour voir le concurrent le moins cher. Le
+              week-end et la nuit suivent la même règle.
+            </p>
             <form action={actionMettreAJourTarifs} className="mt-4">
               <input type="hidden" name="ecart" value={String(ecart)} />
               <BoutonConfirmation
-                libelle={`Mettre à jour nos tarifs (${plan.changements.length} prix)`}
+                libelle="Appliquer ces nouveaux tarifs"
                 enCours="Mise à jour…"
-                confirmer={`Recaler ${plan.changements.length} prix à ${ecart} € sous le concurrent le moins cher ? La grille est publiée tout de suite ; l’onglet Tarifs permet de revenir en arrière.`}
+                confirmer={`Appliquer ces tarifs à ${ecart} € sous le concurrent le moins cher, sur tous les trajets et tous les véhicules ? Ils sont publiés tout de suite ; l’onglet Tarifs permet de revenir en arrière.`}
                 className="rounded bg-marque px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
               />
             </form>
