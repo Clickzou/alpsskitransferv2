@@ -57,6 +57,50 @@ export async function inserer<T extends Record<string, unknown>>(
   }
 }
 
+/**
+ * Écrit plusieurs lignes d'un coup, et remplace celles qui existent déjà sur
+ * les colonnes de `surConflit` — un relevé rejoué la même nuit met à jour ses
+ * prix au lieu de les doubler.
+ */
+export async function ecrireLignes(
+  table: string,
+  lignes: Record<string, unknown>[],
+  surConflit: string,
+): Promise<boolean> {
+  if (!supabaseConfigure() || lignes.length === 0) return lignes.length === 0;
+  try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}`);
+    url.searchParams.set("on_conflict", surConflit);
+    const reponse = await fetch(url, {
+      method: "POST",
+      headers: { ...entetes(), Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify(lignes),
+      cache: "no-store",
+    });
+    if (!reponse.ok) {
+      console.error(`[supabase] écriture groupée refusée sur ${table}`, await reponse.text());
+      return false;
+    }
+    return true;
+  } catch (erreur) {
+    console.error(`[supabase] écriture groupée impossible sur ${table}`, erreur);
+    return false;
+  }
+}
+
+/** Supprime les lignes filtrées. */
+export async function supprimer(table: string, filtres: Filtre[]): Promise<boolean> {
+  if (!supabaseConfigure()) return false;
+  try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}`);
+    for (const f of filtres) url.searchParams.set(f.colonne, `${f.operateur ?? "eq"}.${f.valeur}`);
+    const reponse = await fetch(url, { method: "DELETE", headers: entetes(), cache: "no-store" });
+    return reponse.ok;
+  } catch {
+    return false;
+  }
+}
+
 /** Un filtre PostgREST : `colonne=operateur.valeur`, l'égalité par défaut. */
 interface Filtre {
   colonne: string;

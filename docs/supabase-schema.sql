@@ -96,6 +96,33 @@ create table if not exists grilles_tarifaires (
   publie_le   timestamptz not null default now()
 );
 
+-- La veille des prix concurrents : les trajets suivis et les prix relevés
+-- chaque nuit. Voir `supabase-migration-concurrence.sql`.
+create table if not exists concurrence_trajets (
+  id        bigint generated always as identity primary key,
+  airport   text not null,
+  resort    text not null,
+  ordre     integer not null default 0,
+  cree_le   timestamptz not null default now(),
+  unique (airport, resort)
+);
+
+create table if not exists concurrence_releves (
+  id           bigint generated always as identity primary key,
+  releve_le    date not null,
+  airport      text not null,
+  resort       text not null,
+  jour         text not null,
+  date_trajet  date not null,
+  passagers    smallint not null,
+  source       text not null,
+  gamme        text not null,
+  prix         numeric(10, 2),
+  detail       text,
+  cree_le      timestamptz not null default now(),
+  unique (releve_le, airport, resort, jour, passagers, source, gamme)
+);
+
 -- Les demandes de changement faites depuis le lien de gestion, et leur sort :
 -- une heure se demande et l'exploitant la valide ; le vol s'applique tout de
 -- suite. Voir `supabase-migration-modifications.sql`.
