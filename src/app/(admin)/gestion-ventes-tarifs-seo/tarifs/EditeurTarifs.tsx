@@ -465,34 +465,38 @@ export default function EditeurTarifs({
         publication étant quatre sections plus bas. Dès qu'une valeur change,
         la barre reste à l'écran et mène à l'aperçu.
       */}
-      {modifie && !apercuAJour ? (
+      {!apercuAJour ? (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-glacier-200 bg-white/95 px-4 py-3 shadow-flottant backdrop-blur-sm">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-alpine">
-              Modifications non publiées — rien ne change pour les clients tant que vous n’avez pas publié.
+            <p className={`text-sm ${modifie ? "font-semibold text-alpine" : "text-alpine-600"}`}>
+              {modifie
+                ? "Modifications non publiées — rien ne change pour les clients tant que vous n’avez pas publié."
+                : "Modifiez une valeur ci-dessus : le bouton de validation s’allumera."}
             </p>
             <div className="flex gap-2">
+              {modifie ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBrouillon(initial);
+                    setApercu(null);
+                    setErreurs([]);
+                  }}
+                  className={BOUTON_SECONDAIRE}
+                >
+                  Annuler
+                </button>
+              ) : null}
               <button
                 type="button"
-                onClick={() => {
-                  setBrouillon(initial);
-                  setApercu(null);
-                  setErreurs([]);
-                }}
-                className={BOUTON_SECONDAIRE}
-              >
-                Annuler
-              </button>
-              <button
-                type="button"
-                disabled={enCours}
+                disabled={enCours || !modifie}
                 onClick={() => {
                   voirApercu();
                   document.getElementById("publier")?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
-                className="rounded bg-marque px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:opacity-60"
+                className="rounded bg-marque px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {enCours ? "Calcul…" : "Voir l’aperçu et publier"}
+                {enCours ? "Calcul…" : "Valider : voir l’aperçu et publier"}
               </button>
             </div>
           </div>
