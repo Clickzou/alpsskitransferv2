@@ -247,7 +247,10 @@ export default async function PageConcurrence({
                 plus de moitié ou prix doublé) — ils sont barrés dans le tableau.
               </p>
             ) : null}
-            <p className="mt-4 text-xs font-medium uppercase tracking-wide text-alpine-600">Le détail, trajet par trajet</p>
+            <details className="mt-4">
+              <summary className="cursor-pointer text-sm font-semibold text-alpine-700 underline underline-offset-2">
+                Voir les nouveaux tarifs
+              </summary>
             <div className="mt-3 max-h-[28rem] overflow-auto rounded border border-glacier-200">
               <table className="w-full min-w-[44rem] text-sm">
                 <thead className="sticky top-0 bg-glacier-50 text-left text-xs uppercase tracking-wide text-alpine-600">
@@ -297,6 +300,7 @@ export default async function PageConcurrence({
               En vert, le prix baisse ; en rouge, il monte. Survolez un prix pour voir le concurrent le moins cher. Le
               week-end et la nuit suivent la même règle.
             </p>
+            </details>
             <form action={actionMettreAJourTarifs} className="mt-4">
               <input type="hidden" name="ecart" value={String(ecart)} />
               <BoutonConfirmation
