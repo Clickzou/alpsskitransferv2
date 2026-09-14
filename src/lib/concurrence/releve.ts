@@ -1,5 +1,6 @@
 import { ecrireLignes, lire } from "@/lib/reservation/supabase";
 import { dateDuJour, isoAlpes, meilleureOffre, type Gamme } from "./comparaison";
+import { GROUPE_REFERENCE } from "./alignement";
 import { CODES_LIEUX, GROUPES, TRAJETS_PAR_DEFAUT, type Concurrent, type Jour } from "./lieux";
 import { lireAlps2alps, lireAlpy, ouvrirSessionAlpy, type Lecture, type SessionAlpy } from "./sources";
 
@@ -19,6 +20,7 @@ import { lireAlps2alps, lireAlpy, ouvrirSessionAlpy, type Lecture, type SessionA
 
 export const TAILLE_LOT = 5;
 const PAUSE_MS = 2500;
+const PAUSE_ALPY_MS = 6000;
 const JOURS: Jour[] = ["mercredi", "samedi"];
 
 const pause = () => new Promise((r) => setTimeout(r, PAUSE_MS));
@@ -80,16 +82,27 @@ export async function releverLot(lot: number, maintenant = new Date()) {
             : { ok: false, raison: "alps2alps ne dessert pas ce trajet" };
         if (codesDepart?.alps2alps && codesArrivee?.alps2alps) await pause();
 
+        /*
+          Alpy, seulement pour le groupe de référence (4 passagers) et plus
+          lentement : le 14 septembre 2026, leur site a répondu 403 au bout
+          d'environ 150 recherches rapprochées. Cent recherches par nuit,
+          espacées de six secondes et réparties sur quatre heures, restent
+          sous ce seuil — et le groupe de 4 est celui qui recale nos tarifs.
+        */
         let alpy: Lecture = { ok: false, raison: "Alpy ne dessert pas ce trajet" };
-        if (codesDepart?.alpy && codesArrivee?.alpy) {
+        if (passagers !== GROUPE_REFERENCE) {
+          alpy = { ok: false, raison: "Alpy n'est relevé que pour 4 passagers" };
+        } else if (codesDepart?.alpy && codesArrivee?.alpy) {
           session ??= await ouvrirSessionAlpy();
           alpy = session
             ? await lireAlpy(session, codesDepart.alpy, codesArrivee.alpy, t.airport.endsWith("-airport"), date, passagers)
             : { ok: false, raison: "Alpy injoignable" };
-          await pause();
+          await new Promise((r) => setTimeout(r, PAUSE_ALPY_MS));
         }
 
-        for (const lecture of [a2a, alpy]) if (!lecture.ok && !/ne dessert pas/.test(lecture.raison)) erreurs.add(lecture.raison);
+        for (const lecture of [a2a, alpy]) {
+          if (!lecture.ok && !/ne dessert pas|n'est relevé que/.test(lecture.raison)) erreurs.add(lecture.raison);
+        }
         const nouvelles = [...lignesDe(base, "alps2alps", a2a), ...lignesDe(base, "alpy", alpy)];
         prixTrouves += nouvelles.filter((l) => l.prix !== null).length;
         lignes.push(...nouvelles);
