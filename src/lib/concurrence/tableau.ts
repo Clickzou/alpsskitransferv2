@@ -31,6 +31,8 @@ export interface LigneComparaison {
   airport: string;
   resort: string;
   trajet: string;
+  /** La date du transfert demandée aux concurrents, `YYYY-MM-DD` — `null` sans relevé. */
+  dateTrajet: string | null;
   nous: { prix: number; categorie: CategorieVehicule } | null;
   alps2alps: { prix: number | null; detail: string | null };
   alpy: { prix: number | null; detail: string | null };
@@ -172,6 +174,7 @@ export async function tableauConcurrence(grille: Grille, f: Filtres, maintenant 
       airport,
       resort,
       trajet: `${airportParSlug(airport)?.name ?? airport} → ${resortParSlug(resort)?.name ?? resort}`,
+      dateTrajet: dateTrajet ?? null,
       nous,
       alps2alps: { prix: nombre(a2a?.prix), detail: a2a?.detail ?? null },
       alpy: { prix: nombre(alpy?.prix), detail: alpy?.detail ?? null },
@@ -186,5 +189,11 @@ export async function tableauConcurrence(grille: Grille, f: Filtres, maintenant 
 
   // Les plus chers que la concurrence d'abord : ce sont eux qu'on corrige.
   lignes.sort((a, b) => (b.ecart ?? -Infinity) - (a.ecart ?? -Infinity));
-  return { dernier, ancien: ancien !== dernier ? ancien : null, lignes };
+
+  // La date du transfert comparé, la plus fréquente : un relevé fait d'une traite n'en a qu'une.
+  const compte = new Map<string, number>();
+  for (const l of lignes) if (l.dateTrajet) compte.set(l.dateTrajet, (compte.get(l.dateTrajet) ?? 0) + 1);
+  const dateTrajet = [...compte].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
+  return { dernier, ancien: ancien !== dernier ? ancien : null, lignes, dateTrajet };
 }

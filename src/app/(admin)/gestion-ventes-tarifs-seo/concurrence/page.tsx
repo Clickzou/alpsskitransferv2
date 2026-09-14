@@ -66,7 +66,7 @@ export default async function PageConcurrence({
   const ecartBrut = Number(String(params.ecart ?? "5").replace(",", "."));
   const ecart = Number.isFinite(ecartBrut) ? ecartBrut : 5;
   const grille = await grilleActive();
-  const [{ dernier, ancien, lignes }, releve, suivis] = await Promise.all([
+  const [{ dernier, ancien, lignes, dateTrajet }, releve, suivis] = await Promise.all([
     tableauConcurrence(grille, filtres),
     dernierReleve(),
     trajetsSuivis(),
@@ -160,9 +160,9 @@ export default async function PageConcurrence({
             laisser d’argent sur la table.
           </li>
           <li className="text-alpine-600">
-            Pour tous les trajets suivis, tous les véhicules, semaine et week-end, jour et nuit. Référence : un
-            groupe de 4 passagers ; la nuit reprend le prix de jour plus notre majoration de nuit ; une baisse de
-            plus de moitié ou un prix doublé n’est jamais posé.
+            Pour tous les trajets suivis, tous les véhicules, semaine et week-end (dimanche compris), jour et nuit.
+            Référence : un groupe de 4 passagers. La nuit garde le même prix que le jour, sans majoration, comme
+            chez les concurrents. Une baisse de plus de moitié ou un prix doublé n’est jamais posé.
           </li>
         </ul>
 
@@ -297,8 +297,20 @@ export default async function PageConcurrence({
         </Link>
       </p>
 
-      <div className="mt-4">
-        <TableauConcurrence lignes={lignes} />
+      <p className="mt-4 rounded border border-glacier-200 bg-glacier-50 px-4 py-3 text-sm text-alpine">
+        {dateTrajet && dernier ? (
+          <>
+            <strong>Prix d’un transfert le {dateLisible(dateTrajet)} à 10 h</strong>, pour {filtres.passagers}{" "}
+            passagers, en gamme {filtres.gamme === "standard" ? "standard" : "premium"} — tels que les concurrents
+            les affichaient le {dateLisible(dernier)}. Nos prix sont calculés pour cette même date.
+          </>
+        ) : (
+          "Pas encore de prix relevés pour ce jour : le tableau se remplira après le prochain relevé."
+        )}
+      </p>
+
+      <div className="mt-3">
+        <TableauConcurrence lignes={lignes} dateCommune={dateTrajet} />
       </div>
 
       <section id="trajets" className="mt-8 rounded-xl border border-glacier-200 bg-white p-5 shadow-carte">

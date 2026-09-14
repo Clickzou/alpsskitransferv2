@@ -12,7 +12,17 @@ const euros = (n: number | null) =>
     ? "—"
     : new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
 
-export default function TableauConcurrence({ lignes }: { lignes: LigneComparaison[] }) {
+const date = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+
+export default function TableauConcurrence({
+  lignes,
+  dateCommune,
+}: {
+  lignes: LigneComparaison[];
+  /** La date du transfert annoncée au-dessus du tableau ; une ligne qui en diffère la redit. */
+  dateCommune: string | null;
+}) {
   return (
     <div className="overflow-x-auto rounded-xl border border-glacier-200 bg-white shadow-carte">
       <table className="w-full min-w-[48rem] text-sm">
@@ -36,6 +46,9 @@ export default function TableauConcurrence({ lignes }: { lignes: LigneComparaiso
                 <td className="px-3 py-2 text-alpine">
                   {l.trajet}
                   {l.nous ? <span className="block text-xs text-alpine-600">notre {l.nous.categorie}</span> : null}
+                  {l.dateTrajet && l.dateTrajet !== dateCommune ? (
+                    <span className="block text-xs text-attention-700">comparé pour le {date(l.dateTrajet)}</span>
+                  ) : null}
                 </td>
                 <td className="px-3 py-2 text-right font-semibold tabular-nums">{euros(l.nous?.prix ?? null)}</td>
                 {[l.alps2alps, l.alpy].map((c, i) => (

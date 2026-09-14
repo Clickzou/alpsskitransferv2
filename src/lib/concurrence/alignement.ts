@@ -22,10 +22,11 @@ import type { Jour } from "./lieux";
  *   huit.
  * - **Par gamme** : notre Standard face à leur offre standard la moins chère,
  *   nos Business et Premium face à leur haut de gamme.
- * - **Par moment** : le relevé du mercredi fait notre prix « semaine, jour »,
- *   celui du samedi notre « week-end, jour ». La nuit, qu'aucun concurrent ne
- *   chiffre dans le relevé, reprend le prix de jour aligné plus notre
- *   majoration de nuit.
+ * - **Par moment** : le relevé du mercredi fait nos prix de semaine, celui du
+ *   samedi nos prix de week-end — dimanche compris. **La nuit prend le même
+ *   prix que le jour, sans majoration** (décision de JC, 14 septembre 2026) :
+ *   alps2alps affiche le même prix à 10 h et à 23 h, en semaine, le samedi et
+ *   le dimanche ; majorer la nuit nous rendait plus chers précisément là.
  * - **Garde-fous** : un prix qui baisserait de plus de moitié, ou doublerait,
  *   n'est pas posé — c'est presque toujours un relevé faux (mauvais véhicule,
  *   devise) ; il est signalé. Un trajet sans aucun prix concurrent ne bouge pas.
@@ -63,7 +64,7 @@ export interface Changement {
   trajet: string;
   categorie: CategorieVehicule;
   creneau: Creneau;
-  /** Le concurrent le moins cher, `null` pour un prix de nuit déduit du jour. */
+  /** Le concurrent le moins cher. */
   reference: number | null;
   avant: number | null;
   apres: number;
@@ -100,7 +101,6 @@ export function planAlignement(
   maintenant = new Date(),
 ): Plan {
   const plan: Plan = { changements: [], ecartes: [], sansReference: [] };
-  const nuit = 1 + grille.bareme.majorations.nuit / 100;
 
   for (const { airport, resort } of trajets) {
     const trajet = nomTrajet(airport, resort);
@@ -132,9 +132,9 @@ export function planAlignement(
             apres: cible,
           },
           {
-            airport, resort, trajet, categorie, creneau: creneaux.nuit, reference: null,
+            airport, resort, trajet, categorie, creneau: creneaux.nuit, reference,
             avant: prixActuel(grille, airport, resort, categorie, aHeure(jourIso, 23)),
-            apres: Math.round(cible * nuit),
+            apres: cible,
           },
         ];
 

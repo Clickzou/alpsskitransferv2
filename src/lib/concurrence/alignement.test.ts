@@ -32,10 +32,12 @@ describe("mettre à jour tous nos tarifs", () => {
     expect(prix(g, "standard", instantAlpes(2026, 10, 10, 10, 0))).toBe(495);
   });
 
-  it("déduit la nuit du prix de jour aligné plus la majoration de nuit", () => {
-    const plan = planAlignement(GRILLE_DEFAUT, trajet, [releve("mercredi", "standard", 250)], 5);
+  it("donne à la nuit le même prix que le jour, sans majoration", () => {
+    const plan = planAlignement(GRILLE_DEFAUT, trajet, [releve("mercredi", "standard", 250), releve("samedi", "standard", 250)], 5);
     const g = appliquerPlan(GRILLE_DEFAUT, plan);
-    expect(prix(g, "standard", instantAlpes(2026, 10, 7, 23, 0))).toBe(Math.round(245 * 1.2));
+    expect(prix(g, "standard", instantAlpes(2026, 10, 7, 23, 0))).toBe(245);
+    // Le dimanche suit le week-end, de jour comme de nuit.
+    expect(prix(g, "standard", instantAlpes(2026, 10, 11, 23, 0))).toBe(245);
   });
 
   it("aligne Business et Premium sur le haut de gamme, et ignore les autres groupes", () => {
