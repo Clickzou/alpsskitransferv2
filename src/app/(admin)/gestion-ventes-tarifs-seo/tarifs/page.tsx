@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AIRPORTS } from "@/lib/airports";
 import { utilisateurCourant } from "@/lib/admin/session";
@@ -143,7 +144,16 @@ export default async function PageTarifs({
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <Entete email={utilisateur.email} actif="tarifs" />
-      <h1 className="mt-6 font-display text-2xl text-alpine">Tarifs</h1>
+      {/* Le chemin vers l'alignement sur la concurrence, là où l'on se pose la question du prix (JC, 14 septembre 2026). */}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-2xl text-alpine">Tarifs</h1>
+        <Link
+          href="/gestion-ventes-tarifs-seo/concurrence/"
+          className="rounded bg-marque px-4 py-2 text-sm font-semibold text-white transition hover:bg-marque-600"
+        >
+          Ajuster les prix par rapport à la concurrence →
+        </Link>
+      </div>
 
       {retour ? (
         <p
