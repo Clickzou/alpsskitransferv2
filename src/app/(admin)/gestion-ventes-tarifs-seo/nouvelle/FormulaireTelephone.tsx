@@ -2,7 +2,7 @@
 
 import { startTransition, useActionState, useRef, useState } from "react";
 import ChampLieu, { type ValeurLieu } from "@/components/reservation/ChampLieu";
-import type { Lieu } from "@/lib/reservation/lieux";
+import { normaliser, type Lieu } from "@/lib/reservation/lieux";
 import { actionCreerTelephone } from "./actions";
 
 /**
@@ -92,6 +92,18 @@ function LieuCache({ nom, valeur }: { nom: string; valeur: ValeurLieu }) {
   );
 }
 
+/**
+ * Le lieu du registre derrière une saisie — revue de JC, 14 septembre 2026 :
+ * « Geneva Airport » tapé en entier, sans cliquer la suggestion, restait une
+ * adresse libre, et le trajet perdait son prix. Un nom exact vaut le lieu.
+ */
+function reconnaitre(valeur: ValeurLieu, lieux: Lieu[]): ValeurLieu {
+  if (valeur.slug || !valeur.texte.trim()) return valeur;
+  const cible = normaliser(valeur.texte);
+  const lieu = lieux.find((l) => l.slug && (normaliser(l.nom) === cible || l.cles.includes(cible)));
+  return lieu ? { slug: lieu.slug, texte: lieu.nom } : valeur;
+}
+
 /** Le texte à envoyer au calcul du prix : le slug, sinon ce qui est tapé. */
 const pourDevis = (valeur: ValeurLieu) => valeur.slug ?? (valeur.texte.trim() || undefined);
 
@@ -152,14 +164,24 @@ export default function FormulaireTelephone({
   const typeDe = (valeur: ValeurLieu) =>
     valeur.slug ? lieux.find((l) => l.slug === valeur.slug)?.type : undefined;
   const retourDeGrille = (valeur: ValeurLieu) => !valeur.texte.trim() || Boolean(valeur.slug);
+  /*
+    Une station vers un aéroport — le client qui redescend — se chiffre sur la
+    même route que l'aller : la grille est la même dans les deux sens. Pas de
+    lieux de retour propres, sinon on ne sait plus quelle route inverser.
+  */
+  const inverse =
+    typeDe(depart) === "station" &&
+    typeDe(arrivee) === "aeroport" &&
+    (!allerRetour || (!retourDepart.texte.trim() && !retourArrivee.texte.trim()));
   const deGrille =
-    typeDe(depart) === "aeroport" &&
-    typeDe(arrivee) === "station" &&
-    (!allerRetour || (retourDeGrille(retourDepart) && retourDeGrille(retourArrivee)));
+    inverse ||
+    (typeDe(depart) === "aeroport" &&
+      typeDe(arrivee) === "station" &&
+      (!allerRetour || (retourDeGrille(retourDepart) && retourDeGrille(retourArrivee))));
 
   /** Un lieu qui change efface le prix calculé, comme les autres champs du trajet. */
   const changerLieu = (setter: (v: ValeurLieu) => void) => (valeur: ValeurLieu) => {
-    setter(valeur);
+    setter(reconnaitre(valeur, lieux));
     trajetModifie();
   };
 
@@ -174,8 +196,9 @@ export default function FormulaireTelephone({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          from: pourDevis(depart),
-          to: pourDevis(arrivee),
+          // Dans l'autre sens, la grille se lit aéroport → station : on lui présente la route inversée.
+          from: pourDevis(inverse ? arrivee : depart),
+          to: pourDevis(inverse ? depart : arrivee),
           when: valeur("when"),
           passengers: valeur("passengers"),
           bags: valeur("bags"),
@@ -183,8 +206,7 @@ export default function FormulaireTelephone({
           ...(allerRetour
             ? {
                 returnWhen: valeur("returnWhen"),
-                returnFrom: pourDevis(retourDepart),
-                returnTo: pourDevis(retourArrivee),
+                ...(inverse ? {} : { returnFrom: pourDevis(retourDepart), returnTo: pourDevis(retourArrivee) }),
                 returnPassengers: valeur("returnPassengers"),
               }
             : {}),

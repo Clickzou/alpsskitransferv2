@@ -6,6 +6,7 @@ import { SITE } from "@/data/site";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
+import { LIEUX, normaliser } from "@/lib/reservation/lieux";
 import { cheminConfirmation, origineSite } from "@/lib/reservation/config";
 import { CATEGORIES, validerDemande } from "@/lib/reservation/demande";
 import { cheminFiche } from "@/lib/reservation/demandes";
@@ -272,10 +273,25 @@ export async function actionCreerTelephone(
     retour surtout : un slug vide y voudrait dire « comme à l'aller », et une
     adresse de retour tapée à la main serait ignorée au profit de la grille.
   */
-  const lieuSaisi = (cle: string) => champ(donnees, cle) || champ(donnees, `${cle}Text`, 300);
+  const lieuSaisi = (cle: string) => {
+    const slug = champ(donnees, cle);
+    if (slug) return slug;
+    // Un nom exact tapé sans cliquer la suggestion vaut le lieu du registre.
+    const texte = champ(donnees, `${cle}Text`, 300);
+    const cible = normaliser(texte);
+    return (cible && LIEUX.find((l) => l.slug && (normaliser(l.nom) === cible || l.cles.includes(cible)))?.slug) || texte;
+  };
+  const from = lieuSaisi("from");
+  const to = lieuSaisi("to");
+  const retourPropre = allerRetour && Boolean(lieuSaisi("returnFrom") || lieuSaisi("returnTo"));
+  /*
+    Station → aéroport : la grille se lit dans l'autre sens, la route est la
+    même. On la chiffre inversée, puis on remet la course dans son vrai sens.
+  */
+  const inverse = Boolean(resortParSlug(from) && airportParSlug(to)) && !retourPropre;
   const valide = validerDemande({
-    from: lieuSaisi("from"),
-    to: lieuSaisi("to"),
+    from: inverse ? to : from,
+    to: inverse ? from : to,
     when: champ(donnees, "when", 40),
     passengers: champ(donnees, "passengers", 3),
     bags: champ(donnees, "bags", 3),
@@ -284,8 +300,8 @@ export async function actionCreerTelephone(
     ...(allerRetour
       ? {
           returnWhen: champ(donnees, "returnWhen", 40),
-          returnFrom: lieuSaisi("returnFrom") || undefined,
-          returnTo: lieuSaisi("returnTo") || undefined,
+          returnFrom: (inverse ? undefined : lieuSaisi("returnFrom")) || undefined,
+          returnTo: (inverse ? undefined : lieuSaisi("returnTo")) || undefined,
           returnPassengers: champ(donnees, "returnPassengers", 3) || undefined,
           vehicleReturn: champ(donnees, "vehicleReturn", 20) || undefined,
         }
@@ -293,10 +309,25 @@ export async function actionCreerTelephone(
   });
   if (!valide.ok) return valide.message;
 
-  const course =
+  const grilleOuTexte =
     "surMesure" in valide
       ? courseHorsGrille(donnees, allerRetour)
       : courseDeGrille(valide.demande, await grilleActive());
+  const course =
+    inverse && typeof grilleOuTexte !== "string" && "demande" in valide
+      ? {
+          ...grilleOuTexte,
+          // Les colonnes disent d'où l'on part et où l'on va : le nom lisible, dans le vrai sens.
+          airport: nomStation(valide.demande.resort),
+          resort: nomAeroport(valide.demande.airport),
+          retourAirport: null,
+          retourResort: null,
+          intitule: `${nomStation(valide.demande.resort)} → ${nomAeroport(valide.demande.airport)}`,
+          trajetRetour: valide.demande.retour
+            ? `${nomAeroport(valide.demande.airport)} → ${nomStation(valide.demande.resort)}`
+            : null,
+        }
+      : grilleOuTexte;
   if (typeof course === "string") return course;
   if (course.aller.getTime() <= Date.now()) {
     return "La date de l’aller est déjà passée : vérifiez le jour et l’année.";
