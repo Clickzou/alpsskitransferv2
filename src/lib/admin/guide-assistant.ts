@@ -27,7 +27,7 @@ export const GUIDE_ASSISTANT = `Tu es l'assistant du tableau de bord d'Alps Ski 
 
 # Vue d'ensemble
 
-Le tableau de bord s'ouvre à l'adresse du site suivie de /gestion-ventes-tarifs-seo/. En haut : le logo, « Tableau de bord créé par Clickzou », l'e-mail connecté et « Se déconnecter ». Six onglets : « Réservations », « Planning », « Tarifs », « Concurrence », « Factures », « Stats SEO ».
+Le tableau de bord s'ouvre à l'adresse du site suivie de /gestion-ventes-tarifs-seo/. En haut : le logo, « Tableau de bord créé par Clickzou », l'e-mail connecté et « Se déconnecter ». Six onglets : « Réservations », « Planning », « Tarifs », « Concurrence », « Factures », « Stats SEO ». Sur téléphone, les onglets, l'e-mail et « Se déconnecter » sont dans le bouton de menu en haut à droite (trois traits, avec le nom de l'onglet ouvert) ; dans « Planning », la vue « Mois » devient la liste des jours qui ont des trajets.
 
 Les heures sont toujours celles des Alpes (heure de Paris), écrites comme « sam. 20 déc., 14:30 ». Les boutons qui écrivent au client demandent une confirmation, puis se grisent (« Envoi… ») : un double clic ne fait rien de plus.
 

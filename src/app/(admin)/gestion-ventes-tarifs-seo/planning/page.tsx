@@ -278,8 +278,45 @@ export default async function PagePlanning({
       </section>
 
       {vue === "mois" ? (
-        <section className="mt-6 overflow-x-auto">
-          <div className="grid min-w-[56rem] grid-cols-7 overflow-hidden rounded-xl border border-glacier-200 bg-glacier-200 [gap:1px]">
+        <>
+        {/*
+          Sur téléphone, sept colonnes font 50 px chacune : le mois devient la
+          liste des jours qui ont des trajets (15 septembre 2026).
+        */}
+        <section className="mt-6 space-y-3 md:hidden">
+          {p.jours.filter((j) => j.slice(0, 7) === jour.slice(0, 7) && (jours.get(j)?.length ?? 0) > 0).length === 0 ? (
+            <p className="rounded-xl border border-glacier-200 bg-white px-4 py-8 text-center text-sm text-alpine-600">
+              Aucun trajet ce mois-ci.
+            </p>
+          ) : (
+            p.jours
+              .filter((j) => j.slice(0, 7) === jour.slice(0, 7) && (jours.get(j)?.length ?? 0) > 0)
+              .map((j) => (
+                <div key={j} className={`rounded-xl border p-2 ${j === auj ? "border-marque/50 bg-marque/5" : "border-glacier-200 bg-white"}`}>
+                  <Link href={url({ vue: "jour", jour: j, chauffeur: filtre })} className="block px-1 pb-1.5 text-sm font-semibold capitalize text-alpine">
+                    {jourLisible(j)} →
+                  </Link>
+                  <ul className="space-y-1">
+                    {(jours.get(j) ?? []).map((t) => (
+                      <li key={t.cle}>
+                        <Link
+                          href={`${url({ vue: "jour", jour: j, chauffeur: filtre })}#${t.cle}`}
+                          className={`block rounded px-2 py-1.5 text-sm leading-snug ${
+                            t.chauffeur ? "bg-succes-50 text-succes-700" : "bg-attention-50 text-attention-700"
+                          }`}
+                        >
+                          <span className="font-semibold tabular-nums">{t.heure}</span> {t.trajet}
+                          <span className="block text-xs">{t.chauffeur ?? "Sans chauffeur"}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+          )}
+        </section>
+        <section className="mt-6 hidden overflow-x-auto md:block">
+          <div className="grid min-w-[46rem] grid-cols-7 overflow-hidden rounded-xl border border-glacier-200 bg-glacier-200 [gap:1px]">
             {["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((j) => (
               <div key={j} className="bg-glacier-50 px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-alpine-600">
                 {j}
@@ -319,6 +356,7 @@ export default async function PagePlanning({
             })}
           </div>
         </section>
+        </>
       ) : vue === "semaine" ? (
         <section className="mt-6 grid gap-3 lg:grid-cols-7">
           {p.jours.map((j) => {

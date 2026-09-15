@@ -325,7 +325,7 @@ export default async function PageAdmin({
       <div className="mt-6 flex justify-end">
         <Link
           href="/gestion-ventes-tarifs-seo/nouvelle/"
-          className="rounded bg-marque px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
+          className="w-full rounded bg-marque px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-marque-600 sm:w-auto"
         >
           + Nouvelle réservation (téléphone)
         </Link>

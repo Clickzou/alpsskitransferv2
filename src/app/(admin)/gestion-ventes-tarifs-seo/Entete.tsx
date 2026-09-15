@@ -2,6 +2,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import { actionDeconnexion } from "./actions";
 import Assistant from "./Assistant";
+import MenuMobile from "./MenuMobile";
 
 /**
  * L'en-tête du back-office, et ses onglets.
@@ -11,6 +12,9 @@ import Assistant from "./Assistant";
  * Demande de JC, 11 septembre 2026 : des onglets distincts. Un onglet ne
  * s'ajoute qu'avec son écran : un onglet qui mène à une page vide est une
  * promesse non tenue.
+ *
+ * Sur téléphone (sous 768 px), les onglets, le compte et la mention Clickzou
+ * passent dans `MenuMobile` (15 septembre 2026).
  */
 const ONGLETS = [
   { cle: "reservations", nom: "Réservations", href: "/gestion-ventes-tarifs-seo/" },
@@ -21,6 +25,21 @@ const ONGLETS = [
   { cle: "seo", nom: "Stats SEO", href: "/gestion-ventes-tarifs-seo/seo/" },
 ];
 
+function Deconnexion({ pleineLargeur = false }: { pleineLargeur?: boolean }) {
+  return (
+    <form action={actionDeconnexion}>
+      <button
+        type="submit"
+        className={`rounded border border-glacier-300 px-3 py-1.5 text-alpine-700 transition hover:border-alpine/40 hover:bg-glacier-50 ${
+          pleineLargeur ? "w-full py-2.5" : ""
+        }`}
+      >
+        Se déconnecter
+      </button>
+    </form>
+  );
+}
+
 export default function Entete({
   email,
   actif = "reservations",
@@ -29,12 +48,12 @@ export default function Entete({
   actif?: string;
 }) {
   return (
-    <header className="border-b border-glacier-200">
+    <header className="border-b border-glacier-200 pb-4 md:pb-0">
       {/* Trois colonnes sur ordinateur, pour que la mention reste au centre quelle que soit la largeur de l'e-mail. */}
-      <div className="flex flex-wrap items-center justify-between gap-4 md:grid md:grid-cols-[1fr_auto_1fr]">
+      <div className="flex items-center justify-between gap-4 md:grid md:grid-cols-[1fr_auto_1fr]">
         <Logo lang="fr" />
 
-        <p className="order-last w-full text-center text-sm text-alpine-600 md:order-none md:w-auto">
+        <p className="hidden text-center text-sm text-alpine-600 md:block">
           Tableau de bord créé par{" "}
           <a
             href="https://clickzou.fr/"
@@ -44,20 +63,17 @@ export default function Entete({
           </a>
         </p>
 
-        <div className="flex items-center gap-4 text-sm md:justify-self-end">
+        <div className="hidden items-center gap-4 text-sm md:flex md:justify-self-end">
           <span className="text-alpine-600">{email}</span>
-          <form action={actionDeconnexion}>
-            <button
-              type="submit"
-              className="rounded border border-glacier-300 px-3 py-1.5 text-alpine-700 transition hover:border-alpine/40 hover:bg-glacier-50"
-            >
-              Se déconnecter
-            </button>
-          </form>
+          <Deconnexion />
         </div>
+
+        <MenuMobile onglets={ONGLETS} actif={actif} email={email}>
+          <Deconnexion pleineLargeur />
+        </MenuMobile>
       </div>
 
-      <nav aria-label="Back-office" className="mt-6 flex gap-5 overflow-x-auto whitespace-nowrap text-sm">
+      <nav aria-label="Back-office" className="mt-6 hidden gap-5 overflow-x-auto whitespace-nowrap text-sm md:flex">
         {ONGLETS.map((onglet) => (
           <Link
             key={onglet.cle}
@@ -75,7 +91,7 @@ export default function Entete({
       </nav>
 
       {/* L'assistant suit l'en-tête : il n'existe que sur les écrans où l'on est connecté. */}
-      <Assistant />
+      <Assistant auDessusDeLaBarre={actif === "tarifs"} />
     </header>
   );
 }

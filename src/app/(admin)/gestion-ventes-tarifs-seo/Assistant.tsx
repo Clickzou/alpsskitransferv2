@@ -63,7 +63,8 @@ function Rendu({ texte }: { texte: string }) {
   );
 }
 
-export default function Assistant() {
+/** `auDessusDeLaBarre` : sur Tarifs, la barre de publication occupe le bas de l’écran — le bouton se pose au-dessus. */
+export default function Assistant({ auDessusDeLaBarre = false }: { auDessusDeLaBarre?: boolean }) {
   const chemin = usePathname();
   const [ouvert, setOuvert] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -142,7 +143,7 @@ export default function Assistant() {
         <button
           type="button"
           onClick={() => setOuvert(true)}
-          className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-alpine px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-alpine-800"
+          className={`fixed right-4 z-40 flex items-center gap-2 rounded-full bg-alpine px-4 py-3 text-sm font-semibold ${auDessusDeLaBarre ? "bottom-32 sm:bottom-24" : "bottom-4 sm:bottom-5 sm:right-5"} text-white shadow-lg transition hover:bg-alpine-800`}
         >
           <span aria-hidden="true" className="flex h-6 w-6 items-center justify-center rounded-full bg-or text-alpine">
             ?
