@@ -12,6 +12,17 @@
   mode test contre Stripe, **inerte tant que `FACTURES_ACTIVES` est éteint**.
   Avant d'allumer : régler dans Stripe la dénomination et l'adresse (le PDF
   affiche « environnement de test Alps Ski Transfers, France »).
+- **Parcours complet prouvé par JC** sur une préproduction facturation allumée
+  (supprimée ensuite) : paiement AST-7D00EF → facture DVJXZD11-0003 (TVA juste,
+  PDF) → remboursement 10 € → avoir DVJXZD11-0003-CN-01 relié au remboursement
+  Visa, visible fiche + Factures + e-mail. **Défaut Stripe relevé** : le PDF
+  d'une facture payée affiche « 323 € dus » et « Payer en ligne » (figé à
+  l'émission, vrai aussi pour une facture payée par l'API) ; la page en ligne,
+  elle, dit « Payée » et donne le reçu. À traiter avant d'allumer : réglage du
+  modèle de facture Stripe, sinon lier la page en ligne plutôt que le PDF dans
+  l'onglet Factures.
+- **Données de test à purger avant l'ouverture** : factures DVJXZD11-0001 à 0003
+  et leurs avoirs (mode test Stripe), réservations AST-7D00EF et suivantes.
 - **Reste à faire** : tests 2 à 5 ci-dessous.
 
 ---
