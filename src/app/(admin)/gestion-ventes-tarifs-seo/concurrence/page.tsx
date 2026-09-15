@@ -24,6 +24,7 @@ import {
   actionReleverTout,
   actionRetirerTrajet,
 } from "./actions";
+import ChampEcart from "./ChampEcart";
 import Rafraichir from "./Rafraichir";
 import TableauConcurrence from "./TableauConcurrence";
 
@@ -216,20 +217,7 @@ export default async function PageConcurrence({
           et de jour, le prix d'aujourd'hui → celui d'après pour chaque
           véhicule ; le week-end et la nuit suivent la même règle.
         */}
-        <form method="get" action={ICI} className="mt-4 flex flex-wrap items-center gap-2 text-sm text-alpine">
-          Nos prix à
-          <input
-            name="ecart"
-            defaultValue={String(ecart)}
-            inputMode="decimal"
-            aria-label="Écart en euros"
-            className="w-20 rounded border border-glacier-300 px-2 py-1.5 text-right"
-          />
-          € en dessous du concurrent le moins cher
-          <button type="submit" className="rounded border border-glacier-300 px-3 py-1.5 font-semibold text-alpine-700 hover:bg-glacier-50">
-            Recalculer l’aperçu
-          </button>
-        </form>
+        <ChampEcart ecart={ecart} />
 
         {!plan ? (
           <p className="mt-4 text-sm text-attention-700">

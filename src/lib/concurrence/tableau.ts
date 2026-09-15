@@ -107,14 +107,18 @@ async function lignesDu(date: string, f: Filtres): Promise<LigneReleve[]> {
  * plus qu'alps2alps. Un concurrent qui ne répond pas un soir n'a pas changé
  * ses prix pour autant ; au-delà de trois jours, on ne présume plus.
  */
-async function avecDerniersPrixConnus(lignes: LigneReleve[], date: string): Promise<LigneReleve[]> {
-  if (!lignes.some((l) => l.prix === null)) return lignes;
+async function avecDerniersPrixConnus(
+  lignes: LigneReleve[],
+  date: string,
+  filtres: { colonne: string; operateur: string; valeur: string }[] = [],
+): Promise<LigneReleve[]> {
   const depuis = new Date(new Date(`${date}T12:00:00Z`).getTime() - 3 * JOUR_MS).toISOString().slice(0, 10);
   const anciens = await lire<LigneReleve>("concurrence_releves", {
     filtres: [
       { colonne: "releve_le", operateur: "gte", valeur: depuis },
       { colonne: "releve_le", operateur: "lt", valeur: date },
       { colonne: "prix", operateur: "not.is", valeur: "null" },
+      ...filtres,
     ],
     tri: { colonne: "releve_le", croissant: false },
     limite: 5000,
@@ -122,10 +126,19 @@ async function avecDerniersPrixConnus(lignes: LigneReleve[], date: string): Prom
   const cle = (l: LigneReleve) => [l.airport, l.resort, l.jour, l.passagers, l.source, l.gamme].join("|");
   const connus = new Map<string, LigneReleve>();
   for (const a of anciens) if (!connus.has(cle(a))) connus.set(cle(a), a);
-  return lignes.map((l) => {
+  const repris = (l: LigneReleve) => ({ ...l, detail: `${l.detail ?? "prix"} — relevé du ${l.releve_le}` });
+  const completees = lignes.map((l) => {
     const connu = l.prix === null ? connus.get(cle(l)) : undefined;
-    return connu ? { ...l, prix: connu.prix, detail: `${connu.detail ?? "prix"} — relevé du ${connu.releve_le}` } : l;
+    return connu ? { ...repris(connu), releve_le: l.releve_le, date_trajet: l.date_trajet } : l;
   });
+  /*
+    Un trajet absent du dernier relevé — un relevé coupé en route, le
+    15 septembre 2026, s'est arrêté au vingtième trajet — garde lui aussi ses
+    prix récents : sans quoi trente trajets passaient « sans prix concurrent ».
+  */
+  const presents = new Set(lignes.map(cle));
+  const absents = [...connus.values()].filter((a) => !presents.has(cle(a))).map(repris);
+  return [...completees, ...absents];
 }
 
 /**
@@ -192,7 +205,15 @@ export async function tableauConcurrence(grille: Grille, f: Filtres, maintenant 
   const ancien = dernier ? await dateReleve(true, il30j) : null;
   const [trajets, recents, anciens] = await Promise.all([
     trajetsSuivis(),
-    dernier ? lignesDu(dernier, f).then((l) => avecDerniersPrixConnus(l, dernier)) : Promise.resolve([]),
+    dernier
+      ? lignesDu(dernier, f).then((l) =>
+          avecDerniersPrixConnus(l, dernier, [
+            { colonne: "jour", operateur: "eq", valeur: f.jour },
+            { colonne: "passagers", operateur: "eq", valeur: String(f.passagers) },
+            { colonne: "gamme", operateur: "eq", valeur: f.gamme },
+          ]),
+        )
+      : Promise.resolve([]),
     ancien && ancien !== dernier ? lignesDu(ancien, f) : Promise.resolve([]),
   ]);
 
