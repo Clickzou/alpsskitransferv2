@@ -1406,6 +1406,8 @@ export interface TextesGestion {
   numeroVol: string;
   facultatif: string;
   enregistrer: string;
+  /** Sous le bouton grisé : rien n'a changé, et l'adresse se garde plus haut. */
+  rienAChanger: string;
   enregistrement: string;
 
   /* Moins de vingt-quatre heures : on signale, on ne modifie plus. */
@@ -1491,6 +1493,8 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     numeroVol: "Flight number",
     facultatif: "(optional)",
     enregistrer: "Send the request",
+    rienAChanger:
+      "Change a time or the flight number above to send a request. Your address in resort is saved with the Save button at the top of the page.",
     enregistrement: "Saving…",
 
     tardifTitre: "Less than 24 hours to go — tell us and we will call you",
@@ -1578,6 +1582,8 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     numeroVol: "Numéro de vol",
     facultatif: "(facultatif)",
     enregistrer: "Envoyer la demande",
+    rienAChanger:
+      "Changez un horaire ou le numéro de vol ci-dessus pour envoyer une demande. Votre adresse en station s’enregistre avec le bouton « Enregistrer », en haut de la page.",
     enregistrement: "Enregistrement…",
 
     tardifTitre: "Moins de 24 heures — dites-le-nous, nous vous rappelons",
@@ -1666,6 +1672,8 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     numeroVol: "Flugnummer",
     facultatif: "(optional)",
     enregistrer: "Anfrage senden",
+    rienAChanger:
+      "Ändern Sie oben eine Uhrzeit oder die Flugnummer, um eine Anfrage zu senden. Ihre Adresse im Skiort speichern Sie mit „Speichern“ oben auf der Seite.",
     enregistrement: "Wird gespeichert…",
 
     tardifTitre: "Weniger als 24 Stunden — sagen Sie es uns, wir rufen zurück",
@@ -1755,6 +1763,8 @@ export const TEXTES_GESTION: Record<Lang, TextesGestion> = {
     numeroVol: "Numero del volo",
     facultatif: "(facoltativo)",
     enregistrer: "Invia la richiesta",
+    rienAChanger:
+      "Modifica un orario o il numero di volo qui sopra per inviare una richiesta. Il tuo indirizzo in località si salva con il pulsante « Salva » in cima alla pagina.",
     enregistrement: "Salvataggio…",
 
     tardifTitre: "Meno di 24 ore — diccelo, ti richiamiamo",

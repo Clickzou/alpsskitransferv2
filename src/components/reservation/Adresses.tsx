@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ENTREPRISE } from "@/data/site";
 import type { Lang } from "@/lib/i18n";
 import type { CourseGestion } from "@/lib/reservation/dossier";
@@ -40,9 +40,29 @@ export default function Adresses({
   const [envoi, setEnvoi] = useState(false);
   const [echec, setEchec] = useState<string | null>(null);
   const [fait, setFait] = useState(false);
+  const [merci, setMerci] = useState(false);
+
+  /*
+    Ce qui est enregistré, pour savoir si la saisie a bougé. Le bouton reste gris
+    tant que rien ne change, et une saisie non enregistrée le dit à côté de lui :
+    la page porte deux formulaires, et celui du bas ne garde pas l'adresse
+    (JC, 15 septembre 2026).
+  */
+  const saisie = JSON.stringify([adresse.trim(), meme, adresseRetour.trim(), volRetour.trim()]);
+  const [enregistree, setEnregistree] = useState(saisie);
+  const modifiee = saisie !== enregistree;
 
   const saisissable = ouvert.aller || ouvert.retour;
   const alerte = course.adresseManquante && !fait;
+
+  const boutonFermer = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!merci) return;
+    boutonFermer.current?.focus();
+    const echap = (e: KeyboardEvent) => e.key === "Escape" && setMerci(false);
+    window.addEventListener("keydown", echap);
+    return () => window.removeEventListener("keydown", echap);
+  }, [merci]);
 
   async function envoyer(evenement: React.FormEvent) {
     evenement.preventDefault();
@@ -73,6 +93,8 @@ export default function Adresses({
         );
       } else {
         setFait(true);
+        setEnregistree(saisie);
+        setMerci(true);
       }
     } catch {
       setEchec(mots.erreur);
@@ -189,16 +211,54 @@ export default function Adresses({
         {saisissable ? (
           <div className="md:col-span-2">
             {echec ? <p className="mb-3 text-sm text-marque">{echec}</p> : null}
-            <button
-              type="submit"
-              disabled={envoi}
-              className="rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:opacity-60"
-            >
-              {envoi ? mots.enregistrement : mots.enregistrer}
-            </button>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <button
+                type="submit"
+                disabled={envoi || !modifiee}
+                className="rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:cursor-not-allowed disabled:bg-glacier-300 disabled:text-alpine-600"
+              >
+                {envoi ? mots.enregistrement : mots.enregistrer}
+              </button>
+              {modifiee && !envoi ? (
+                <p className="text-sm font-semibold text-attention" role="status">
+                  {mots.nonEnregistre}
+                </p>
+              ) : null}
+            </div>
           </div>
         ) : null}
       </form>
+
+      {merci ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-alpine-900/60 px-4"
+          onClick={() => setMerci(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="merci-titre"
+            className="w-full max-w-md rounded-xl bg-white p-6 text-center shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-succes-50 text-2xl text-succes">
+              ✓
+            </div>
+            <h3 id="merci-titre" className="mt-4 font-display text-2xl text-alpine">
+              {mots.merciTitre}
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-alpine-700">{mots.merciTexte}</p>
+            <button
+              ref={boutonFermer}
+              type="button"
+              onClick={() => setMerci(false)}
+              className="mt-6 rounded bg-marque px-8 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
+            >
+              {mots.fermer}
+            </button>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

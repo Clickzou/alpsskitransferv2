@@ -10,6 +10,7 @@
  */
 
 import { SITE } from "@/data/site";
+import { texteEnHtml } from "@/lib/reservation/email-html";
 
 export function emailConfigure(): boolean {
   return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_EXPEDITEUR);
@@ -65,6 +66,7 @@ export async function envoyer(message: Message): Promise<boolean> {
         to,
         subject: message.sujet,
         text: message.texte,
+        html: texteEnHtml(message.texte, message.sujet),
       }),
       cache: "no-store",
     });

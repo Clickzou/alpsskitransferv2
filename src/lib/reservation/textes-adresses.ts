@@ -20,6 +20,12 @@ export interface TextesAdresses {
   volRetour: string;
   facultatif: string;
   enregistrer: string;
+  /** À côté du bouton, dès qu'un champ a changé sans être enregistré. */
+  nonEnregistre: string;
+  /** La fenêtre qui suit l'enregistrement : merci, et la page peut se fermer. */
+  merciTitre: string;
+  merciTexte: string;
+  fermer: string;
   enregistrement: string;
   enregistre: string;
   verrouille: string;
@@ -51,6 +57,11 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     volRetour: "Return flight number",
     facultatif: "(optional)",
     enregistrer: "Save",
+    nonEnregistre: "Not saved yet — click Save.",
+    merciTitre: "Thank you!",
+    merciTexte:
+      "Your information is saved and your driver has it. There is nothing else to do: you can close this page.",
+    fermer: "OK",
     enregistrement: "Saving…",
     enregistre: "Saved — your driver has it.",
     verrouille: "Less than 24 hours before this pick-up: to change this address, call us.",
@@ -85,6 +96,11 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     volRetour: "Numéro du vol retour",
     facultatif: "(facultatif)",
     enregistrer: "Enregistrer",
+    nonEnregistre: "Pas encore enregistré — cliquez sur « Enregistrer ».",
+    merciTitre: "Merci !",
+    merciTexte:
+      "Vos informations sont enregistrées et votre chauffeur les a. Vous n’avez rien d’autre à faire : vous pouvez quitter cette page.",
+    fermer: "D’accord",
     enregistrement: "Enregistrement…",
     enregistre: "C’est enregistré — votre chauffeur l’a.",
     verrouille:
@@ -120,6 +136,11 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     volRetour: "Flugnummer der Rückreise",
     facultatif: "(optional)",
     enregistrer: "Speichern",
+    nonEnregistre: "Noch nicht gespeichert — klicken Sie auf „Speichern“.",
+    merciTitre: "Vielen Dank!",
+    merciTexte:
+      "Ihre Angaben sind gespeichert und liegen Ihrem Fahrer vor. Sie müssen nichts weiter tun: Sie können diese Seite schließen.",
+    fermer: "OK",
     enregistrement: "Wird gespeichert…",
     enregistre: "Gespeichert — Ihr Fahrer hat sie.",
     verrouille:
@@ -156,6 +177,11 @@ export const TEXTES_ADRESSES: Record<Lang, TextesAdresses> = {
     volRetour: "Numero del volo di ritorno",
     facultatif: "(facoltativo)",
     enregistrer: "Salva",
+    nonEnregistre: "Non ancora salvato — clicca su « Salva ».",
+    merciTitre: "Grazie!",
+    merciTexte:
+      "Le tue informazioni sono salvate e il tuo autista le ha ricevute. Non devi fare altro: puoi chiudere questa pagina.",
+    fermer: "OK",
     enregistrement: "Salvataggio…",
     enregistre: "Salvato — il tuo autista ce l’ha.",
     verrouille:

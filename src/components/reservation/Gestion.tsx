@@ -69,6 +69,14 @@ export default function Gestion({
     return depart ? saisieAlpes(new Date(depart)) : "";
   });
   const [vol, setVol] = useState(course.vol ?? "");
+  /*
+    Le bouton reste gris tant qu'aucun horaire ni le vol n'a bougé : la page
+    porte aussi le formulaire des adresses, et un client qui venait donner la
+    sienne cliquait « Envoyer la demande » en croyant l'enregistrer
+    (JC, 15 septembre 2026).
+  */
+  const [depart] = useState(() => [quand, quandRetour, vol.trim()].join("|"));
+  const demandeModifiee = [quand, quandRetour, vol.trim()].join("|") !== depart;
   const [message, setMessage] = useState("");
   const [envoi, setEnvoi] = useState(false);
   const [echec, setEchec] = useState<string | null>(null);
@@ -320,11 +328,16 @@ export default function Gestion({
 
             <button
               type="submit"
-              disabled={envoi}
-              className="mt-4 w-full rounded bg-marque px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:opacity-60"
+              disabled={envoi || !demandeModifiee}
+              className="mt-4 w-full rounded bg-marque px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:cursor-not-allowed disabled:bg-glacier-300 disabled:text-alpine-600"
             >
               {envoi ? mots.enregistrement : mots.enregistrer}
             </button>
+            {!demandeModifiee ? (
+              <p className="mt-2 text-xs leading-relaxed text-alpine-600">
+                {mots.rienAChanger}
+              </p>
+            ) : null}
           </form>
         )}
       </aside>
