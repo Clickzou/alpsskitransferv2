@@ -25,6 +25,10 @@ export interface TextesTunnel {
   passagers: string;
   bagages: string;
   housses: string;
+  /** « Réserver ce véhicule » depuis l'accueil (JC, 15 septembre 2026). */
+  vehiculeChoisi: (nom: string, places: number) => string;
+  vehiculeChanger: string;
+  vehiculeNeConvientPas: (nom: string) => string;
   noteBagages: string;
   retour: string;
   retourCase: string;
@@ -181,6 +185,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     passagers: "Passengers",
     bagages: "Bags",
     housses: "Ski bags",
+    vehiculeChoisi: (nom, places) => `Vehicle chosen: ${nom} (up to ${places} passengers). Enter your journey to see its price.`,
+    vehiculeChanger: "Choose another vehicle",
+    vehiculeNeConvientPas: (nom) => `The ${nom} does not fit this group or this luggage: here are the vehicles that do.`,
     noteBagages:
       "Bags and ski bags decide the vehicle, so we ask before quoting rather than after.",
     retour: "Return",
@@ -276,6 +283,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     passagers: "Passagers",
     bagages: "Valises",
     housses: "Housses à skis",
+    vehiculeChoisi: (nom, places) => `Véhicule choisi : ${nom} (jusqu’à ${places} passagers). Indiquez votre trajet pour voir son prix.`,
+    vehiculeChanger: "Choisir un autre véhicule",
+    vehiculeNeConvientPas: (nom) => `Le ${nom} ne convient pas à ce groupe ou à ces bagages : voici les véhicules qui conviennent.`,
     noteBagages:
       "Les bagages déterminent le véhicule : nous les demandons avant de chiffrer, pas après.",
     retour: "Retour",
@@ -378,6 +388,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     passagers: "Personen",
     bagages: "Koffer",
     housses: "Skisäcke",
+    vehiculeChoisi: (nom, places) => `Gewähltes Fahrzeug: ${nom} (bis zu ${places} Personen). Geben Sie Ihre Strecke ein, um den Preis zu sehen.`,
+    vehiculeChanger: "Anderes Fahrzeug wählen",
+    vehiculeNeConvientPas: (nom) => `Der ${nom} passt nicht zu dieser Gruppe oder diesem Gepäck: Diese Fahrzeuge passen.`,
     noteBagages:
       "Das Gepäck bestimmt das Fahrzeug: Wir fragen davor danach, nicht danach.",
     retour: "Rückfahrt",
@@ -479,6 +492,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     passagers: "Passeggeri",
     bagages: "Valigie",
     housses: "Sacche da sci",
+    vehiculeChoisi: (nom, places) => `Veicolo scelto: ${nom} (fino a ${places} passeggeri). Inserisci il tragitto per vederne il prezzo.`,
+    vehiculeChanger: "Scegli un altro veicolo",
+    vehiculeNeConvientPas: (nom) => `Il ${nom} non va bene per questo gruppo o questi bagagli: ecco i veicoli adatti.`,
     noteBagages:
       "È il bagaglio a decidere il veicolo: lo chiediamo prima del preventivo, non dopo.",
     retour: "Ritorno",

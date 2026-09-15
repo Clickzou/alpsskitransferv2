@@ -25,6 +25,8 @@ export interface VehiculesTraduits {
   surtitre: string;
   titre: string;
   capacites: Record<"standard" | "business" | "premium", string>;
+  /** Le bouton de chaque carte : il ouvre le tunnel, véhicule présélectionné. */
+  reserver: string;
   /**
    * Le texte alternatif de chaque photo.
    *
@@ -124,6 +126,7 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
     vehicules: {
       surtitre: "Nos véhicules",
       titre: "De la porte à la porte, dans un véhicule prévu pour la montagne",
+      reserver: "Réserver ce véhicule",
       capacites: {
         standard: "Jusqu’à 8 passagers",
         business: "Jusqu’à 7 passagers",
@@ -213,6 +216,7 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
     vehicules: {
       surtitre: "Unsere Fahrzeuge",
       titre: "Von Tür zu Tür, in einem Fahrzeug für den Bergwinter",
+      reserver: "Dieses Fahrzeug buchen",
       capacites: {
         standard: "Bis zu 8 Personen",
         business: "Bis zu 7 Personen",
@@ -278,6 +282,7 @@ export const ACCUEIL: Record<LangueSecondaire, ContenuAccueil> = {
     vehicules: {
       surtitre: "I nostri veicoli",
       titre: "Porta a porta, con un veicolo attrezzato per la montagna",
+      reserver: "Prenota questo veicolo",
       capacites: {
         standard: "Fino a 8 passeggeri",
         business: "Fino a 7 passeggeri",

@@ -157,7 +157,7 @@ export default async function AccueilIntl({ lang }: { lang: LangueSecondaire }) 
           </nav>
         </BandeauImageTexte>
 
-        <Vehicules textes={contenu.vehicules} />
+        <Vehicules textes={contenu.vehicules} tunnel={lienTunnelLangue(lang)} />
 
         {stations.length > 0 ? (
           <Section fond="glacier">

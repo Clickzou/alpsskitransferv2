@@ -163,6 +163,7 @@ export default function Tunnel({
   retourPassagersInitial,
   bagagesInitial,
   skisInitial,
+  vehiculeInitial,
   langue = "en",
 }: {
   lieux: Lieu[];
@@ -178,6 +179,8 @@ export default function Tunnel({
   /** Valises et housses saisies sur l'accueil. */
   bagagesInitial?: number;
   skisInitial?: number;
+  /** Le véhicule choisi sur une carte de l'accueil (« Réserver ce véhicule »). */
+  vehiculeInitial?: string;
   langue?: LangueTunnel;
 }) {
   const t = TEXTES[langue];
@@ -242,6 +245,16 @@ export default function Tunnel({
   /* Le véhicule du retour. `null` sur un aller simple, ou tant qu'il manque. */
   const [choixRetour, setChoixRetour] = useState<OptionVehicule | null>(null);
   const [surMesure, setSurMesure] = useState<string | null>(null);
+  /*
+    « Réserver ce véhicule » — JC, 15 septembre 2026. Le véhicule voulu reste
+    en mémoire jusqu'au prix : s'il convient au groupe et aux bagages, le
+    tunnel passe droit aux coordonnées ; sinon il montre la liste, en disant
+    pourquoi. Le client peut y renoncer d'un clic.
+  */
+  const [vehiculeVoulu, setVehiculeVoulu] = useState<string | null>(
+    vehiculeInitial && ["standard", "business", "premium"].includes(vehiculeInitial) ? vehiculeInitial : null,
+  );
+  const [avisVehicule, setAvisVehicule] = useState<string | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
   /* Le champ que le serveur désigne dans son refus — voir `ChampFautif`. */
   const [champFautif, setChampFautif] = useState<string | null>(null);
@@ -394,6 +407,7 @@ export default function Tunnel({
   async function chercherPrix(automatique = false) {
     setErreur(null);
     setSurMesure(null);
+    setAvisVehicule(null);
     setEnCours(true);
     try {
       const reponse = await fetch("/api/devis/", {
@@ -416,6 +430,21 @@ export default function Tunnel({
         return;
       }
       setDevis(donnees);
+      if (vehiculeVoulu) {
+        const options = donnees.options as OptionVehicule[];
+        const optionsRetour = (donnees.optionsRetour ?? []) as OptionVehicule[];
+        const aller = options.find((o) => o.categorie === vehiculeVoulu);
+        const deuxSens = Boolean(donnees.trajet?.allerRetour && optionsRetour.length > 0);
+        const retour = deuxSens ? optionsRetour.find((o) => o.categorie === vehiculeVoulu) : null;
+        if (aller && (!deuxSens || retour)) {
+          setChoix(aller);
+          setChoixRetour(retour ?? null);
+          setEtape("details");
+          return;
+        }
+        const modele = options.find((o) => o.categorie === vehiculeVoulu)?.nom ?? vehiculeVoulu.charAt(0).toUpperCase() + vehiculeVoulu.slice(1);
+        setAvisVehicule(t.vehiculeNeConvientPas(modele));
+      }
       setEtape("vehicule");
     } catch {
       if (!automatique) setErreur(t.erreurReseau);
@@ -599,6 +628,23 @@ export default function Tunnel({
       {/* ---------------------------------------------------------- 1. trajet */}
       {etape === "trajet" ? (
         <form onSubmit={demanderDevis} className="mt-6 space-y-5">
+          {vehiculeVoulu ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-alpes/40 bg-alpes-50 px-4 py-3 text-sm text-alpine">
+              <p>
+                {t.vehiculeChoisi(
+                  vehiculeVoulu.charAt(0).toUpperCase() + vehiculeVoulu.slice(1),
+                  { standard: 8, business: 7, premium: 4 }[vehiculeVoulu as "standard"] ?? 8,
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={() => setVehiculeVoulu(null)}
+                className="text-sm font-semibold text-marque underline underline-offset-2 hover:text-marque-600"
+              >
+                {t.vehiculeChanger}
+              </button>
+            </div>
+          ) : null}
           <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
             <ChampLieu
               id="from"
@@ -886,6 +932,11 @@ export default function Tunnel({
                 : null,
             ]}
           />
+          {avisVehicule ? (
+            <p role="status" className="mt-4 rounded border border-attention-300 bg-attention-50 px-4 py-3 text-sm text-attention-700">
+              {avisVehicule}
+            </p>
+          ) : null}
 
           <h2 className="mt-8 font-display text-2xl text-alpine">
             {allerRetourChiffre ? t.titreVehiculeDeuxSens : t.titreVehicule}

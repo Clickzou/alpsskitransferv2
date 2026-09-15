@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Visuel from "@/components/Visuel";
 import { BandeauImageTexte, BandeauReassurance, Coche } from "@/components/gabarit/Sections";
-import { lienReservation } from "@/lib/reservation/config";
+import { ANCRE_TUNNEL, CHEMIN_TUNNEL, lienReservation } from "@/lib/reservation/config";
 import type { BlocAvis } from "@/lib/avis";
 import type { AvisTraduits, VehiculesTraduits } from "@/lib/intl/accueil";
 import { airportParSlug } from "@/lib/airports";
@@ -127,7 +127,13 @@ export function Presentation() {
  * photos ni aux modèles, qui sont les mêmes dans les quatre langues. Sans
  * `textes`, c'est la version anglaise de la maquette.
  */
-export function Vehicules({ textes }: { textes?: VehiculesTraduits }) {
+/*
+ * « Réserver ce véhicule » — demande de JC, 15 septembre 2026 : une autre porte
+ * vers la réservation. Le bouton ouvre le tunnel de la langue avec le véhicule
+ * présélectionné ; le client y saisit son trajet et passe droit aux
+ * coordonnées si le véhicule convient.
+ */
+export function Vehicules({ textes, tunnel = CHEMIN_TUNNEL }: { textes?: VehiculesTraduits; tunnel?: string }) {
   return (
     <section className="bg-white">
       <div className="px-6 py-section-lg sm:px-10 lg:px-[100px]">
@@ -167,6 +173,12 @@ export function Vehicules({ textes }: { textes?: VehiculesTraduits }) {
                   <Coche className="h-3.5 w-3.5" />
                   {textes?.capacites[v.cle] ?? v.capacite}
                 </p>
+                <a
+                  href={`${tunnel}?vehicle=${v.cle}${ANCRE_TUNNEL}`}
+                  className="mt-6 inline-flex justify-center rounded bg-marque px-5 py-3 text-sm font-semibold text-white transition hover:bg-marque-600"
+                >
+                  {textes?.reserver ?? "Book this vehicle"}
+                </a>
               </div>
             </article>
           ))}

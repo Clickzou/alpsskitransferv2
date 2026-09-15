@@ -56,6 +56,7 @@ export default function TunnelAutonome({ lieux }: { lieux: Lieu[] }) {
       retourPassagersInitial={entierPositif("returnPassengers")}
       bagagesInitial={entierOuZero("bags")}
       skisInitial={entierOuZero("skis")}
+      vehiculeInitial={texte("vehicle")}
     />
   );
 }

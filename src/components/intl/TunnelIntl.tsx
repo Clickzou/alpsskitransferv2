@@ -104,6 +104,7 @@ export default function TunnelIntl({
             retourArrivee={texte("returnTo")}
             bagagesInitial={entierOuZero(texte("bags"))}
             skisInitial={entierOuZero(texte("skis"))}
+            vehiculeInitial={texte("vehicle")}
             retourPassagersInitial={entierPositif(passagersRetour)}
           />
         </Section>
