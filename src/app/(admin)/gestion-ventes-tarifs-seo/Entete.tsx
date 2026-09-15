@@ -13,6 +13,7 @@ import { actionDeconnexion } from "./actions";
  */
 const ONGLETS = [
   { cle: "reservations", nom: "Réservations", href: "/gestion-ventes-tarifs-seo/" },
+  { cle: "planning", nom: "Planning", href: "/gestion-ventes-tarifs-seo/planning/" },
   { cle: "tarifs", nom: "Tarifs", href: "/gestion-ventes-tarifs-seo/tarifs/" },
   { cle: "concurrence", nom: "Concurrence", href: "/gestion-ventes-tarifs-seo/concurrence/" },
   { cle: "factures", nom: "Factures", href: "/gestion-ventes-tarifs-seo/factures/" },
@@ -55,7 +56,7 @@ export default function Entete({
         </div>
       </div>
 
-      <nav aria-label="Back-office" className="mt-6 flex gap-6 text-sm">
+      <nav aria-label="Back-office" className="mt-6 flex gap-5 overflow-x-auto whitespace-nowrap text-sm">
         {ONGLETS.map((onglet) => (
           <Link
             key={onglet.cle}

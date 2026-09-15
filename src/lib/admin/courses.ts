@@ -61,6 +61,11 @@ interface LigneBase {
   message: string | null;
   paye_le: string | null;
   cree_le: string;
+  /** Le planning — absents avant `supabase-migration-planning.sql`. */
+  chauffeur?: string | null;
+  chauffeur_retour?: string | null;
+  note_planning?: string | null;
+  note_planning_retour?: string | null;
 }
 
 export interface Course {
@@ -109,6 +114,11 @@ export interface Course {
   devise: string;
   payeLe: Date | null;
   creeLe: Date;
+  /** Le chauffeur et la note interne de chaque trajet — l'onglet Planning. */
+  planning: {
+    aller: { chauffeur: string | null; note: string | null };
+    retour: { chauffeur: string | null; note: string | null };
+  };
   /** Ce que le client a changé depuis son lien de gestion, dans l'ordre. */
   historique: Modification[];
 }
@@ -256,6 +266,13 @@ function versCourse(ligne: LigneBase): Course {
     devise: ligne.devise,
     payeLe: ligne.paye_le ? new Date(ligne.paye_le) : null,
     creeLe: new Date(ligne.cree_le),
+    planning: {
+      aller: { chauffeur: ligne.chauffeur?.trim() || null, note: ligne.note_planning?.trim() || null },
+      retour: {
+        chauffeur: ligne.chauffeur_retour?.trim() || null,
+        note: ligne.note_planning_retour?.trim() || null,
+      },
+    },
     historique: [],
   };
 }
@@ -318,6 +335,22 @@ export async function rechercherCourses(critere: Critere): Promise<Course[] | nu
     limite: 200,
   });
   return avecHistorique(lignes.map(versCourse));
+}
+
+/**
+ * Les courses dont un trajet — l'aller ou le retour — tombe dans la période :
+ * le planning. Tous statuts confondus ; c'est l'écran qui écarte ce qui n'est
+ * pas à assurer.
+ */
+export async function coursesDeLaPeriode(debut: Date, fin: Date): Promise<Course[]> {
+  const d = debut.toISOString();
+  const f = fin.toISOString();
+  const lignes = await lire<LigneBase>("reservations", {
+    tri: { colonne: "aller", croissant: true },
+    parametres: { or: `(and(aller.gte."${d}",aller.lt."${f}"),and(retour.gte."${d}",retour.lt."${f}"))` },
+    limite: 1000,
+  });
+  return lignes.map(versCourse);
 }
 
 /** Les courses passées, la plus récente en tête. */

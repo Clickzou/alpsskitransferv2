@@ -102,6 +102,10 @@ const CHAMPS: Record<string, string> = {
   adresse: "Adresse à l’aller",
   adresse_retour: "Adresse au retour",
   vol_retour: "Vol retour",
+  chauffeur: "Chauffeur à l’aller",
+  chauffeur_retour: "Chauffeur au retour",
+  note_planning: "Note du planning (aller)",
+  note_planning_retour: "Note du planning (retour)",
 };
 
 const STATUTS: Record<string, string> = {
@@ -156,6 +160,9 @@ export interface Sens {
   ages: string;
   valises: string;
   housses: string;
+  /** Inscrits depuis l'onglet Planning. */
+  chauffeur: string | null;
+  notePlanning: string | null;
 }
 
 /** Ce que la carte affiche à la place d'une adresse que le client n'a pas encore donnée. */
@@ -205,6 +212,8 @@ export function sensDeLaCourse(course: Course, maintenant = new Date()): Sens[] 
     ages,
     valises,
     housses,
+    chauffeur: course.planning.aller.chauffeur,
+    notePlanning: course.planning.aller.note,
   };
   if (!course.retour) return [aller];
 
@@ -230,6 +239,8 @@ export function sensDeLaCourse(course: Course, maintenant = new Date()): Sens[] 
       ages,
       valises,
       housses,
+      chauffeur: course.planning.retour.chauffeur,
+      notePlanning: course.planning.retour.note,
     },
   ];
 }

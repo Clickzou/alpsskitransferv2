@@ -18,6 +18,8 @@ export default function CarteSens({ sens }: { sens: Sens }) {
     ["Âges des enfants", sens.ages],
     ["Valises", sens.valises],
     ["Housses à skis", sens.housses],
+    ["Chauffeur", sens.chauffeur ?? "à inscrire dans le Planning"],
+    ...(sens.notePlanning ? ([["Note du planning", sens.notePlanning]] as [string, string][]) : []),
   ];
 
   return (

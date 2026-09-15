@@ -49,6 +49,10 @@ function course(champs: Partial<Course>): Course {
     devise: "EUR",
     payeLe: null,
     creeLe: maintenant,
+    planning: {
+      aller: { chauffeur: null, note: null },
+      retour: { chauffeur: null, note: null },
+    },
     historique: [],
     ...champs,
   };
