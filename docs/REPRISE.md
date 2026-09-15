@@ -66,7 +66,17 @@
   `/mcp/` (outil `get_transfer_quote`, lecture seule, sans SDK), annoncés dans
   `/llms.txt`. Même calcul et même limite (30/h) que le devis du site. **Après
   la mise en ligne** : proposer le connecteur aux annuaires (Claude, ChatGPT).
-- **Reste à faire** : tests 2c (adresse, maintenant chiffrée), 3 à 5 ci-dessous.
+- **Concurrence, soir du 15 (validé par JC)** : le relevé du 15 s'était arrêté
+  à 20 trajets (chaîne coupée par un déploiement) → un trajet absent du dernier
+  relevé reprend ses prix de moins de trois jours (`avecDerniersPrixConnus`).
+  L'écart tapé n'était pas celui appliqué (5 € au lieu de 2 €) → `ChampEcart` :
+  la page se recharge sur la valeur tapée, le champ appartient au formulaire
+  d'application, et le bouton refuse tant que l'aperçu ne montre pas la valeur.
+- **Back-office sur téléphone (validé par JC)** : `MenuMobile` sous 768 px
+  (onglets, compte, mention Clickzou), vue Mois du planning en liste de jours,
+  bouton de l'assistant au-dessus de la barre de publication des Tarifs.
+- **Reste à faire** : test 5 (limite de devis) ; mercredi matin, vérifier le
+  relevé de nuit du 16 (Alpy compris) et la relance des adresses.
 
 ---
 
