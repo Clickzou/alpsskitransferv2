@@ -128,7 +128,8 @@ Pour une adresse (hôtel, gare, domicile), la distance est mesurée sur la route
 Des limites évitent les fautes de frappe (coefficient entre 0,3 et 3, prix au km jusqu'à 10 €, majorations jusqu'à 200 %…) ; un message dit quelle valeur corriger.
 
 ## Revenir en arrière
-« Historique des publications » : les 20 dernières versions, avec la date, l'auteur et la phrase. « En vigueur » marque la version actuelle. « Revenir à cette version » republie une ancienne grille (rien n'est effacé : elle devient la nouvelle version).
+« Historique des publications » : les 20 dernières versions, avec la date, l'auteur et la phrase. « En vigueur » marque la version actuelle. « Revenir à cette version » republie une ancienne grille (rien n'est effacé : elle devient la nouvelle version). Ce bouton n'apparaît qu'à partir de deux publications : après la toute première, il n'y a pas encore de version plus ancienne.
+Perdu dans les modifications ? Sous l'historique, « Revenir aux tarifs d'origine » republie les tarifs d'origine du site (prise en charge, prix au kilomètre, majorations et coefficients d'origine, sans saison ni prix fixe). Il demande une confirmation, s'applique aux nouvelles réservations, et les versions précédentes restent dans l'historique : on peut revenir dessus.
 
 En haut de l'onglet, « Ajuster les prix par rapport à la concurrence → » mène à l'onglet « Concurrence ».
 

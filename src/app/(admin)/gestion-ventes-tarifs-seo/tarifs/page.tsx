@@ -13,7 +13,7 @@ import { grilleActive, historiqueGrilles } from "@/lib/tarification/grilles-publ
 import { composantesAlpes, instantAlpes } from "@/lib/temps";
 import BoutonConfirmation from "../BoutonConfirmation";
 import Entete from "../Entete";
-import { actionRevenirGrille } from "./actions";
+import { actionRevenirGrille, actionTarifsOrigine } from "./actions";
 import EditeurTarifs, { type FicheVehicule } from "./EditeurTarifs";
 
 /**
@@ -34,6 +34,10 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
   "version-restauree": {
     alerte: false,
     texte: "Version restaurée : elle est republiée et fait les prix des nouvelles réservations.",
+  },
+  "origine-restauree": {
+    alerte: false,
+    texte: "Tarifs d’origine republiés : ils font les prix des nouvelles réservations. Les versions précédentes restent dans l’historique.",
   },
   "version-introuvable": { alerte: true, texte: "Cette version est introuvable ou illisible : rien n’a changé." },
   echec: { alerte: true, texte: "L’enregistrement a échoué. Réessayez dans un instant." },
@@ -287,6 +291,26 @@ export default async function PageTarifs({
             ))}
           </ul>
         )}
+
+        {historique.length > 0 ? (
+          /*
+            Le filet de sécurité : quand on ne sait plus où on en est, repartir
+            des tarifs d'origine. Rien ne s'efface — c'est une version de plus.
+          */
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-glacier-200 bg-glacier-50 p-3">
+            <p className="max-w-prose text-sm text-alpine-700">
+              Perdu dans les modifications ? Repartez des tarifs d’origine du site : prise en charge, prix
+              au kilomètre, majorations et coefficients d’origine, sans saison ni prix fixe.
+            </p>
+            <form action={actionTarifsOrigine}>
+              <BoutonConfirmation
+                libelle="Revenir aux tarifs d’origine"
+                confirmer="Republier les tarifs d’origine ? Toutes les modifications (règles, saisons, coefficients, prix fixes) sont remplacées pour les nouvelles réservations. Les versions précédentes restent dans l’historique : vous pourrez y revenir."
+                className="rounded border border-danger-300 bg-white px-3 py-1.5 text-xs font-semibold text-danger-700 transition hover:bg-danger-50"
+              />
+            </form>
+          </div>
+        ) : null}
       </section>
     </main>
   );

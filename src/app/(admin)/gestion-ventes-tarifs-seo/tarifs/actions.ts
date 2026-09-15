@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { apercuGrille, type LigneApercu } from "@/lib/tarification/apercu";
-import { validerGrille } from "@/lib/tarification/grille";
+import { GRILLE_DEFAUT, validerGrille } from "@/lib/tarification/grille";
 import { grilleActive, grilleParId, publierGrille } from "@/lib/tarification/grilles-publiees";
 
 /**
@@ -68,5 +68,25 @@ export async function actionRevenirGrille(donnees: FormData): Promise<void> {
     utilisateur.email,
     `Retour à la version n° ${ancienne.id} du ${new Date(ancienne.publie_le).toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}`,
   );
+  revalidatePath(ICI);
   redirect(`${ICI}?fait=${publiee ? "version-restauree" : "echec"}`);
+}
+
+/**
+ * « Revenir aux tarifs d'origine » — demande de JC, 15 septembre 2026 : « si
+ * jamais il y a trop de modifs et que l'on est perdu ». Le bouton « Revenir à
+ * cette version » n'existe qu'à partir de deux publications ; celui-ci sert
+ * aussi quand il n'y en a qu'une.
+ *
+ * Les tarifs d'origine sont ceux du code (`GRILLE_DEFAUT`), republiés comme une
+ * version de plus : l'historique garde tout ce qui précède, on peut donc
+ * revenir aussi sur ce retour.
+ */
+export async function actionTarifsOrigine(): Promise<void> {
+  const utilisateur = await utilisateurCourant();
+  if (!utilisateur) redirect(`/gestion-ventes-tarifs-seo/connexion/?suite=${encodeURIComponent(ICI)}`);
+
+  const publiee = await publierGrille(GRILLE_DEFAUT, utilisateur.email, "Retour aux tarifs d'origine");
+  revalidatePath(ICI);
+  redirect(`${ICI}?fait=${publiee ? "origine-restauree" : "echec"}`);
 }
