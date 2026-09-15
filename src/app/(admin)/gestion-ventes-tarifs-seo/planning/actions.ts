@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { utilisateurCourant } from "@/lib/admin/session";
 import { inserer, lire, mettreAJour } from "@/lib/reservation/supabase";
@@ -31,8 +32,13 @@ export async function actionPlanning(donnees: FormData): Promise<void> {
   const retour = brut.startsWith(PLANNING) && !brut.includes("//") ? brut.split("#")[0] : PLANNING;
   const reference = String(donnees.get("reference") ?? "");
   const sens = donnees.get("sens") === "retour" ? "retour" : "aller";
-  const ancre = `#${reference}-${sens}`;
-  const avec = (fait: string) => `${retour}${retour.includes("?") ? "&" : "?"}fait=${fait}${ancre}`;
+  /*
+    Pas d'ancre dans l'adresse de retour : avec un « # », le navigateur restait
+    sur la page déjà affichée, la carte ouverte et « Sans chauffeur », alors que
+    l'enregistrement était fait (test de JC, 15 septembre 2026).
+  */
+  const sansFait = retour.replace(/([?&])fait=[^&]*&?/, "$1").replace(/[?&]$/, "");
+  const avec = (fait: string) => `${sansFait}${sansFait.includes("?") ? "&" : "?"}fait=${fait}`;
 
   if (!/^AST-[0-9A-Z]{6,8}$/.test(reference)) redirect(avec("introuvable"));
 
@@ -68,5 +74,7 @@ export async function actionPlanning(donnees: FormData): Promise<void> {
     });
   }
 
+  // La page et la fiche relisent la base : sans cela, le routeur ressert l'ancienne version.
+  revalidatePath("/gestion-ventes-tarifs-seo", "layout");
   redirect(avec("enregistre"));
 }
