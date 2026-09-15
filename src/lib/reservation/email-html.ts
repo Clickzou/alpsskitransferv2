@@ -126,12 +126,23 @@ function libelleBouton(url: string, langue: Langue): string {
   return BOUTONS[type][langue];
 }
 
+/**
+ * Le lien écrit sous le bouton, raccourci : le domaine et le début du chemin.
+ * Un lien Stripe fait plus de 300 caractères et remplissait cinq lignes
+ * (retour de JC, 15 septembre 2026). Le lien cliqué, lui, reste entier.
+ */
+export function lienLisible(url: string): string {
+  const sansProtocole = url.replace(/^https?:\/\//, "").replace(/[?#].*$/, "");
+  return sansProtocole.length > 48 ? `${sansProtocole.slice(0, 45)}…` : sansProtocole;
+}
+
 function bouton(url: string, langue: Langue): string {
-  const href = echapper(url.replace(/[.,;:)]+$/, ""));
+  const propre = url.replace(/[.,;:)]+$/, "");
+  const href = echapper(propre);
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:18px 0 6px"><tr><td style="border-radius:8px;background:${COULEURS.action}">
 <a href="${href}" style="display:inline-block;padding:13px 24px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px">${echapper(libelleBouton(url, langue))} →</a>
 </td></tr></table>
-<p style="margin:0 0 14px;font-size:11px;line-height:1.5;color:${COULEURS.doux};word-break:break-all"><a href="${href}" style="color:${COULEURS.doux}">${href}</a></p>`;
+<p style="margin:0 0 14px;font-size:11px;line-height:1.5;color:${COULEURS.doux}"><a href="${href}" style="color:${COULEURS.doux}">${echapper(lienLisible(propre))}</a></p>`;
 }
 
 /**

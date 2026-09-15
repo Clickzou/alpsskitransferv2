@@ -31,6 +31,13 @@ describe("texteEnHtml", () => {
     expect(html).not.toContain("<b>chalet");
   });
 
+  it("raccourcit le lien écrit sous le bouton, pas le lien cliqué", () => {
+    const long = `https://checkout.stripe.com/c/pay/cs_test_${"a".repeat(300)}#fidnandhYHdWcXxpYCc`;
+    const html = texteEnHtml(`Payez ici :\n${long}`, "S");
+    expect(html).toContain(`href="${long}"`);
+    expect(html).toContain(">checkout.stripe.com/c/pay/cs_test_aaaaaaaaaaa…</a>");
+  });
+
   it("laisse une phrase qui finit par un point dans le texte", () => {
     expect(texteEnHtml("Une question : +33 7 69 78 91 89.", "S")).not.toContain(">Une question</td>");
   });

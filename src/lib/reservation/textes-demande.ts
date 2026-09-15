@@ -47,6 +47,7 @@ interface Libelles {
   remarques: string;
   total: string;
   deuxTrajets: string;
+  /** Un compte à zéro ne s'écrit pas : « 2 passagers », pas « 2 passagers, 0 bagage ». */
   effectif: (passagers: number, bagages: number | null, skis: number) => string;
 }
 
@@ -93,7 +94,7 @@ export const TEXTES_DEMANDE: Record<Lang, TextesDemande> = {
       deuxTrajets: " for both journeys",
       effectif: (p, b, s) =>
         `${p} passenger${p > 1 ? "s" : ""}` +
-        (b !== null ? `, ${b} bag${b > 1 ? "s" : ""}` : "") +
+        (b !== null && b > 0 ? `, ${b} bag${b > 1 ? "s" : ""}` : "") +
         (s > 0 ? `, ${s} ski bag${s > 1 ? "s" : ""}` : ""),
     },
   },
@@ -130,7 +131,7 @@ export const TEXTES_DEMANDE: Record<Lang, TextesDemande> = {
       deuxTrajets: " pour les deux trajets",
       effectif: (p, b, s) =>
         `${p} passager${p > 1 ? "s" : ""}` +
-        (b !== null ? `, ${b} bagage${b > 1 ? "s" : ""}` : "") +
+        (b !== null && b > 0 ? `, ${b} bagage${b > 1 ? "s" : ""}` : "") +
         (s > 0 ? `, ${s} housse${s > 1 ? "s" : ""} à skis` : ""),
     },
   },
@@ -167,7 +168,7 @@ export const TEXTES_DEMANDE: Record<Lang, TextesDemande> = {
       deuxTrajets: " für beide Fahrten",
       effectif: (p, b, s) =>
         `${p} ${p > 1 ? "Personen" : "Person"}` +
-        (b !== null ? `, ${b} Gepäckstück${b > 1 ? "e" : ""}` : "") +
+        (b !== null && b > 0 ? `, ${b} Gepäckstück${b > 1 ? "e" : ""}` : "") +
         (s > 0 ? `, ${s} Skitasche${s > 1 ? "n" : ""}` : ""),
     },
   },
@@ -205,7 +206,7 @@ export const TEXTES_DEMANDE: Record<Lang, TextesDemande> = {
       deuxTrajets: " per entrambi i tragitti",
       effectif: (p, b, s) =>
         `${p} passegger${p > 1 ? "i" : "o"}` +
-        (b !== null ? `, ${b} bagagl${b > 1 ? "i" : "io"}` : "") +
+        (b !== null && b > 0 ? `, ${b} bagagl${b > 1 ? "i" : "io"}` : "") +
         (s > 0 ? `, ${s} sacc${s > 1 ? "he" : "a"} da sci` : ""),
     },
   },
