@@ -24,6 +24,7 @@ import { alternativesTrajet } from "@/lib/intl/liens";
 import { PAYS } from "@/lib/pays";
 import { lienReservation } from "@/lib/reservation/config";
 import { SLUG_PAYS, resortParSlug } from "@/lib/resorts";
+import { avecQuestionPrix, questionPrix } from "@/lib/tarification/question-prix";
 import { faqSchema, filArianeSchema, grapheJsonLd, organisationSchema, trajetSchema } from "@/lib/schema";
 import { segmentTrajet, transferParSlugs, transfersDeLaStation } from "@/lib/transfers";
 
@@ -58,6 +59,11 @@ export default function PageTrajet({
   const cheminStation = `/${silo}/${station.slug}/`;
   const chemin = `${cheminStation}${segmentTrajet(airport)}/`;
   const court = aeroport.name.replace(" Airport", "");
+  // La question que l'on pose aux assistants, chiffrée, en tête de la FAQ.
+  const faq = avecQuestionPrix(
+    trajet.faq,
+    prixDepuis !== null ? questionPrix("en", court, station.name, prixDepuis) : null,
+  );
 
   const distance = DISTANCES.find((d) => d.airport === airport && d.resort === resort);
   const articles = articlesDuTrajet(airport, resort);
@@ -204,7 +210,7 @@ export default function PageTrajet({
           </Section>
         ) : null}
 
-        <Faq items={trajet.faq} titre={`Frequently asked questions — ${court} to ${station.name}`} />
+        <Faq items={faq} titre={`Frequently asked questions — ${court} to ${station.name}`} />
 
         {/* Le maillage retour : les guides qui citent ce trajet, puis ceux de sa station. */}
         {articles.length > 0 ? (
@@ -230,7 +236,7 @@ export default function PageTrajet({
         data={grapheJsonLd(
           organisationSchema(),
           filArianeSchema(filAriane.map((e) => ({ nom: e.nom, path: e.chemin }))),
-          faqSchema(trajet.faq),
+          faqSchema(faq),
           trajetSchema({ nom: `${aeroport.name} to ${station.name} transfer`, chemin, prix: prixDepuis }),
         )}
       />

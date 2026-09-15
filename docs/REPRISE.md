@@ -57,6 +57,12 @@
   et dernier prix connu repris trois jours. **À surveiller** sur les relevés de
   nuit qui tournent enfin.
 - **« Réserver ce véhicule »** sur les cartes de l'accueil, quatre langues.
+- **Prix lisibles par les IA** : question « combien coûte… » chiffrée en tête de
+  la FAQ de chaque page de trajet (quatre langues, remplace la question sans
+  chiffre), prix « dès / ab / da » dans le title et les repères des pages
+  traduites, `Offer` sur les pages traduites, et `/llms.txt` (117 trajets,
+  recalculé chaque heure). **Demandé ensuite** : que ChatGPT ou Claude
+  demandent le prix exact et obtiennent le lien pré-rempli.
 - **Reste à faire** : tests 2c (adresse, maintenant chiffrée), 3 à 5 ci-dessous.
 
 ---

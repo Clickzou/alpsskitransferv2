@@ -171,3 +171,21 @@ describe("validerEtMesurer", () => {
     expect(valide.ok && "surMesure" in valide).toBe(true);
   });
 });
+
+describe("question du prix", async () => {
+  const { aFr, avecQuestionPrix, questionPrix } = await import("./question-prix");
+  it("accorde la destination en français", () => {
+    expect(aFr("Alpe d’Huez")).toBe("à l’Alpe d’Huez");
+    expect(aFr("Les Gets")).toBe("aux Gets");
+    expect(aFr("Le Grand-Bornand")).toBe("au Grand-Bornand");
+    expect(aFr("Val Thorens")).toBe("à Val Thorens");
+  });
+  it("remplace la question de prix sans chiffre au lieu de la doubler", () => {
+    const faq = avecQuestionPrix(
+      [{ question: "How much does a transfer from Geneva to Tignes cost?", reponse: "It depends." }, { question: "How long?", reponse: "3 h" }],
+      questionPrix("en", "Geneva", "Tignes", 402),
+    );
+    expect(faq.map((f) => f.question)).toEqual(["How much is a private transfer from Geneva to Tignes?", "How long?"]);
+    expect(faq[0].reponse).toContain("€402");
+  });
+});

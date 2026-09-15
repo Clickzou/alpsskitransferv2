@@ -23,6 +23,8 @@ import { T } from "./textes";
 import { pageIntlParSlug, pagesDeLaLangue } from "@/lib/pages/intl";
 import { resortParSlugTraduit, resortsTraduits } from "@/lib/resorts";
 import { pageMetadata } from "@/lib/seo";
+import { prixDepuis } from "@/lib/tarification/prix-depuis";
+import { A_PARTIR_DE, TITRE_PRIX } from "@/lib/tarification/question-prix";
 import {
   SEGMENTS_AEROPORT,
   aeroportDepuisSegment,
@@ -161,17 +163,26 @@ export function resoudreTrajet(
   return { resort, trajet };
 }
 
-export function metadataTrajet(
+export async function metadataTrajet(
   lang: LangueSecondaire,
   slugStation: string,
   segment: string,
-): Metadata {
+): Promise<Metadata> {
   const donnees = resoudreTrajet(lang, slugStation, segment);
   if (!donnees) return {};
   const traduction = donnees.trajet.traductions![lang]!;
+  // Le prix dans le title, comme en anglais, s'il tient dans 60 caractères.
+  const prix = await prixDepuis(donnees.trajet.airport, donnees.resort.slug);
+  // Coupé sur « | » seulement : les titles traduits écrivent le trajet « Genf – Zermatt ».
+  const base = traduction.metaTitre.split(/\s+\|\s+/)[0].trim();
+  const avecPrix = prix !== null ? `${base} | ${TITRE_PRIX[lang](prix)}` : null;
+  const accroche = prix !== null ? `${A_PARTIR_DE[lang](prix)}. ` : "";
   return pageMetadata({
-    title: traduction.metaTitre,
-    description: traduction.metaDescription,
+    title: avecPrix && avecPrix.length <= 60 ? avecPrix : traduction.metaTitre,
+    description:
+      (accroche + traduction.metaDescription).length <= 155
+        ? accroche + traduction.metaDescription
+        : traduction.metaDescription,
     path: cheminTrajet(donnees.resort, donnees.trajet.airport, lang)!,
     lang,
     alternatives: alternativesTrajet(donnees.trajet, donnees.resort, lang),

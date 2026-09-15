@@ -19,7 +19,9 @@ import type { LangueSecondaire } from "@/lib/i18n";
 import { alternativesTrajet, cheminStation, cheminTrajet } from "@/lib/intl/liens";
 import { T, lienReserver } from "@/lib/intl/textes";
 import type { Resort } from "@/lib/resorts";
-import { faqSchema, filArianeSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
+import { faqSchema, filArianeSchema, grapheJsonLd, organisationSchema, trajetSchema } from "@/lib/schema";
+import { prixDepuis } from "@/lib/tarification/prix-depuis";
+import { A_PARTIR_DE, avecQuestionPrix, questionPrix } from "@/lib/tarification/question-prix";
 import { SEGMENTS_AEROPORT, trajetsTraduitsDeLaStation, type Transfer } from "@/lib/transfers";
 
 /**
@@ -30,7 +32,7 @@ import { SEGMENTS_AEROPORT, trajetsTraduitsDeLaStation, type Transfer } from "@/
  * Le deuxième est celui qui travaille : c'est la question que se pose le
  * visiteur qui n'a pas encore acheté son billet d'avion.
  */
-export default function TrajetIntl({
+export default async function TrajetIntl({
   lang,
   resort,
   trajet,
@@ -46,6 +48,13 @@ export default function TrajetIntl({
   const chemin = cheminTrajet(resort, trajet.airport, lang)!;
   const lienStation = cheminStation(resort, lang)!;
   const reserver = lienReserver(lang);
+  /*
+    Le prix « à partir de » et la question du prix, comme sur la page anglaise
+    (15 septembre 2026) : les pages traduites annonçaient « Fixe, par véhicule »
+    sans chiffre, et c'est le chiffre que cherchent les assistants.
+  */
+  const prix = await prixDepuis(trajet.airport, resort.slug);
+  const faq = avecQuestionPrix(traduction.faq, prix !== null ? questionPrix(lang, aeroport.nom, nom, prix) : null);
 
   const distance = DISTANCES.find(
     (d) => d.airport === trajet.airport && d.resort === resort.slug,
@@ -93,7 +102,7 @@ export default function TrajetIntl({
               ...(distance?.minutes
                 ? [{ libelle: t.tempsDeRoute, valeur: duree(distance.minutes) }]
                 : []),
-              { libelle: t.prix, valeur: t.prixFixe },
+              { libelle: t.prix, valeur: prix !== null ? A_PARTIR_DE[lang](prix) : t.prixFixe },
             ]}
           />
 
@@ -179,7 +188,7 @@ export default function TrajetIntl({
         ) : null}
 
         <Faq
-          items={traduction.faq}
+          items={faq}
           titre={t.faqTrajet(aeroport.nom, nom)}
           surtitre={t.aide}
         />
@@ -201,7 +210,8 @@ export default function TrajetIntl({
         data={grapheJsonLd(
           organisationSchema(),
           filArianeSchema(filAriane.map((e) => ({ nom: e.nom, path: e.chemin }))),
-          faqSchema(traduction.faq),
+          faqSchema(faq),
+          trajetSchema({ nom: traduction.h1, chemin, prix }),
         )}
       />
     </>
