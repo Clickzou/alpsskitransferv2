@@ -45,7 +45,15 @@ import Recherche from "./Recherche";
 const LIMITE_PASSEES = 50;
 const LIMITE_A_VENIR = 200;
 
-function LigneCourse({ course }: { course: Course }) {
+/**
+ * Trier par date d'achat — demande de JC, 15 septembre 2026 : les dernières
+ * ventes en tête. Une course payée compte à son paiement ; une course pas
+ * encore payée (devis, lien envoyé), à sa création.
+ */
+const dateAchat = (course: Course) => (course.payeLe ?? course.creeLe).getTime();
+const parAchat = (liste: Course[]) => [...liste].sort((a, b) => dateAchat(b) - dateAchat(a));
+
+function LigneCourse({ course, achat = false }: { course: Course; achat?: boolean }) {
   const pastille = pastilleStatut(course);
   const sens = sensDeLaCourse(course);
   const devise = course.devise === "EUR" ? "EUR" : course.devise;
@@ -65,6 +73,11 @@ function LigneCourse({ course }: { course: Course }) {
             <span className="font-semibold text-alpine">{course.client.nom}</span>
             <span className="tabular-nums text-alpine-700">{course.client.telephone}</span>
             <span className="font-mono text-xs text-alpine-600">{course.reference}</span>
+            {achat ? (
+              <span className="text-xs text-alpine-600">
+                {course.payeLe ? "payée le" : "créée le"} {heure(course.payeLe ?? course.creeLe)}
+              </span>
+            ) : null}
           </p>
 
           {sens.map((s) => (
@@ -207,11 +220,13 @@ function Tableau({
   courses,
   vide,
   note,
+  achat = false,
 }: {
   titre?: string;
   courses: Course[];
   vide: string;
   note?: string | null;
+  achat?: boolean;
 }) {
   return (
     <section className={titre ? "mt-8" : "mt-3"}>
@@ -238,7 +253,7 @@ function Tableau({
               <span className="text-right">Statut</span>
             </div>
             {courses.map((course) => (
-              <LigneCourse key={course.reference} course={course} />
+              <LigneCourse key={course.reference} course={course} achat={achat} />
             ))}
           </>
         )}
@@ -248,7 +263,15 @@ function Tableau({
 }
 
 /** Les courses sans suite — annulées, paiements abandonnés —, repliées : consultables, pas mêlées. */
-function SansSuite({ courses, contexte }: { courses: Course[]; contexte: string }) {
+function SansSuite({
+  courses,
+  contexte,
+  achat = false,
+}: {
+  courses: Course[];
+  contexte: string;
+  achat?: boolean;
+}) {
   if (courses.length === 0) return null;
   return (
     <details className="mt-10">
@@ -260,7 +283,7 @@ function SansSuite({ courses, contexte }: { courses: Course[]; contexte: string 
         Rien à assurer ici : une course annulée, ou un client qui a ouvert la page de paiement
         sans payer — un client qui a hésité, qu’on peut rappeler.
       </p>
-      <Tableau courses={courses} vide="Rien ici." />
+      <Tableau courses={achat ? parAchat(courses) : courses} vide="Rien ici." achat={achat} />
     </details>
   );
 }
@@ -276,6 +299,8 @@ export default async function PageAdmin({
   const params = await searchParams;
   const texte = (valeur: unknown) => (typeof valeur === "string" ? valeur : "");
   const critere = { q: texte(params.q), du: texte(params.du), au: texte(params.au) };
+  const tri = params.tri === "achat" ? "achat" : "prise";
+  const achat = tri === "achat";
 
   const [aVenir, passees, resultats] = await Promise.all([
     coursesAVenir(LIMITE_A_VENIR),
@@ -302,7 +327,7 @@ export default async function PageAdmin({
         </Link>
       </div>
 
-      <Recherche q={critere.q} du={critere.du} au={critere.au} />
+      <Recherche q={critere.q} du={critere.du} au={critere.au} tri={tri} />
 
       {!supabaseConfigure() ? (
         <p className="mt-8 rounded border border-danger-300 bg-danger-50 px-4 py-3 text-sm leading-relaxed text-danger-700">
@@ -314,7 +339,8 @@ export default async function PageAdmin({
         <>
           <Tableau
             titre="Résultats"
-            courses={resultats.filter(estAAssurer)}
+            courses={achat ? parAchat(resultats.filter(estAAssurer)) : resultats.filter(estAAssurer)}
+            achat={achat}
             vide="Aucune course à assurer ne correspond à cette recherche."
             note={
               resultats.length >= 200
@@ -322,7 +348,7 @@ export default async function PageAdmin({
                 : null
             }
           />
-          <SansSuite courses={sansSuite(resultats)} contexte="dans ces résultats" />
+          <SansSuite courses={sansSuite(resultats)} contexte="dans ces résultats" achat={achat} />
         </>
       ) : (
         <>
@@ -352,6 +378,16 @@ export default async function PageAdmin({
             </section>
           ) : null}
 
+          {achat ? (
+            <Tableau
+              titre="Par date d’achat"
+              courses={parAchat([...aVenir, ...passees].filter(estAAssurer))}
+              vide="Aucune réservation pour le moment."
+              note={`Les dernières ventes en tête — les ${LIMITE_A_VENIR} prochaines courses et les ${LIMITE_PASSEES} dernières passées.`}
+              achat
+            />
+          ) : (
+          <>
           <Tableau
             titre="À venir"
             courses={aVenir.filter(estAAssurer)}
@@ -369,10 +405,13 @@ export default async function PageAdmin({
             vide="Aucune course passée."
             note={`Les ${LIMITE_PASSEES} dernières — pour plus ancien, utilisez la recherche.`}
           />
+          </>
+          )}
 
           <SansSuite
             courses={[...aVenir.filter((c) => !estAAssurer(c)), ...sansSuite(passees)]}
             contexte=""
+            achat={achat}
           />
         </>
       )}
