@@ -7,6 +7,7 @@ import { utilisateurCourant } from "@/lib/admin/session";
 import { appliquerPlan, planAlignement } from "@/lib/concurrence/alignement";
 import { CODES_LIEUX, TRAJETS_PAR_DEFAUT } from "@/lib/concurrence/lieux";
 import { trajetsSuivis } from "@/lib/concurrence/releve";
+import { avancementSaison } from "@/lib/concurrence/saison";
 import { avancementReleve, dernierReleve } from "@/lib/concurrence/tableau";
 import { ecrireLignes, lire, supprimer } from "@/lib/reservation/supabase";
 import { validerGrille } from "@/lib/tarification/grille";
@@ -111,11 +112,36 @@ export async function actionReleverTout(): Promise<void> {
   const origine = origineSite(
     new Request(`${entetes.get("x-forwarded-proto") ?? "http"}://${entetes.get("host") ?? "localhost"}`),
   );
-  const lance = await fetch(`${origine}/api/concurrence?lot=0&chaine=1`, {
+  const lance = await fetch(`${origine}/api/concurrence/?lot=0&chaine=1`, {
     headers: { authorization: `Bearer ${secret}` },
     cache: "no-store",
   })
     .then((r) => r.status === 202)
     .catch(() => false);
   redirect(`${ICI}?fait=${lance ? "releve-lance" : "echec"}`);
+}
+
+/**
+ * « Relever la haute saison maintenant » — le relevé des dates de vacances
+ * (`lib/concurrence/saison.ts`) sans attendre le 1er ou le 15. Refusé s'il
+ * tourne déjà.
+ */
+export async function actionReleverSaison(): Promise<void> {
+  await exigerSession();
+  const total = (await trajetsSuivis()).length;
+  if ((await avancementSaison(total)).enCours) redirect(`${ICI}?fait=releve-deja-en-cours#saison`);
+
+  const secret = process.env.CRON_SECRET?.trim();
+  if (!secret) redirect(`${ICI}?fait=echec#saison`);
+  const entetes = await headers();
+  const origine = origineSite(
+    new Request(`${entetes.get("x-forwarded-proto") ?? "http"}://${entetes.get("host") ?? "localhost"}`),
+  );
+  const lance = await fetch(`${origine}/api/concurrence/saison/?lot=0&chaine=1`, {
+    headers: { authorization: `Bearer ${secret}` },
+    cache: "no-store",
+  })
+    .then((r) => r.status === 202)
+    .catch(() => false);
+  redirect(`${ICI}?fait=${lance ? "saison-lance" : "echec"}#saison`);
 }

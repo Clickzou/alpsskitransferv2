@@ -18,10 +18,13 @@ const date = (iso: string) =>
 export default function TableauConcurrence({
   lignes,
   dateCommune,
+  libelleTendance = "Tendance 30 j",
 }: {
   lignes: LigneComparaison[];
   /** La date du transfert annoncée au-dessus du tableau ; une ligne qui en diffère la redit. */
   dateCommune: string | null;
+  /** L'en-tête de la dernière colonne : 30 jours pour le relevé de nuit, le relevé précédent pour la haute saison. */
+  libelleTendance?: string;
 }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-glacier-200 bg-white shadow-carte">
@@ -33,7 +36,7 @@ export default function TableauConcurrence({
             <th className="px-3 py-2 text-right font-medium">alps2alps</th>
             <th className="px-3 py-2 text-right font-medium">Alpy</th>
             <th className="px-3 py-2 text-right font-medium">Écart</th>
-            <th className="px-3 py-2 text-right font-medium">Tendance 30 j</th>
+            <th className="px-3 py-2 text-right font-medium">{libelleTendance}</th>
           </tr>
         </thead>
         <tbody>

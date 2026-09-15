@@ -5,6 +5,7 @@ import { airportParSlug } from "@/lib/airports";
 import { CODES_LIEUX, CONCURRENTS } from "@/lib/concurrence/lieux";
 import { planAlignement } from "@/lib/concurrence/alignement";
 import { trajetsSuivis } from "@/lib/concurrence/releve";
+import { avancementSaison, DATES_SAISON, datesAVenir, tableauSaison } from "@/lib/concurrence/saison";
 import {
   avancementReleve,
   dernierReleve,
@@ -16,7 +17,13 @@ import { resortParSlug } from "@/lib/resorts";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
 import BoutonConfirmation from "../BoutonConfirmation";
 import Entete from "../Entete";
-import { actionAjouterTrajet, actionMettreAJourTarifs, actionReleverTout, actionRetirerTrajet } from "./actions";
+import {
+  actionAjouterTrajet,
+  actionMettreAJourTarifs,
+  actionReleverSaison,
+  actionReleverTout,
+  actionRetirerTrajet,
+} from "./actions";
 import Rafraichir from "./Rafraichir";
 import TableauConcurrence from "./TableauConcurrence";
 
@@ -41,6 +48,7 @@ const RETOURS: Record<string, { alerte: boolean; texte: (detail: string) => stri
   "ecart-illisible": { alerte: true, texte: () => "L’écart n’est pas lisible : écrivez un nombre d’euros, par exemple 5." },
   "grille-refusee": { alerte: true, texte: (d) => `La grille n’a pas été publiée : ${d}` },
   "releve-lance": { alerte: false, texte: () => "Relevé lancé sur tous les trajets. L’avancement s’affiche ci-dessous dans une minute." },
+  "saison-lance": { alerte: false, texte: () => "Relevé de haute saison lancé : environ deux heures, en arrière-plan. Vous pouvez quitter la page." },
   "releve-deja-en-cours": { alerte: true, texte: () => "Un relevé tourne déjà : attendez qu’il se termine." },
   "trajet-ajoute": { alerte: false, texte: () => "Trajet ajouté : il sera relevé cette nuit." },
   "trajet-retire": { alerte: false, texte: () => "Trajet retiré de la liste suivie." },
@@ -71,6 +79,17 @@ export default async function PageConcurrence({
     trajetsSuivis(),
   ]);
   const avancement = await avancementReleve(suivis.length);
+
+  // La haute saison : une date fixe choisie, et le véhicule comparé.
+  const aVenir = datesAVenir();
+  const choixSaison = aVenir.find((d) => d.date === params.saison) ?? aVenir[0] ?? DATES_SAISON[DATES_SAISON.length - 1];
+  const vehiculeSaison = VEHICULES_COMPARES.find((v) => v.cle === params.vs)?.cle ?? "standard";
+  const [saison, avancementHaute] = await Promise.all([
+    tableauSaison(grille, choixSaison.date, vehiculeSaison),
+    avancementSaison(suivis.length),
+  ]);
+  const lienSaison = (date: string, vs: string) =>
+    `${lien({ jour: filtres.jour, passagers: String(filtres.passagers), vehicule: filtres.vehicule, saison: date, vs })}#saison`;
   // L'aperçu du bouton : ce que « Mettre à jour » poserait, avec cet écart, sur le dernier relevé.
   const plan = releve ? planAlignement(grille, suivis, releve.lignes, ecart) : null;
   // L'aperçu lisible : par trajet, le prix « semaine, jour » de chaque véhicule, avant → après.
@@ -400,6 +419,76 @@ export default async function PageConcurrence({
       <div className="mt-3">
         <TableauConcurrence lignes={lignes} dateCommune={dateTrajet} />
       </div>
+
+      {/* ------------------------------------------ la haute saison (JC, 15 septembre 2026) */}
+      <section id="saison" className="mt-10 scroll-mt-6">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="font-display text-lg text-alpine">Haute saison : les dates qui comptent</h2>
+            <p className="mt-1 max-w-3xl text-sm leading-relaxed text-alpine-600">
+              Les mêmes samedis de vacances relevés tous les 15 jours (le 1er et le 15 du mois), pour 4 passagers :
+              on voit les concurrents faire monter leurs prix à l’approche des vacances. Ces prix ne changent pas nos
+              tarifs automatiquement.
+              {saison.dernier ? ` Dernier relevé : ${dateLisible(saison.dernier)}` : " Pas encore de relevé pour cette date"}
+              {saison.precedent ? `, comparé à celui du ${dateLisible(saison.precedent)}.` : "."}
+            </p>
+          </div>
+          {avancementHaute.enCours ? null : (
+            <form action={actionReleverSaison}>
+              <BoutonConfirmation
+                libelle="Relever la haute saison maintenant"
+                enCours="Lancement…"
+                confirmer={`Relever les ${aVenir.length} dates de haute saison sur les ${avancementHaute.total} trajets ? Environ deux heures, en arrière-plan : vous pouvez quitter la page.`}
+                className="rounded border border-glacier-300 px-3 py-1.5 text-sm font-semibold text-alpine-700 hover:bg-glacier-50"
+              />
+            </form>
+          )}
+        </div>
+
+        {avancementHaute.enCours ? (
+          <div className="mt-3 rounded border border-alpes/40 bg-alpes-50/60 px-4 py-3 text-sm text-alpine">
+            <p className="font-semibold">
+              Relevé de haute saison en cours : {avancementHaute.faits} / {avancementHaute.total} trajets.
+            </p>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-glacier-200">
+              <div
+                className="h-full rounded-full bg-alpes"
+                style={{ width: `${Math.round((avancementHaute.faits / Math.max(1, avancementHaute.total)) * 100)}%` }}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          {aVenir.map((d) => (
+            <Link key={d.date} href={lienSaison(d.date, vehiculeSaison)} className={puce(d.date === choixSaison.date)}>
+              <span className="font-semibold">{d.periode}</span> · {d.libelle}
+            </Link>
+          ))}
+        </div>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {VEHICULES_COMPARES.map((v) => (
+            <Link key={v.cle} href={lienSaison(choixSaison.date, v.cle)} className={puce(vehiculeSaison === v.cle)}>
+              {v.nom}
+            </Link>
+          ))}
+        </div>
+
+        <p className="mt-3 text-sm text-alpine">
+          <strong>
+            {choixSaison.periode} — transfert le {dateLisible(choixSaison.date)} à 10 h
+          </strong>
+          , 4 passagers, notre {VEHICULES_COMPARES.find((v) => v.cle === vehiculeSaison)?.nom}. La dernière colonne
+          dit de combien le moins cher des concurrents a bougé depuis le relevé précédent.
+        </p>
+        <div className="mt-3">
+          <TableauConcurrence
+            lignes={saison.lignes}
+            dateCommune={choixSaison.date}
+            libelleTendance="Depuis le relevé précédent"
+          />
+        </div>
+      </section>
 
       <section id="trajets" className="mt-8 rounded-xl border border-glacier-200 bg-white p-5 shadow-carte">
         <h2 className="font-display text-lg text-alpine">Trajets suivis ({lignes.length})</h2>
