@@ -44,6 +44,11 @@ export default function TunnelIntl({
   const passagers = Number(texte("passengers"));
   const passagersRetour = Number(texte("returnPassengers"));
   const entierPositif = (n: number) => (Number.isInteger(n) && n > 0 ? n : undefined);
+  // Zéro valise est une réponse : seul un paramètre absent ou illisible retombe sur le défaut.
+  const entierOuZero = (brut: string | undefined) => {
+    const n = Number(brut);
+    return brut !== undefined && Number.isInteger(n) && n >= 0 && n <= 16 ? n : undefined;
+  };
 
   return (
     <>
@@ -97,6 +102,8 @@ export default function TunnelIntl({
             retourQuand={texte("returnWhen")}
             retourDepart={texte("returnFrom")}
             retourArrivee={texte("returnTo")}
+            bagagesInitial={entierOuZero(texte("bags"))}
+            skisInitial={entierOuZero(texte("skis"))}
             retourPassagersInitial={entierPositif(passagersRetour)}
           />
         </Section>

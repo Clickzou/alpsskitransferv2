@@ -161,6 +161,8 @@ export default function Tunnel({
   retourDepart,
   retourArrivee,
   retourPassagersInitial,
+  bagagesInitial,
+  skisInitial,
   langue = "en",
 }: {
   lieux: Lieu[];
@@ -173,6 +175,9 @@ export default function Tunnel({
   retourDepart?: string;
   retourArrivee?: string;
   retourPassagersInitial?: number;
+  /** Valises et housses saisies sur l'accueil. */
+  bagagesInitial?: number;
+  skisInitial?: number;
   langue?: LangueTunnel;
 }) {
   const t = TEXTES[langue];
@@ -225,8 +230,8 @@ export default function Tunnel({
   const [retourPassagers, setRetourPassagers] = useState<number | null>(
     retourPassagersInitial ?? null,
   );
-  const [bags, setBags] = useState(2);
-  const [skis, setSkis] = useState(2);
+  const [bags, setBags] = useState(bagagesInitial ?? 2);
+  const [skis, setSkis] = useState(skisInitial ?? 2);
   const [devise, setDevise] = useState<CodeDevise>("EUR");
 
   const [devis, setDevis] = useState<Devis | null>(null);

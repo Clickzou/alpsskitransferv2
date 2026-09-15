@@ -206,7 +206,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     aller: "Outbound",
     recapPassagers: (n) => `${n} passenger${n > 1 ? "s" : ""}`,
     recapBagages: (sacs, housses) =>
-      `${sacs} bag${sacs > 1 ? "s" : ""}, ${housses} ski bag${housses > 1 ? "s" : ""}`,
+      [sacs > 0 ? `${sacs} bag${sacs > 1 ? "s" : ""}` : null, housses > 0 ? `${housses} ski bag${housses > 1 ? "s" : ""}` : null]
+        .filter(Boolean)
+        .join(", ") || "No luggage",
     ajouterListe: "Booking more than one journey? Add this one to my list",
     ajoutFait: "Added — your list is in the menu.",
     ajoutDeja: "Already in your list.",
@@ -300,7 +302,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     aller: "Aller",
     recapPassagers: (n) => `${n} passager${n > 1 ? "s" : ""}`,
     recapBagages: (sacs, housses) =>
-      `${sacs} bagage${sacs > 1 ? "s" : ""}, ${housses} housse${housses > 1 ? "s" : ""} à skis`,
+      [sacs > 0 ? `${sacs} bagage${sacs > 1 ? "s" : ""}` : null, housses > 0 ? `${housses} housse${housses > 1 ? "s" : ""} à skis` : null]
+        .filter(Boolean)
+        .join(", ") || "Aucun bagage",
     ajouterListe: "Vous réservez plusieurs trajets ? Ajouter celui-ci à ma liste",
     ajoutFait: "Ajouté — votre liste est dans le menu.",
     ajoutDeja: "Déjà dans votre liste.",
@@ -400,7 +404,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     aller: "Hinfahrt",
     recapPassagers: (n) => `${n} Person${n > 1 ? "en" : ""}`,
     recapBagages: (sacs, housses) =>
-      `${sacs} Gepäckstück${sacs > 1 ? "e" : ""}, ${housses} ${housses > 1 ? "Skisäcke" : "Skisack"}`,
+      [sacs > 0 ? `${sacs} Gepäckstück${sacs > 1 ? "e" : ""}` : null, housses > 0 ? `${housses} ${housses > 1 ? "Skisäcke" : "Skisack"}` : null]
+        .filter(Boolean)
+        .join(", ") || "Kein Gepäck",
     ajouterListe: "Mehrere Fahrten? Diese zu meiner Liste hinzufügen",
     ajoutFait: "Hinzugefügt — Ihre Liste steht im Menü.",
     ajoutDeja: "Schon in Ihrer Liste.",
@@ -499,7 +505,9 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     aller: "Andata",
     recapPassagers: (n) => `${n} passegger${n > 1 ? "i" : "o"}`,
     recapBagages: (sacs, housses) =>
-      `${sacs} ${sacs > 1 ? "bagagli" : "bagaglio"}, ${housses} ${housses > 1 ? "sacche" : "sacca"} da sci`,
+      [sacs > 0 ? `${sacs} ${sacs > 1 ? "bagagli" : "bagaglio"}` : null, housses > 0 ? `${housses} ${housses > 1 ? "sacche" : "sacca"} da sci` : null]
+        .filter(Boolean)
+        .join(", ") || "Nessun bagaglio",
     ajouterListe: "Prenoti più tragitti? Aggiungi questo alla mia lista",
     ajoutFait: "Aggiunto — la tua lista è nel menu.",
     ajoutDeja: "Già nella tua lista.",
@@ -608,6 +616,9 @@ export const TEXTES_LIEU: Record<Lang, TextesLieu> = {
  * seul ton pour les deux.
  */
 export interface TextesRecherche {
+  /** Valises et housses, demandées dès l'accueil : le coffre décide du véhicule (JC, 15 septembre 2026). */
+  valises: string;
+  housses: string;
   titreAccessible: string;
   quand: string;
   depart: string;
@@ -638,6 +649,8 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     arrivee: "Drop-off location",
     arriveeIndice: "Resort, or address with postcode and town",
     passagers: "How many people (including children)",
+    valises: "Suitcases",
+    housses: "Ski bags",
     typeTrajet: "Trip type",
     allerRetour: "Return",
     allerSimple: "One-way",
@@ -658,6 +671,8 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     arrivee: "Lieu de dépose",
     arriveeIndice: "Station, ou adresse avec code postal et commune",
     passagers: "Combien de personnes (enfants compris)",
+    valises: "Valises",
+    housses: "Housses à skis",
     typeTrajet: "Type de trajet",
     allerRetour: "Aller-retour",
     allerSimple: "Aller simple",
@@ -678,6 +693,8 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     arrivee: "Zielort",
     arriveeIndice: "Skiort oder Adresse mit PLZ und Ort",
     passagers: "Wie viele Personen (Kinder eingeschlossen)",
+    valises: "Koffer",
+    housses: "Skisäcke",
     typeTrajet: "Fahrtart",
     allerRetour: "Hin und zurück",
     allerSimple: "Nur Hinfahrt",
@@ -698,6 +715,8 @@ export const TEXTES_RECHERCHE: Record<Lang, TextesRecherche> = {
     arrivee: "Luogo di arrivo",
     arriveeIndice: "Località o indirizzo con CAP e comune",
     passagers: "Quante persone (bambini compresi)",
+    valises: "Valigie",
+    housses: "Sacche da sci",
     typeTrajet: "Tipo di tragitto",
     allerRetour: "Andata e ritorno",
     allerSimple: "Solo andata",

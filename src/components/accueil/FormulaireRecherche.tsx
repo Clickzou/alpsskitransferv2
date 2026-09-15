@@ -54,6 +54,14 @@ export default function FormulaireRecherche({
   const [vers, setVers] = useState<ValeurLieu>({ slug: null, texte: "" });
   const [quand, setQuand] = useState("");
   const [passagers, setPassagers] = useState(2);
+  /*
+    Valises et housses, dès l'accueil : le client arrivait sur les prix sans
+    les avoir indiquées, et le récapitulatif annonçait « 2 bags, 2 ski bags »
+    qu'il n'avait jamais saisis (test de JC, 15 septembre 2026). Ce sont elles
+    qui écartent un véhicule dont le coffre ne suffit pas.
+  */
+  const [valises, setValises] = useState(2);
+  const [housses, setHousses] = useState(2);
   const [allerRetour, setAllerRetour] = useState(false);
   const [retourQuand, setRetourQuand] = useState("");
   const [retourAilleurs, setRetourAilleurs] = useState(false);
@@ -97,6 +105,8 @@ export default function FormulaireRecherche({
 
     const parametres = new URLSearchParams({
       passengers: String(passagers),
+      bags: String(valises),
+      skis: String(housses),
       trip: allerRetour ? "return" : "one-way",
     });
     if (quand) parametres.set("when", quand);
@@ -227,6 +237,34 @@ export default function FormulaireRecherche({
             max={16}
             value={passagers}
             onChange={(e) => setPassagers(Number(e.target.value))}
+            className={`${champ} w-24`}
+          />
+        </div>
+        <div className="min-w-0">
+          <label className={etiquette} htmlFor="valises">
+            {mots.valises}
+          </label>
+          <input
+            id="valises"
+            type="number"
+            min={0}
+            max={16}
+            value={valises}
+            onChange={(e) => setValises(Math.max(0, Number(e.target.value) || 0))}
+            className={`${champ} w-24`}
+          />
+        </div>
+        <div className="min-w-0">
+          <label className={etiquette} htmlFor="housses">
+            {mots.housses}
+          </label>
+          <input
+            id="housses"
+            type="number"
+            min={0}
+            max={16}
+            value={housses}
+            onChange={(e) => setHousses(Math.max(0, Number(e.target.value) || 0))}
             className={`${champ} w-24`}
           />
         </div>

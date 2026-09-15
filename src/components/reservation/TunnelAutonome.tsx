@@ -25,6 +25,12 @@ export default function TunnelAutonome({ lieux }: { lieux: Lieu[] }) {
     const n = Number(params.get(cle));
     return Number.isInteger(n) && n > 0 ? n : undefined;
   };
+  // Zéro valise est une réponse : seul un paramètre absent ou illisible retombe sur le défaut.
+  const entierOuZero = (cle: string) => {
+    const brut = params.get(cle);
+    const n = Number(brut);
+    return brut !== null && Number.isInteger(n) && n >= 0 && n <= 16 ? n : undefined;
+  };
 
   /*
     Le retour aussi, et pas seulement l'aller.
@@ -48,6 +54,8 @@ export default function TunnelAutonome({ lieux }: { lieux: Lieu[] }) {
       retourDepart={texte("returnFrom")}
       retourArrivee={texte("returnTo")}
       retourPassagersInitial={entierPositif("returnPassengers")}
+      bagagesInitial={entierOuZero("bags")}
+      skisInitial={entierOuZero("skis")}
     />
   );
 }
