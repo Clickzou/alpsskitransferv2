@@ -85,8 +85,14 @@ function Pastille({ t }: { t: Trajet }) {
 
 /** Un trajet, et sous lui le formulaire du chauffeur et de la note. */
 function CarteTrajet({ t, retour, large = false }: { t: Trajet; retour: string; large?: boolean }) {
+  /*
+    Dans la vue Jour, les cartes s'ouvrent d'office : on y arrive depuis le
+    mois en cliquant un trajet, pour le préparer — le formulaire doit être là
+    (JC, 15 septembre 2026). Dans la semaine, sept colonnes ouvertes seraient
+    illisibles : elles restent repliées.
+  */
   return (
-    <details id={t.cle} className="group scroll-mt-24 rounded-lg border border-glacier-200 bg-white text-sm shadow-sm open:ring-2 open:ring-marque/30">
+    <details id={t.cle} open={large} className="group scroll-mt-24 rounded-lg border border-glacier-200 bg-white text-sm shadow-sm open:ring-2 open:ring-marque/30">
       <summary className="cursor-pointer list-none space-y-1 p-2.5 hover:bg-glacier-50 [&::-webkit-details-marker]:hidden">
         <p className="flex flex-wrap items-baseline justify-between gap-x-2">
           <span className="font-semibold tabular-nums text-alpine">{t.heure}</span>
