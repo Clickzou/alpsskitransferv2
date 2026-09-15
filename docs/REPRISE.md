@@ -48,6 +48,15 @@
   suit pas les redirections — **ni relevé de nuit ni rappel d'adresse n'ont
   tourné avant le 15 septembre**. Barres ajoutées, test de garde. À vérifier
   mercredi matin : des prix datés du 16 dans `concurrence_releves`.
+- **Haute saison** (table `concurrence_saison`, migration passée) : 10 samedis
+  de vacances relevés le 1er et le 15, partie dédiée dans Concurrence.
+- **Alpy** : le 15 entre 18 h 05 et 18 h 33, pages sans offres prises pour
+  « trajet non proposé » ; une sonde (`/api/diagnostic/alpy/?n=12`) a montré
+  12 recherches réussies d'affilée depuis Vercel vingt minutes plus tard — blocage
+  passager d'Imperva. Désormais : page inattendue réessayée avec session neuve,
+  et dernier prix connu repris trois jours. **À surveiller** sur les relevés de
+  nuit qui tournent enfin.
+- **« Réserver ce véhicule »** sur les cartes de l'accueil, quatre langues.
 - **Reste à faire** : tests 2c (adresse, maintenant chiffrée), 3 à 5 ci-dessous.
 
 ---
