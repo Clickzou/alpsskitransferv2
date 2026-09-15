@@ -18,18 +18,23 @@ import { validerDemande, type EntreeBrute, type Validation } from "./demande";
  * encaissé sortent de la même mesure. La mesure est gardée en mémoire : deux
  * appels rapprochés ne la refont pas.
  *
- * Un retour qui part d'ailleurs que l'aller reste en devis : c'est un cas rare,
- * et deux adresses de plus à situer, c'est deux occasions de se tromper.
+ * Un retour qui ne reprend pas l'aller inversé — repartir d'un golf vers
+ * l'aéroport de Toulouse — se mesure à part, sur sa propre route.
  */
 export async function validerEtMesurer(entree: EntreeBrute): Promise<Validation> {
   const valide = validerDemande(entree);
   if (!valide.ok || !("surMesure" in valide)) return valide;
 
   const s = valide.surMesure;
-  if (s.retourAilleurs) return valide;
-
   const mesure = await mesurer(s.lieuDepart, s.lieuArrivee);
   if (!mesure) return valide;
+
+  // Le retour part de l'arrivée de l'aller et revient au départ, sauf lieu donné.
+  const mesureRetour =
+    s.retour && s.retourAilleurs
+      ? await mesurer(s.lieuRetourDepart ?? s.lieuArrivee, s.lieuRetourArrivee ?? s.lieuDepart)
+      : null;
+  if (s.retour && s.retourAilleurs && !mesureRetour) return valide;
 
   /*
     Les colonnes de lieu gardent le slug quand il y en a un, le libellé sinon :
@@ -39,6 +44,7 @@ export async function validerEtMesurer(entree: EntreeBrute): Promise<Validation>
   */
   const lieu = (brut: string, lisible: string) =>
     airportParSlug(brut) || resortParSlug(brut) ? brut : lisible.slice(0, 200);
+  const enMesure = (m: NonNullable<typeof mesure>) => ({ km: m.km, minutes: m.minutes, station: m.station });
 
   return {
     ok: true,
@@ -54,7 +60,11 @@ export async function validerEtMesurer(entree: EntreeBrute): Promise<Validation>
       bagages: s.bagages,
       skis: s.skis,
       partage: s.partage,
-      mesures: { aller: { km: mesure.km, minutes: mesure.minutes, station: mesure.station } },
+      retourResort: s.lieuRetourDepart ? lieu(s.lieuRetourDepart, s.libelleRetourDepart ?? s.lieuRetourDepart) : null,
+      retourAirport: s.lieuRetourArrivee
+        ? lieu(s.lieuRetourArrivee, s.libelleRetourArrivee ?? s.lieuRetourArrivee)
+        : null,
+      mesures: { aller: enMesure(mesure), retour: mesureRetour ? enMesure(mesureRetour) : null },
     },
   };
 }

@@ -83,8 +83,13 @@ export interface DemandeSurMesure {
    */
   lieuDepart: string;
   lieuArrivee: string;
-  /** Le retour part d'ailleurs : on ne le chiffre pas, il reste en devis. */
+  /** Le retour ne reprend pas l'aller inversé : il se mesure à part. */
   retourAilleurs: boolean;
+  /** Les lieux du retour quand ils diffèrent — slug, ou texte — et leurs libellés. */
+  lieuRetourDepart: string | null;
+  lieuRetourArrivee: string | null;
+  libelleRetourDepart: string | null;
+  libelleRetourArrivee: string | null;
   categorie: CategorieVehicule;
   categorieRetour: CategorieVehicule | null;
   passagersRetour: number | null;
@@ -168,6 +173,21 @@ export function validerDemande(entree: EntreeBrute): Validation {
 
   const from = texte(entree.from);
   const to = texte(entree.to);
+  /*
+    Les lieux du retour : le slug quand il y en a un, le texte sinon.
+
+    Seul le slug était lu : un retour vers une adresse — l'aéroport de
+    Toulouse trouvé parmi les suggestions d'adresses — était ignoré, et le
+    retour chiffré comme l'aller inversé, vers Genève (JC, 15 septembre 2026).
+  */
+  const retourDepartBrut = retour ? (texte(entree.returnFrom) ?? texte(entree.returnFromText, 300)) : null;
+  const retourArriveeBrut = retour ? (texte(entree.returnTo) ?? texte(entree.returnToText, 300)) : null;
+  const lieuxRetour = {
+    lieuRetourDepart: retourDepartBrut,
+    lieuRetourArrivee: retourArriveeBrut,
+    libelleRetourDepart: retour ? (texte(entree.returnFromText, 300) ?? retourDepartBrut) : null,
+    libelleRetourArrivee: retour ? (texte(entree.returnToText, 300) ?? retourArriveeBrut) : null,
+  };
   const departConnu = from ? airportParSlug(from) : null;
   const arriveeConnue = to ? resortParSlug(to) : null;
 
@@ -191,7 +211,8 @@ export function validerDemande(entree: EntreeBrute): Validation {
         motif: "adresse-libre",
         lieuDepart: from ?? depart,
         lieuArrivee: to ?? arrivee,
-        retourAilleurs: Boolean(retour && (texte(entree.returnFrom) || texte(entree.returnTo))),
+        retourAilleurs: Boolean(retourDepartBrut || retourArriveeBrut),
+        ...lieuxRetour,
         categorie,
         categorieRetour,
         passagersRetour,
@@ -202,8 +223,8 @@ export function validerDemande(entree: EntreeBrute): Validation {
 
   // Retour asymétrique : les lieux du retour, s'ils diffèrent, doivent eux aussi
   // être connus des registres — sinon la réservation entière passe en devis.
-  const retourFrom = texte(entree.returnFrom);
-  const retourTo = texte(entree.returnTo);
+  const retourFrom = retourDepartBrut;
+  const retourTo = retourArriveeBrut;
   if (retour && (retourFrom || retourTo)) {
     const resortRetour = retourFrom ? resortParSlug(retourFrom) : arriveeConnue;
     const airportRetour = retourTo ? airportParSlug(retourTo) : departConnu;
@@ -224,6 +245,7 @@ export function validerDemande(entree: EntreeBrute): Validation {
           lieuDepart: departConnu.slug,
           lieuArrivee: arriveeConnue.slug,
           retourAilleurs: true,
+          ...lieuxRetour,
           categorie,
           categorieRetour,
           passagersRetour,

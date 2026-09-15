@@ -122,6 +122,44 @@ describe("validerEtMesurer", () => {
     }
   });
 
+  it("mesure à part un retour qui part et arrive ailleurs", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string | URL) => {
+        const u = String(url);
+        const toulouse = u.includes("Toulouse");
+        const corps = u.includes("api-adresse")
+          ? {
+              features: [
+                {
+                  geometry: { coordinates: toulouse ? [1.3638, 43.6293] : [1.6053, 43.6653] },
+                  properties: { score: 0.9 },
+                },
+              ],
+            }
+          : u.includes("project-osrm")
+            ? { code: "Ok", routes: [{ distance: u.includes("1.3638") ? 36_000 : 712_000, duration: 2_400 }] }
+            : {};
+        return new Response(JSON.stringify(corps), { status: 200 });
+      }),
+    );
+    const valide = await validerEtMesurer({
+      from: "geneva-airport",
+      toText: "Golf de Palmola, 31660 Buzet-sur-Tarn",
+      when: "2026-01-14T10:00",
+      returnWhen: "2026-01-20T10:00",
+      returnFromText: "Golf de Palmola, 31660 Buzet-sur-Tarn",
+      returnToText: "Aéroport de Toulouse-Blagnac, 31700 Blagnac",
+      passengers: 2,
+    });
+    expect(valide.ok && "demande" in valide).toBe(true);
+    if (valide.ok && "demande" in valide) {
+      expect(valide.demande.retourAirport).toBe("Aéroport de Toulouse-Blagnac, 31700 Blagnac");
+      const r = devisReservation(valide.demande);
+      expect(r.ok && r.devis.lignes.map((l) => l.km)).toEqual([712, 36]);
+    }
+  });
+
   it("laisse la demande en devis quand l'adresse ne se situe pas", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response("{}", { status: 200 })));
     const valide = await validerEtMesurer({

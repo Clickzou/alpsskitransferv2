@@ -331,8 +331,10 @@ export default function Tunnel({
       returnWhen: allerRetour ? returnWhen : undefined,
       returnFrom: allerRetour && retourAilleurs ? retourDe.slug : undefined,
       returnTo: allerRetour && retourAilleurs ? retourVers.slug : undefined,
-      returnFromText: adresseEntiere(retourDe),
-      returnToText: adresseEntiere(retourVers),
+      // Les textes du retour ne partent que si le retour part vraiment d'ailleurs :
+      // un lieu saisi puis abandonné ne doit pas détourner le retour.
+      returnFromText: allerRetour && retourAilleurs ? adresseEntiere(retourDe) : undefined,
+      returnToText: allerRetour && retourAilleurs ? adresseEntiere(retourVers) : undefined,
       passengers,
       returnPassengers: allerRetour && retourPassagers !== null ? retourPassagers : undefined,
       bags,

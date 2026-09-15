@@ -164,7 +164,13 @@ function courseDeGrille(demande: DemandeReservation, tarifs: Grille): CourseSais
     prixGrille: grille.devis.total,
     // Une adresse d'arrivée vaut adresse de dépose ; au retour, elle est le point de départ.
     adresseArrivee: estUneAdresse(demande.resort) ? demande.resort : estUneAdresse(demande.airport) ? demande.airport : null,
-    adresseDepartRetour: estUneAdresse(demande.resort) ? demande.resort : null,
+    adresseDepartRetour: demande.retourResort
+      ? estUneAdresse(demande.retourResort)
+        ? demande.retourResort
+        : null
+      : estUneAdresse(demande.resort)
+        ? demande.resort
+        : null,
   };
 }
 
