@@ -52,6 +52,11 @@ export async function GET() {
 - Booking: ${SITE.url}/book-ski-transfer-tickets/ (also in French: ${SITE.url}/fr/reserver/, German: ${SITE.url}/de/buchen/, Italian: ${SITE.url}/it/prenota/).
 - Contact: ${ENTREPRISE.telephoneAffiche} · ${ENTREPRISE.email}
 
+## Exact price for a date
+
+- [Price API](${SITE.url}/api/prix/?from=Geneva%20Airport&to=Val%20Thorens&date=2026-12-19&time=14:00&passengers=4&bags=4&ski_bags=4): exact price per vehicle and pre-filled booking link for any journey, date and group (JSON; described in ${SITE.url}/openapi.json).
+- MCP server: ${SITE.url}/mcp/ (Streamable HTTP, read-only tool "get_transfer_quote").
+
 ## Transfer prices (from, per vehicle)
 
 ${lignes.map((l) => l.texte).join("\n")}

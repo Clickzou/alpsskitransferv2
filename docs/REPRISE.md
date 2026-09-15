@@ -61,8 +61,11 @@
   la FAQ de chaque page de trajet (quatre langues, remplace la question sans
   chiffre), prix « dès / ab / da » dans le title et les repères des pages
   traduites, `Offer` sur les pages traduites, et `/llms.txt` (117 trajets,
-  recalculé chaque heure). **Demandé ensuite** : que ChatGPT ou Claude
-  demandent le prix exact et obtiennent le lien pré-rempli.
+  recalculé chaque heure). **Fait ensuite** : `GET /api/prix/` (prix exact par
+  véhicule et lien pré-rempli, décrit dans `/openapi.json`), serveur MCP
+  `/mcp/` (outil `get_transfer_quote`, lecture seule, sans SDK), annoncés dans
+  `/llms.txt`. Même calcul et même limite (30/h) que le devis du site. **Après
+  la mise en ligne** : proposer le connecteur aux annuaires (Claude, ChatGPT).
 - **Reste à faire** : tests 2c (adresse, maintenant chiffrée), 3 à 5 ci-dessous.
 
 ---
