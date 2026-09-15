@@ -193,10 +193,11 @@ export default function Tunnel({
     l'écran montrerait le formulaire une fraction de seconde avant de basculer
     sur les véhicules — un clignotement qui donne l'impression d'un faux départ.
   */
-  const [prixAttendu, setPrixAttendu] = useState(() =>
-    Boolean(depart && arrivee && quand && lieux.some((l) => l.slug === depart) &&
-      lieux.some((l) => l.slug === arrivee)),
-  );
+  /*
+    Une adresse se chiffre aussi depuis le 15 septembre 2026 (la route se
+    mesure côté serveur) : il suffit que les deux lieux et la date soient là.
+  */
+  const [prixAttendu, setPrixAttendu] = useState(() => Boolean(depart && arrivee && quand));
   const [de, setDe] = useState<ValeurLieu>(lieuDe(depart));
   const [vers, setVers] = useState<ValeurLieu>(lieuDe(arrivee));
   const [when, setWhen] = useState(quand ?? "");
@@ -355,7 +356,7 @@ export default function Tunnel({
   */
   useEffect(() => {
     const retourComplet = !retourQuand || Boolean(retourQuand);
-    const chiffrable = Boolean(lieuDe(depart).slug && lieuDe(arrivee).slug && quand && retourComplet);
+    const chiffrable = Boolean(lieuDe(depart).texte && lieuDe(arrivee).texte && quand && retourComplet);
     if (chiffrable) void chercherPrix(true).finally(() => setPrixAttendu(false));
     else setPrixAttendu(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps

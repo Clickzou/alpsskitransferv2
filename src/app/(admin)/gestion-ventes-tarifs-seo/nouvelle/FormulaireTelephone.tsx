@@ -158,8 +158,9 @@ export default function FormulaireTelephone({
   }
 
   /*
-    La grille ne chiffre qu'un aéroport vers une station — et un retour entre
-    lieux de la liste. Tout le reste se dit tout de suite, avant « Calculer ».
+    La table chiffre un aéroport vers une station ; le reste — une adresse,
+    une station de départ — se mesure au kilomètre au moment du calcul
+    (15 septembre 2026). On le dit tout de suite, avant « Calculer ».
   */
   const typeDe = (valeur: ValeurLieu) =>
     valeur.slug ? lieux.find((l) => l.slug === valeur.slug)?.type : undefined;
@@ -215,7 +216,7 @@ export default function FormulaireTelephone({
       const donnees = await reponse.json();
       if (donnees.devisSurMesure && reponse.ok) {
         setCalcul(
-          "Ce trajet passe par une adresse ou un lieu hors de la grille : pas de prix automatique. Saisissez le prix convenu avec le client.",
+          "Pas de prix automatique : l’adresse n’a pas pu être située, ou le retour part d’un autre lieu. Vérifiez l’adresse (avec code postal et commune), ou saisissez le prix convenu avec le client.",
         );
         return;
       }
@@ -310,7 +311,8 @@ export default function FormulaireTelephone({
           </div>
           {depart.texte && arrivee.texte && !deGrille ? (
             <p className="text-xs text-attention-700 md:col-span-2">
-              Trajet hors grille : pas de prix automatique, saisissez le prix convenu plus bas.
+              Trajet par une adresse : le prix se calcule au kilomètre avec « Calculer le prix de la
+              grille ». Si l’adresse ne se situe pas, saisissez le prix convenu.
             </p>
           ) : null}
           <label className={ETIQUETTE}>

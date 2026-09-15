@@ -5,7 +5,7 @@ import { ENTREPRISE, SITE } from "@/data/site";
 import { airportParSlug } from "@/lib/airports";
 import { resortParSlug } from "@/lib/resorts";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
-import { validerDemande } from "@/lib/reservation/demande";
+import { estUneAdresse, nomDuLieu, validerEtMesurer } from "@/lib/reservation/demande-mesuree";
 import { devisReservation } from "@/lib/reservation/devis";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
 import { cheminConfirmation, origineSite } from "@/lib/reservation/config";
@@ -137,7 +137,7 @@ export async function POST(requete: Request) {
     return NextResponse.json({ erreur: "Invalid request." }, { status: 400 });
   }
 
-  const valide = validerDemande(corps);
+  const valide = await validerEtMesurer(corps);
   if (!valide.ok) {
     /* Le champ voyage avec le message : le tunnel y ramène le curseur. */
     return NextResponse.json({ erreur: valide.message, champ: valide.champ }, { status: 400 });
@@ -336,10 +336,17 @@ export async function POST(requete: Request) {
   }
 
   const devis = resultat.devis;
-  const aeroport = airportParSlug(demande.airport)!;
-  const station = resortParSlug(demande.resort)!;
   const ref = reference();
-  const intitule = `${aeroport.name} → ${station.name}`;
+  const intitule = `${nomDuLieu(demande.airport)} → ${nomDuLieu(demande.resort)}`;
+  /*
+    Un trajet vers une adresse — ou qui en part — dit déjà où prendre ou
+    déposer le client : sans adresse saisie à part, c'est elle qu'on retient,
+    plutôt que d'annoncer au chauffeur une adresse « manquante » qu'il a sous
+    les yeux.
+  */
+  const adresseCourse =
+    adresse ||
+    (estUneAdresse(demande.resort) ? demande.resort : estUneAdresse(demande.airport) ? demande.airport : "");
 
   const ligne = {
     reference: ref,
@@ -388,7 +395,7 @@ export async function POST(requete: Request) {
     client_email: email,
     client_telephone: telephone,
     vol: propre(client.vol, 20),
-    adresse,
+    adresse: adresseCourse,
     /*
       Les valises, que le devis a déjà comptées pour choisir le coffre : elles
       n'étaient écrites nulle part, et le chauffeur les découvrait à l'aéroport.
@@ -423,7 +430,7 @@ export async function POST(requete: Request) {
     retour: demande.retour ? heure(demande.retour) : null,
     trajetRetour: trajetRetour(demande),
     passagersRetour: demande.passagersRetour ?? null,
-    adresse,
+    adresse: adresseCourse,
     client: { nom, email, telephone },
     vehicule: demande.categorie,
     vehiculeRetour: demande.categorieRetour ?? null,
@@ -519,7 +526,7 @@ export async function POST(requete: Request) {
               : null,
           bagages: ligne.bagages,
           skis: ligne.bagages_ski ?? 0,
-          adresse,
+          adresse: adresseCourse,
           vol: ligne.vol,
           message: ligne.message,
           total: montantClient(langue, devis.total, Boolean(demande.retour)),

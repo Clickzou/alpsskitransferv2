@@ -23,7 +23,22 @@
   l'onglet Factures.
 - **Données de test à purger avant l'ouverture** : factures DVJXZD11-0001 à 0003
   et leurs avoirs (mode test Stripe), réservations AST-7D00EF et suivantes.
-- **Reste à faire** : tests 2 à 5 ci-dessous.
+- **Tri par date d'achat** dans Réservations (`?tri=achat`), en ligne.
+- **Prix au kilomètre pour les adresses**, site et téléphone (décision de JC) :
+  `lib/tarification/itineraire.ts` situe chaque point (coordonnées des lieux
+  dans `data/coordonnees.ts`, BAN puis Photon pour une adresse), mesure la route
+  (table pour aéroport ↔ station dans les deux sens, sinon OSRM public, Google
+  en repli) et choisit le coefficient (station du trajet, ou station à moins de
+  15 km de l'adresse). `validerEtMesurer` est le passage unique pour le devis,
+  la réservation et le téléphone ; le panier mesure aussi. Un retour qui part
+  d'ailleurs reste en devis. **Point de vigilance** : OSRM public n'a pas de
+  garantie de service — si les devis d'adresse tombent en devis manuel, poser
+  une clé Google avec l'API Distance Matrix activée.
+- **Retouches notées** : « 0 bag » dans le récapitulatif, lien Stripe trop long
+  sous le bouton des e-mails.
+- **Demandé, à faire** : onglet **Planning** (calendrier semaine / mois,
+  chauffeur et note par trajet — migration de deux colonnes).
+- **Reste à faire** : tests 2c (adresse, maintenant chiffrée), 3 à 5 ci-dessous.
 
 ---
 

@@ -1,3 +1,4 @@
+import { resortParSlug } from "@/lib/resorts";
 import type { CategorieVehicule } from "@/lib/tarification/bareme";
 import { calculer, type Devis } from "@/lib/tarification/calcul";
 import { distanceCalculee, distancePubliee } from "@/lib/tarification/distance";
@@ -64,6 +65,22 @@ export interface DemandeReservation {
   skis?: number;
   /** Prix par personne au lieu du prix par véhicule. */
   partage?: boolean;
+  /**
+   * Les distances mesurées hors de la table — un trajet qui passe par une
+   * adresse, ou une station de départ (`lib/tarification/itineraire.ts`).
+   *
+   * Mesurées par l'appelant, qui a le droit d'appeler le réseau ; le calcul, lui,
+   * reste pur. Absentes, seule la table chiffre, comme avant le 15 septembre
+   * 2026. Le retour sans mesure propre reprend celle de l'aller.
+   */
+  mesures?: { aller?: MesureTrajet | null; retour?: MesureTrajet | null } | null;
+}
+
+/** Une distance mesurée, et la station dont le coefficient s'applique. */
+export interface MesureTrajet {
+  km: number;
+  minutes: number | null;
+  station: string | null;
 }
 
 export interface LigneDevis {
@@ -144,9 +161,28 @@ export function prixFixe(
   return prixFixeDe(grille, airport, resort, categorie)?.prix ?? null;
 }
 
-function distanceDuTrajet(airport: string, resort: string) {
+function distanceDuTrajet(airport: string, resort: string, mesure?: MesureTrajet | null) {
   const trajet = { origine: airport, destination: resort };
-  return distanceCalculee(trajet) ?? distancePubliee(trajet);
+  const table = distanceCalculee(trajet) ?? distancePubliee(trajet);
+  if (table) return table;
+  return mesure ? { km: mesure.km, minutes: mesure.minutes, source: "api" as const } : null;
+}
+
+/**
+ * Le prix fixe d'un trajet, lu dans les deux sens : station → aéroport coûte
+ * ce que coûte aéroport → station, la route est la même.
+ */
+function prixFixeDesDeux(
+  grille: Grille,
+  depart: string,
+  arrivee: string,
+  categorie: CategorieVehicule,
+  moment: Date,
+) {
+  return (
+    prixFixeDe(grille, depart, arrivee, categorie, moment) ??
+    prixFixeDe(grille, arrivee, depart, categorie, moment)
+  );
 }
 
 /**
@@ -200,7 +236,8 @@ export function devisReservation(
     return { ok: false, echec: { raison: "dates-incoherentes" } };
   }
 
-  const distance = distanceDuTrajet(demande.airport, demande.resort);
+  const mesureAller = demande.mesures?.aller ?? null;
+  const distance = distanceDuTrajet(demande.airport, demande.resort, mesureAller);
   if (!distance) return { ok: false, echec: { raison: "distance-inconnue" } };
 
   // Le retour peut partir d'ailleurs : on le chiffre sur sa propre liaison.
@@ -209,12 +246,23 @@ export function devisReservation(
   const distanceRetour =
     airportRetour === demande.airport && resortRetour === demande.resort
       ? distance
-      : distanceDuTrajet(airportRetour, resortRetour);
+      : distanceDuTrajet(airportRetour, resortRetour, demande.mesures?.retour ?? mesureAller);
   if (demande.retour && !distanceRetour) {
     return { ok: false, echec: { raison: "distance-inconnue" } };
   }
 
-  const coefficient = coefficientDe(grille, demande.resort);
+  /*
+    Le coefficient est celui de la station du trajet. Une adresse n'en a pas :
+    la mesure dit alors laquelle s'applique — la station de départ, ou celle
+    dont l'adresse est voisine.
+  */
+  const coefficientDuTrajet = (resort: string, mesure: MesureTrajet | null) =>
+    resortParSlug(resort) || !mesure
+      ? coefficientDe(grille, resort)
+      : mesure.station
+        ? coefficientDe(grille, mesure.station)
+        : 1;
+  const coefficient = coefficientDuTrajet(demande.resort, mesureAller);
 
   // Chaque sens est calculé avec sa propre date : un retour le samedi à 6 h n'est
   // pas un aller du mercredi remisé. `calculer` reste appelé en aller simple, la
@@ -224,8 +272,8 @@ export function devisReservation(
     const d = retour ? distanceRetour! : distance;
     const categorie = retour ? categorieRetour : demande.categorie;
     const fixe = retour
-      ? prixFixeDe(grille, airportRetour, resortRetour, categorie, depart)
-      : prixFixeDe(grille, demande.airport, demande.resort, categorie, depart);
+      ? prixFixeDesDeux(grille, airportRetour, resortRetour, categorie, depart)
+      : prixFixeDesDeux(grille, demande.airport, demande.resort, categorie, depart);
     return {
       sens,
       depart,
@@ -239,7 +287,9 @@ export function devisReservation(
           passagers: retour ? passagersRetour : demande.passagers,
           partage: demande.partage ?? false,
           allerRetour: false,
-          coefficient: retour ? coefficientDe(grille, resortRetour) : coefficient,
+          coefficient: retour
+            ? coefficientDuTrajet(resortRetour, demande.mesures?.retour ?? mesureAller)
+            : coefficient,
           prixFixe: fixe?.prix ?? null,
           majorationsIncluses: fixe?.majorationsIncluses ?? false,
           saison: saisonDu(grille, depart),

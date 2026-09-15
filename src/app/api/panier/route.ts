@@ -6,6 +6,7 @@ import { airportParSlug } from "@/lib/airports";
 import { origineSite } from "@/lib/reservation/config";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 import { devisReservation } from "@/lib/reservation/devis";
+import { mesurer } from "@/lib/tarification/itineraire";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
 import { limiteDevis } from "@/lib/reservation/limite";
 import { creerSessionCheckout, stripeConfigure, type LigneCheckout } from "@/lib/reservation/stripe";
@@ -109,9 +110,12 @@ export async function POST(requete: Request) {
       continue;
     }
 
+    // Une adresse, une station de départ : la route se mesure, comme dans le tunnel.
+    const mesure = await mesurer(String(ligne.from), String(ligne.to));
     const resultat = devisReservation({
       airport: ligne.from,
       resort: ligne.to,
+      mesures: mesure ? { aller: { km: mesure.km, minutes: mesure.minutes, station: mesure.station } } : null,
       aller: depart,
       passagers: Number(ligne.passengers) || 1,
       categorie,

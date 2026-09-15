@@ -76,6 +76,19 @@ export interface DemandeSurMesure {
   bagages: number;
   skis: number;
   motif: "adresse-libre" | "liaison-inconnue";
+  /**
+   * De quoi la chiffrer quand même, si la route se mesure
+   * (`mesurerDemande`) : ce que le visiteur a choisi, et chaque lieu tel qu'il
+   * a été transmis — le slug quand il y en a un, le texte sinon.
+   */
+  lieuDepart: string;
+  lieuArrivee: string;
+  /** Le retour part d'ailleurs : on ne le chiffre pas, il reste en devis. */
+  retourAilleurs: boolean;
+  categorie: CategorieVehicule;
+  categorieRetour: CategorieVehicule | null;
+  passagersRetour: number | null;
+  partage: boolean;
 }
 
 /**
@@ -176,6 +189,13 @@ export function validerDemande(entree: EntreeBrute): Validation {
         bagages,
         skis,
         motif: "adresse-libre",
+        lieuDepart: from ?? depart,
+        lieuArrivee: to ?? arrivee,
+        retourAilleurs: Boolean(retour && (texte(entree.returnFrom) || texte(entree.returnTo))),
+        categorie,
+        categorieRetour,
+        passagersRetour,
+        partage: entree.shared === true || entree.shared === "true",
       },
     };
   }
@@ -201,6 +221,13 @@ export function validerDemande(entree: EntreeBrute): Validation {
           bagages,
           skis,
           motif: "adresse-libre",
+          lieuDepart: departConnu.slug,
+          lieuArrivee: arriveeConnue.slug,
+          retourAilleurs: true,
+          categorie,
+          categorieRetour,
+          passagersRetour,
+          partage: entree.shared === true || entree.shared === "true",
         },
       };
     }

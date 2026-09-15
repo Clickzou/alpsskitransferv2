@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { VEHICULES } from "@/data/accueil";
-import { airportParSlug } from "@/lib/airports";
 import { duree } from "@/lib/airports/dessertes";
-import { resortParSlug } from "@/lib/resorts";
-import { CATEGORIES, validerDemande } from "@/lib/reservation/demande";
+import { CATEGORIES } from "@/lib/reservation/demande";
+import { nomDuLieu, validerEtMesurer } from "@/lib/reservation/demande-mesuree";
 import { CAPACITE, CAPACITE_BAGAGES, devisReservation } from "@/lib/reservation/devis";
 import { distanceCalculee, distancePubliee } from "@/lib/tarification/distance";
 import { grilleActive } from "@/lib/tarification/grilles-publiees";
@@ -17,8 +16,11 @@ import { limiteDevis } from "@/lib/reservation/limite";
  * l'affichage et à l'encaissement — deux calculs différents, c'est l'écart entre
  * 220 € affichés et 377 € facturés que cette refonte corrige.
  *
- * Trois issues : un prix ferme, une demande de devis quand un lieu est saisi
- * librement, ou un refus motivé. Jamais un prix approximatif.
+ * Trois issues : un prix ferme, une demande de devis quand un lieu saisi
+ * librement ne se mesure pas, ou un refus motivé. Jamais un prix approximatif.
+ * Depuis le 15 septembre 2026, une adresse ou une station de départ se
+ * chiffrent aussi, au kilomètre, quand la route se mesure
+ * (`validerEtMesurer`).
  *
  * POST /api/devis
  *   { from, to, when, returnWhen?, returnFrom?, returnTo?, passengers, bags?, skis?, shared? }
@@ -37,7 +39,7 @@ export async function POST(requete: Request) {
     return NextResponse.json({ erreur: "Invalid request." }, { status: 400 });
   }
 
-  const valide = validerDemande((corps ?? {}) as Record<string, unknown>);
+  const valide = await validerEtMesurer((corps ?? {}) as Record<string, unknown>);
   if (!valide.ok) {
     /* Le champ voyage avec le message : le tunnel y ramène le curseur. */
     return NextResponse.json({ erreur: valide.message, champ: valide.champ }, { status: 400 });
@@ -55,11 +57,11 @@ export async function POST(requete: Request) {
 
   const { demande } = valide;
   const grille = await grilleActive();
-  const aeroport = airportParSlug(demande.airport)!;
-  const station = resortParSlug(demande.resort)!;
+  const mesureAller = demande.mesures?.aller ?? null;
   const distance =
     distanceCalculee({ origine: demande.airport, destination: demande.resort }) ??
-    distancePubliee({ origine: demande.airport, destination: demande.resort });
+    distancePubliee({ origine: demande.airport, destination: demande.resort }) ??
+    mesureAller;
 
   /*
     Un devis par catégorie **et par sens**.
@@ -156,33 +158,25 @@ export async function POST(requete: Request) {
     retour, quitte à reprendre les lieux de l'aller inversés — c'est bien la
     course qui est décrite, pas ce qui la distingue de l'aller.
   */
-  const stationRetour = demande.retourResort
-    ? resortParSlug(demande.retourResort)
-    : station;
-  const aeroportRetour = demande.retourAirport
-    ? airportParSlug(demande.retourAirport)
-    : aeroport;
+  const departRetour = demande.retourResort ?? demande.resort;
+  const arriveeRetour = demande.retourAirport ?? demande.airport;
   const distanceRetour = demande.retour
-    ? (distanceCalculee({
-        origine: aeroportRetour?.slug ?? demande.airport,
-        destination: stationRetour?.slug ?? demande.resort,
-      }) ??
-      distancePubliee({
-        origine: aeroportRetour?.slug ?? demande.airport,
-        destination: stationRetour?.slug ?? demande.resort,
-      }))
+    ? (distanceCalculee({ origine: arriveeRetour, destination: departRetour }) ??
+      distancePubliee({ origine: arriveeRetour, destination: departRetour }) ??
+      demande.mesures?.retour ??
+      mesureAller)
     : null;
 
   return NextResponse.json({
     trajet: {
-      aeroport: aeroport.name,
-      station: station.name,
+      aeroport: nomDuLieu(demande.airport),
+      station: nomDuLieu(demande.resort),
       km: distance?.km ?? null,
       duree: duree(distance?.minutes ?? null),
       allerRetour: Boolean(demande.retour),
       retourAilleurs: Boolean(retourAilleurs),
-      retourDepart: demande.retour ? (stationRetour?.name ?? null) : null,
-      retourArrivee: demande.retour ? (aeroportRetour?.name ?? null) : null,
+      retourDepart: demande.retour ? nomDuLieu(departRetour) : null,
+      retourArrivee: demande.retour ? nomDuLieu(arriveeRetour) : null,
       retourKm: distanceRetour?.km ?? null,
       retourDuree: duree(distanceRetour?.minutes ?? null),
       passagers: demande.passagers,

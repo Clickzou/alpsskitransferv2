@@ -9,6 +9,7 @@ import { resortParSlug } from "@/lib/resorts";
 import { LIEUX, normaliser } from "@/lib/reservation/lieux";
 import { cheminConfirmation, origineSite } from "@/lib/reservation/config";
 import { CATEGORIES, validerDemande } from "@/lib/reservation/demande";
+import { estUneAdresse, validerEtMesurer } from "@/lib/reservation/demande-mesuree";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import {
   CAPACITE,
@@ -54,7 +55,10 @@ import { grilleActive } from "@/lib/tarification/grilles-publiees";
  * donc ceux du site — aéroport, station ou adresse. Sur le site, une adresse
  * libre part en demande de devis ; ici, l'exploitant a le client en ligne et
  * lui donne son prix : la course se crée comme les autres, **au prix saisi**,
- * qui devient obligatoire faute de grille. Les colonnes de lieu portent alors
+ * qui devient obligatoire faute de grille. **Depuis le 15 septembre 2026, une
+ * adresse se chiffre au kilomètre** quand la route se mesure
+ * (`validerEtMesurer`) : le prix saisi ne devient obligatoire que si elle ne
+ * se mesure pas. Les colonnes de lieu portent alors
  * le nom lisible plutôt qu'un slug — tous les écrans affichent déjà la valeur
  * brute quand elle n'est pas au registre.
  *
@@ -127,7 +131,7 @@ function nomStation(slug: string): string {
   return resortParSlug(slug)?.name ?? slug;
 }
 
-/** Un trajet aéroport → station de la liste : le prix de la grille. */
+/** Un trajet chiffré — de la table, ou mesuré jusqu'à une adresse : le prix de la grille. */
 function courseDeGrille(demande: DemandeReservation, tarifs: Grille): CourseSaisie | string {
   const grille = devisReservation(demande, tarifs);
   if (!grille.ok) {
@@ -158,8 +162,9 @@ function courseDeGrille(demande: DemandeReservation, tarifs: Grille): CourseSais
     bagages: demande.bagages ?? 0,
     skis: demande.skis ?? 0,
     prixGrille: grille.devis.total,
-    adresseArrivee: null,
-    adresseDepartRetour: null,
+    // Une adresse d'arrivée vaut adresse de dépose ; au retour, elle est le point de départ.
+    adresseArrivee: estUneAdresse(demande.resort) ? demande.resort : estUneAdresse(demande.airport) ? demande.airport : null,
+    adresseDepartRetour: estUneAdresse(demande.resort) ? demande.resort : null,
   };
 }
 
@@ -289,7 +294,7 @@ export async function actionCreerTelephone(
     même. On la chiffre inversée, puis on remet la course dans son vrai sens.
   */
   const inverse = Boolean(resortParSlug(from) && airportParSlug(to)) && !retourPropre;
-  const valide = validerDemande({
+  const valide = await validerEtMesurer({
     from: inverse ? to : from,
     to: inverse ? from : to,
     when: champ(donnees, "when", 40),
