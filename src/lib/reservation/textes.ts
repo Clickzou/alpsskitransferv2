@@ -28,6 +28,9 @@ export interface TextesTunnel {
   /** « Réserver ce véhicule » depuis l'accueil (JC, 15 septembre 2026). */
   vehiculeChoisi: (nom: string, places: number) => string;
   vehiculeChanger: string;
+  /** L'encadré du véhicule retenu, en tête de l'écran des tarifs. */
+  vehiculeRetenu: (nom: string) => string;
+  vehiculeComparer: string;
   vehiculeNeConvientPas: (nom: string) => string;
   noteBagages: string;
   retour: string;
@@ -187,6 +190,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     housses: "Ski bags",
     vehiculeChoisi: (nom, places) => `Vehicle chosen: ${nom} (up to ${places} passengers). Enter your journey to see its price.`,
     vehiculeChanger: "Choose another vehicle",
+    vehiculeRetenu: (nom) => `Your vehicle: ${nom}`,
+    vehiculeComparer: "Or compare with the other vehicles below.",
     vehiculeNeConvientPas: (nom) => `The ${nom} does not fit this group or this luggage: here are the vehicles that do.`,
     noteBagages:
       "Bags and ski bags decide the vehicle, so we ask before quoting rather than after.",
@@ -285,6 +290,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     housses: "Housses à skis",
     vehiculeChoisi: (nom, places) => `Véhicule choisi : ${nom} (jusqu’à ${places} passagers). Indiquez votre trajet pour voir son prix.`,
     vehiculeChanger: "Choisir un autre véhicule",
+    vehiculeRetenu: (nom) => `Votre véhicule : ${nom}`,
+    vehiculeComparer: "Ou comparez avec les autres véhicules ci-dessous.",
     vehiculeNeConvientPas: (nom) => `Le ${nom} ne convient pas à ce groupe ou à ces bagages : voici les véhicules qui conviennent.`,
     noteBagages:
       "Les bagages déterminent le véhicule : nous les demandons avant de chiffrer, pas après.",
@@ -390,6 +397,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     housses: "Skisäcke",
     vehiculeChoisi: (nom, places) => `Gewähltes Fahrzeug: ${nom} (bis zu ${places} Personen). Geben Sie Ihre Strecke ein, um den Preis zu sehen.`,
     vehiculeChanger: "Anderes Fahrzeug wählen",
+    vehiculeRetenu: (nom) => `Ihr Fahrzeug: ${nom}`,
+    vehiculeComparer: "Oder vergleichen Sie unten mit den anderen Fahrzeugen.",
     vehiculeNeConvientPas: (nom) => `Der ${nom} passt nicht zu dieser Gruppe oder diesem Gepäck: Diese Fahrzeuge passen.`,
     noteBagages:
       "Das Gepäck bestimmt das Fahrzeug: Wir fragen davor danach, nicht danach.",
@@ -494,6 +503,8 @@ export const TEXTES: Record<LangueTunnel, TextesTunnel> = {
     housses: "Sacche da sci",
     vehiculeChoisi: (nom, places) => `Veicolo scelto: ${nom} (fino a ${places} passeggeri). Inserisci il tragitto per vederne il prezzo.`,
     vehiculeChanger: "Scegli un altro veicolo",
+    vehiculeRetenu: (nom) => `Il tuo veicolo: ${nom}`,
+    vehiculeComparer: "Oppure confronta con gli altri veicoli qui sotto.",
     vehiculeNeConvientPas: (nom) => `Il ${nom} non va bene per questo gruppo o questi bagagli: ecco i veicoli adatti.`,
     noteBagages:
       "È il bagaglio a decidere il veicolo: lo chiediamo prima del preventivo, non dopo.",

@@ -437,9 +437,14 @@ export default function Tunnel({
         const deuxSens = Boolean(donnees.trajet?.allerRetour && optionsRetour.length > 0);
         const retour = deuxSens ? optionsRetour.find((o) => o.categorie === vehiculeVoulu) : null;
         if (aller && (!deuxSens || retour)) {
+          /*
+            Le véhicule convient : il est présélectionné, mais on montre quand
+            même l'écran des tarifs — passer droit aux coordonnées cachait le
+            prix dans une ligne du récapitulatif (test de JC, 15 septembre 2026).
+          */
           setChoix(aller);
           setChoixRetour(retour ?? null);
-          setEtape("details");
+          setEtape("vehicule");
           return;
         }
         const modele = options.find((o) => o.categorie === vehiculeVoulu)?.nom ?? vehiculeVoulu.charAt(0).toUpperCase() + vehiculeVoulu.slice(1);
@@ -932,6 +937,25 @@ export default function Tunnel({
                 : null,
             ]}
           />
+          {vehiculeVoulu && choix && choix.categorie === vehiculeVoulu && (!allerRetourChiffre || choixRetour) ? (
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-lg border-2 border-marque/40 bg-marque/5 p-5">
+              <div>
+                <p className="font-display text-lg text-alpine">{t.vehiculeRetenu(choix.nom)}</p>
+                <p className="mt-1 font-display text-3xl tabular-nums text-alpine">
+                  {prix(choix.total + (allerRetourChiffre && choixRetour ? choixRetour.total : 0))}
+                  <span className="ml-2 text-sm font-normal text-alpine-600">{t.parVehicule}</span>
+                </p>
+                <p className="mt-1 text-xs text-alpine-600">{t.vehiculeComparer}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEtape("details")}
+                className="rounded bg-marque px-6 py-3 text-sm font-semibold text-white transition hover:bg-marque-600"
+              >
+                {t.continuerVehicule} →
+              </button>
+            </div>
+          ) : null}
           {avisVehicule ? (
             <p role="status" className="mt-4 rounded border border-attention-300 bg-attention-50 px-4 py-3 text-sm text-attention-700">
               {avisVehicule}
