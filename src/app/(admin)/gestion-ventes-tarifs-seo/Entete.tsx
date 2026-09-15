@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import { actionDeconnexion } from "./actions";
+import Assistant from "./Assistant";
 
 /**
  * L'en-tête du back-office, et ses onglets.
@@ -72,6 +73,9 @@ export default function Entete({
           </Link>
         ))}
       </nav>
+
+      {/* L'assistant suit l'en-tête : il n'existe que sur les écrans où l'on est connecté. */}
+      <Assistant />
     </header>
   );
 }
