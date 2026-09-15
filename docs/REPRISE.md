@@ -1,3 +1,21 @@
+# Mardi 15 septembre 2026 — pendant les tests
+
+- **Test 1 réussi** (adresse demandée, adresse saisie, remboursement 10 € sur
+  AST-62B62B, ligne dans Factures). Corrigé en route : expéditeur « Alps Ski
+  Transfers », e-mails en HTML (`email-html.ts`, habillage tiré de la forme du
+  texte), boutons de la page de gestion grisés tant que rien ne change, fenêtre
+  « Merci » après l'adresse.
+- **Avoirs** : chaque remboursement d'une course facturée crée un avoir Stripe
+  (`creerAvoir`), relié au remboursement carte ou déclaré hors Stripe pour un
+  virement ; PDF dans l'e-mail au client, dans la fiche et dans Factures ;
+  l'identifiant `cn_…` est gardé dans `paiements.session_stripe`. Éprouvé en
+  mode test contre Stripe, **inerte tant que `FACTURES_ACTIVES` est éteint**.
+  Avant d'allumer : régler dans Stripe la dénomination et l'adresse (le PDF
+  affiche « environnement de test Alps Ski Transfers, France »).
+- **Reste à faire** : tests 2 à 5 ci-dessous.
+
+---
+
 # Point de reprise — lundi 14 septembre 2026, 21 h 30 → mardi 15
 
 **Mardi : on fait tous les tests avec JC** (sa décision). Tout est poussé et en

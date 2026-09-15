@@ -193,7 +193,14 @@ export async function factureParId(id: string): Promise<Facture | null> {
  */
 export function csvFactures(
   factures: Facture[],
-  remboursements: { reference: string; montant: number; devise: string; le: Date; moyen: string }[] = [],
+  remboursements: {
+    reference: string;
+    montant: number;
+    devise: string;
+    le: Date;
+    moyen: string;
+    avoir?: { numero: string; pdf: string | null } | null;
+  }[] = [],
 ): string {
   const nombre = (n: number) => n.toFixed(2).replace(".", ",");
   const cellule = (v: string) => (/[;"\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
@@ -228,7 +235,7 @@ export function csvFactures(
     ...remboursements.map((r) => {
       const ht = Math.round((r.montant / 1.1) * 100) / 100;
       return [
-        "Remboursement",
+        r.avoir ? `Avoir ${r.avoir.numero}` : "Remboursement",
         date(r.le),
         "",
         "",
@@ -238,7 +245,7 @@ export function csvFactures(
         nombre(-r.montant),
         r.devise,
         r.moyen === "carte" ? "Remboursé par carte" : "Remboursé par virement",
-        "",
+        r.avoir?.pdf ?? "",
       ]
         .map(cellule)
         .join(";");

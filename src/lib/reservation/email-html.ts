@@ -50,6 +50,12 @@ const BOUTONS: Record<string, Record<Langue, string>> = {
     it: "Gestisci la prenotazione",
   },
   facture: { en: "View my invoice", fr: "Voir ma facture", de: "Rechnung ansehen", it: "Vedi la fattura" },
+  avoir: {
+    en: "Download my credit note",
+    fr: "Télécharger mon avoir",
+    de: "Gutschrift herunterladen",
+    it: "Scarica la nota di credito",
+  },
   paiement: { en: "Pay online", fr: "Payer en ligne", de: "Online bezahlen", it: "Paga online" },
   recu: { en: "View my receipt", fr: "Voir mon reçu", de: "Beleg ansehen", it: "Vedi la ricevuta" },
   fiche: { en: "Open the booking", fr: "Ouvrir la fiche", de: "Buchung öffnen", it: "Apri la prenotazione" },
@@ -108,7 +114,9 @@ function libelleBouton(url: string, langue: Langue): string {
         ? url.includes("#adresses")
           ? "adresse"
           : "gestion"
-        : /invoice\.stripe\.com/.test(url)
+        : /credit_notes/.test(url)
+          ? "avoir"
+          : /invoice\.stripe\.com|pay\.stripe\.com\/invoice/.test(url)
           ? "facture"
           : /checkout\.stripe\.com|buy\.stripe\.com/.test(url)
             ? "paiement"

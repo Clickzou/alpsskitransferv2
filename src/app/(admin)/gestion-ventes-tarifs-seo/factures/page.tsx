@@ -186,6 +186,7 @@ export default async function PageFactures({
                   <th className="px-4 py-2 font-medium">Date</th>
                   <th className="px-4 py-2 font-medium">Course</th>
                   <th className="px-4 py-2 font-medium">Moyen</th>
+                  <th className="px-4 py-2 font-medium">Avoir</th>
                   <th className="px-4 py-2 text-right font-medium">Montant TTC</th>
                 </tr>
               </thead>
@@ -199,6 +200,23 @@ export default async function PageFactures({
                       </Link>
                     </td>
                     <td className="px-4 py-3">{r.moyen === "carte" ? "Carte (Stripe)" : "Virement"}</td>
+                    <td className="px-4 py-3">
+                      {r.avoir ? (
+                        <span className="whitespace-nowrap">
+                          <span className="font-mono text-xs">{r.avoir.numero}</span>
+                          {r.avoir.pdf ? (
+                            <>
+                              {" · "}
+                              <a href={r.avoir.pdf} className="text-marque underline underline-offset-2">
+                                PDF
+                              </a>
+                            </>
+                          ) : null}
+                        </span>
+                      ) : (
+                        <span className="text-alpine-600">—</span>
+                      )}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-danger-700">
                       −{euros(r.montant)}
                     </td>
@@ -207,7 +225,7 @@ export default async function PageFactures({
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-glacier-300 font-semibold">
-                  <td className="px-4 py-3" colSpan={3}>
+                  <td className="px-4 py-3" colSpan={4}>
                     Total remboursé
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-danger-700">

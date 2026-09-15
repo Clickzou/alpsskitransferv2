@@ -347,9 +347,26 @@ export default async function FicheReservation({
           {rembourseTotal > 0 ? (
             <Info libelle="Remboursé">
               <strong className="text-danger-700">{euros(rembourseTotal, devise)}</strong>
-              {remboursements.length > 0
-                ? ` (${remboursements.map((r) => `${euros(r.montant, devise)} le ${heure(r.le)}`).join(", ")})`
-                : ""}
+              {remboursements.length > 0 ? (
+                <>
+                  {" ("}
+                  {remboursements.map((r, i) => (
+                    <span key={i}>
+                      {i > 0 ? ", " : ""}
+                      {euros(r.montant, devise)} le {heure(r.le)}
+                      {r.avoir?.pdf ? (
+                        <>
+                          {" — "}
+                          <a href={r.avoir.pdf} className="text-marque underline underline-offset-2">
+                            avoir {r.avoir.numero} (PDF)
+                          </a>
+                        </>
+                      ) : null}
+                    </span>
+                  ))}
+                  {")"}
+                </>
+              ) : null}
             </Info>
           ) : null}
           {course.payeLe && (course.paiementStripe ? stripe : true) ? (

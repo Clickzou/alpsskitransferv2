@@ -401,6 +401,97 @@ export async function rembourserStripe(
   );
 }
 
+/** Ce que le site garde d'un avoir : son numéro et son PDF. */
+export interface AvoirStripe {
+  id: string;
+  numero: string;
+  pdf: string | null;
+}
+
+interface AvoirBrut {
+  id: string;
+  number: string;
+  pdf: string | null;
+}
+
+/**
+ * L'avoir d'un remboursement — demande de JC, 15 septembre 2026.
+ *
+ * Une facture émise ne se corrige pas : rendre de l'argent sur une course
+ * facturée demande un avoir, avec son propre numéro (« …-CN-01 ») et son PDF.
+ * Stripe le numérote dans la série de la facture et en détaille la TVA — le
+ * taux est inclus, comme sur la facture.
+ *
+ * Deux façons de le relier à l'argent rendu, essayées dans l'ordre :
+ *  · **carte** — l'avoir cite le remboursement Stripe déjà fait
+ *    (`refunds[0][refund]`) : il ne rembourse pas une seconde fois ;
+ *  · **virement**, ou remboursement que Stripe ne rattache pas à la facture —
+ *    l'avoir le déclare réglé hors de Stripe (`out_of_band_amount`).
+ * Les deux ont été essayés en mode test le 15 septembre 2026, API
+ * `2026-08-26.dahlia`.
+ *
+ * `null` quand la facturation est éteinte ou que Stripe refuse : le
+ * remboursement, lui, est déjà fait et reste noté — l'avoir manquant se voit
+ * dans l'historique.
+ */
+export async function creerAvoir(demande: {
+  facture: string;
+  reference: string;
+  montant: number;
+  dejaRembourse: number;
+  /** Le remboursement Stripe — `null` pour un virement. */
+  remboursement: string | null;
+}): Promise<AvoirStripe | null> {
+  if (!facturesActives()) return null;
+  const centimes = String(Math.round(demande.montant * 100));
+  const cle = `avoir-${demande.reference}-${centimes}-${Math.round(demande.dejaRembourse * 100)}`;
+  const commun = {
+    invoice: demande.facture,
+    "lines[0][type]": "custom_line_item",
+    "lines[0][description]": `Remboursement — ${demande.reference}`,
+    "lines[0][quantity]": "1",
+    "lines[0][unit_amount]": centimes,
+    "lines[0][tax_rates][0]": process.env.STRIPE_TAUX_TVA!.trim(),
+    "metadata[reference]": demande.reference,
+  };
+
+  const avoir =
+    (demande.remboursement
+      ? await ecrireStripe<AvoirBrut>(
+          "/v1/credit_notes",
+          new URLSearchParams({
+            ...commun,
+            "refunds[0][refund]": demande.remboursement,
+            "refunds[0][amount_refunded]": centimes,
+          }),
+          `${cle}-carte`,
+        )
+      : null) ??
+    (await ecrireStripe<AvoirBrut>(
+      "/v1/credit_notes",
+      new URLSearchParams({ ...commun, out_of_band_amount: centimes }),
+      `${cle}-hors-stripe`,
+    ));
+
+  return avoir ? { id: avoir.id, numero: avoir.number, pdf: avoir.pdf } : null;
+}
+
+/** Relit un avoir — `null` si Stripe ne répond pas. */
+export async function lireAvoir(id: string): Promise<AvoirStripe | null> {
+  if (!stripeConfigure()) return null;
+  try {
+    const reponse = await fetch(`https://api.stripe.com/v1/credit_notes/${encodeURIComponent(id)}`, {
+      headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+      cache: "no-store",
+    });
+    if (!reponse.ok) return null;
+    const a = (await reponse.json()) as AvoirBrut;
+    return { id: a.id, numero: a.number, pdf: a.pdf };
+  } catch {
+    return null;
+  }
+}
+
 /** Relit une facture Stripe — `null` si Stripe n'est pas configuré ou ne répond pas. */
 export async function lireFacture(id: string): Promise<FactureStripe | null> {
   if (!stripeConfigure()) return null;

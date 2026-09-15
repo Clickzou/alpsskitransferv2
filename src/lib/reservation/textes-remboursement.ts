@@ -17,6 +17,8 @@ export interface DetailsRemboursement {
   moyen: "carte" | "virement";
   annulee: boolean;
   telephone: string;
+  /** Le PDF de l’avoir Stripe — `null` tant que la facturation est éteinte. */
+  avoir: string | null;
 }
 
 export interface TextesRemboursement {
@@ -40,6 +42,8 @@ export const TEXTES_REMBOURSEMENT: Record<Lang, TextesRemboursement> = {
           ? "The amount goes back to the card you paid with. Banks usually take 5 to 10 business days to show it."
           : "The amount is sent by bank transfer. Banks usually take a few business days to show it.",
         d.annulee ? "Your transfer is cancelled." : "Your transfer is still booked — nothing else changes.",
+        d.avoir ? "" : null,
+        d.avoir ? `Your credit note (PDF): ${d.avoir}` : null,
         "",
         `Any question: ${d.telephone}.`,
       ]),
@@ -57,6 +61,8 @@ export const TEXTES_REMBOURSEMENT: Record<Lang, TextesRemboursement> = {
           ? "Le montant revient sur la carte utilisée pour payer. Les banques mettent en général 5 à 10 jours ouvrés à l’afficher."
           : "Le montant vous est versé par virement. Les banques mettent en général quelques jours ouvrés à l’afficher.",
         d.annulee ? "Votre transfert est annulé." : "Votre transfert reste réservé : rien d’autre ne change.",
+        d.avoir ? "" : null,
+        d.avoir ? `Votre avoir (PDF) : ${d.avoir}` : null,
         "",
         `Une question : ${d.telephone}.`,
       ]),
@@ -74,6 +80,8 @@ export const TEXTES_REMBOURSEMENT: Record<Lang, TextesRemboursement> = {
           ? "Der Betrag geht auf die Karte zurück, mit der Sie bezahlt haben. Banken zeigen ihn meist nach 5 bis 10 Werktagen an."
           : "Der Betrag wird per Überweisung erstattet. Banken zeigen ihn meist nach einigen Werktagen an.",
         d.annulee ? "Ihr Transfer ist storniert." : "Ihr Transfer bleibt gebucht — sonst ändert sich nichts.",
+        d.avoir ? "" : null,
+        d.avoir ? `Ihre Gutschrift (PDF): ${d.avoir}` : null,
         "",
         `Bei Fragen: ${d.telephone}.`,
       ]),
@@ -91,6 +99,8 @@ export const TEXTES_REMBOURSEMENT: Record<Lang, TextesRemboursement> = {
           ? "L’importo torna sulla carta usata per pagare. Le banche impiegano di solito da 5 a 10 giorni lavorativi a mostrarlo."
           : "L’importo ti viene inviato con bonifico. Le banche impiegano di solito alcuni giorni lavorativi a mostrarlo.",
         d.annulee ? "Il tuo transfer è annullato." : "Il tuo transfer resta prenotato: non cambia nient’altro.",
+        d.avoir ? "" : null,
+        d.avoir ? `La tua nota di credito (PDF): ${d.avoir}` : null,
         "",
         `Per qualsiasi domanda: ${d.telephone}.`,
       ]),

@@ -16,8 +16,11 @@ import { textesDecision } from "@/lib/reservation/textes-decision";
 import { resortParSlug } from "@/lib/resorts";
 import { formaterAlpes } from "@/lib/temps";
 import { SITE } from "@/data/site";
+import { factureDeReference, factureParId } from "@/lib/admin/factures";
 import {
+  creerAvoir,
   creerSessionCheckout,
+  facturesActives,
   lireFacture,
   lirePaiementStripe,
   marquerFacturePayee,
@@ -509,8 +512,10 @@ export async function actionRembourser(donnees: FormData): Promise<void> {
     paiement_stripe: string | null;
     client_email: string;
     langue: string | null;
+    facture_stripe: string | null;
   }>("reservations", {
-    colonnes: "reference,statut,airport,resort,montant,devise,paye_le,paiement_stripe,client_email,langue",
+    colonnes:
+      "reference,statut,airport,resort,montant,devise,paye_le,paiement_stripe,client_email,langue,facture_stripe",
     filtres: [{ colonne: "reference", operateur: "eq", valeur: reference }],
     limite: 1,
   });
@@ -536,10 +541,39 @@ export async function actionRembourser(donnees: FormData): Promise<void> {
     identifiant = remboursement.id;
   }
 
+  /*
+    L'avoir — demande de JC, 15 septembre 2026. Seulement si la course a une
+    facture payée : la facture téléphonique est gardée en base, celle du site se
+    retrouve par sa référence. Sans facture (facturation éteinte, ou course
+    payée avant l'allumage), il n'y a rien à annuler et donc pas d'avoir.
+  */
+  let avoir: Awaited<ReturnType<typeof creerAvoir>> = null;
+  let avoirManque = false;
+  if (facturesActives()) {
+    const facture = r.facture_stripe
+      ? await factureParId(r.facture_stripe)
+      : await factureDeReference(reference);
+    if (facture?.statut === "Payée") {
+      avoir = await creerAvoir({
+        facture: facture.id,
+        reference,
+        montant,
+        dejaRembourse: etat.dejaRembourse,
+        remboursement: identifiant,
+      });
+      avoirManque = !avoir;
+    }
+  }
+
   const annuler = donnees.get("annuler") === "on" && r.statut !== "annulee";
   await inserer("paiements", {
     reference,
-    session_stripe: null,
+    /*
+      Une ligne de remboursement n'a pas de session Checkout : la colonne porte
+      l'identifiant de son avoir (`cn_…`), que l'onglet Factures relit chez
+      Stripe pour le numéro et le PDF.
+    */
+    session_stripe: avoir?.id ?? null,
     paiement_stripe: r.paiement_stripe,
     montant,
     devise: r.devise ?? "EUR",
@@ -561,6 +595,7 @@ export async function actionRembourser(donnees: FormData): Promise<void> {
         moyen: carte ? "carte" : "virement",
         annulee: annuler,
         telephone: ENTREPRISE.telephoneAffiche,
+        avoir: avoir?.pdf ?? null,
       }),
       "",
       `${SITE.nom} — ${SITE.url}`,
@@ -576,6 +611,8 @@ export async function actionRembourser(donnees: FormData): Promise<void> {
         ? `Remboursement de ${lisible} par Stripe (${identifiant})`
         : `Remboursement de ${lisible} par virement, noté`,
       `par ${utilisateur.email}`,
+      avoir ? `avoir ${avoir.numero}` : null,
+      avoirManque ? "AVOIR NON ÉMIS — à faire dans Stripe" : null,
       annuler ? "course annulée" : null,
       envoye ? null : "e-mail au client NON parti",
     ]
