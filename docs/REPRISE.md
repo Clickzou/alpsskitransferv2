@@ -38,6 +38,11 @@
   sous le bouton des e-mails.
 - **Demandé, à faire** : onglet **Planning** (calendrier semaine / mois,
   chauffeur et note par trajet — migration de deux colonnes).
+- **Assistant « Une question ? »** sur tous les écrans du back-office : Claude
+  (`claude-opus-5`, effort medium, repli `fallbacks: "default"`) répond depuis
+  `lib/admin/guide-assistant.ts`, mis en cache (~8 500 jetons, ~1,5 centime la
+  question). Clé : celle de Clickzou (choix de JC), posée sur Vercel.
+  **Tenir le guide à jour quand un écran change.**
 - **Reste à faire** : tests 2c (adresse, maintenant chiffrée), 3 à 5 ci-dessous.
 
 ---
