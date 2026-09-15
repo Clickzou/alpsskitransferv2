@@ -75,8 +75,13 @@
 - **Back-office sur téléphone (validé par JC)** : `MenuMobile` sous 768 px
   (onglets, compte, mention Clickzou), vue Mois du planning en liste de jours,
   bouton de l'assistant au-dessus de la barre de publication des Tarifs.
-- **Reste à faire** : test 5 (limite de devis) ; mercredi matin, vérifier le
-  relevé de nuit du 16 (Alpy compris) et la relance des adresses.
+- **Test 5 non joué** (JC : « je te fais confiance ») ; le compteur
+  `compter_demande` répond en base (vérifié le 15 au soir).
+- **Mercredi 16 au matin, en premier** : vérifier le relevé de nuit du 16
+  (50 trajets, Alpy compris) et la relance des adresses. Ensuite, la liste
+  « avant la mise en ligne » : barème et remise aller-retour avec Nassim,
+  `EMAIL_EXPLOITANT`, Stripe (invitation, identité, clés live, dénomination,
+  « dus » sur le PDF payé), purge des données de test, domaine puis indexation.
 
 ---
 
