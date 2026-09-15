@@ -9,6 +9,8 @@
  * croire à une confirmation qui n'est jamais partie.
  */
 
+import { SITE } from "@/data/site";
+
 export function emailConfigure(): boolean {
   return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_EXPEDITEUR);
 }
@@ -26,6 +28,17 @@ export interface Message {
   destinataire: string | string[];
   sujet: string;
   texte: string;
+}
+
+/**
+ * « bookings@… » → « Alps Ski Transfers <bookings@…> ».
+ *
+ * Sans nom affiché, les messageries montrent la partie avant l'arobase : le
+ * client lisait « bookings » dans sa boîte, pas la marque (JC, 15 septembre
+ * 2026). Une variable qui porte déjà son nom est laissée telle quelle.
+ */
+function expediteur(adresse: string): string {
+  return adresse.includes("<") ? adresse : `${SITE.nom} <${adresse.trim()}>`;
 }
 
 /** « a@x.fr, b@y.fr » → ["a@x.fr", "b@y.fr"]. Les vides sautent. */
@@ -48,7 +61,7 @@ export async function envoyer(message: Message): Promise<boolean> {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: process.env.EMAIL_EXPEDITEUR,
+        from: expediteur(process.env.EMAIL_EXPEDITEUR ?? ""),
         to,
         subject: message.sujet,
         text: message.texte,
