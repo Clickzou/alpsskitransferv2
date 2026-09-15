@@ -36,10 +36,15 @@ export interface Message {
  *
  * Sans nom affiché, les messageries montrent la partie avant l'arobase : le
  * client lisait « bookings » dans sa boîte, pas la marque (JC, 15 septembre
- * 2026). Une variable qui porte déjà son nom est laissée telle quelle.
+ * 2026). Le nom est toujours celui du site : une variable qui en porterait un
+ * autre — « bookings <bookings@…> », guillemets compris — n'en garde que
+ * l'adresse. C'est ce qui s'est passé en production après une première
+ * correction qui respectait le nom déjà posé.
  */
-function expediteur(adresse: string): string {
-  return adresse.includes("<") ? adresse : `${SITE.nom} <${adresse.trim()}>`;
+export function expediteur(valeur: string): string {
+  const entre = /<([^>]+)>/.exec(valeur);
+  const adresse = (entre ? entre[1] : valeur).replace(/["'\s]/g, "");
+  return `${SITE.nom} <${adresse}>`;
 }
 
 /** « a@x.fr, b@y.fr » → ["a@x.fr", "b@y.fr"]. Les vides sautent. */

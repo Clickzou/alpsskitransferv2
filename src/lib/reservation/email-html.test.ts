@@ -1,5 +1,18 @@
 import { describe, expect, it } from "vitest";
+import { expediteur } from "./email";
 import { langueDuTexte, texteEnHtml } from "./email-html";
+
+describe("expediteur", () => {
+  it("affiche toujours la marque, quel que soit le nom posé dans la variable", () => {
+    expect(expediteur("bookings@alpsskitransfers.com")).toBe("Alps Ski Transfers <bookings@alpsskitransfers.com>");
+    expect(expediteur('"bookings" <bookings@alpsskitransfers.com>')).toBe(
+      "Alps Ski Transfers <bookings@alpsskitransfers.com>",
+    );
+    expect(expediteur(' "bookings@alpsskitransfers.com"\n')).toBe(
+      "Alps Ski Transfers <bookings@alpsskitransfers.com>",
+    );
+  });
+});
 
 describe("texteEnHtml", () => {
   it("fait d'un lien de gestion un bouton dans la langue du client", () => {
