@@ -57,7 +57,13 @@ export default function TableauConcurrence({
                 {[l.alps2alps, l.alpy].map((c, i) => (
                   <td key={i} className="px-3 py-2 text-right tabular-nums" title={c.detail ?? undefined}>
                     {c.prix !== null ? (
-                      euros(c.prix)
+                      <>
+                        {euros(c.prix)}
+                        {/* Un prix repris d'un relevé précédent, le concurrent n'ayant pas répondu cette fois. */}
+                        {c.detail?.includes("relevé du") ? (
+                          <span className="block text-xs text-alpine-500">{c.detail.slice(c.detail.indexOf("relevé du"))}</span>
+                        ) : null}
+                      </>
                     ) : (
                       <span className="text-xs text-alpine-500">{c.detail ? "indisponible" : "pas encore relevé"}</span>
                     )}

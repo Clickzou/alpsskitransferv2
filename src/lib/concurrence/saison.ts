@@ -9,7 +9,7 @@ import { GROUPE_REFERENCE } from "./alignement";
 import { isoAlpes, meilleureOffre, type Gamme } from "./comparaison";
 import { CODES_LIEUX, type Concurrent } from "./lieux";
 import { trajetsSuivis } from "./releve";
-import { lireAlps2alps, lireAlpy, ouvrirSessionAlpy, type Lecture, type SessionAlpy } from "./sources";
+import { alpyAReessayer, lireAlps2alps, lireAlpy, ouvrirSessionAlpy, type Lecture, type SessionAlpy } from "./sources";
 import type { LigneComparaison } from "./tableau";
 
 /**
@@ -88,6 +88,7 @@ export async function releverLotSaison(lot: number, maintenant = new Date()) {
   const dates = datesAVenir(maintenant);
   let session: SessionAlpy | null = null;
   let prixTrouves = 0;
+  let reessais = 3;
 
   for (const t of trajets) {
     const depart = CODES_LIEUX[t.airport];
@@ -109,6 +110,14 @@ export async function releverLotSaison(lot: number, maintenant = new Date()) {
         alpy = session
           ? await lireAlpy(session, depart.alpy, arrivee.alpy, t.airport.endsWith("-airport"), date, GROUPE_REFERENCE)
           : { ok: false, raison: "Alpy injoignable" };
+        if (alpyAReessayer(alpy) && reessais > 0) {
+          reessais -= 1;
+          await attendre(20_000);
+          session = await ouvrirSessionAlpy();
+          alpy = session
+            ? await lireAlpy(session, depart.alpy, arrivee.alpy, t.airport.endsWith("-airport"), date, GROUPE_REFERENCE)
+            : { ok: false, raison: "Alpy injoignable" };
+        }
         await attendre(PAUSE_ALPY_MS);
       }
 

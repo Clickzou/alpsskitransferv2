@@ -99,6 +99,36 @@ async function lignesDu(date: string, f: Filtres): Promise<LigneReleve[]> {
 }
 
 /**
+ * Un prix manquant remplacé par le dernier prix connu, s'il a moins de trois
+ * jours — même trajet, jour, groupe, concurrent et gamme.
+ *
+ * Le 15 septembre 2026, Alpy a filtré le relevé pendant une demi-heure : tout
+ * l'onglet affichait « indisponible » et la mise à jour des tarifs ne voyait
+ * plus qu'alps2alps. Un concurrent qui ne répond pas un soir n'a pas changé
+ * ses prix pour autant ; au-delà de trois jours, on ne présume plus.
+ */
+async function avecDerniersPrixConnus(lignes: LigneReleve[], date: string): Promise<LigneReleve[]> {
+  if (!lignes.some((l) => l.prix === null)) return lignes;
+  const depuis = new Date(new Date(`${date}T12:00:00Z`).getTime() - 3 * JOUR_MS).toISOString().slice(0, 10);
+  const anciens = await lire<LigneReleve>("concurrence_releves", {
+    filtres: [
+      { colonne: "releve_le", operateur: "gte", valeur: depuis },
+      { colonne: "releve_le", operateur: "lt", valeur: date },
+      { colonne: "prix", operateur: "not.is", valeur: "null" },
+    ],
+    tri: { colonne: "releve_le", croissant: false },
+    limite: 5000,
+  });
+  const cle = (l: LigneReleve) => [l.airport, l.resort, l.jour, l.passagers, l.source, l.gamme].join("|");
+  const connus = new Map<string, LigneReleve>();
+  for (const a of anciens) if (!connus.has(cle(a))) connus.set(cle(a), a);
+  return lignes.map((l) => {
+    const connu = l.prix === null ? connus.get(cle(l)) : undefined;
+    return connu ? { ...l, prix: connu.prix, detail: `${connu.detail ?? "prix"} — relevé du ${connu.releve_le}` } : l;
+  });
+}
+
+/**
  * Où en est le relevé du jour : combien de trajets suivis ont déjà leurs prix,
  * et s'il tourne encore — une ligne écrite il y a moins de six minutes, alors
  * que tous les trajets ne sont pas faits. Un lot dure trois minutes : au-delà
@@ -153,7 +183,7 @@ export async function dernierReleve(maintenant = new Date()): Promise<{ date: st
     filtres: [{ colonne: "releve_le", operateur: "eq", valeur: date }],
     limite: 5000,
   });
-  return { date, lignes };
+  return { date, lignes: await avecDerniersPrixConnus(lignes, date) };
 }
 
 export async function tableauConcurrence(grille: Grille, f: Filtres, maintenant = new Date()) {
@@ -162,7 +192,7 @@ export async function tableauConcurrence(grille: Grille, f: Filtres, maintenant 
   const ancien = dernier ? await dateReleve(true, il30j) : null;
   const [trajets, recents, anciens] = await Promise.all([
     trajetsSuivis(),
-    dernier ? lignesDu(dernier, f) : Promise.resolve([]),
+    dernier ? lignesDu(dernier, f).then((l) => avecDerniersPrixConnus(l, dernier)) : Promise.resolve([]),
     ancien && ancien !== dernier ? lignesDu(ancien, f) : Promise.resolve([]),
   ]);
 

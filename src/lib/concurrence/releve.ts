@@ -2,7 +2,7 @@ import { ecrireLignes, lire } from "@/lib/reservation/supabase";
 import { dateDuJour, isoAlpes, meilleureOffre, type Gamme } from "./comparaison";
 import { GROUPE_REFERENCE } from "./alignement";
 import { CODES_LIEUX, GROUPES, TRAJETS_PAR_DEFAUT, type Concurrent, type Jour } from "./lieux";
-import { lireAlps2alps, lireAlpy, ouvrirSessionAlpy, type Lecture, type SessionAlpy } from "./sources";
+import { alpyAReessayer, lireAlps2alps, lireAlpy, ouvrirSessionAlpy, type Lecture, type SessionAlpy } from "./sources";
 
 /**
  * Le relevé de nuit : les prix des concurrents sur les trajets suivis, écrits
@@ -65,6 +65,8 @@ export async function releverLot(lot: number, maintenant = new Date()) {
   let session: SessionAlpy | null = null;
   let prixTrouves = 0;
   const erreurs = new Set<string>();
+  // Deux seconds essais par lot au plus : chacun coûte vingt secondes, et le lot doit tenir en cinq minutes.
+  let reessais = 2;
 
   for (const t of trajets) {
     const codesDepart = CODES_LIEUX[t.airport];
@@ -97,6 +99,18 @@ export async function releverLot(lot: number, maintenant = new Date()) {
           alpy = session
             ? await lireAlpy(session, codesDepart.alpy, codesArrivee.alpy, t.airport.endsWith("-airport"), date, passagers)
             : { ok: false, raison: "Alpy injoignable" };
+          /*
+            Un blocage passager d'Alpy (page inattendue, 403) se réessaie une fois
+            après vingt secondes, avec une session neuve — voir `lireOffresAlpy`.
+          */
+          if (alpyAReessayer(alpy) && reessais > 0) {
+            reessais -= 1;
+            await new Promise((r) => setTimeout(r, 20_000));
+            session = await ouvrirSessionAlpy();
+            alpy = session
+              ? await lireAlpy(session, codesDepart.alpy, codesArrivee.alpy, t.airport.endsWith("-airport"), date, passagers)
+              : { ok: false, raison: "Alpy injoignable" };
+          }
           await new Promise((r) => setTimeout(r, PAUSE_ALPY_MS));
         }
 

@@ -197,10 +197,26 @@ export function lireOffresAlpy(html: string, passagers: number): Lecture {
     });
   }
   if (offres.length) return { ok: true, offres };
-  return {
-    ok: false,
-    raison: /transfer-card/.test(html)
-      ? "Alpy : page de résultats illisible — leur site a peut-être changé"
-      : "Alpy ne propose pas ce trajet à cette date",
-  };
+  if (/transfer-card/.test(html)) {
+    return { ok: false, raison: "Alpy : page de résultats illisible — leur site a peut-être changé" };
+  }
+  /*
+    Une page sans offre n'est pas forcément un trajet non desservi. Le
+    15 septembre 2026, pendant une demi-heure, Alpy a renvoyé des pages vides
+    pour des trajets qu'il avait chiffrés la veille et qu'il rechiffrait vingt
+    minutes plus tard : son anti-robot (Imperva) filtrait. Seule la page de
+    résultats (« Choose your private transfer ») dit vraiment « rien à cette
+    date » ; toute autre page est un blocage, qui se réessaie.
+  */
+  const titre = html.match(/<title>([^<]*)<\/title>/i)?.[1]?.trim() || "sans titre";
+  return /choose your private transfer/i.test(html)
+    ? { ok: false, raison: "Alpy ne propose pas ce trajet à cette date" }
+    : { ok: false, raison: `${ALPY_PAGE_INATTENDUE} (« ${titre.slice(0, 60)} »)` };
+}
+
+export const ALPY_PAGE_INATTENDUE = "Alpy a renvoyé une page inattendue";
+
+/** Les échecs d'Alpy qui valent la peine d'un second essai, avec une session neuve. */
+export function alpyAReessayer(lecture: Lecture): boolean {
+  return !lecture.ok && /page inattendue|répondu 403|injoignable/.test(lecture.raison);
 }

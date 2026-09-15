@@ -37,6 +37,13 @@ describe("veille des prix", () => {
     ]);
   });
 
+  it("ne prend pas une page de blocage d'Alpy pour un trajet non desservi", () => {
+    const vide = lireOffresAlpy("<title>purchase</title><h1>Choose your private transfer</h1>", 4);
+    expect(!vide.ok && vide.raison).toBe("Alpy ne propose pas ce trajet à cette date");
+    const bloque = lireOffresAlpy("<title>Alps ski resorts transfers</title><form></form>", 4);
+    expect(!bloque.ok && bloque.raison).toMatch(/page inattendue/);
+  });
+
   it("chiffre notre prix standard, et aucun premium pour un groupe de huit", () => {
     const samedi = dateDuJour("samedi", maintenant);
     expect(notrePrix(GRILLE_DEFAUT, "geneva-airport", "val-thorens", 8, "standard", samedi)?.categorie).toBe("standard");
