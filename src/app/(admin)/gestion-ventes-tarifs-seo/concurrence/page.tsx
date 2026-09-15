@@ -24,7 +24,7 @@ import {
   actionReleverTout,
   actionRetirerTrajet,
 } from "./actions";
-import ChampEcart from "./ChampEcart";
+import { BoutonAppliquer, ChampEcart } from "./ChampEcart";
 import Rafraichir from "./Rafraichir";
 import TableauConcurrence from "./TableauConcurrence";
 
@@ -192,7 +192,7 @@ export default async function PageConcurrence({
       ) : null}
 
       {/* ------------------------------------------ le bouton unique */}
-      <section className="mt-5 rounded-xl border-2 border-alpes/30 bg-white p-5 shadow-carte">
+      <section id="apercu" className="mt-5 scroll-mt-6 rounded-xl border-2 border-alpes/30 bg-white p-5 shadow-carte">
         <h2 className="font-display text-lg text-alpine">Mettre à jour tous nos tarifs</h2>
         <ul className="mt-2 max-w-3xl space-y-1 text-sm leading-relaxed text-alpine-700">
           <li>
@@ -313,14 +313,9 @@ export default async function PageConcurrence({
               référence. Le week-end et la nuit suivent la même règle.
             </p>
             </details>
-            <form action={actionMettreAJourTarifs} className="mt-4">
-              <input type="hidden" name="ecart" value={String(ecart)} />
-              <BoutonConfirmation
-                libelle="Appliquer ces nouveaux tarifs"
-                enCours="Mise à jour…"
-                confirmer={`Appliquer ces tarifs à ${ecart} € sous le concurrent le moins cher, sur tous les trajets et tous les véhicules ? Ils sont publiés tout de suite ; l’onglet Tarifs permet de revenir en arrière.`}
-                className="rounded bg-marque px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600"
-              />
+            {/* Le champ d'écart, plus haut, appartient à ce formulaire (attribut `form`). */}
+            <form id="appliquer-tarifs" action={actionMettreAJourTarifs} className="mt-4">
+              <BoutonAppliquer ecart={ecart} />
             </form>
           </>
         )}
