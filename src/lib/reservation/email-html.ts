@@ -126,10 +126,15 @@ function bouton(url: string, langue: Langue): string {
 <p style="margin:0 0 14px;font-size:11px;line-height:1.5;color:${COULEURS.doux};word-break:break-all"><a href="${href}" style="color:${COULEURS.doux}">${href}</a></p>`;
 }
 
-/** « Référence : AST-… », « Total: 515 € » — un libellé court, puis une valeur. */
+/**
+ * « Référence : AST-… », « Total: 515 € » — un libellé court, puis une valeur.
+ * Une valeur qui finit par un point est une phrase (« Une question : +33… ») :
+ * elle reste dans le texte.
+ */
 function libelleValeur(ligne: string): [string, string] | null {
   const m = /^([^:.,!?→]{2,32}?)\s?:\s+(.+)$/.exec(ligne.trim());
-  return m ? [m[1].trim(), m[2].trim()] : null;
+  if (!m || /[.!?]$/.test(m[2])) return null;
+  return [m[1].trim(), m[2].trim()];
 }
 
 function enCapitales(ligne: string): boolean {

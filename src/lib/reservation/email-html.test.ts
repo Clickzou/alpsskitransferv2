@@ -31,6 +31,10 @@ describe("texteEnHtml", () => {
     expect(html).not.toContain("<b>chalet");
   });
 
+  it("laisse une phrase qui finit par un point dans le texte", () => {
+    expect(texteEnHtml("Une question : +33 7 69 78 91 89.", "S")).not.toContain(">Une question</td>");
+  });
+
   it("signale en rouge ce qui reste à faire", () => {
     expect(texteEnHtml("ALLER\n  ADRESSE À OBTENIR PAR TÉLÉPHONE", "S")).toContain("#B42318");
   });
