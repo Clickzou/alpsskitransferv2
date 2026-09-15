@@ -43,6 +43,11 @@
   `lib/admin/guide-assistant.ts`, mis en cache (~8 500 jetons, ~1,5 centime la
   question). Clé : celle de Clickzou (choix de JC), posée sur Vercel.
   **Tenir le guide à jour quand un écran change.**
+- **Tâches planifiées réparées** : `vercel.json` appelait `/api/relances` et
+  `/api/concurrence?lot=` sans barre finale ; le site redirige (308) et Vercel ne
+  suit pas les redirections — **ni relevé de nuit ni rappel d'adresse n'ont
+  tourné avant le 15 septembre**. Barres ajoutées, test de garde. À vérifier
+  mercredi matin : des prix datés du 16 dans `concurrence_releves`.
 - **Reste à faire** : tests 2c (adresse, maintenant chiffrée), 3 à 5 ci-dessous.
 
 ---

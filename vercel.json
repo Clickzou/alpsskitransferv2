@@ -1,20 +1,20 @@
 {
   "crons": [
     {
-      "path": "/api/relances",
+      "path": "/api/relances/",
       "schedule": "0 7 * * *"
     },
-    { "path": "/api/concurrence?lot=0", "schedule": "0 0 * * *" },
-    { "path": "/api/concurrence?lot=1", "schedule": "20 0 * * *" },
-    { "path": "/api/concurrence?lot=2", "schedule": "40 0 * * *" },
-    { "path": "/api/concurrence?lot=3", "schedule": "0 1 * * *" },
-    { "path": "/api/concurrence?lot=4", "schedule": "20 1 * * *" },
-    { "path": "/api/concurrence?lot=5", "schedule": "40 1 * * *" },
-    { "path": "/api/concurrence?lot=6", "schedule": "0 2 * * *" },
-    { "path": "/api/concurrence?lot=7", "schedule": "20 2 * * *" },
-    { "path": "/api/concurrence?lot=8", "schedule": "40 2 * * *" },
-    { "path": "/api/concurrence?lot=9", "schedule": "0 3 * * *" },
-    { "path": "/api/concurrence?lot=10", "schedule": "20 3 * * *" },
-    { "path": "/api/concurrence?lot=11", "schedule": "40 3 * * *" }
+    { "path": "/api/concurrence/?lot=0", "schedule": "0 0 * * *" },
+    { "path": "/api/concurrence/?lot=1", "schedule": "20 0 * * *" },
+    { "path": "/api/concurrence/?lot=2", "schedule": "40 0 * * *" },
+    { "path": "/api/concurrence/?lot=3", "schedule": "0 1 * * *" },
+    { "path": "/api/concurrence/?lot=4", "schedule": "20 1 * * *" },
+    { "path": "/api/concurrence/?lot=5", "schedule": "40 1 * * *" },
+    { "path": "/api/concurrence/?lot=6", "schedule": "0 2 * * *" },
+    { "path": "/api/concurrence/?lot=7", "schedule": "20 2 * * *" },
+    { "path": "/api/concurrence/?lot=8", "schedule": "40 2 * * *" },
+    { "path": "/api/concurrence/?lot=9", "schedule": "0 3 * * *" },
+    { "path": "/api/concurrence/?lot=10", "schedule": "20 3 * * *" },
+    { "path": "/api/concurrence/?lot=11", "schedule": "40 3 * * *" }
   ]
 }
