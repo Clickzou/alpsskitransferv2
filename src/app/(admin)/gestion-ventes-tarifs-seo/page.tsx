@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import {
   adresseManquante,
   aValider,
+  bagagesCourts,
   decrire,
   estAAssurer,
   euros,
@@ -102,6 +103,9 @@ function LigneCourse({ course, achat = false }: { course: Course; achat?: boolea
                 </span>
                 <span className="text-alpine-600">
                   {s.passagers} passager{s.passagers > 1 ? "s" : ""} · {s.vehicule}
+                  {bagagesCourts(course.bagages, course.bagagesSki) ? (
+                    <span className="block text-xs">{bagagesCourts(course.bagages, course.bagagesSki)}</span>
+                  ) : null}
                 </span>
               </p>
             </div>

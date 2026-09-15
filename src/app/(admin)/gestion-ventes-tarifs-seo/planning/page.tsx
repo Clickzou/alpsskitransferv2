@@ -101,6 +101,7 @@ function CarteTrajet({ t, retour, large = false }: { t: Trajet; retour: string; 
         <p className={`font-medium leading-snug text-alpine ${large ? "" : "break-words"}`}>{t.trajet}</p>
         <p className="text-xs leading-snug text-alpine-600">
           {t.client} · {t.passagers} pers. · {t.vehicule}
+          {t.bagages ? <span className="block">{t.bagages}</span> : null}
         </p>
         <Pastille t={t} />
         {t.note ? <p className="whitespace-pre-line text-xs italic leading-snug text-alpine-700">{t.note}</p> : null}

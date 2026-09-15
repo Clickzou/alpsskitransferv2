@@ -1,4 +1,4 @@
-import { estAAssurer, sensDeLaCourse } from "@/lib/admin/affichage";
+import { bagagesCourts, estAAssurer, sensDeLaCourse } from "@/lib/admin/affichage";
 import type { Course } from "@/lib/admin/courses";
 import { instantAlpes, saisieAlpes } from "@/lib/temps";
 
@@ -45,6 +45,8 @@ export interface Trajet {
   telephone: string;
   passagers: number;
   vehicule: string;
+  /** « 2 valises · 1 housse à skis », vide s'il n'y en a pas. */
+  bagages: string;
   vol: string;
   chauffeur: string | null;
   note: string | null;
@@ -173,6 +175,7 @@ export function trajetsDe(courses: Course[], debut: Date, fin: Date, maintenant 
         telephone: course.client.telephone,
         passagers: s.passagers,
         vehicule: s.vehicule,
+        bagages: bagagesCourts(course.bagages, course.bagagesSki),
         vol: s.vol,
         chauffeur: course.planning[sens].chauffeur,
         note: course.planning[sens].note,

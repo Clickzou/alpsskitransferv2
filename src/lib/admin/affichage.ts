@@ -165,6 +165,20 @@ export interface Sens {
   notePlanning: string | null;
 }
 
+/**
+ * « 2 valises · 1 housse » — ce que le coffre doit prendre, en une mention
+ * courte pour les lignes repliées et le planning. Rien quand il n'y a rien
+ * (JC, 15 septembre 2026 : valises et housses doivent se voir partout).
+ */
+export function bagagesCourts(valises: number, housses: number): string {
+  return [
+    valises > 0 ? `${valises} valise${valises > 1 ? "s" : ""}` : null,
+    housses > 0 ? `${housses} housse${housses > 1 ? "s" : ""} à skis` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 /** Ce que la carte affiche à la place d'une adresse que le client n'a pas encore donnée. */
 const MANQUANTE = "MANQUANTE — à demander au client";
 
