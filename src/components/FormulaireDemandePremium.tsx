@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { ENTREPRISE } from "@/data/site";
-import { TYPES_DEMANDE } from "@/data/page-premium";
+import { CLES_DEMANDE, type LibellesFormulaire } from "@/data/page-premium";
+import type { Lang } from "@/lib/i18n";
 
 type Etat = "saisie" | "envoi" | "envoye" | "erreur";
 
 /**
- * Formulaire des demandes sur mesure — `/luxury-ski-transfers/`.
+ * Formulaire des demandes sur mesure, dans les quatre langues.
  *
  * Il ne ressemble pas au formulaire de contact, et c'est le point : une demande
  * de mise à disposition ou d'événement se chiffre sur des éléments précis — la
@@ -20,10 +21,22 @@ type Etat = "saisie" | "envoi" | "envoye" | "erreur";
  * refuse d'envoyer parce qu'une date n'est pas encore arrêtée perd exactement le
  * client qu'il vise — celui dont le programme n'est pas fixé.
  *
+ * **La nature part en clé, pas en libellé.** Le visiteur choisit « Hochzeit » ou
+ * « Matrimonio », le serveur reçoit `wedding` et l'exploitant lit « Mariage » :
+ * il reçoit le même vocabulaire quelle que soit la langue du demandeur, et
+ * l'objet de l'e-mail reste triable. La langue, elle, est transmise à part —
+ * c'est elle qui dit dans quelle langue répondre.
+ *
  * Comme le contact, il **ne stocke rien** : la demande part par e-mail à
  * l'exploitant, et c'est tout.
  */
-export default function FormulaireDemandePremium() {
+export default function FormulaireDemandePremium({
+  lang,
+  champs,
+}: {
+  lang: Lang;
+  champs: LibellesFormulaire;
+}) {
   const [etat, setEtat] = useState<Etat>("saisie");
   const [message, setMessage] = useState<string | null>(null);
 
@@ -41,7 +54,7 @@ export default function FormulaireDemandePremium() {
       const reponse = await fetch("/api/demande-premium/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(donnees),
+        body: JSON.stringify({ ...donnees, langue: lang }),
       });
       const resultat = await reponse.json();
 
@@ -52,11 +65,7 @@ export default function FormulaireDemandePremium() {
       }
 
       setEtat("erreur");
-      setMessage(
-        resultat.erreur === "champs-invalides"
-          ? "Please check the fields marked as required."
-          : null,
-      );
+      setMessage(resultat.erreur === "champs-invalides" ? champs.erreurChamps : null);
     } catch {
       setEtat("erreur");
       setMessage(null);
@@ -66,18 +75,14 @@ export default function FormulaireDemandePremium() {
   if (etat === "envoye") {
     return (
       <div className="rounded-xl border border-alpes/30 bg-alpes-50 p-6">
-        <p className="font-display text-lg text-alpine">Request received</p>
-        <p className="mt-2 text-sm leading-relaxed text-alpine-700">
-          Thank you. We read every request personally and come back in writing — within 24 hours,
-          usually the same day. If the dates are close, call {ENTREPRISE.telephoneAffiche} and we
-          will start on it straight away.
-        </p>
+        <p className="font-display text-lg text-alpine">{champs.succes.titre}</p>
+        <p className="mt-2 text-sm leading-relaxed text-alpine-700">{champs.succes.texte}</p>
         <button
           type="button"
           onClick={() => setEtat("saisie")}
           className="mt-4 text-sm font-semibold text-marque hover:underline"
         >
-          Send another request
+          {champs.succes.relancer}
         </button>
       </div>
     );
@@ -86,20 +91,20 @@ export default function FormulaireDemandePremium() {
   const champ =
     "mt-1 w-full min-w-0 rounded border border-glacier-300 bg-white px-3 py-2 text-sm text-alpine focus:border-alpes focus:outline-none focus:ring-2 focus:ring-alpes/40";
   const etiquette = "block text-xs font-medium uppercase tracking-wide text-alpine-600";
-  const facultatif = <span className="normal-case text-alpine-600">(optional)</span>;
+  const facultatif = <span className="normal-case text-alpine-600">{champs.facultatif}</span>;
 
   return (
     <form onSubmit={envoyer} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={etiquette} htmlFor="premium-nom">
-            Your name
+            {champs.nom}
           </label>
           <input id="premium-nom" name="nom" required maxLength={120} className={champ} />
         </div>
         <div>
           <label className={etiquette} htmlFor="premium-email">
-            Email
+            {champs.email}
           </label>
           <input
             id="premium-email"
@@ -115,7 +120,7 @@ export default function FormulaireDemandePremium() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={etiquette} htmlFor="premium-telephone">
-            Phone {facultatif}
+            {champs.telephone} {facultatif}
           </label>
           <input
             id="premium-telephone"
@@ -127,7 +132,7 @@ export default function FormulaireDemandePremium() {
         </div>
         <div>
           <label className={etiquette} htmlFor="premium-societe">
-            Company, brand or agency {facultatif}
+            {champs.societe} {facultatif}
           </label>
           <input id="premium-societe" name="societe" maxLength={160} className={champ} />
         </div>
@@ -135,30 +140,32 @@ export default function FormulaireDemandePremium() {
 
       <div>
         <label className={etiquette} htmlFor="premium-type">
-          What do you need
+          {champs.type}
         </label>
-        <select id="premium-type" name="type" className={champ} defaultValue={TYPES_DEMANDE[0]}>
-          {TYPES_DEMANDE.map((type) => (
-            <option key={type}>{type}</option>
+        <select id="premium-type" name="type" className={champ} defaultValue={CLES_DEMANDE[0]}>
+          {CLES_DEMANDE.map((cle) => (
+            <option key={cle} value={cle}>
+              {champs.types[cle]}
+            </option>
           ))}
         </select>
       </div>
 
       {/*
         Les dates sont en `type="date"` mais **jamais obligatoires** : beaucoup de
-        demandes arrivent avec un mois, pas un jour. Le champ « flexible » du
-        détail sert alors de réponse.
+        demandes arrivent avec un mois, pas un jour. Le champ libre du bas sert
+        alors de réponse.
       */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={etiquette} htmlFor="premium-debut">
-            From {facultatif}
+            {champs.du} {facultatif}
           </label>
           <input id="premium-debut" name="debut" type="date" className={champ} />
         </div>
         <div>
           <label className={etiquette} htmlFor="premium-fin">
-            To {facultatif}
+            {champs.au} {facultatif}
           </label>
           <input id="premium-fin" name="fin" type="date" className={champ} />
         </div>
@@ -167,26 +174,26 @@ export default function FormulaireDemandePremium() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={etiquette} htmlFor="premium-depart">
-            Arriving at {facultatif}
+            {champs.arrivee} {facultatif}
           </label>
           <input
             id="premium-depart"
             name="depart"
             maxLength={160}
             className={champ}
-            placeholder="Geneva, Chambéry, a private terminal…"
+            placeholder={champs.placeholders.arrivee}
           />
         </div>
         <div>
           <label className={etiquette} htmlFor="premium-destination">
-            Going to {facultatif}
+            {champs.destination} {facultatif}
           </label>
           <input
             id="premium-destination"
             name="destination"
             maxLength={160}
             className={champ}
-            placeholder="Courchevel, Megève, a chalet address…"
+            placeholder={champs.placeholders.destination}
           />
         </div>
       </div>
@@ -194,7 +201,7 @@ export default function FormulaireDemandePremium() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={etiquette} htmlFor="premium-passagers">
-            Passengers {facultatif}
+            {champs.passagers} {facultatif}
           </label>
           <input
             id="premium-passagers"
@@ -207,21 +214,21 @@ export default function FormulaireDemandePremium() {
         </div>
         <div>
           <label className={etiquette} htmlFor="premium-budget">
-            Budget in mind {facultatif}
+            {champs.budget} {facultatif}
           </label>
           <input
             id="premium-budget"
             name="budget"
             maxLength={80}
             className={champ}
-            placeholder="A range is enough"
+            placeholder={champs.placeholders.budget}
           />
         </div>
       </div>
 
       <div>
         <label className={etiquette} htmlFor="premium-details">
-          What the stay looks like
+          {champs.details}
         </label>
         <textarea
           id="premium-details"
@@ -230,7 +237,7 @@ export default function FormulaireDemandePremium() {
           rows={6}
           maxLength={5000}
           className={champ}
-          placeholder="The programme as you see it: arrivals, the hours you want a car available, an event and its schedule, anything that has to be discreet."
+          placeholder={champs.placeholders.details}
         />
       </div>
 
@@ -240,7 +247,7 @@ export default function FormulaireDemandePremium() {
         serveur.
       */}
       <div className="hidden" aria-hidden="true">
-        <label htmlFor="premium-website">Leave this field empty</label>
+        <label htmlFor="premium-website">{champs.piege}</label>
         <input id="premium-website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
 
@@ -248,14 +255,16 @@ export default function FormulaireDemandePremium() {
         <p className="rounded border border-marque/30 bg-marque/5 px-4 py-3 text-sm text-alpine-700">
           {message ?? (
             <>
-              We could not send your request. Please write to{" "}
+              {champs.erreurGenerale.avant}
               <a
                 className="font-semibold text-marque underline"
                 href={`mailto:${ENTREPRISE.email}`}
               >
                 {ENTREPRISE.email}
-              </a>{" "}
-              or call {ENTREPRISE.telephoneAffiche}.
+              </a>
+              {champs.erreurGenerale.entre}
+              {ENTREPRISE.telephoneAffiche}
+              {champs.erreurGenerale.apres}
             </>
           )}
         </p>
@@ -266,13 +275,11 @@ export default function FormulaireDemandePremium() {
         disabled={etat === "envoi"}
         className="rounded bg-marque px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-marque-600 disabled:opacity-60"
       >
-        {etat === "envoi" ? "Sending…" : "Send your request"}
+        {etat === "envoi" ? champs.envoiEnCours : champs.envoyer}
       </button>
 
       <p className="text-xs leading-relaxed text-alpine-600">
-        We use your details only to answer you. Nothing is stored on this website and nothing is
-        shared with third parties. Flights are chartered with licensed operators; road transport is
-        operated by {ENTREPRISE.raisonSociale}.
+        {champs.mentionBas} {ENTREPRISE.raisonSociale}.
       </p>
     </form>
   );

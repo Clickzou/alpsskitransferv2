@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { ENTREPRISE } from "@/data/site";
-import { TYPES_DEMANDE } from "@/data/page-premium";
+import { CLES_DEMANDE, LIBELLES_EXPLOITANT, type CleDemande } from "@/data/page-premium";
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 
 /**
- * Formulaire des demandes sur mesure — `/luxury-ski-transfers/`.
+ * Formulaire des demandes sur mesure — `/luxury-ski-transfers/` et ses trois
+ * traductions, qui postent toutes ici.
  *
  * Mêmes principes que `/api/contact/` : on ne ment pas sur l'envoi, on valide
  * côté serveur, on ne stocke rien. Deux différences, qui tiennent au dossier
@@ -15,9 +16,10 @@ import { emailConfigure, envoyer } from "@/lib/reservation/email";
  *    dates, points, passagers — et l'exploitant répond depuis son téléphone,
  *    souvent en conduisant entre deux courses. Un pavé de texte l'oblige à
  *    reconstituer la demande ; une fiche se lit en dix secondes.
- * 2. **Le sujet porte la nature de la demande.** « Helicopter transfer » ou
- *    « Wedding » en objet permet de trier une boîte de réception sans l'ouvrir,
- *    et de retrouver un dossier trois mois plus tard.
+ * 2. **Le sujet porte la nature de la demande, toujours en français.**
+ *    « Hélicoptère » ou « Mariage » en objet permet de trier une boîte de
+ *    réception sans l'ouvrir, et de retrouver un dossier trois mois plus tard —
+ *    y compris quand la demande vient de la page allemande.
  *
  * Aucun accusé de réception n'est envoyé au demandeur, et c'est délibéré :
  * ce serait un e-mail partant vers une adresse saisie par un inconnu, donc un
@@ -26,7 +28,7 @@ import { emailConfigure, envoyer } from "@/lib/reservation/email";
  * servir qu'à celui qui vient d'écrire.
  *
  * POST /api/demande-premium
- *   { nom, email, type, details, telephone?, societe?, debut?, fin?,
+ *   { nom, email, type (clé), langue, details, telephone?, societe?, debut?, fin?,
  *     depart?, destination?, passagers?, budget? }
  */
 export const dynamic = "force-dynamic";
@@ -84,13 +86,27 @@ export async function POST(requete: Request) {
   const details = texte(entree.details, LIMITES.details);
 
   /*
-   * La nature de la demande est ramenée à la liste publiée : un POST direct ne
-   * choisit pas ce qui s'affiche dans l'objet de l'e-mail de l'exploitant.
+   * La nature arrive en clé — « wedding », « helicopter » — et ressort en
+   * français. Le formulaire existe en quatre langues ; sans cette table,
+   * l'exploitant recevrait « Hochzeit » dans l'objet d'un e-mail qu'il lit en
+   * français, et ne pourrait plus trier sa boîte de réception.
+   *
+   * Une clé inconnue — donc un POST fabriqué — retombe sur « Autre demande »
+   * plutôt que d'écrire dans l'objet ce qu'on lui a soufflé.
    */
-  const propose = texte(entree.type, 80);
-  const type = (TYPES_DEMANDE as readonly string[]).includes(propose)
-    ? propose
-    : TYPES_DEMANDE[TYPES_DEMANDE.length - 1];
+  const propose = texte(entree.type, 40);
+  const cle = (CLES_DEMANDE as readonly string[]).includes(propose)
+    ? (propose as CleDemande)
+    : "other";
+  const type = LIBELLES_EXPLOITANT[cle];
+
+  /*
+   * La langue du visiteur : elle ne sert pas à la validation, elle dit dans
+   * quelle langue répondre. Une demande venue de la page italienne appelle une
+   * réponse en italien, et rien d'autre dans l'e-mail ne le révèle.
+   */
+  const langues: Record<string, string> = { en: "anglais", fr: "français", de: "allemand", it: "italien" };
+  const langue = langues[texte(entree.langue, 5)] ?? "anglais";
 
   const manquants: string[] = [];
   if (nom.length < 2) manquants.push("nom");
@@ -114,6 +130,7 @@ export async function POST(requete: Request) {
 
   const lignes: (string | null)[] = [
     `Nature : ${type}`,
+    `Répondre en : ${langue}`,
     "",
     `De : ${nom} <${email}>`,
     texte(entree.telephone, LIMITES.telephone)

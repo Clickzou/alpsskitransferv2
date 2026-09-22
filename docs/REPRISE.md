@@ -35,6 +35,29 @@ premier réglage conditionné à `xl:` n'a donc rien changé là où ça coinça
 barre est à 1 216 pixels, les écarts sont resserrés, le corps du menu perd un
 demi-point, et **le menu est centré** entre la marque et les actions.
 
+**Les quatre langues, le même jour.** `/luxury-ski-transfers/`,
+`/fr/transferts-luxe/`, `/de/luxus-transfer/` et `/it/transfer-di-lusso/` —
+même gabarit, même formulaire, hreflang réciproques et sélecteur de langue au
+complet. C'est d'ailleurs l'absence du sélecteur sur la page anglaise seule qui
+a déclenché la décision : une page qui n'existe que dans une langue ne peut en
+proposer aucune autre, et le sélecteur s'efface plutôt que de mener à une 404.
+
+Trois points de structure :
+
+- **Le gabarit ne contient plus aucune chaîne de caractères** : tout vient de
+  `data/page-premium.ts` (l'anglais, et le type `ContenuPremium`) et de
+  `data/page-premium-intl.ts` (les trois autres), y compris les mots des boutons
+  et les messages du formulaire. Sans cela, une traduction laisse derrière elle
+  un « Send your request » sur une page allemande.
+- **Le formulaire envoie une clé, pas un libellé.** Le visiteur choisit
+  « Hochzeit », le serveur reçoit `wedding`, l'exploitant lit « Mariage » :
+  l'objet de l'e-mail reste triable quelle que soit la langue du demandeur. Une
+  ligne « Répondre en : italien » dit dans quelle langue répondre.
+- **Les exemples suivent le périmètre de chaque langue**, ce ne sont pas des
+  miroirs : l'allemand parle de Zurich, Sion, Zermatt et St. Moritz ; l'italien
+  de Turin, Milan, Courmayeur et Cervinia. Traduire mot à mot aurait produit
+  trois pages qui parlent du marché français en trois langues.
+
 **GEO.** La page est déclarée dans `llms.txt` (faits clés et pages principales),
 et ses quatre prestations sont balisées une par une — nouveau nœud
 `serviceCatalogueSchema` dans `lib/schema.ts`, un `Service` avec son
@@ -72,8 +95,8 @@ chaque heure, l'API de prix publique décrite dans `openapi.json`, le serveur MC
      avis remplacent les quatre témoignages repris du WordPress.
 3. **Les mentions légales** ne sont toujours pas écrites, et `cookie-policy-uk`
    reste à reprendre — l'éditeur est français.
-4. La page premium n'existe **qu'en anglais**. Le marché du luxe francophone
-   (Courchevel, Megève, mariages) justifierait une version `/fr/`.
+4. ~~La page premium n’existe qu’en anglais~~ — **réglé le 22 septembre
+   2026** : elle existe dans les quatre langues, avec son formulaire.
 
 # Mardi 15 septembre 2026 — pendant les tests
 

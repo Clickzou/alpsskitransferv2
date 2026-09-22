@@ -687,4 +687,61 @@ export const PAGES_DE: PageIntl[] = [
     ],
     faq: [],
   },
+  /*
+   * Sonderwünsche — Fahrer zur Verfügung, Helikopter, Privatjet, Hochzeiten und
+   * Markenevents. Am 22. September 2026 angelegt, zugleich mit der englischen,
+   * französischen und italienischen Fassung.
+   *
+   * Eigenes Gabarit `components/PagePremium`, Inhalt in
+   * `data/page-premium-intl.ts` — `contenu` bleibt hier deshalb leer. Die
+   * Beispiele folgen dem deutschen Perimeter: Zürich, Sion, Zermatt und
+   * St. Moritz, nicht Courchevel.
+   */
+  {
+    slug: "luxus-transfer",
+    visuel: {
+      nom: "vehicule-premium",
+      alt: "Oberklasse-Limousine am Fuß eines Alpenorts",
+    },
+    metaTitre: "Luxus-Skitransfer | Fahrer, Helikopter & Privatjet",
+    metaDescription:
+      "Fahrer zur freien Verfügung, Helikopter- und Privatjet-Transfers in die Alpen: Hochzeiten, Markenevents, private Ankünfte. Angebot in 24 Stunden.",
+    h1: "Luxus-Skitransfers — Fahrer, Helikopter und Privatjet",
+    chapo:
+      "Ein Wagen samt Fahrer für die Dauer Ihres Aufenthalts, eine Flugetappe, wenn die Straße dicht ist, eine Hochzeit oder ein Markenevent mit einem Koordinator von der ersten Ankunft bis zur letzten Abreise. Beschreiben Sie uns den Aufenthalt — wir antworten schriftlich.",
+    equivalentEn: "/luxury-ski-transfers/",
+    contenu: [],
+    faq: [
+      {
+        question: "Betreiben Sie die Helikopter und Jets selbst?",
+        reponse:
+          "Nein, und das gehört gesagt. Wir sind ein Straßenbetrieb — konzessioniert für die Personenbeförderung mit Taxi und Mietwagen — und jede Flugetappe wird bei einem zugelassenen Luftfahrtunternehmen gechartert, mit dem wir zusammenarbeiten. Uns gehört der Rest: die Strecke, die Zeiten, die Fahrer an beiden Enden des Fluges und ein Ansprechpartner für das Ganze. Der Operator wird im Angebot namentlich genannt, bevor Sie irgendetwas bestätigen.",
+      },
+      {
+        question: "Was ist bei einem Fahrer zur freien Verfügung enthalten?",
+        reponse:
+          "Ein Fahrzeug samt Fahrer, das für einen Zeitraum Ihrer Wahl bereitsteht — einen halben Tag, einen ganzen Tag oder den gesamten Aufenthalt — und nicht für eine einzelne Fahrt. Wartezeit ist Teil des Preises: ein Nachmittag, der sich um vier Uhr ändert, kostet nichts extra. Derselbe Fahrer bleibt durchgehend bei Ihnen, und genau das macht spätestens am dritten Tag den Unterschied.",
+      },
+      {
+        question: "Wie früh sollte ich anfragen?",
+        reponse:
+          "So früh wie möglich für Weihnachten, Neujahr und die Sportferien im Februar: diese Wochen sind zuerst ausgebucht, und ein Helikopter-Slot in einen Bergort ist das Knappste im ganzen Programm. Außerhalb dieser Zeiten genügen für Wagen und Fahrer oft wenige Tage. Wenn Ihre Termine nah sind, rufen Sie besser an, statt zu schreiben: wir sagen Ihnen sofort, ob es machbar ist.",
+      },
+      {
+        question: "Übernehmen Sie eine Hochzeit oder ein mehrtägiges Event?",
+        reponse:
+          "Ja, und das ist der Teil, den wir am gründlichsten planen. Gäste landen selten an einem Flughafen und an einem Tag: eine Berghochzeit sind meist Zürich, Genf und Sion über zwei Tage, ein Shuttle zwischen Trauung und Empfang, dann ein Abreisefenster am Sonntag. Sie bekommen einen Ablaufplan statt einer Liste von Buchungen, einen durchgehend erreichbaren Koordinator und am Ende eine Rechnung.",
+      },
+      {
+        question: "Wie diskret ist das, und unterschreiben Sie eine Vertraulichkeitsvereinbarung?",
+        reponse:
+          "Ja zur Vertraulichkeitsvereinbarung — Ihre oder unsere, unterschrieben vor dem Angebot, wenn Ihre Veranstaltung das verlangt. Darüber hinaus: kein Name auf einem Schild, wenn Sie das nicht wünschen, nichts Veröffentlichtes über eine Fahrt, und Fahrer, die das Programm vorab erhalten, damit vor Ihren Gästen nichts besprochen wird.",
+      },
+      {
+        question: "Wie wird eine Sonderanfrage kalkuliert?",
+        reponse:
+          "Nicht nach Kilometern. Eine Verfügungsfahrt rechnet sich nach den gebuchten Stunden und dem Fahrzeug, ein Event nach Bewegungen und Tagen, eine Flugetappe nach dem Angebot des Operators, das unverändert weitergegeben wird. Sie erhalten eine schriftliche Proposition, die auf eine Seite passt, und nichts wird berechnet, bevor Sie sie angenommen haben. Für eine einfache Fahrt vom Flughafen in den Skiort ist das Buchungsformular schneller und nennt sofort einen Festpreis.",
+      },
+    ],
+  },
 ];

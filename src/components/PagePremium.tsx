@@ -14,11 +14,12 @@ import {
   Reperes,
   Section,
 } from "@/components/gabarit/Sections";
-import { ANCRE_FORMULAIRE, PAGE_PREMIUM } from "@/data/page-premium";
+import { ANCRE_FORMULAIRE, type ContenuPremium } from "@/data/page-premium";
 import { ENTREPRISE } from "@/data/site";
-import { alternativesPageFonctionnelleEn } from "@/lib/intl/liens";
-import type { PageFonctionnelle } from "@/lib/pages";
-import { CHEMIN_PAGE_RESERVATION } from "@/lib/reservation/config";
+import type { Alternative, Lang } from "@/lib/i18n";
+import { T } from "@/lib/intl/textes";
+import { lienTunnelLangue } from "@/lib/intl/navigation";
+import type { Faq as QuestionReponse } from "@/lib/resorts/types";
 import {
   filArianeSchema,
   faqSchema,
@@ -28,45 +29,67 @@ import {
 } from "@/lib/schema";
 
 /**
- * `/luxury-ski-transfers/` — demandes sur mesure.
+ * La page des demandes sur mesure, dans les quatre langues.
  *
- * Comme `/inquiry/`, le bandeau **ne porte pas le formulaire de recherche** : le
- * tunnel ne sait pas chiffrer une mise à disposition de six jours ni un vol
- * affrété, et l'y envoyer serait l'envoyer vers un refus. Mais contrairement à
- * `/inquiry/`, l'appel à l'action n'est pas un `mailto:` : il descend vers le
- * formulaire de la page. Un client qui demande une mise à disposition ouvre
- * rarement son logiciel de courrier pour écrire quatre lignes de dates — il
- * remplit ce qu'on lui présente, à condition que ce soit court et à sa place.
+ * Comme la page des groupes, le bandeau **ne porte pas le formulaire de
+ * recherche** : le tunnel ne sait pas chiffrer une mise à disposition de six
+ * jours ni un vol affrété, et l'y envoyer serait l'envoyer vers un refus. Mais
+ * contrairement à elle, l'appel à l'action n'est pas un `mailto:` : il descend
+ * vers le formulaire de la page. Un client qui demande une mise à disposition
+ * ouvre rarement son logiciel de courrier pour écrire quatre lignes de dates —
+ * il remplit ce qu'on lui présente, à condition que ce soit court et à sa place.
  *
  * Le téléphone reste visible à côté, sans concurrencer le bouton : sur ce type
  * de demande, une part des visiteurs appelle, et ceux-là décident vite.
+ *
+ * **Aucune chaîne de caractères ici.** Tout vient de `contenu`, y compris les
+ * mots des boutons : c'est ce qui permet aux quatre langues de partager un seul
+ * gabarit sans qu'un « Send your request » traîne sur la page allemande.
  */
-export default function PagePremium({ page }: { page: PageFonctionnelle }) {
-  const chemin = `/${page.slug}/`;
-  const filAriane = [
-    { nom: "Home", chemin: "/" },
-    { nom: "Luxury ski transfers", chemin },
-  ];
+export default function PagePremium({
+  lang,
+  chemin,
+  h1,
+  chapo,
+  faq,
+  contenu,
+  alternatives,
+}: {
+  lang: Lang;
+  /** Chemin absolu de la page, `/luxury-ski-transfers/` ou `/fr/transferts-luxe/`. */
+  chemin: string;
+  h1: string;
+  chapo: string;
+  faq: QuestionReponse[];
+  contenu: ContenuPremium;
+  alternatives: Alternative[];
+}) {
+  const t = T(lang);
   const ancre = `#${ANCRE_FORMULAIRE}`;
+  const reserver = lienTunnelLangue(lang);
+  const filAriane = [
+    { nom: t.accueil, chemin: lang === "en" ? "/" : `/${lang}/` },
+    { nom: contenu.filAriane, chemin },
+  ];
 
   return (
     <>
-      <Header lang="en" alternatives={alternativesPageFonctionnelleEn(page.slug)} />
+      <Header lang={lang} alternatives={alternatives} />
       <main id="contenu">
-        <HeroInterieur image={PAGE_PREMIUM.heroImage}>
+        <HeroInterieur image={contenu.heroImage}>
           <FilAriane clair elements={filAriane} />
-          <h1 className="mt-4 max-w-4xl text-balance font-display text-titre-page">{page.h1}</h1>
-          <p className="mt-4 max-w-2xl text-chapo text-glacier-200">{page.chapo}</p>
+          <h1 className="mt-4 max-w-4xl text-balance font-display text-titre-page">{h1}</h1>
+          <p className="mt-4 max-w-2xl text-chapo text-glacier-200">{chapo}</p>
 
-          <Reperes items={[...PAGE_PREMIUM.reperes]} />
+          <Reperes items={[...contenu.reperes]} />
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <BoutonAction href={ancre}>Send your request</BoutonAction>
+            <BoutonAction href={ancre}>{contenu.actions.envoyer}</BoutonAction>
             <a
               href={`tel:${ENTREPRISE.telephone}`}
               className="text-sm font-medium text-white underline underline-offset-4 hover:text-alpes-300"
             >
-              or call {ENTREPRISE.telephoneAffiche}
+              {contenu.actions.appeler} {ENTREPRISE.telephoneAffiche}
             </a>
           </div>
         </HeroInterieur>
@@ -75,26 +98,29 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
         <Section fond="blanc">
           <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]">
             <div className="max-w-prose space-y-4 leading-relaxed text-alpine-700">
-              {PAGE_PREMIUM.intro.map((paragraphe) => (
+              {contenu.intro.map((paragraphe) => (
                 <p key={paragraphe.slice(0, 40)}>{paragraphe}</p>
               ))}
               {/*
                 Le renvoi vers les groupes est ici, en fin d'introduction, et pas
                 dans le pied : les deux pages se ressemblent de loin, et un
-                visiteur qui cherchait un convoi de minibus doit pouvoir partir
-                avant d'avoir lu une page de mise à disposition.
+                visiteur venu pour un convoi de minibus doit pouvoir partir avant
+                d'avoir lu une page de mise à disposition.
               */}
               <p className="text-sm text-alpine-600">
-                Travelling as a large party rather than a private one?{" "}
-                <Link href="/inquiry/" className="font-semibold text-marque hover:underline">
-                  Group ski transfers
-                </Link>{" "}
-                covers several vehicles quoted as one journey.
+                {contenu.renvoiGroupes.avant}
+                <Link
+                  href={contenu.renvoiGroupes.chemin}
+                  className="font-semibold text-marque hover:underline"
+                >
+                  {contenu.renvoiGroupes.lien}
+                </Link>
+                {contenu.renvoiGroupes.apres}
               </p>
             </div>
             <Visuel
-              nom={PAGE_PREMIUM.introImage.nom}
-              alt={PAGE_PREMIUM.introImage.alt}
+              nom={contenu.introImage.nom}
+              alt={contenu.introImage.alt}
               sizes="(min-width: 1024px) 26rem, 100vw"
               className="h-full min-h-[14rem] w-full rounded-xl object-cover shadow-carte"
             />
@@ -104,12 +130,12 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
         {/* ------------------------------------------------------ prestations */}
         <Section fond="glacier">
           <EnTeteSection
-            surtitre={PAGE_PREMIUM.prestations.surtitre}
-            titre={PAGE_PREMIUM.prestations.titre}
-            chapo={PAGE_PREMIUM.prestations.chapo}
+            surtitre={contenu.prestations.surtitre}
+            titre={contenu.prestations.titre}
+            chapo={contenu.prestations.chapo}
           />
           <div className="mt-10 grid gap-6 lg:grid-cols-2" data-anime-decale>
-            {PAGE_PREMIUM.prestations.cartes.map((carte) => (
+            {contenu.prestations.cartes.map((carte) => (
               <article
                 key={carte.titre}
                 className="flex flex-col rounded-xl border border-glacier-200 bg-white p-6 shadow-carte"
@@ -118,10 +144,7 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
                 <p className="mt-3 text-sm leading-relaxed text-alpine-600">{carte.texte}</p>
                 <ul className="mt-5 space-y-2 border-t border-glacier-200 pt-5">
                   {carte.points.map((point) => (
-                    <li
-                      key={point}
-                      className="flex gap-3 text-sm leading-relaxed text-alpine-700"
-                    >
+                    <li key={point} className="flex gap-3 text-sm leading-relaxed text-alpine-700">
                       <Coche className="mt-0.5 h-4 w-4 shrink-0 text-alpes" />
                       <span>{point}</span>
                     </li>
@@ -135,12 +158,12 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
         {/* --------------------------------------------------------- pour qui */}
         <Section fond="blanc">
           <EnTeteSection
-            surtitre={PAGE_PREMIUM.occasions.surtitre}
-            titre={PAGE_PREMIUM.occasions.titre}
-            chapo={PAGE_PREMIUM.occasions.chapo}
+            surtitre={contenu.occasions.surtitre}
+            titre={contenu.occasions.titre}
+            chapo={contenu.occasions.chapo}
           />
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-anime-decale>
-            {PAGE_PREMIUM.occasions.points.map((point) => (
+            {contenu.occasions.points.map((point) => (
               <li
                 key={point.titre}
                 className="rounded border border-glacier-200 bg-white p-5 shadow-carte"
@@ -157,17 +180,15 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-white/70">
-                {PAGE_PREMIUM.discretion.surtitre}
+                {contenu.discretion.surtitre}
               </p>
-              <h2 className="mt-3 font-display text-titre-section">
-                {PAGE_PREMIUM.discretion.titre}
-              </h2>
+              <h2 className="mt-3 font-display text-titre-section">{contenu.discretion.titre}</h2>
               <p className="mt-3 text-sm leading-relaxed text-white/90">
-                {PAGE_PREMIUM.discretion.chapo}
+                {contenu.discretion.chapo}
               </p>
             </div>
             <ul className="space-y-3">
-              {PAGE_PREMIUM.discretion.points.map((point) => (
+              {contenu.discretion.points.map((point) => (
                 <li key={point} className="flex gap-3 text-sm leading-relaxed text-white/90">
                   <Coche className="mt-1 h-4 w-4 shrink-0 text-alpes-300" />
                   <span>{point}</span>
@@ -182,20 +203,20 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
           <div className="mx-auto grid max-w-6xl gap-10 px-4 py-section lg:grid-cols-2" data-anime>
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-white/70">
-                {PAGE_PREMIUM.fonctionnement.surtitre}
+                {contenu.fonctionnement.surtitre}
               </p>
               <h2 className="mt-3 font-display text-titre-section">
-                {PAGE_PREMIUM.fonctionnement.titre}
+                {contenu.fonctionnement.titre}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-white/90">
-                {PAGE_PREMIUM.fonctionnement.chapo}
+                {contenu.fonctionnement.chapo}
               </p>
               <BoutonAction href={ancre} className="mt-6">
-                Start your request
+                {contenu.actions.commencer}
               </BoutonAction>
             </div>
             <ol className="space-y-4">
-              {PAGE_PREMIUM.fonctionnement.etapes.map((etape, i) => (
+              {contenu.fonctionnement.etapes.map((etape, i) => (
                 <li key={etape.titre} className="flex gap-3 text-sm">
                   <span className="font-semibold tabular-nums">{i + 1}.</span>
                   <span>
@@ -204,12 +225,9 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
                 </li>
               ))}
               <li className="pt-2 text-sm text-white/90">
-                {PAGE_PREMIUM.fonctionnement.conclusion}{" "}
-                <Link
-                  href={CHEMIN_PAGE_RESERVATION}
-                  className="underline underline-offset-2 hover:text-white"
-                >
-                  Book ski transfer tickets
+                {contenu.fonctionnement.conclusion.avant}{" "}
+                <Link href={reserver} className="underline underline-offset-2 hover:text-white">
+                  {contenu.fonctionnement.conclusion.lien}
                 </Link>
                 .
               </li>
@@ -222,22 +240,21 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem]">
             <div>
               <EnTeteSection
-                surtitre={PAGE_PREMIUM.formulaire.surtitre}
-                titre={PAGE_PREMIUM.formulaire.titre}
-                chapo={PAGE_PREMIUM.formulaire.chapo}
+                surtitre={contenu.formulaire.surtitre}
+                titre={contenu.formulaire.titre}
+                chapo={contenu.formulaire.chapo}
               />
               <div className="mt-8 rounded-xl border border-glacier-200 bg-white p-6 shadow-carte">
-                <FormulaireDemandePremium />
+                <FormulaireDemandePremium lang={lang} champs={contenu.champs} />
               </div>
             </div>
 
             <aside className="space-y-6 lg:sticky lg:top-6 lg:h-fit">
               {/* Une part de cette clientèle appelle. Le numéro doit être lisible. */}
               <div className="rounded border border-glacier-200 bg-white p-5">
-                <p className="font-display text-lg text-alpine">Prefer to talk it through?</p>
+                <p className="font-display text-lg text-alpine">{contenu.encartTelephone.titre}</p>
                 <p className="mt-2 text-sm leading-relaxed text-alpine-600">
-                  Complex programmes are often quicker to describe out loud than to type. Call and
-                  we will take the outline down for you.
+                  {contenu.encartTelephone.texte}
                 </p>
                 <ul className="mt-4 space-y-2 text-sm">
                   <li>
@@ -261,29 +278,26 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
 
               {/* Le raccourci pour ceux qui n'ont besoin que d'un trajet. */}
               <div className="rounded border border-glacier-200 bg-glacier-50 p-5">
-                <p className="font-display text-lg text-alpine">Just one airport run?</p>
+                <p className="font-display text-lg text-alpine">
+                  {contenu.encartReservation.titre}
+                </p>
                 <p className="mt-2 text-sm leading-relaxed text-alpine-600">
-                  A single vehicle from an airport to a resort is priced instantly by the booking
-                  form — no request, no waiting.
+                  {contenu.encartReservation.texte}
                 </p>
                 <Link
-                  href={CHEMIN_PAGE_RESERVATION}
+                  href={reserver}
                   className="mt-4 inline-block rounded bg-marque px-5 py-2 text-sm font-semibold text-white transition hover:bg-marque-600"
                 >
-                  Get a price
+                  {contenu.encartReservation.bouton}
                 </Link>
               </div>
             </aside>
           </div>
         </Section>
 
-        <Faq
-          items={page.faq}
-          titre="Frequently asked questions about luxury ski transfers"
-          surtitre="Good to know"
-        />
+        <Faq items={faq} titre={contenu.faq.titre} surtitre={contenu.faq.surtitre} />
       </main>
-      <Footer lang="en" />
+      <Footer lang={lang} />
       <JsonLd
         data={grapheJsonLd(
           organisationSchema(),
@@ -295,15 +309,15 @@ export default function PagePremium({ page }: { page: PageFonctionnelle }) {
           serviceCatalogueSchema({
             id: "demandes-sur-mesure",
             chemin,
-            nom: "Luxury and bespoke ski transfers",
-            description: page.chapo,
-            prestations: PAGE_PREMIUM.prestations.cartes.map((carte) => ({
+            nom: contenu.nomService,
+            description: chapo,
+            prestations: contenu.prestations.cartes.map((carte) => ({
               titre: carte.titre,
               texte: carte.texte,
             })),
           }),
           filArianeSchema(filAriane.map((e) => ({ nom: e.nom, path: e.chemin }))),
-          faqSchema(page.faq),
+          faqSchema(faq),
         )}
       />
     </>

@@ -52,6 +52,7 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Stations", chemin: "/fr/transferts-ski/" },
     { texte: "Aéroports", chemin: "/fr/aeroports/" },
     { texte: "Transferts privés", chemin: "/fr/transferts-prives/" },
+    { texte: "Transferts de luxe", chemin: "/fr/transferts-luxe/" },
     { texte: "Comment réserver", chemin: "/fr/comment-reserver/" },
     { texte: "Blog", chemin: "/fr/blog/" },
     { texte: "Aide", chemin: "/fr/aide/" },
@@ -61,6 +62,7 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Skiorte", chemin: "/de/skitransfer/" },
     { texte: "Flughäfen", chemin: "/de/flughaefen/" },
     { texte: "Privattransfer", chemin: "/de/privattransfer/" },
+    { texte: "Luxus-Transfer", chemin: "/de/luxus-transfer/" },
     { texte: "So buchen Sie", chemin: "/de/transfer-buchen/" },
     { texte: "Blog", chemin: "/de/blog/" },
     { texte: "Hilfe", chemin: "/de/haeufige-fragen/" },
@@ -70,6 +72,7 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Località", chemin: "/it/trasferimenti-sci/" },
     { texte: "Aeroporti", chemin: "/it/aeroporti/" },
     { texte: "Transfer privato", chemin: "/it/transfer-privato/" },
+    { texte: "Transfer di lusso", chemin: "/it/transfer-di-lusso/" },
     { texte: "Come prenotare", chemin: "/it/come-prenotare/" },
     { texte: "Blog", chemin: "/it/blog/" },
     { texte: "Assistenza", chemin: "/it/domande-frequenti/" },
@@ -217,6 +220,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
         titre: "Services",
         liens: [
           { texte: "Transferts privés", chemin: "/fr/transferts-prives/" },
+          { texte: "Transferts de luxe", chemin: "/fr/transferts-luxe/" },
           { texte: "Agences et professionnels", chemin: "/fr/agences-et-professionnels/" },
           { texte: "Stations de ski", chemin: "/fr/transferts-ski/" },
           { texte: "Aéroports desservis", chemin: "/fr/aeroports/" },
@@ -246,6 +250,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
         titre: "Leistungen",
         liens: [
           { texte: "Privattransfer", chemin: "/de/privattransfer/" },
+          { texte: "Luxus-Transfer", chemin: "/de/luxus-transfer/" },
           { texte: "Agenturen und Firmen", chemin: "/de/agenturen-und-firmen/" },
           { texte: "Skiorte", chemin: "/de/skitransfer/" },
           { texte: "Flughäfen", chemin: "/de/flughaefen/" },
@@ -271,6 +276,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
       titre: "Servizi",
       liens: [
         { texte: "Transfer privato", chemin: "/it/transfer-privato/" },
+        { texte: "Transfer di lusso", chemin: "/it/transfer-di-lusso/" },
         { texte: "Agenzie e aziende", chemin: "/it/agenzie-e-aziende/" },
         { texte: "Località sciistiche", chemin: "/it/trasferimenti-sci/" },
         { texte: "Aeroporti", chemin: "/it/aeroporti/" },

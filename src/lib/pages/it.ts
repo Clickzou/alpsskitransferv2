@@ -685,4 +685,60 @@ export const PAGES_IT: PageIntl[] = [
     ],
     faq: [],
   },
+  /*
+   * Richieste su misura — autista a disposizione, elicottero, jet privato,
+   * matrimoni ed eventi di marca. Creata il 22 settembre 2026 insieme alle
+   * versioni inglese, francese e tedesca.
+   *
+   * Gabarit dedicato `components/PagePremium`, contenuti in
+   * `data/page-premium-intl.ts`: `contenu` resta quindi vuoto qui. Gli esempi
+   * seguono il perimetro italiano — Torino, Milano, Courmayeur e Cervinia.
+   */
+  {
+    slug: "transfer-di-lusso",
+    visuel: {
+      nom: "vehicule-premium",
+      alt: "Berlina di alta gamma all'arrivo in una località alpina",
+    },
+    metaTitre: "Transfer di lusso sci | Autista, elicottero e jet",
+    metaDescription:
+      "Autista a disposizione, elicottero e jet privato verso le Alpi: matrimoni, eventi di marca, arrivi privati. Proposta scritta entro 24 ore.",
+    h1: "Transfer di lusso — autista a disposizione, elicottero e jet privato",
+    chapo:
+      "Un'auto con autista a disposizione per tutta la durata del soggiorno, una tratta aerea quando la strada è bloccata, un matrimonio o un evento di marca con un solo coordinatore dal primo arrivo all'ultima partenza. Ci racconti com'è il soggiorno: rispondiamo per iscritto.",
+    equivalentEn: "/luxury-ski-transfers/",
+    contenu: [],
+    faq: [
+      {
+        question: "Gestite direttamente elicotteri e jet?",
+        reponse:
+          "No, ed è giusto dirlo. Siamo un operatore su strada — autorizzati al trasporto di persone con taxi e NCC — e ogni tratta aerea viene noleggiata presso un operatore aereo autorizzato con cui collaboriamo. Nostro è tutto il resto: il percorso, gli orari, gli autisti alle due estremità del volo e una persona che risponde dell'insieme. L'operatore è indicato per nome nel preventivo, prima di qualsiasi impegno.",
+      },
+      {
+        question: "Che cosa comprende l'autista a disposizione?",
+        reponse:
+          "Un veicolo con autista riservato per un periodo che sceglie lei — mezza giornata, una giornata intera o l'intero soggiorno — e non per un singolo viaggio. L'attesa fa parte del prezzo: un pomeriggio che cambia alle quattro non costa nulla in più. Lo stesso autista resta con lei dall'inizio alla fine, ed è di solito ciò che fa la differenza al terzo giorno.",
+      },
+      {
+        question: "Con quanto anticipo conviene chiedere?",
+        reponse:
+          "Il prima possibile per Natale, Capodanno e le settimane bianche di febbraio: sono i periodi che si riempiono per primi, e uno slot in elicottero verso una località è la cosa più scarsa di tutto il programma. Fuori da quelle settimane, per un'auto con autista bastano spesso pochi giorni. Se le date sono vicine, ci chiami invece di scrivere: le diremo subito se è fattibile.",
+      },
+      {
+        question: "Gestite un matrimonio o un evento su più giorni?",
+        reponse:
+          "Sì, ed è la parte che pianifichiamo con più cura. Gli invitati raramente atterrano nello stesso aeroporto e nello stesso giorno: un matrimonio in montagna sono di solito Torino, Milano e Ginevra su due giorni, una navetta tra cerimonia e ricevimento, poi una finestra di partenza la domenica. Riceve un programma invece di un elenco di prenotazioni, un coordinatore raggiungibile per tutta la durata e un'unica fattura.",
+      },
+      {
+        question: "Quanto è riservato il servizio, e firmate un accordo di riservatezza?",
+        reponse:
+          "Sì all'accordo di riservatezza — il suo o il nostro, firmato prima del preventivo se il suo evento lo richiede. Oltre al documento: nessun nome sul cartello se non lo desidera, nulla di pubblicato su un viaggio, e autisti che ricevono l'itinerario prima del giorno stesso, così che nulla venga discusso davanti ai suoi ospiti.",
+      },
+      {
+        question: "Come si calcola una richiesta su misura?",
+        reponse:
+          "Non a chilometro. Una disposizione si calcola sulle ore impegnate e sul veicolo; un evento sui movimenti e sulle giornate; una tratta aerea sul preventivo dell'operatore, riportato così com'è. Riceve una proposta scritta che sta in una pagina, e nulla viene addebitato prima che lei l'abbia accettata. Per un semplice transfer dall'aeroporto alla località, il modulo di prenotazione è più rapido e dà subito un prezzo fisso.",
+      },
+    ],
+  },
 ];

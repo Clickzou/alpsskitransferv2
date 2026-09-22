@@ -1,5 +1,5 @@
 /**
- * `/luxury-ski-transfers/` — la page des demandes sur mesure.
+ * `/luxury-ski-transfers/` et ses traductions — la page des demandes sur mesure.
  *
  * ## Ce qu'elle capte, et que rien ne captait
  *
@@ -38,37 +38,104 @@
  * blanc dans la carte, dans la FAQ et dans la mention sous le formulaire. Une
  * page premium qui promet un appareil qu'elle n'a pas se fait rattraper au
  * premier devis — et la route, la coordination et le sol restent, eux,
- * entièrement du ressort de l'exploitant.
+ * entièrement du ressort de l'exploitant. **Cette réserve doit survivre à toute
+ * traduction** : elle figure dans les quatre langues, au même endroit.
+ *
+ * ## Pourquoi les libellés d'interface vivent ici
+ *
+ * La page existe dans les quatre langues (22 septembre 2026), avec le même
+ * gabarit et le même formulaire. Tout ce qui s'affiche est donc porté par ce
+ * type — jusqu'aux mots des boutons et aux messages du formulaire. Le composant
+ * ne contient plus une seule chaîne en anglais : c'est la seule façon qu'une
+ * traduction ne laisse pas derrière elle un « Send your request » sur une page
+ * allemande, défaut typique des gabarits à moitié traduits.
  */
 
 import type { NomVisuel } from "@/components/Visuel";
 
 /**
- * Les natures de demande, partagées par le formulaire et par la route qui le
- * reçoit — le serveur revalide contre cette liste, et une valeur inventée est
- * ramenée à « Something else » plutôt que recopiée telle quelle dans l'e-mail.
+ * Les natures de demande, **par clé stable**.
+ *
+ * Le formulaire affiche le libellé de la langue du visiteur et envoie la clé ;
+ * la route de réception traduit la clé en français pour l'exploitant, qui reçoit
+ * ainsi le même vocabulaire quelle que soit la langue du demandeur. Envoyer le
+ * libellé affiché aurait fait arriver « Hochzeit » ou « Matrimonio » dans l'objet
+ * d'un e-mail lu en français, et rendu tout tri impossible.
  */
-export const TYPES_DEMANDE = [
-  "Chauffeur at your disposal",
-  "Helicopter transfer",
-  "Private jet arrival",
-  "Wedding",
-  "Brand or corporate event",
-  "Film or photo production",
-  "Something else",
+export const CLES_DEMANDE = [
+  "disposal",
+  "helicopter",
+  "jet",
+  "wedding",
+  "event",
+  "production",
+  "other",
 ] as const;
 
-export type TypeDemande = (typeof TYPES_DEMANDE)[number];
+export type CleDemande = (typeof CLES_DEMANDE)[number];
+
+/** Ce que l'exploitant lit dans l'objet de l'e-mail, toujours en français. */
+export const LIBELLES_EXPLOITANT: Record<CleDemande, string> = {
+  disposal: "Mise à disposition",
+  helicopter: "Hélicoptère",
+  jet: "Jet privé",
+  wedding: "Mariage",
+  event: "Événement de marque ou d'entreprise",
+  production: "Tournage ou shooting",
+  other: "Autre demande",
+};
 
 /** L'ancre du formulaire : les appels à l'action de la page y descendent. */
 export const ANCRE_FORMULAIRE = "request";
 
-export const PAGE_PREMIUM: {
+/** Un texte coupé par un lien, pour éviter toute balise dans les contenus. */
+export interface PhraseAvecLien {
+  avant: string;
+  lien: string;
+  apres: string;
+  chemin: string;
+}
+
+export interface LibellesFormulaire {
+  nom: string;
+  email: string;
+  telephone: string;
+  societe: string;
+  type: string;
+  du: string;
+  au: string;
+  arrivee: string;
+  destination: string;
+  passagers: string;
+  budget: string;
+  details: string;
+  /** « (facultatif) », apposé aux étiquettes qui ne sont pas obligatoires. */
+  facultatif: string;
+  placeholders: { arrivee: string; destination: string; budget: string; details: string };
+  types: Record<CleDemande, string>;
+  envoyer: string;
+  envoiEnCours: string;
+  succes: { titre: string; texte: string; relancer: string };
+  erreurChamps: string;
+  /** Message d'échec, coupé autour de l'adresse e-mail et du téléphone. */
+  erreurGenerale: { avant: string; entre: string; apres: string };
+  mentionBas: string;
+  /** Le piège à robots, invisible mais annoncé aux outils qui le liraient. */
+  piege: string;
+}
+
+export interface ContenuPremium {
   motCle: string;
+  /** Libellé du fil d'Ariane, plus court que le H1. */
+  filAriane: string;
+  /** Nom du service dans les données structurées. */
+  nomService: string;
   heroImage: { nom: NomVisuel; alt: string };
   introImage: { nom: NomVisuel; alt: string };
   reperes: readonly { libelle: string; valeur: string }[];
   intro: readonly string[];
+  renvoiGroupes: PhraseAvecLien;
+  actions: { envoyer: string; appeler: string; commencer: string };
   prestations: {
     surtitre: string;
     titre: string;
@@ -92,11 +159,20 @@ export const PAGE_PREMIUM: {
     titre: string;
     chapo: string;
     etapes: readonly { titre: string; texte: string }[];
-    conclusion: string;
+    /** La conclusion se termine sur le lien vers le tunnel de réservation. */
+    conclusion: { avant: string; lien: string };
   };
   formulaire: { surtitre: string; titre: string; chapo: string };
-} = {
+  encartTelephone: { titre: string; texte: string };
+  encartReservation: { titre: string; texte: string; bouton: string };
+  faq: { surtitre: string; titre: string };
+  champs: LibellesFormulaire;
+}
+
+export const PAGE_PREMIUM: ContenuPremium = {
   motCle: "luxury ski transfers",
+  filAriane: "Luxury ski transfers",
+  nomService: "Luxury and bespoke ski transfers",
 
   heroImage: {
     nom: "vehicule-premium",
@@ -118,6 +194,19 @@ export const PAGE_PREMIUM: {
     "Some journeys are not a transfer. A car and a driver held for a week, an arrival by private jet at Chambéry, the last leg to Courchevel by helicopter on a Saturday when the road is full, a wedding whose guests land across two days — none of that fits a booking form, and none of it should be priced by one.",
     "This page is for those requests. You describe what the stay actually looks like; we come back with a written proposal — the vehicles, the timings, the operators for anything that flies, and one price. Nothing is charged, and nothing is committed, until you have read it.",
   ],
+
+  renvoiGroupes: {
+    avant: "Travelling as a large party rather than a private one? ",
+    lien: "Group ski transfers",
+    apres: " covers several vehicles quoted as one journey.",
+    chemin: "/inquiry/",
+  },
+
+  actions: {
+    envoyer: "Send your request",
+    appeler: "or call",
+    commencer: "Start your request",
+  },
 
   prestations: {
     surtitre: "What we arrange",
@@ -253,8 +342,11 @@ export const PAGE_PREMIUM: {
           "A name and a number, reachable for the length of the stay. Changes go to that person, not to a form.",
       },
     ],
-    conclusion:
-      "If what you need is one vehicle from an airport to a resort, the booking form is quicker and gives you a fixed price straight away — no request needed:",
+    conclusion: {
+      avant:
+        "If what you need is one vehicle from an airport to a resort, the booking form is quicker and gives you a fixed price straight away — no request needed:",
+      lien: "Book ski transfer tickets",
+    },
   },
 
   formulaire: {
@@ -262,5 +354,72 @@ export const PAGE_PREMIUM: {
     titre: "Tell us what the stay looks like",
     chapo:
       "The more it reads like a schedule and the less like a booking, the more useful the answer. Nothing here commits you to anything.",
+  },
+
+  encartTelephone: {
+    titre: "Prefer to talk it through?",
+    texte:
+      "Complex programmes are often quicker to describe out loud than to type. Call and we will take the outline down for you.",
+  },
+
+  encartReservation: {
+    titre: "Just one airport run?",
+    texte:
+      "A single vehicle from an airport to a resort is priced instantly by the booking form — no request, no waiting.",
+    bouton: "Get a price",
+  },
+
+  faq: {
+    surtitre: "Good to know",
+    titre: "Frequently asked questions about luxury ski transfers",
+  },
+
+  champs: {
+    nom: "Your name",
+    email: "Email",
+    telephone: "Phone",
+    societe: "Company, brand or agency",
+    type: "What do you need",
+    du: "From",
+    au: "To",
+    arrivee: "Arriving at",
+    destination: "Going to",
+    passagers: "Passengers",
+    budget: "Budget in mind",
+    details: "What the stay looks like",
+    facultatif: "(optional)",
+    placeholders: {
+      arrivee: "Geneva, Chambéry, a private terminal…",
+      destination: "Courchevel, Megève, a chalet address…",
+      budget: "A range is enough",
+      details:
+        "The programme as you see it: arrivals, the hours you want a car available, an event and its schedule, anything that has to be discreet.",
+    },
+    types: {
+      disposal: "Chauffeur at your disposal",
+      helicopter: "Helicopter transfer",
+      jet: "Private jet arrival",
+      wedding: "Wedding",
+      event: "Brand or corporate event",
+      production: "Film or photo production",
+      other: "Something else",
+    },
+    envoyer: "Send your request",
+    envoiEnCours: "Sending…",
+    succes: {
+      titre: "Request received",
+      texte:
+        "Thank you. We read every request personally and come back in writing — within 24 hours, usually the same day. If the dates are close, call us and we will start on it straight away.",
+      relancer: "Send another request",
+    },
+    erreurChamps: "Please check the fields marked as required.",
+    erreurGenerale: {
+      avant: "We could not send your request. Please write to ",
+      entre: " or call ",
+      apres: ".",
+    },
+    mentionBas:
+      "We use your details only to answer you. Nothing is stored on this website and nothing is shared with third parties. Flights are chartered with licensed operators; road transport is operated by",
+    piege: "Leave this field empty",
   },
 };

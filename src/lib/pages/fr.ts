@@ -810,4 +810,61 @@ export const PAGES_FR: PageIntl[] = [
       },
     ],
   },
+  /*
+   * Les demandes sur mesure — mise à disposition, hélicoptère, jet privé,
+   * mariages et événements de marque. Créée le 22 septembre 2026, en même temps
+   * que ses équivalentes anglaise, allemande et italienne.
+   *
+   * Gabarit `components/PagePremium`, contenu dans `data/page-premium-intl.ts` :
+   * `contenu` reste donc vide ici, comme pour les autres pages à gabarit propre.
+   * Le slug est un mot-clé, « transferts-luxe », et non la traduction littérale
+   * de l'anglais.
+   */
+  {
+    slug: "transferts-luxe",
+    visuel: {
+      nom: "vehicule-premium",
+      alt: "Berline haut de gamme à l'arrivée d'une station des Alpes",
+    },
+    metaTitre: "Transferts de luxe Alpes | Chauffeur, hélico, jet",
+    metaDescription:
+      "Chauffeur à disposition, hélicoptère et jet privé vers les Alpes : mariages, événements de marque, arrivées privées. Proposition écrite sous 24 h.",
+    h1: "Transferts de luxe — chauffeur à disposition, hélicoptère et jet privé",
+    chapo:
+      "Une voiture et un chauffeur retenus pour la durée de votre séjour, un tronçon par les airs quand la route est saturée, un mariage ou un événement de marque avec un seul coordinateur de la première arrivée au dernier départ. Dites-nous à quoi ressemble le séjour, nous revenons vers vous par écrit.",
+    equivalentEn: "/luxury-ski-transfers/",
+    contenu: [],
+    faq: [
+      {
+        question: "Exploitez-vous vous-mêmes les hélicoptères et les jets ?",
+        reponse:
+          "Non, et il est important de le dire. Nous sommes transporteur routier — taxi et VTC — et chaque tronçon aérien est affrété auprès d'un opérateur aérien agréé avec lequel nous travaillons. Ce qui nous appartient, c'est le reste : l'itinéraire, les horaires, les chauffeurs aux deux bouts du vol, et un interlocuteur qui répond de l'ensemble. L'opérateur est nommé dans votre devis avant tout engagement.",
+      },
+      {
+        question: "Que comprend la mise à disposition d'un chauffeur ?",
+        reponse:
+          "Un véhicule et un chauffeur retenus pour une durée que vous choisissez — une demi-journée, une journée, ou tout le séjour — et non pour un trajet. L'attente fait partie du prix : un après-midi qui change à seize heures ne coûte rien de plus. Le même chauffeur reste avec vous du début à la fin, et c'est en général ce qui fait la différence au troisième jour.",
+      },
+      {
+        question: "Combien de temps à l'avance faut-il demander ?",
+        reponse:
+          "Le plus tôt possible pour Noël, le Nouvel An et les vacances de février : ces semaines se remplissent en premier, et un créneau d'hélicoptère vers un altiport de station est ce qu'il y a de plus rare. Hors de ces périodes, quelques jours suffisent souvent pour une voiture avec chauffeur. Si vos dates sont proches, appelez plutôt que d'écrire : nous vous dirons tout de suite si c'est possible.",
+      },
+      {
+        question: "Pouvez-vous gérer un mariage ou un événement sur plusieurs jours ?",
+        reponse:
+          "Oui, et c'est ce que nous préparons le plus soigneusement. Les invités atterrissent rarement au même aéroport le même jour : un mariage en montagne, c'est le plus souvent Genève, Lyon et Chambéry sur deux jours, une navette entre la cérémonie et la réception, puis un créneau de départ le dimanche. Vous recevez un programme plutôt qu'une liste de réservations, un coordinateur joignable du début à la fin, et une seule facture.",
+      },
+      {
+        question: "Quelle discrétion, et signez-vous un accord de confidentialité ?",
+        reponse:
+          "Oui pour l'accord de confidentialité — le vôtre ou le nôtre, signé avant le devis si votre événement l'exige. Au-delà du document : aucun nom sur une pancarte si vous n'en voulez pas, rien de publié sur un trajet, et des chauffeurs qui reçoivent l'itinéraire avant le jour J pour que rien ne se discute devant vos invités.",
+      },
+      {
+        question: "Comment se chiffre une demande sur mesure ?",
+        reponse:
+          "Pas au kilomètre. Une mise à disposition se calcule sur les heures retenues et le véhicule ; un événement sur les mouvements et les journées ; un tronçon aérien sur le devis de l'opérateur, répercuté tel quel. Vous recevez une proposition écrite qui tient sur une page, et rien n'est facturé avant que vous l'ayez acceptée. Pour un simple transfert d'aéroport vers une station, le formulaire de réservation est plus rapide et donne un prix ferme immédiatement.",
+      },
+    ],
+  },
 ];

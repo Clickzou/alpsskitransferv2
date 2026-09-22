@@ -10,6 +10,7 @@ import PageGroupes from "@/components/PageGroupes";
 import PagePremium from "@/components/PagePremium";
 import PageStations from "@/components/PageStations";
 import PageTransfertsPrives from "@/components/PageTransfertsPrives";
+import { PAGE_PREMIUM } from "@/data/page-premium";
 import { alternativesHubPaysEn, alternativesPageFonctionnelleEn } from "@/lib/intl/liens";
 import { PAGES, pageParSlug } from "@/lib/pages";
 import { PAYS } from "@/lib/pays";
@@ -86,7 +87,19 @@ export default async function Page({ params }: { params: Promise<{ silo: string 
     if (silo === "ski-resort-transfers") return <PageStations page={page} />;
     if (silo === "airport-ski-transfers") return <PageAeroports page={page} />;
     if (silo === "inquiry") return <PageGroupes page={page} />;
-    if (silo === "luxury-ski-transfers") return <PagePremium page={page} />;
+    if (silo === "luxury-ski-transfers") {
+      return (
+        <PagePremium
+          lang="en"
+          chemin={`/${silo}/`}
+          h1={page.h1}
+          chapo={page.chapo}
+          faq={page.faq}
+          contenu={PAGE_PREMIUM}
+          alternatives={alternativesPageFonctionnelleEn(silo)}
+        />
+      );
+    }
     if (silo === "general-questions") return <PageAide page={page} />;
     if (silo === "contact") return <PageContact page={page} />;
     return <PageContenu page={page} />;
