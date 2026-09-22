@@ -210,3 +210,55 @@ export function grapheJsonLd(...noeuds: (Record<string, unknown> | null)[]) {
     "@graph": noeuds.filter(Boolean),
   };
 }
+
+/**
+ * Un service sans prix affiché, avec son catalogue de prestations.
+ *
+ * `trajetSchema` décrit ce qui se vend au tarif publié : une liaison, un prix.
+ * Les demandes sur mesure n'ont pas de prix — une mise à disposition se chiffre
+ * aux heures retenues, un vol au devis de l'opérateur — et les déclarer sans
+ * `offers` n'est pas un manque, c'est la vérité du dossier.
+ *
+ * Ce que le nœud apporte, lui, c'est le **catalogue** : quatre prestations
+ * nommées, que les moteurs de réponse peuvent citer une par une. Un assistant
+ * interrogé sur « helicopter transfer to Courchevel » cherche un prestataire qui
+ * l'annonce explicitement ; une page qui n'en parle que dans sa prose est
+ * lisible, mais elle n'est pas *structurée*, et c'est la différence entre être
+ * lu et être cité.
+ */
+export function serviceCatalogueSchema({
+  id,
+  chemin,
+  nom,
+  description,
+  prestations,
+}: {
+  id: string;
+  chemin: string;
+  nom: string;
+  description: string;
+  prestations: readonly { titre: string; texte: string }[];
+}) {
+  return {
+    "@type": "Service",
+    "@id": `${absoluteUrl(chemin)}#${id}`,
+    name: nom,
+    url: absoluteUrl(chemin),
+    description,
+    serviceType: nom,
+    provider: { "@id": `${SITE.url}/#exploitant` },
+    areaServed: ENTREPRISE.zonesDesservies.map((pays) => ({ "@type": "Country", name: pays })),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: nom,
+      itemListElement: prestations.map((p) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: p.titre,
+          description: p.texte,
+        },
+      })),
+    },
+  };
+}

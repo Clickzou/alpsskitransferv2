@@ -25,6 +25,15 @@ export interface LienNav {
 const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
   en: [
     { texte: "Private transfers", chemin: "/private-airport-transfers-to-alps-ski-resort/" },
+    /*
+       Les demandes sur mesure : mise à disposition, hélicoptère, jet privé,
+       mariages et événements de marque. Elle est au menu et pas seulement au
+       pied de page parce que c'est la page au panier moyen le plus élevé du
+       site, et qu'une offre de ce genre ne se cherche pas : elle se voit, ou
+       elle n'existe pas. L'ancre diffère de celle du pied — « Luxury & special
+       requests » — pour que les deux liens ne fassent pas doublon.
+    */
+    { texte: "Luxury transfers", chemin: "/luxury-ski-transfers/" },
     // Les deux index du silo, côte à côte : où l'on va, d'où l'on part.
     { texte: "Ski resorts", chemin: "/ski-resort-transfers/" },
     { texte: "Airports", chemin: "/airport-ski-transfers/" },
@@ -128,6 +137,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
             chemin: "/private-airport-transfers-to-alps-ski-resort/",
           },
           { texte: "Travel agencies", chemin: "/inquiry/" },
+          { texte: "Luxury & special requests", chemin: "/luxury-ski-transfers/" },
           { texte: "Ski resorts", chemin: "/ski-resort-transfers/" },
           { texte: "Help", chemin: "/help/" },
           { texte: "Lost luggage", chemin: "/lost-luggage/" },

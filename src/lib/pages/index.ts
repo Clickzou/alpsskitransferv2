@@ -8,6 +8,7 @@ import { help } from "./help";
 import { inquiry } from "./inquiry";
 import { legalNotice } from "./legal-notice";
 import { lostLuggage } from "./lost-luggage";
+import { luxurySkiTransfers } from "./luxury-ski-transfers";
 import { privacy } from "./privacy";
 import { privateAirportTransfersToAlpsSkiResort } from "./private-airport-transfers-to-alps-ski-resort";
 import { skiResortTransfers } from "./ski-resort-transfers";
@@ -34,6 +35,7 @@ export const PAGES: PageFonctionnelle[] = [
   inquiry,
   legalNotice,
   lostLuggage,
+  luxurySkiTransfers,
   privacy,
   privateAirportTransfersToAlpsSkiResort,
   skiResortTransfers,

@@ -1,3 +1,80 @@
+# Mardi 22 septembre 2026 — la page premium, et la fiche Google qui arrive
+
+## Ce qui a été livré
+
+**`/luxury-ski-transfers/` — les demandes sur mesure.** Page neuve, sans
+antériorité WordPress : mise à disposition d'un chauffeur à l'heure, à la
+journée ou à la semaine, tronçons en hélicoptère et arrivées en jet privé,
+mariages, événements de marque et tournages. Mot-clé propriétaire « luxury ski
+transfers ».
+
+- Contenu dans `data/page-premium.ts`, gabarit `components/PagePremium`,
+  registre `lib/pages/luxury-ski-transfers.ts`.
+- **Formulaire dédié** (`components/FormulaireDemandePremium`,
+  `POST /api/demande-premium`) : nature de la demande, dates, points, passagers,
+  budget. Seuls le nom, l'e-mail et la description sont obligatoires — une
+  demande sans dates arrêtées doit pouvoir partir. L'e-mail reçu par
+  l'exploitant est mis en forme comme une fiche, pas comme un message.
+- **Aucun accusé de réception au demandeur**, délibérément : ce serait un e-mail
+  partant vers une adresse saisie par un inconnu, donc un relais de courrier
+  indésirable. La confirmation s'affiche à l'écran.
+- **La limite est tenue par la rédaction** : NM Transports 73 n'exploite ni
+  hélicoptère ni avion. La page écrit noir sur blanc que les vols sont affrétés
+  auprès d'opérateurs agréés, et que la route, le sol et la coordination sont
+  les siens. Ne pas laisser un script ou une retouche effacer cette réserve.
+- Frontière avec `/inquiry/` : celle-là porte **le nombre** (plus de huit
+  passagers, agences, entreprises), celle-ci **la nature** de la demande. Les
+  deux pages se renvoient l'une à l'autre en fin d'introduction.
+- Maillage : menu principal (« Luxury transfers »), pied de page (« Luxury &
+  special requests »), `llms.txt`.
+
+**En-tête.** Le menu anglais est passé à neuf entrées et « Contact » retombait
+sur une deuxième ligne. Ce n'était pas une affaire d'écran mais de conteneur :
+`max-w-6xl` plafonne la barre à 1 152 pixels quelle que soit la fenêtre, et un
+premier réglage conditionné à `xl:` n'a donc rien changé là où ça coinçait. La
+barre est à 1 216 pixels, les écarts sont resserrés, le corps du menu perd un
+demi-point, et **le menu est centré** entre la marque et les actions.
+
+**GEO.** La page est déclarée dans `llms.txt` (faits clés et pages principales),
+et ses quatre prestations sont balisées une par une — nouveau nœud
+`serviceCatalogueSchema` dans `lib/schema.ts`, un `Service` avec son
+`OfferCatalog`. Sans lui, un moteur de réponse interrogé sur « helicopter
+transfer to Courchevel » devait déduire le service de la prose.
+
+## L'audit SEO / GEO du jour
+
+Mesuré en crawlant le site servi (`npm run audit:seo` sur un `next start`) :
+362 URL, 0 erreur, 0 title manquant ou trop long, 0 page à plusieurs H1, 0 page
+sans canonical, 0 image sans alt, 967 mots par page (440 sur le WordPress),
+355 pages avec données structurées, 201 avec hreflang, 14 liens internes par
+page. Les trois pages « orphelines » sont `/booking/`, `/booking/confirmed/` et
+`/manage-booking/` : on y arrive après paiement ou par e-mail, c'est normal.
+
+Déjà en place côté GEO : `llms.txt` avec la grille tarifaire complète recalculée
+chaque heure, l'API de prix publique décrite dans `openapi.json`, le serveur MCP
+`get_transfer_quote`, et les robots IA autorisés nommément dans `robots.txt`.
+
+## Ce qui attend — par ordre de coût
+
+1. **L'indexation est fermée** (`NEXT_PUBLIC_INDEXATION`). Tant qu'elle l'est,
+   rien n'est indexé ni cité, et aucune optimisation ne produit d'effet. À
+   ouvrir le jour de la bascule sur le domaine définitif, pas avant.
+2. **La fiche Google est en cours de mise à jour par le client** (annoncé le
+   22 septembre 2026). JC préviendra dès que c'est fait. **À faire ce jour-là :**
+   - vérifier que la fiche porte exactement les nom, adresse et téléphone de
+     `data/site.ts` — NM Transports 73, 317 rue de la Bionne, 73000 Chambéry,
+     +33 7 69 78 91 89 ;
+   - **brancher `sameAs`** dans `organisationSchema()` : l'URL de la fiche
+     Google, et les profils sociaux s'il y en a. Le balisage n'en a aucun
+     aujourd'hui, et c'est ce qui relie le site à une entité réelle pour Google
+     comme pour les moteurs de réponse ;
+   - renseigner `GOOGLE_PLACE_ID` et `GOOGLE_MAPS_API_KEY` pour que les vrais
+     avis remplacent les quatre témoignages repris du WordPress.
+3. **Les mentions légales** ne sont toujours pas écrites, et `cookie-policy-uk`
+   reste à reprendre — l'éditeur est français.
+4. La page premium n'existe **qu'en anglais**. Le marché du luxe francophone
+   (Courchevel, Megève, mariages) justifierait une version `/fr/`.
+
 # Mardi 15 septembre 2026 — pendant les tests
 
 - **Test 1 réussi** (adresse demandée, adresse saisie, remboursement 10 € sur

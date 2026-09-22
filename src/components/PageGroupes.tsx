@@ -78,6 +78,24 @@ export default function PageGroupes({ page }: { page: PageFonctionnelle }) {
               {PAGE_GROUPES.intro.map((paragraphe) => (
                 <p key={paragraphe.slice(0, 40)}>{paragraphe}</p>
               ))}
+              {/*
+                Le renvoi réciproque de `/luxury-ski-transfers/`. Les deux pages
+                se ressemblent de loin et se distinguent par un seul critère : le
+                nombre ici, la nature de la demande là-bas. Un visiteur venu pour
+                une mise à disposition ou un événement doit pouvoir y aller sans
+                repasser par le menu.
+              */}
+              <p className="text-sm text-alpine-600">
+                Looking for a chauffeur at your disposal, a helicopter leg or transport for a
+                wedding or a brand event?{" "}
+                <Link
+                  href="/luxury-ski-transfers/"
+                  className="font-semibold text-marque hover:underline"
+                >
+                  Luxury ski transfers
+                </Link>{" "}
+                covers what is quoted by the hour rather than by the journey.
+              </p>
             </div>
             <Visuel
               nom={PAGE_GROUPES.introImage.nom}
