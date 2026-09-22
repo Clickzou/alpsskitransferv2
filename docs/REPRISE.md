@@ -1,5 +1,35 @@
 # Mardi 22 septembre 2026 — la page premium, et la fiche Google qui arrive
 
+## EN ATTENTE DE NASSIM — mail envoyé le 22 septembre 2026
+
+Le travail côté site est terminé. Sept informations ont été demandées à
+l'exploitant ; **ne pas les redemander, reprendre cette liste.**
+
+**Deux bloquent :**
+
+1. **Les accès au nom de domaine**, pour brancher `alpsskitransfers.com` sur
+   Vercel. Tant que ce n'est pas fait, l'indexation reste fermée et aucun des
+   365 pages ne produit le moindre effet. L'ordre des opérations est dans
+   `docs/MISE-EN-LIGNE.md` et ne se négocie pas.
+2. **Les partenaires hélicoptère et jet privé.** La page des demandes sur
+   mesure vend des vols affrétés auprès d'opérateurs agréés. Si Nassim n'en a
+   pas, **il faut retirer ou réécrire les deux cartes concernées avant la mise
+   en ligne** — c'est le seul point du dossier qui puisse faire disparaître du
+   contenu, et le seul qui coûterait un client mécontent plutôt qu'une position
+   perdue.
+
+**Cinq retardent sans bloquer :**
+
+- La fiche Google et son lien une fois faite (`sameAs`, `GOOGLE_PLACE_ID`).
+- Mentions légales : numéro au registre VTC, assureur et numéro de contrat en
+  RC professionnelle, numéro de TVA, médiateur de la consommation — ce dernier
+  est une obligation légale dès qu'on vend à des particuliers.
+- Stripe : dénomination et adresse dans le compte, les factures sortant encore
+  avec « environnement de test ».
+- Des photos réelles des véhicules, et de lui s'il accepte.
+- L'adresse e-mail qui reçoit les demandes du site.
+
+
 ## Ce qui a été livré
 
 **`/luxury-ski-transfers-alps/` — les demandes sur mesure.** Page neuve, sans
@@ -120,6 +150,27 @@ page. Les trois pages « orphelines » sont `/booking/`, `/booking/confirmed/` e
 Déjà en place côté GEO : `llms.txt` avec la grille tarifaire complète recalculée
 chaque heure, l'API de prix publique décrite dans `openapi.json`, le serveur MCP
 `get_transfer_quote`, et les robots IA autorisés nommément dans `robots.txt`.
+
+## Le blog, vérifié le même jour
+
+Treize articles anglais, trois français, plus les versions allemande et
+italienne des trois. 3 300 mots de moyenne, minimum 3 075 — aucun article
+famélique. Les hreflang du blog sont honnêtes : chaque version annoncée répond
+bien en 200, vérifié une par une.
+
+Deux corrections :
+
+- **`author` était absent** des articles. Google le demande, et un moteur de
+  réponse qui ne sait pas qui écrit cite moins volontiers. `publisher` pointait
+  par ailleurs vers `#organisation`, qui est un `TaxiService` — un *service*,
+  pas une *organisation*. Les deux pointent maintenant vers `#exploitant`, le
+  `LocalBusiness`, seul nœud du graphe qui soit une `Organization`. L'auteur est
+  l'entreprise et jamais une personne : le WordPress signait ses pages d'une
+  `Person` nommée « JC ».
+- **`llms.txt` ignorait le blog.** Une question ouverte — « quel aéroport pour
+  Chamonix ? », « que se passe-t-il si mon vol a du retard ? » — n'appelle pas
+  une page de trajet mais un article, et c'est précisément ce qu'un assistant
+  cherche à citer. Les guides y sont maintenant listés avec leur chapô.
 
 ## Ce qui attend — par ordre de coût
 
