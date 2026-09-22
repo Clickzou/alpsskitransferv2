@@ -199,7 +199,24 @@ export function articleSchema(a: {
     datePublished: a.datePublication,
     dateModified: a.dateModification ?? a.datePublication,
     image: a.image ? `${SITE.url}${a.image}` : undefined,
-    publisher: { "@id": `${SITE.url}/#organisation` },
+    /*
+     * L'auteur et l'éditeur sont **l'exploitant**, et non le nœud
+     * `#organisation`.
+     *
+     * Deux corrections en une. D'abord `author` manquait : Google le demande
+     * sur un article, et un moteur de réponse qui ne sait pas qui écrit cite
+     * moins volontiers. Ensuite `publisher` pointait vers `#organisation`, qui
+     * est un `TaxiService` — donc un *service*, pas une *organisation*. Un
+     * éditeur doit être une `Organization` ou une `Person` ; le seul nœud du
+     * graphe qui en soit une est `#exploitant`, le `LocalBusiness`.
+     *
+     * L'auteur est l'entreprise, jamais une personne : l'audit du 4 septembre
+     * 2026 relevait que le WordPress signait ses pages d'une `Person` nommée
+     * « JC », ce qui rattachait le contenu à un individu sans existence
+     * éditoriale plutôt qu'à la marque qui en répond.
+     */
+    author: { "@id": `${SITE.url}/#exploitant` },
+    publisher: { "@id": `${SITE.url}/#exploitant` },
   };
 }
 

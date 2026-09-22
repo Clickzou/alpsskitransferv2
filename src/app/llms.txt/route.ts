@@ -1,5 +1,6 @@
 import { ENTREPRISE, SITE } from "@/data/site";
 import { airportParSlug } from "@/lib/airports";
+import { articlesPublies } from "@/lib/articles";
 import { devisReservation } from "@/lib/reservation/devis";
 import { resortParSlug, SLUG_PAYS } from "@/lib/resorts";
 import { dateDuJour } from "@/lib/concurrence/comparaison";
@@ -38,6 +39,20 @@ export async function GET() {
     return [{ tri: `${aeroport.name} ${station.name}`, texte: `- [${aeroport.name} to ${station.name}](${url}): from €${devis.devis.total} per vehicle` }];
   }).sort((a, b) => a.tri.localeCompare(b.tri, "en"));
 
+  /*
+   * Les guides du blog.
+   *
+   * Une question ouverte — « quel aéroport pour Chamonix ? », « que se passe-t-il
+   * si mon vol a du retard ? » — n'appelle pas une page de trajet mais un
+   * article, et c'est précisément ce qu'un assistant cherche à citer. Les treize
+   * guides font en moyenne 3 300 mots, ils sont datés et ils répondent à la
+   * question posée : les taire ici revenait à laisser l'assistant chercher la
+   * réponse ailleurs alors qu'elle existe sur le site.
+   */
+  const guides = articlesPublies()
+    .map((a) => `- [${a.titre}](${SITE.url}/blog/${a.slug}/): ${a.chapo}`)
+    .join("\n");
+
   const texte = `# ${SITE.nom}
 
 > Private airport transfers to the ski resorts of the French, Swiss and Italian Alps, operated by NM Transports 73 (sole trader, Chambéry, France). Fixed prices per vehicle, not per person, booked and paid online.
@@ -69,6 +84,10 @@ ${lignes.map((l) => l.texte).join("\n")}
 - [Book a transfer](${SITE.url}/book-ski-transfer-tickets/): exact price for your date, vehicle and group
 - [Luxury ski transfers and chauffeur service](${SITE.url}/luxury-ski-transfers-alps/): chauffeur at disposal by the hour or the week, helicopter, private jet, weddings and events
 - [Group ski transfers](${SITE.url}/inquiry/): parties of more than eight, travel agencies and company trips
+
+## Guides
+
+${guides}
 `;
 
   return new Response(texte, {
