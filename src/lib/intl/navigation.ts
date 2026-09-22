@@ -30,20 +30,26 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
        mariages et événements de marque. Elle est au menu et pas seulement au
        pied de page parce que c'est la page au panier moyen le plus élevé du
        site, et qu'une offre de ce genre ne se cherche pas : elle se voit, ou
-       elle n'existe pas. L'ancre diffère de celle du pied — « Luxury & special
-       requests » — pour que les deux liens ne fassent pas doublon.
+       elle n'existe pas. L'ancre diffère de celle du pied — « Chauffeur service
+       & events » — pour que les deux liens ne fassent pas doublon, et parce que
+       « chauffeur service » est le terme que ce marché tape réellement.
     */
-    { texte: "Luxury transfers", chemin: "/luxury-ski-transfers/" },
+    { texte: "Luxury transfers", chemin: "/luxury-ski-transfers-alps/" },
+    /*
+       Les groupes suivent immédiatement, et c'est voulu : ces deux pages
+       couvrent ensemble tout ce qui ne rentre pas dans le tunnel standard —
+       l'une par la nature de la demande, l'autre par le nombre. Les séparer par
+       les deux index obligeait à traverser le menu pour comparer les deux
+       seules réponses à « mon cas ne rentre pas dans le formulaire ».
+
+       L'ancre dit « Groups » et non « Special inquiry » : le second est le nom
+       interne du formulaire, il ne veut rien dire pour un visiteur et ne
+       correspond à aucune recherche.
+    */
+    { texte: "Groups", chemin: "/inquiry/" },
     // Les deux index du silo, côte à côte : où l'on va, d'où l'on part.
     { texte: "Ski resorts", chemin: "/ski-resort-transfers/" },
     { texte: "Airports", chemin: "/airport-ski-transfers/" },
-    /*
-       Groupes, agences, demandes sur mesure : la page qui capte ce qui ne
-       rentre pas dans le tunnel standard. L'ancre dit « Groups » et non
-       « Special inquiry » : le second est le nom interne du formulaire, il ne
-       veut rien dire pour un visiteur et ne correspond à aucune recherche.
-    */
-    { texte: "Groups", chemin: "/inquiry/" },
     { texte: "Blog", chemin: "/blog/" },
     { texte: "Help", chemin: "/general-questions/" },
     { texte: "Contact", chemin: "/contact/" },
@@ -52,7 +58,7 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Stations", chemin: "/fr/transferts-ski/" },
     { texte: "Aéroports", chemin: "/fr/aeroports/" },
     { texte: "Transferts privés", chemin: "/fr/transferts-prives/" },
-    { texte: "Chauffeur privé", chemin: "/fr/chauffeur-prive/" },
+    { texte: "Chauffeur privé", chemin: "/fr/chauffeur-prive-alpes/" },
     { texte: "Comment réserver", chemin: "/fr/comment-reserver/" },
     { texte: "Blog", chemin: "/fr/blog/" },
     { texte: "Aide", chemin: "/fr/aide/" },
@@ -62,7 +68,7 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Skiorte", chemin: "/de/skitransfer/" },
     { texte: "Flughäfen", chemin: "/de/flughaefen/" },
     { texte: "Privattransfer", chemin: "/de/privattransfer/" },
-    { texte: "Limousinenservice", chemin: "/de/limousinenservice/" },
+    { texte: "Limousinenservice", chemin: "/de/limousinenservice-alpen/" },
     { texte: "So buchen Sie", chemin: "/de/transfer-buchen/" },
     { texte: "Blog", chemin: "/de/blog/" },
     { texte: "Hilfe", chemin: "/de/haeufige-fragen/" },
@@ -72,7 +78,7 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
     { texte: "Località", chemin: "/it/trasferimenti-sci/" },
     { texte: "Aeroporti", chemin: "/it/aeroporti/" },
     { texte: "Transfer privato", chemin: "/it/transfer-privato/" },
-    { texte: "NCC di lusso", chemin: "/it/ncc-di-lusso/" },
+    { texte: "NCC di lusso", chemin: "/it/ncc-di-lusso-alpi/" },
     { texte: "Come prenotare", chemin: "/it/come-prenotare/" },
     { texte: "Blog", chemin: "/it/blog/" },
     { texte: "Assistenza", chemin: "/it/domande-frequenti/" },
@@ -140,7 +146,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
             chemin: "/private-airport-transfers-to-alps-ski-resort/",
           },
           { texte: "Travel agencies", chemin: "/inquiry/" },
-          { texte: "Chauffeur service & events", chemin: "/luxury-ski-transfers/" },
+          { texte: "Chauffeur service & events", chemin: "/luxury-ski-transfers-alps/" },
           { texte: "Ski resorts", chemin: "/ski-resort-transfers/" },
           { texte: "Help", chemin: "/help/" },
           { texte: "Lost luggage", chemin: "/lost-luggage/" },
@@ -220,7 +226,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
         titre: "Services",
         liens: [
           { texte: "Transferts privés", chemin: "/fr/transferts-prives/" },
-          { texte: "Chauffeur privé et VTC de luxe", chemin: "/fr/chauffeur-prive/" },
+          { texte: "Chauffeur privé et VTC de luxe", chemin: "/fr/chauffeur-prive-alpes/" },
           { texte: "Agences et professionnels", chemin: "/fr/agences-et-professionnels/" },
           { texte: "Stations de ski", chemin: "/fr/transferts-ski/" },
           { texte: "Aéroports desservis", chemin: "/fr/aeroports/" },
@@ -250,7 +256,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
         titre: "Leistungen",
         liens: [
           { texte: "Privattransfer", chemin: "/de/privattransfer/" },
-          { texte: "Limousinen- und Chauffeurservice", chemin: "/de/limousinenservice/" },
+          { texte: "Limousinen- und Chauffeurservice", chemin: "/de/limousinenservice-alpen/" },
           { texte: "Agenturen und Firmen", chemin: "/de/agenturen-und-firmen/" },
           { texte: "Skiorte", chemin: "/de/skitransfer/" },
           { texte: "Flughäfen", chemin: "/de/flughaefen/" },
@@ -276,7 +282,7 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
       titre: "Servizi",
       liens: [
         { texte: "Transfer privato", chemin: "/it/transfer-privato/" },
-        { texte: "NCC e auto con autista", chemin: "/it/ncc-di-lusso/" },
+        { texte: "NCC e auto con autista", chemin: "/it/ncc-di-lusso-alpi/" },
         { texte: "Agenzie e aziende", chemin: "/it/agenzie-e-aziende/" },
         { texte: "Località sciistiche", chemin: "/it/trasferimenti-sci/" },
         { texte: "Aeroporti", chemin: "/it/aeroporti/" },

@@ -4,7 +4,7 @@ import { CLES_DEMANDE, LIBELLES_EXPLOITANT, type CleDemande } from "@/data/page-
 import { emailConfigure, envoyer } from "@/lib/reservation/email";
 
 /**
- * Formulaire des demandes sur mesure — `/luxury-ski-transfers/` et ses trois
+ * Formulaire des demandes sur mesure — `/luxury-ski-transfers-alps/` et ses trois
  * traductions, qui postent toutes ici.
  *
  * Mêmes principes que `/api/contact/` : on ne ment pas sur l'envoi, on valide

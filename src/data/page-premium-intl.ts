@@ -65,14 +65,14 @@ import type { ContenuPremium } from "./page-premium";
 
 /** Les slugs sont des mots-clés : ils vivent dans l'URL, comme ailleurs sur le site. */
 export const SLUGS_PREMIUM: Record<LangueSecondaire, string> = {
-  fr: "chauffeur-prive",
-  de: "limousinenservice",
-  it: "ncc-di-lusso",
+  fr: "chauffeur-prive-alpes",
+  de: "limousinenservice-alpen",
+  it: "ncc-di-lusso-alpi",
 };
 
 const FR: ContenuPremium = {
   motCle: "chauffeur privé Alpes",
-  filAriane: "Chauffeur privé",
+  filAriane: "Chauffeur privé Alpes",
   nomService: "Chauffeur privé et VTC de luxe dans les Alpes",
 
   heroImage: {
@@ -342,7 +342,7 @@ const FR: ContenuPremium = {
 
 const DE: ContenuPremium = {
   motCle: "Limousinenservice Alpen",
-  filAriane: "Limousinenservice",
+  filAriane: "Limousinenservice Alpen",
   nomService: "Limousinen- und Chauffeurservice in den Alpen",
 
   heroImage: {
@@ -612,7 +612,7 @@ const DE: ContenuPremium = {
 
 const IT: ContenuPremium = {
   motCle: "NCC di lusso Alpi",
-  filAriane: "NCC di lusso",
+  filAriane: "NCC di lusso Alpi",
   nomService: "NCC di lusso e auto con autista nelle Alpi",
 
   heroImage: {

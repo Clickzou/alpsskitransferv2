@@ -56,7 +56,7 @@ export default function PagePremium({
   alternatives,
 }: {
   lang: Lang;
-  /** Chemin absolu de la page, `/luxury-ski-transfers/` ou `/fr/transferts-luxe/`. */
+  /** Chemin absolu de la page, `/luxury-ski-transfers-alps/` ou `/fr/chauffeur-prive-alpes/`. */
   chemin: string;
   h1: string;
   chapo: string;

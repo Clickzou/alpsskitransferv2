@@ -1,5 +1,5 @@
 /**
- * `/luxury-ski-transfers/` et ses traductions — la page des demandes sur mesure.
+ * `/luxury-ski-transfers-alps/` et ses traductions — la page des demandes sur mesure.
  *
  * ## Ce qu'elle capte, et que rien ne captait
  *
@@ -12,7 +12,11 @@
  * Ces demandes arrivent déjà par téléphone ; elles n'avaient pas de page, donc
  * pas de visibilité, et aucune trace écrite de ce que l'entreprise sait faire.
  *
- * **Mot-clé propriétaire : « luxury ski transfers ».** Requêtes secondaires
+ * **Mot-clé propriétaire : « luxury ski transfers Alps ».** Le massif est dans
+ * le mot-clé, dans le slug et dans le H1 : « luxury ski transfers » seul est une
+ * requête mondiale que se disputent les Rocheuses, les Dolomites et Hokkaido,
+ * et sur laquelle une entreprise de Chambéry n'a rien à gagner. Requêtes
+ * secondaires
  * portées par les H2 : « chauffeur at disposal ski resort », « helicopter
  * transfer Courchevel », « private jet transfer Geneva ski », « wedding
  * transport Alps », « VIP ski transfer ».
@@ -186,9 +190,9 @@ export interface ContenuPremium {
 }
 
 export const PAGE_PREMIUM: ContenuPremium = {
-  motCle: "luxury ski transfers",
-  filAriane: "Luxury ski transfers",
-  nomService: "Luxury and bespoke ski transfers",
+  motCle: "luxury ski transfers Alps",
+  filAriane: "Luxury ski transfers in the Alps",
+  nomService: "Luxury and bespoke ski transfers in the Alps",
 
   heroImage: {
     nom: "vehicule-premium",

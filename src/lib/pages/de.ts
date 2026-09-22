@@ -702,7 +702,7 @@ export const PAGES_DE: PageIntl[] = [
    * aus dem Englischen übersetzte Fassung.
    */
   {
-    slug: "limousinenservice",
+    slug: "limousinenservice-alpen",
     visuel: {
       nom: "vehicule-premium",
       alt: "Oberklasse-Limousine am Fuß eines Alpenorts",
@@ -713,7 +713,7 @@ export const PAGES_DE: PageIntl[] = [
     h1: "Limousinenservice in den Alpen — Chauffeur, Helikopter und Privatjet",
     chapo:
       "Ein Wagen samt Fahrer für die Dauer Ihres Aufenthalts, eine Flugetappe, wenn die Straße dicht ist, eine Hochzeit oder ein Markenevent mit einem Koordinator von der ersten Ankunft bis zur letzten Abreise. Beschreiben Sie uns den Aufenthalt — wir antworten schriftlich.",
-    equivalentEn: "/luxury-ski-transfers/",
+    equivalentEn: "/luxury-ski-transfers-alps/",
     contenu: [],
     faq: [
       {

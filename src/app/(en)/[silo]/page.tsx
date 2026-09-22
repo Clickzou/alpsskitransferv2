@@ -87,7 +87,7 @@ export default async function Page({ params }: { params: Promise<{ silo: string 
     if (silo === "ski-resort-transfers") return <PageStations page={page} />;
     if (silo === "airport-ski-transfers") return <PageAeroports page={page} />;
     if (silo === "inquiry") return <PageGroupes page={page} />;
-    if (silo === "luxury-ski-transfers") {
+    if (silo === "luxury-ski-transfers-alps") {
       return (
         <PagePremium
           lang="en"

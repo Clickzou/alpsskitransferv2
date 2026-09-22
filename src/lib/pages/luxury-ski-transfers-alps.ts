@@ -1,7 +1,7 @@
 import type { PageFonctionnelle } from "./types";
 
 /**
- * `/luxury-ski-transfers/` — demandes sur mesure : mise à disposition,
+ * `/luxury-ski-transfers-alps/` — demandes sur mesure : mise à disposition,
  * hélicoptère, jet privé, mariages et événements de marque.
  *
  * **Page créée le 22 septembre 2026**, elle ne vient pas du WordPress et
@@ -19,11 +19,11 @@ import type { PageFonctionnelle } from "./types";
  * des points et des heures retenues, et le champ libre du contact ne les obtient
  * pas du premier coup.
  */
-export const luxurySkiTransfers: PageFonctionnelle = {
-  slug: "luxury-ski-transfers",
-  metaTitre: "Luxury Ski Transfers & Chauffeur Service | Alps",
+export const luxurySkiTransfersAlps: PageFonctionnelle = {
+  slug: "luxury-ski-transfers-alps",
+  metaTitre: "Luxury Ski Transfers in the Alps | Chauffeur & Jet",
   metaDescription: "Chauffeur at your disposal, helicopter and private jet transfers to the Alps — weddings, brand events and private arrivals. Written quote in 24 hours.",
-  h1: "Luxury Ski Transfers — Chauffeur, Helicopter and Private Jet",
+  h1: "Luxury Ski Transfers in the Alps — Chauffeur, Helicopter and Private Jet",
   chapo: "A car and a driver held for the length of your stay, an air leg when the road is full, a wedding or a brand event with one coordinator from the first arrival to the last departure. Tell us what the stay looks like, and we come back in writing.",
 
   /*

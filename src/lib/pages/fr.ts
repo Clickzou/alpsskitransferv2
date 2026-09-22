@@ -822,7 +822,7 @@ export const PAGES_FR: PageIntl[] = [
    * de l'anglais, qui avait d'abord donné « transferts-luxe », sans volume.
    */
   {
-    slug: "chauffeur-prive",
+    slug: "chauffeur-prive-alpes",
     visuel: {
       nom: "vehicule-premium",
       alt: "Berline haut de gamme à l'arrivée d'une station des Alpes",
@@ -833,7 +833,7 @@ export const PAGES_FR: PageIntl[] = [
     h1: "Chauffeur privé dans les Alpes — mise à disposition, hélicoptère et jet privé",
     chapo:
       "Une voiture et un chauffeur retenus pour la durée de votre séjour, un tronçon par les airs quand la route est saturée, un mariage ou un événement de marque avec un seul coordinateur de la première arrivée au dernier départ. Dites-nous à quoi ressemble le séjour, nous revenons vers vous par écrit.",
-    equivalentEn: "/luxury-ski-transfers/",
+    equivalentEn: "/luxury-ski-transfers-alps/",
     contenu: [],
     faq: [
       {

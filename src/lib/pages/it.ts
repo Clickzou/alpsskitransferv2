@@ -699,7 +699,7 @@ export const PAGES_IT: PageIntl[] = [
    * non « transfer di lusso », prima versione tradotta dall'inglese.
    */
   {
-    slug: "ncc-di-lusso",
+    slug: "ncc-di-lusso-alpi",
     visuel: {
       nom: "vehicule-premium",
       alt: "Berlina di alta gamma all'arrivo in una località alpina",
@@ -710,7 +710,7 @@ export const PAGES_IT: PageIntl[] = [
     h1: "NCC di lusso nelle Alpi — auto con autista, elicottero e jet privato",
     chapo:
       "Un'auto con autista a disposizione per tutta la durata del soggiorno, una tratta aerea quando la strada è bloccata, un matrimonio o un evento di marca con un solo coordinatore dal primo arrivo all'ultima partenza. Ci racconti com'è il soggiorno: rispondiamo per iscritto.",
-    equivalentEn: "/luxury-ski-transfers/",
+    equivalentEn: "/luxury-ski-transfers-alps/",
     contenu: [],
     faq: [
       {

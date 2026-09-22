@@ -2,7 +2,7 @@
 
 ## Ce qui a été livré
 
-**`/luxury-ski-transfers/` — les demandes sur mesure.** Page neuve, sans
+**`/luxury-ski-transfers-alps/` — les demandes sur mesure.** Page neuve, sans
 antériorité WordPress : mise à disposition d'un chauffeur à l'heure, à la
 journée ou à la semaine, tronçons en hélicoptère et arrivées en jet privé,
 mariages, événements de marque et tournages. Mot-clé propriétaire « luxury ski
@@ -35,8 +35,8 @@ premier réglage conditionné à `xl:` n'a donc rien changé là où ça coinça
 barre est à 1 216 pixels, les écarts sont resserrés, le corps du menu perd un
 demi-point, et **le menu est centré** entre la marque et les actions.
 
-**Les quatre langues, le même jour.** `/luxury-ski-transfers/`,
-`/fr/chauffeur-prive/`, `/de/limousinenservice/` et `/it/ncc-di-lusso/` —
+**Les quatre langues, le même jour.** `/luxury-ski-transfers-alps/`,
+`/fr/chauffeur-prive-alpes/`, `/de/limousinenservice-alpen/` et `/it/ncc-di-lusso-alpi/` —
 même gabarit, même formulaire, hreflang réciproques et sélecteur de langue au
 complet. C'est d'ailleurs l'absence du sélecteur sur la page anglaise seule qui
 a déclenché la décision : une page qui n'existe que dans une langue ne peut en
@@ -73,10 +73,10 @@ concurrents mettent dans leurs titres, marché par marché, et correction :
 
 | Marché | Terme réel | URL retenue |
 |---|---|---|
-| Anglais | chauffeur service, luxury ski transfer | `/luxury-ski-transfers/` *(inchangée)* |
-| Français | **chauffeur privé**, VTC | `/fr/chauffeur-prive/` |
-| Allemand | **Limousinenservice**, Chauffeurservice | `/de/limousinenservice/` |
-| Italien | **NCC** (noleggio con conducente) | `/it/ncc-di-lusso/` |
+| Anglais | chauffeur service, luxury ski transfer | `/luxury-ski-transfers-alps/` |
+| Français | **chauffeur privé**, VTC | `/fr/chauffeur-prive-alpes/` |
+| Allemand | **Limousinenservice**, Chauffeurservice | `/de/limousinenservice-alpen/` |
+| Italien | **NCC** (noleggio con conducente) | `/it/ncc-di-lusso-alpi/` |
 
 Le relevé, pour mémoire : les concurrents français titrent « Chauffeur Privé
 Courchevel – VTC Aéroport », les suisses alémaniques « Limousinenservice Sankt
@@ -90,6 +90,23 @@ du menu et du pied diffèrent l'une de l'autre pour ne pas faire doublon.
 
 **La règle à retenir** : on traduit le contenu, jamais le mot-clé. Un marché se
 relève, il ne se déduit pas — et cette page-ci est le cas d'école du projet.
+
+### Le massif dans le mot-clé, pas seulement dans le title
+
+Deuxième correction du même jour, demandée par JC : « luxury ski transfers »
+seul est une requête mondiale que se disputent les Rocheuses, les Dolomites et
+Hokkaido. Une entreprise de Chambéry n'a rien à y gagner. Le massif passe donc
+du seul title au **slug, au H1 et au fil d'Ariane**, dans les quatre langues.
+
+| Langue | URL définitive |
+|---|---|
+| Anglais | `/luxury-ski-transfers-alps/` |
+| Français | `/fr/chauffeur-prive-alpes/` |
+| Allemand | `/de/limousinenservice-alpen/` |
+| Italien | `/it/ncc-di-lusso-alpi/` |
+
+Toujours aucune redirection à écrire : aucune de ces URL n'a jamais été servie
+en production.
 
 ## L'audit SEO / GEO du jour
 
