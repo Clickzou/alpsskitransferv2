@@ -140,7 +140,23 @@ export interface ContenuPremium {
     surtitre: string;
     titre: string;
     chapo: string;
-    cartes: readonly { titre: string; texte: string; points: readonly string[] }[];
+    cartes: readonly {
+      titre: string;
+      texte: string;
+      points: readonly string[];
+      /*
+        Chaque prestation a sa photo. Les quatre cartes portaient jusque-là du
+        texte seul, et la page au panier moyen le plus élevé du site était la
+        seule à ne rien montrer — un hélicoptère et un jet privé se vendent
+        d'abord par l'image.
+
+        Générées avec fal.ai (`scripts/visuels-premium.json`), elles ne
+        prétendent montrer aucune station réelle et ne portent ni
+        immatriculation ni nom d'opérateur : une image qui annoncerait un
+        appareil précis engagerait sur un appareil que l'exploitant n'a pas.
+      */
+      image: { nom: NomVisuel; alt: string };
+    }[];
   };
   occasions: {
     surtitre: string;
@@ -180,8 +196,8 @@ export const PAGE_PREMIUM: ContenuPremium = {
   },
 
   introImage: {
-    nom: "station-courchevel",
-    alt: "Chalets above a Savoie resort at the end of the day",
+    nom: "premium-helicoptere",
+    alt: "Private helicopter on a snow-covered mountain helipad at dusk, a saloon car waiting alongside",
   },
 
   reperes: [
@@ -224,6 +240,10 @@ export const PAGE_PREMIUM: ContenuPremium = {
           "Waiting time is part of the price, not an extra on top",
           "Restaurants, ski lifts, spas, the school run to the slopes",
         ],
+        image: {
+          nom: "premium-chauffeur",
+          alt: "Chauffeur holding open the rear door of a saloon car outside a lit alpine chalet",
+        },
       },
       {
         titre: "Helicopter transfers",
@@ -235,6 +255,10 @@ export const PAGE_PREMIUM: ContenuPremium = {
           "Flown by licensed operators; the ground legs are ours",
           "Weather is the one thing nobody controls — a road plan comes with every quote",
         ],
+        image: {
+          nom: "premium-helicoptere-vol",
+          alt: "Helicopter in flight above snow-covered alpine summits on a clear winter morning",
+        },
       },
       {
         titre: "Private jet arrivals",
@@ -246,6 +270,10 @@ export const PAGE_PREMIUM: ContenuPremium = {
           "Crew transfers and repositioning runs handled the same evening",
           "Slot changes cost nothing — tell us, and the driver moves",
         ],
+        image: {
+          nom: "premium-jet",
+          alt: "Private jet on a snowy apron at dawn, a premium minivan waiting at the foot of the airstairs",
+        },
       },
       {
         titre: "Weddings, brand events and productions",
@@ -257,6 +285,10 @@ export const PAGE_PREMIUM: ContenuPremium = {
           "Vehicles held on site between movements",
           "One invoice to the company, the agency or the production",
         ],
+        image: {
+          nom: "premium-evenement",
+          alt: "Three black premium vehicles lined up outside a lit alpine event venue on a winter evening",
+        },
       },
     ],
   },

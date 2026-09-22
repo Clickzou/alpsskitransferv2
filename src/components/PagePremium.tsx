@@ -138,18 +138,36 @@ export default function PagePremium({
             {contenu.prestations.cartes.map((carte) => (
               <article
                 key={carte.titre}
-                className="flex flex-col rounded-xl border border-glacier-200 bg-white p-6 shadow-carte"
+                className="flex flex-col overflow-hidden rounded-xl border border-glacier-200 bg-white shadow-carte"
               >
-                <h2 className="font-display text-titre-carte text-alpine">{carte.titre}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-alpine-600">{carte.texte}</p>
-                <ul className="mt-5 space-y-2 border-t border-glacier-200 pt-5">
-                  {carte.points.map((point) => (
-                    <li key={point} className="flex gap-3 text-sm leading-relaxed text-alpine-700">
-                      <Coche className="mt-0.5 h-4 w-4 shrink-0 text-alpes" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
+                {/*
+                  La photo en tête de carte, pleine largeur et sans marge. Un
+                  hélicoptère et un jet privé se vendent d'abord par l'image :
+                  cette page était la seule du site à n'en porter aucune là où
+                  elle en avait le plus besoin. Le ratio est fixe pour que les
+                  quatre cartes s'alignent quelle que soit la longueur du texte.
+                */}
+                <Visuel
+                  nom={carte.image.nom}
+                  alt={carte.image.alt}
+                  sizes="(min-width: 1024px) 34rem, 100vw"
+                  className="aspect-[16/9] w-full object-cover"
+                />
+                <div className="flex flex-1 flex-col p-6">
+                  <h2 className="font-display text-titre-carte text-alpine">{carte.titre}</h2>
+                  <p className="mt-3 text-sm leading-relaxed text-alpine-600">{carte.texte}</p>
+                  <ul className="mt-5 space-y-2 border-t border-glacier-200 pt-5">
+                    {carte.points.map((point) => (
+                      <li
+                        key={point}
+                        className="flex gap-3 text-sm leading-relaxed text-alpine-700"
+                      >
+                        <Coche className="mt-0.5 h-4 w-4 shrink-0 text-alpes" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </article>
             ))}
           </div>

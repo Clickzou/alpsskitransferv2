@@ -13,7 +13,10 @@
  * - aucun visage reconnaissable, aucun texte ni logo ;
  * - paysage 16/9, photoréaliste.
  *
- * Usage : FAL_KEY=… node scripts/generer-visuels-blog.mjs [fichier.json]
+ * Usage : FAL_KEY=… node scripts/generer-visuels-blog.mjs [fichier.json] [dossier]
+ *   Le dossier de sortie sous `pHOTOS/` vaut « blog » par défaut ; les visuels
+ *   de la page des demandes sur mesure vont dans « premium ». `preparer-images`
+ *   reprend les deux dossiers de la même façon, sous `{dossier}-{nom}`.
  *   Le fichier liste `[{ "nom": "geneva-or-lyon", "prompt": "…" }]`. Une image
  *   déjà présente n'est pas regénérée : relancer ne coûte que les manquantes.
  */
@@ -27,7 +30,7 @@ if (!CLE) {
 }
 
 const liste = JSON.parse(await readFile(process.argv[2] ?? "scripts/visuels-blog.json", "utf8"));
-const SORTIE = path.join(process.cwd(), "..", "pHOTOS", "blog");
+const SORTIE = path.join(process.cwd(), "..", "pHOTOS", process.argv[3] ?? "blog");
 await mkdir(SORTIE, { recursive: true });
 
 const STYLE =

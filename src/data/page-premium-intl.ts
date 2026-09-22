@@ -80,8 +80,8 @@ const FR: ContenuPremium = {
     alt: "Berline haut de gamme à l'arrivée d'une station des Alpes",
   },
   introImage: {
-    nom: "station-courchevel",
-    alt: "Chalets au-dessus d'une station de Savoie en fin de journée",
+    nom: "premium-helicoptere",
+    alt: "Hélicoptère privé posé sur une hélisurface enneigée au crépuscule, une berline attend à côté",
   },
 
   reperes: [
@@ -124,6 +124,10 @@ const FR: ContenuPremium = {
           "L'attente est comprise dans le prix, pas facturée en supplément",
           "Restaurants, remontées, spa, dépose et reprise sur les pistes",
         ],
+        image: {
+          nom: "premium-chauffeur",
+          alt: "Chauffeur ouvrant la portière arrière d'une berline devant un chalet alpin éclairé",
+        },
       },
       {
         titre: "Transferts en hélicoptère",
@@ -135,6 +139,10 @@ const FR: ContenuPremium = {
           "Vols opérés par des opérateurs agréés ; les tronçons routiers sont les nôtres",
           "La météo reste la seule inconnue : un plan par la route accompagne chaque devis",
         ],
+        image: {
+          nom: "premium-helicoptere-vol",
+          alt: "Hélicoptère en vol au-dessus des sommets enneigés par un matin d'hiver clair",
+        },
       },
       {
         titre: "Arrivées en jet privé",
@@ -146,6 +154,10 @@ const FR: ContenuPremium = {
           "Transferts d'équipage et repositionnements assurés le soir même",
           "Un créneau qui change ne coûte rien : prévenez-nous, le chauffeur suit",
         ],
+        image: {
+          nom: "premium-jet",
+          alt: "Jet privé sur un tarmac enneigé à l'aube, van haut de gamme au pied de la passerelle",
+        },
       },
       {
         titre: "Mariages, événements de marque et tournages",
@@ -157,6 +169,10 @@ const FR: ContenuPremium = {
           "Véhicules maintenus sur place entre deux mouvements",
           "Une seule facture, à l'entreprise, à l'agence ou à la production",
         ],
+        image: {
+          nom: "premium-evenement",
+          alt: "Trois véhicules noirs alignés devant un lieu de réception alpin un soir d'hiver",
+        },
       },
     ],
   },
@@ -334,8 +350,8 @@ const DE: ContenuPremium = {
     alt: "Oberklasse-Limousine am Fuß eines Alpenorts",
   },
   introImage: {
-    nom: "station-davos",
-    alt: "Chalets über einem Schweizer Bergort am späten Nachmittag",
+    nom: "premium-helicoptere",
+    alt: "Privathelikopter auf verschneitem Landeplatz in der Dämmerung, daneben wartet eine Limousine",
   },
 
   reperes: [
@@ -378,6 +394,10 @@ const DE: ContenuPremium = {
           "Wartezeit ist im Preis enthalten, kein Zuschlag",
           "Restaurants, Bergbahnen, Spa, die Fahrt zur Piste und zurück",
         ],
+        image: {
+          nom: "premium-chauffeur",
+          alt: "Chauffeur öffnet die hintere Wagentür einer Limousine vor einem beleuchteten Alpenchalet",
+        },
       },
       {
         titre: "Helikopter-Transfers",
@@ -389,6 +409,10 @@ const DE: ContenuPremium = {
           "Geflogen von zugelassenen Operatoren; die Straßenetappen sind unsere",
           "Das Wetter bleibt die einzige Unbekannte — zu jedem Angebot gehört ein Plan über die Straße",
         ],
+        image: {
+          nom: "premium-helicoptere-vol",
+          alt: "Helikopter im Flug über verschneiten Alpengipfeln an einem klaren Wintermorgen",
+        },
       },
       {
         titre: "Ankunft im Privatjet",
@@ -400,6 +424,10 @@ const DE: ContenuPremium = {
           "Crew-Transfers und Überführungen noch am selben Abend",
           "Ein geänderter Slot kostet nichts: sagen Sie Bescheid, der Fahrer verschiebt sich",
         ],
+        image: {
+          nom: "premium-jet",
+          alt: "Privatjet auf verschneitem Vorfeld im Morgengrauen, Premium-Van an der Gangway",
+        },
       },
       {
         titre: "Hochzeiten, Markenevents und Drehs",
@@ -411,6 +439,10 @@ const DE: ContenuPremium = {
           "Fahrzeuge bleiben zwischen den Bewegungen vor Ort",
           "Eine Rechnung an die Firma, die Agentur oder die Produktion",
         ],
+        image: {
+          nom: "premium-evenement",
+          alt: "Drei schwarze Fahrzeuge vor einer beleuchteten alpinen Eventlocation an einem Winterabend",
+        },
       },
     ],
   },
@@ -588,8 +620,8 @@ const IT: ContenuPremium = {
     alt: "Berlina di alta gamma all'arrivo in una località alpina",
   },
   introImage: {
-    nom: "station-courmayeur",
-    alt: "Chalet sopra una località valdostana nel tardo pomeriggio",
+    nom: "premium-helicoptere",
+    alt: "Elicottero privato su piazzola innevata al crepuscolo, una berlina attende a fianco",
   },
 
   reperes: [
@@ -632,6 +664,10 @@ const IT: ContenuPremium = {
           "L'attesa è compresa nel prezzo, non è un supplemento",
           "Ristoranti, impianti, spa, andata e ritorno dalle piste",
         ],
+        image: {
+          nom: "premium-chauffeur",
+          alt: "Autista apre la portiera posteriore di una berlina davanti a uno chalet alpino illuminato",
+        },
       },
       {
         titre: "Transfer in elicottero",
@@ -643,6 +679,10 @@ const IT: ContenuPremium = {
           "Voli operati da operatori autorizzati; le tratte su strada sono nostre",
           "Il meteo resta l'unica incognita: a ogni preventivo si affianca un piano via strada",
         ],
+        image: {
+          nom: "premium-helicoptere-vol",
+          alt: "Elicottero in volo sopra le cime innevate in una limpida mattina invernale",
+        },
       },
       {
         titre: "Arrivi in jet privato",
@@ -654,6 +694,10 @@ const IT: ContenuPremium = {
           "Transfer equipaggi e riposizionamenti gestiti in serata",
           "Uno slot che cambia non costa nulla: ci avvisi e l'autista si sposta",
         ],
+        image: {
+          nom: "premium-jet",
+          alt: "Jet privato su piazzale innevato all'alba, minivan di alta gamma ai piedi della scaletta",
+        },
       },
       {
         titre: "Matrimoni, eventi di marca e produzioni",
@@ -665,6 +709,10 @@ const IT: ContenuPremium = {
           "Veicoli fermi in loco tra un movimento e l'altro",
           "Una sola fattura, all'azienda, all'agenzia o alla produzione",
         ],
+        image: {
+          nom: "premium-evenement",
+          alt: "Tre veicoli neri allineati davanti a una struttura alpina illuminata in una sera d'inverno",
+        },
       },
     ],
   },

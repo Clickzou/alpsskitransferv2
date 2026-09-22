@@ -326,5 +326,25 @@
   "blog-zurich-or-geneva-swiss-resorts": {
     "width": 1400,
     "height": 778
+  },
+  "premium-chauffeur": {
+    "width": 1000,
+    "height": 556
+  },
+  "premium-evenement": {
+    "width": 1000,
+    "height": 556
+  },
+  "premium-helicoptere-vol": {
+    "width": 1000,
+    "height": 556
+  },
+  "premium-helicoptere": {
+    "width": 1000,
+    "height": 556
+  },
+  "premium-jet": {
+    "width": 1000,
+    "height": 556
   }
 }

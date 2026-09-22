@@ -1,0 +1,22 @@
+[
+  {
+    "nom": "helicoptere",
+    "prompt": "A private helicopter standing on a cleared snow-covered mountain helipad at dusk, rotors still, cabin doors open and interior warmly lit, a dark premium saloon car waiting a few metres away with its boot open, alpine peaks and snow-laden pine forest behind, deep blue evening light. Plain unmarked white and dark grey fuselage with no registration letters, no manufacturer badge, no operator name."
+  },
+  {
+    "nom": "chauffeur",
+    "prompt": "A chauffeur in a dark tailored suit holding open the rear door of a black premium saloon car parked in front of a snow-covered alpine chalet at blue hour, warm light spilling from the chalet windows, two suitcases and a ski bag on the cleared driveway beside the car. The chauffeur is seen from behind, no face visible. Unmarked car with no badges or number plate text."
+  },
+  {
+    "nom": "helicoptere-vol",
+    "prompt": "A single helicopter in flight seen from the side, banking gently above a ridge of snow-covered alpine summits on a clear winter morning, low sun raking across the glaciers below, deep valley in shadow. Plain unmarked light grey fuselage, no registration letters, no operator markings, no logos."
+  },
+  {
+    "nom": "jet",
+    "prompt": "A small private business jet parked on a snowy regional airport apron at dawn, airstairs lowered, a dark premium minivan waiting at the foot of the stairs with its side door open, a ground handler loading ski bags and suitcases, snow-covered mountains on the horizon. Plain white unmarked fuselage, no registration letters, no airline name, no logos. The handler is seen from behind."
+  },
+  {
+    "nom": "evenement",
+    "prompt": "Three identical black premium vehicles lined up on a cleared forecourt outside an elegant alpine event venue on a winter evening, warm golden light from the tall windows, fresh snow on the ground and on the pine branches, a few guests in formal winter coats walking towards the entrance seen from behind at a distance. No faces visible, no signage lettering, no brand names on the vehicles."
+  }
+]

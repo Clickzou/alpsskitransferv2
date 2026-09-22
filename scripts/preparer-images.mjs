@@ -224,6 +224,29 @@ try {
   // Pas encore de visuel de blog généré : rien à préparer.
 }
 
+/*
+ * Les visuels de la page des demandes sur mesure, générés par
+ * `node scripts/generer-visuels-blog.mjs scripts/visuels-premium.json premium`
+ * dans `pHOTOS/premium/`. Même mécanique que le blog, sous `premium-{nom}` :
+ * l hélicoptère, le chauffeur, le jet et les véhicules d événement.
+ *
+ * 1 000 pixels suffisent : ces images sont servies dans une colonne de carte,
+ * jamais en pleine largeur.
+ */
+try {
+  for (const fichier of await readdir(path.join(SOURCE, "premium"))) {
+    if (!/.(jpe?g|png|webp)$/i.test(fichier)) continue;
+    IMAGES.push({
+      source: path.join("premium", fichier),
+      nom: `premium-${fichier.replace(/.[a-z]+$/i, "")}`,
+      largeur: 1000,
+      qualite: 70,
+    });
+  }
+} catch {
+  // Pas encore de visuel premium généré : rien à préparer.
+}
+
 await mkdir(SORTIE, { recursive: true });
 
 const manquantes = [];
