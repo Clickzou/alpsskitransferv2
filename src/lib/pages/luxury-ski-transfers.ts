@@ -21,7 +21,7 @@ import type { PageFonctionnelle } from "./types";
  */
 export const luxurySkiTransfers: PageFonctionnelle = {
   slug: "luxury-ski-transfers",
-  metaTitre: "Luxury Ski Transfers | Chauffeur, Helicopter & Jet",
+  metaTitre: "Luxury Ski Transfers & Chauffeur Service | Alps",
   metaDescription: "Chauffeur at your disposal, helicopter and private jet transfers to the Alps — weddings, brand events and private arrivals. Written quote in 24 hours.",
   h1: "Luxury Ski Transfers — Chauffeur, Helicopter and Private Jet",
   chapo: "A car and a driver held for the length of your stay, an air leg when the road is full, a wedding or a brand event with one coordinator from the first arrival to the last departure. Tell us what the stay looks like, and we come back in writing.",

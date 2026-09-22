@@ -36,7 +36,7 @@ barre est à 1 216 pixels, les écarts sont resserrés, le corps du menu perd un
 demi-point, et **le menu est centré** entre la marque et les actions.
 
 **Les quatre langues, le même jour.** `/luxury-ski-transfers/`,
-`/fr/transferts-luxe/`, `/de/luxus-transfer/` et `/it/transfer-di-lusso/` —
+`/fr/chauffeur-prive/`, `/de/limousinenservice/` et `/it/ncc-di-lusso/` —
 même gabarit, même formulaire, hreflang réciproques et sélecteur de langue au
 complet. C'est d'ailleurs l'absence du sélecteur sur la page anglaise seule qui
 a déclenché la décision : une page qui n'existe que dans une langue ne peut en
@@ -63,6 +63,33 @@ et ses quatre prestations sont balisées une par une — nouveau nœud
 `serviceCatalogueSchema` dans `lib/schema.ts`, un `Service` avec son
 `OfferCatalog`. Sans lui, un moteur de réponse interrogé sur « helicopter
 transfer to Courchevel » devait déduire le service de la prose.
+
+## Les mots-clés, corrigés le même jour
+
+Première version des trois traductions : « transferts de luxe »,
+« Luxus-Transfer », « transfer di lusso » — trois calques de l'anglais, et trois
+expressions que personne ne tape. JC l'a vu immédiatement. Relevé de ce que les
+concurrents mettent dans leurs titres, marché par marché, et correction :
+
+| Marché | Terme réel | URL retenue |
+|---|---|---|
+| Anglais | chauffeur service, luxury ski transfer | `/luxury-ski-transfers/` *(inchangée)* |
+| Français | **chauffeur privé**, VTC | `/fr/chauffeur-prive/` |
+| Allemand | **Limousinenservice**, Chauffeurservice | `/de/limousinenservice/` |
+| Italien | **NCC** (noleggio con conducente) | `/it/ncc-di-lusso/` |
+
+Le relevé, pour mémoire : les concurrents français titrent « Chauffeur Privé
+Courchevel – VTC Aéroport », les suisses alémaniques « Limousinenservice Sankt
+Moritz », les italiens « NCC Cervinia » — l'un d'eux a pour domaine
+`nccautodilusso.com`. L'anglais garde son URL, « luxury ski transfers » étant le
+terme du secteur côté transferts, mais son title porte maintenant « Chauffeur
+Service », que le marché tape davantage.
+
+Chaque introduction pose le terme dans sa première phrase utile, et les ancres
+du menu et du pied diffèrent l'une de l'autre pour ne pas faire doublon.
+
+**La règle à retenir** : on traduit le contenu, jamais le mot-clé. Un marché se
+relève, il ne se déduit pas — et cette page-ci est le cas d'école du projet.
 
 ## L'audit SEO / GEO du jour
 

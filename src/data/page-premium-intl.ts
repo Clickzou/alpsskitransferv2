@@ -15,6 +15,36 @@
  *  · **l'italien** porte la Vallée d'Aoste et le Piémont, Courmayeur, Cervinia
  *    et Cortina, avec Milan et Turin comme portes d'entrée.
  *
+ * ## Les mots-clés ne se traduisent pas — ils se relèvent
+ *
+ * Première version, le 22 septembre 2026 : « transferts de luxe »,
+ * « Luxus-Transfer », « transfer di lusso ». Trois calques de l'anglais, et
+ * trois expressions que personne ne tape. JC l'a vu tout de suite. Relevé de ce
+ * que les concurrents mettent réellement dans leurs titres, marché par marché :
+ *
+ *  · **français — « chauffeur privé », « VTC ».** « Chauffeur Privé Courchevel
+ *    – VTC Aéroport & Transfert Stations de Ski », « VTC Genève – Chauffeur
+ *    privé aéroport ». Pas une occurrence de « transfert de luxe ».
+ *  · **allemand — « Limousinenservice », « Chauffeurservice ».** Le terme est
+ *    si établi que des sites entiers s'appellent « Limousinenservice Sankt
+ *    Moritz » ou « Chauffeurservice St. Moritz ». « Luxus-Transfer » n'existe
+ *    pas comme requête.
+ *  · **italien — « NCC »**, pour *noleggio con conducente*. C'est le mot du
+ *    métier **et** celui du public : « NCC Cervinia », « NCC Transfer Torino »,
+ *    et un concurrent dont le domaine est littéralement `nccautodilusso.com`.
+ *  · **anglais — « chauffeur service »**, à côté de « luxury ski transfer ».
+ *    L'URL anglaise ne bouge pas, « luxury ski transfers » étant le terme du
+ *    secteur côté transferts, mais le title porte désormais les deux.
+ *
+ * D'où les slugs : `chauffeur-prive`, `limousinenservice`, `ncc-di-lusso`. Le
+ * slug est un mot-clé et il vit dans l'URL — c'est la règle du projet, encore
+ * fallait-il que ce soit le bon mot. Chaque introduction pose le terme dans sa
+ * première phrase utile : c'est ce que le visiteur vient de taper, il doit le
+ * retrouver dans le texte.
+ *
+ * **À retenir pour les prochaines traductions** : traduire le contenu, oui ;
+ * traduire le mot-clé, jamais. Un marché se relève, il ne se déduit pas.
+ *
  * ## Ce ne sont pas des miroirs
  *
  * La structure est commune — c'est le même gabarit et le même formulaire — mais
@@ -35,15 +65,15 @@ import type { ContenuPremium } from "./page-premium";
 
 /** Les slugs sont des mots-clés : ils vivent dans l'URL, comme ailleurs sur le site. */
 export const SLUGS_PREMIUM: Record<LangueSecondaire, string> = {
-  fr: "transferts-luxe",
-  de: "luxus-transfer",
-  it: "transfer-di-lusso",
+  fr: "chauffeur-prive",
+  de: "limousinenservice",
+  it: "ncc-di-lusso",
 };
 
 const FR: ContenuPremium = {
-  motCle: "transfert de luxe station de ski",
-  filAriane: "Transferts de luxe",
-  nomService: "Transferts de luxe et prestations sur mesure",
+  motCle: "chauffeur privé Alpes",
+  filAriane: "Chauffeur privé",
+  nomService: "Chauffeur privé et VTC de luxe dans les Alpes",
 
   heroImage: {
     nom: "vehicule-premium",
@@ -62,7 +92,7 @@ const FR: ContenuPremium = {
 
   intro: [
     "Certains déplacements ne sont pas des transferts. Une voiture et un chauffeur retenus pour la semaine, une arrivée en jet privé à Chambéry, le dernier tronçon vers Courchevel en hélicoptère un samedi où la route est saturée, un mariage dont les invités atterrissent sur deux jours : rien de tout cela n'entre dans un formulaire de réservation, et rien de tout cela ne doit être chiffré par un formulaire.",
-    "Cette page est faite pour ces demandes. Vous décrivez le séjour tel qu'il sera ; nous revenons vers vous par écrit — les véhicules, les horaires, l'opérateur pour ce qui vole, et un prix. Rien n'est facturé, rien n'est engagé, avant que vous ayez lu la proposition.",
+    "Cette page est faite pour ces demandes. C'est du chauffeur privé au sens strict — un VTC retenu pour vous, pas une course — et tout ce qui va avec. Vous décrivez le séjour tel qu'il sera ; nous revenons vers vous par écrit — les véhicules, les horaires, l'opérateur pour ce qui vole, et un prix. Rien n'est facturé, rien n'est engagé, avant que vous ayez lu la proposition.",
   ],
 
   renvoiGroupes: {
@@ -295,9 +325,9 @@ const FR: ContenuPremium = {
 };
 
 const DE: ContenuPremium = {
-  motCle: "Luxus Skitransfer",
-  filAriane: "Luxus-Transfer",
-  nomService: "Luxus-Skitransfers und Sonderwünsche",
+  motCle: "Limousinenservice Alpen",
+  filAriane: "Limousinenservice",
+  nomService: "Limousinen- und Chauffeurservice in den Alpen",
 
   heroImage: {
     nom: "vehicule-premium",
@@ -316,7 +346,7 @@ const DE: ContenuPremium = {
 
   intro: [
     "Manche Fahrten sind kein Transfer. Ein Wagen samt Fahrer, der eine Woche lang bereitsteht, eine Ankunft im Privatjet in Sion, die letzte Etappe nach Zermatt per Helikopter an einem Samstag, an dem die Straße dichtmacht, eine Hochzeit, deren Gäste über zwei Tage verteilt landen: nichts davon passt in ein Buchungsformular, und nichts davon sollte von einem Formular berechnet werden.",
-    "Für solche Anfragen ist diese Seite da. Sie beschreiben, wie der Aufenthalt tatsächlich aussieht; wir antworten schriftlich — mit den Fahrzeugen, den Zeiten, dem Operator für alles, was fliegt, und einem Preis. Nichts wird berechnet und nichts ist verbindlich, bevor Sie das Angebot gelesen haben.",
+    "Für solche Anfragen ist diese Seite da. Es ist Limousinenservice im engeren Sinn — ein Chauffeurservice, der Ihnen gehört, keine einzelne Fahrt — und alles, was dazugehört. Sie beschreiben, wie der Aufenthalt tatsächlich aussieht; wir antworten schriftlich — mit den Fahrzeugen, den Zeiten, dem Operator für alles, was fliegt, und einem Preis. Nichts wird berechnet und nichts ist verbindlich, bevor Sie das Angebot gelesen haben.",
   ],
 
   renvoiGroupes: {
@@ -549,9 +579,9 @@ const DE: ContenuPremium = {
 };
 
 const IT: ContenuPremium = {
-  motCle: "transfer di lusso sci",
-  filAriane: "Transfer di lusso",
-  nomService: "Transfer di lusso e servizi su misura",
+  motCle: "NCC di lusso Alpi",
+  filAriane: "NCC di lusso",
+  nomService: "NCC di lusso e auto con autista nelle Alpi",
 
   heroImage: {
     nom: "vehicule-premium",
@@ -570,7 +600,7 @@ const IT: ContenuPremium = {
 
   intro: [
     "Certi spostamenti non sono un transfer. Un'auto con autista a disposizione per una settimana, un arrivo in jet privato a Torino, l'ultimo tratto verso Courmayeur in elicottero in un sabato in cui la strada è bloccata, un matrimonio i cui invitati atterrano su due giorni: niente di tutto questo entra in un modulo di prenotazione, e niente di tutto questo va calcolato da un modulo.",
-    "Questa pagina serve a quelle richieste. Lei descrive com'è davvero il soggiorno; noi rispondiamo per iscritto — i veicoli, gli orari, l'operatore per ciò che vola e un prezzo unico. Nulla viene addebitato e nulla è impegnativo prima che abbia letto la proposta.",
+    "Questa pagina serve a quelle richieste. È NCC in senso stretto — un'auto con autista riservata a lei, non una singola corsa — e tutto ciò che ne consegue. Lei descrive com'è davvero il soggiorno; noi rispondiamo per iscritto — i veicoli, gli orari, l'operatore per ciò che vola e un prezzo unico. Nulla viene addebitato e nulla è impegnativo prima che abbia letto la proposta.",
   ],
 
   renvoiGroupes: {

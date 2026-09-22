@@ -696,17 +696,21 @@ export const PAGES_DE: PageIntl[] = [
    * `data/page-premium-intl.ts` — `contenu` bleibt hier deshalb leer. Die
    * Beispiele folgen dem deutschen Perimeter: Zürich, Sion, Zermatt und
    * St. Moritz, nicht Courchevel.
+   *
+   * Der Slug ist ein erhobenes Keyword: « limousinenservice » ist der Begriff,
+   * den dieser Markt tatsächlich sucht — nicht « Luxus-Transfer », die erste,
+   * aus dem Englischen übersetzte Fassung.
    */
   {
-    slug: "luxus-transfer",
+    slug: "limousinenservice",
     visuel: {
       nom: "vehicule-premium",
       alt: "Oberklasse-Limousine am Fuß eines Alpenorts",
     },
-    metaTitre: "Luxus-Skitransfer | Fahrer, Helikopter & Privatjet",
+    metaTitre: "Limousinenservice Alpen | Chauffeur, Helikopter, Jet",
     metaDescription:
-      "Fahrer zur freien Verfügung, Helikopter- und Privatjet-Transfers in die Alpen: Hochzeiten, Markenevents, private Ankünfte. Angebot in 24 Stunden.",
-    h1: "Luxus-Skitransfers — Fahrer, Helikopter und Privatjet",
+      "Limousinenservice und Chauffeurservice in die Alpen: Fahrer zur freien Verfügung, Helikopter, Privatjet, Hochzeiten und Markenevents.",
+    h1: "Limousinenservice in den Alpen — Chauffeur, Helikopter und Privatjet",
     chapo:
       "Ein Wagen samt Fahrer für die Dauer Ihres Aufenthalts, eine Flugetappe, wenn die Straße dicht ist, eine Hochzeit oder ein Markenevent mit einem Koordinator von der ersten Ankunft bis zur letzten Abreise. Beschreiben Sie uns den Aufenthalt — wir antworten schriftlich.",
     equivalentEn: "/luxury-ski-transfers/",

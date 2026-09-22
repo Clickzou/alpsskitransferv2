@@ -817,19 +817,20 @@ export const PAGES_FR: PageIntl[] = [
    *
    * Gabarit `components/PagePremium`, contenu dans `data/page-premium-intl.ts` :
    * `contenu` reste donc vide ici, comme pour les autres pages à gabarit propre.
-   * Le slug est un mot-clé, « transferts-luxe », et non la traduction littérale
-   * de l'anglais.
+   * Le slug est un mot-clé relevé sur le marché : « chauffeur-prive », le terme
+   * que les concurrents français mettent dans leurs titres — pas la traduction
+   * de l'anglais, qui avait d'abord donné « transferts-luxe », sans volume.
    */
   {
-    slug: "transferts-luxe",
+    slug: "chauffeur-prive",
     visuel: {
       nom: "vehicule-premium",
       alt: "Berline haut de gamme à l'arrivée d'une station des Alpes",
     },
-    metaTitre: "Transferts de luxe Alpes | Chauffeur, hélico, jet",
+    metaTitre: "Chauffeur privé Alpes | VTC de luxe, hélico, jet",
     metaDescription:
-      "Chauffeur à disposition, hélicoptère et jet privé vers les Alpes : mariages, événements de marque, arrivées privées. Proposition écrite sous 24 h.",
-    h1: "Transferts de luxe — chauffeur à disposition, hélicoptère et jet privé",
+      "Chauffeur privé et VTC de luxe vers les stations des Alpes : mise à disposition, hélicoptère, jet privé, mariages et événements de marque.",
+    h1: "Chauffeur privé dans les Alpes — mise à disposition, hélicoptère et jet privé",
     chapo:
       "Une voiture et un chauffeur retenus pour la durée de votre séjour, un tronçon par les airs quand la route est saturée, un mariage ou un événement de marque avec un seul coordinateur de la première arrivée au dernier départ. Dites-nous à quoi ressemble le séjour, nous revenons vers vous par écrit.",
     equivalentEn: "/luxury-ski-transfers/",

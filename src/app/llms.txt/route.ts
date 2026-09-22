@@ -50,7 +50,7 @@ export async function GET() {
 - Surcharges: weekend, night-time (22:00–06:00) and peak-season departures cost more; the booking page gives the exact price for a date.
 - The "from" prices below are for a Standard vehicle on a weekday in the daytime, computed from the current price list.
 - Booking: ${SITE.url}/book-ski-transfer-tickets/ (also in French: ${SITE.url}/fr/reserver/, German: ${SITE.url}/de/buchen/, Italian: ${SITE.url}/it/prenota/).
-- Bespoke requests: a chauffeur kept at your disposal by the half-day, day or week, helicopter and private jet legs chartered with licensed operators, and transport for weddings, brand events and film productions. These are quoted by hand, not booked online: ${SITE.url}/luxury-ski-transfers/ (also in French: ${SITE.url}/fr/transferts-luxe/, German: ${SITE.url}/de/luxus-transfer/, Italian: ${SITE.url}/it/transfer-di-lusso/).
+- Bespoke requests: a chauffeur kept at your disposal by the half-day, day or week, helicopter and private jet legs chartered with licensed operators, and transport for weddings, brand events and film productions. These are quoted by hand, not booked online: ${SITE.url}/luxury-ski-transfers/ (also in French: ${SITE.url}/fr/chauffeur-prive/, German: ${SITE.url}/de/limousinenservice/, Italian: ${SITE.url}/it/ncc-di-lusso/).
 - Contact: ${ENTREPRISE.telephoneAffiche} · ${ENTREPRISE.email}
 
 ## Exact price for a date
@@ -67,7 +67,7 @@ ${lignes.map((l) => l.texte).join("\n")}
 - [Ski resort transfers](${SITE.url}/ski-resort-transfers/): all resorts served
 - [Airport ski transfers](${SITE.url}/airport-ski-transfers/): all airports served
 - [Book a transfer](${SITE.url}/book-ski-transfer-tickets/): exact price for your date, vehicle and group
-- [Luxury ski transfers](${SITE.url}/luxury-ski-transfers/): chauffeur at disposal, helicopter, private jet, weddings and events
+- [Luxury ski transfers and chauffeur service](${SITE.url}/luxury-ski-transfers/): chauffeur at disposal by the hour or the week, helicopter, private jet, weddings and events
 - [Group ski transfers](${SITE.url}/inquiry/): parties of more than eight, travel agencies and company trips
 `;
 

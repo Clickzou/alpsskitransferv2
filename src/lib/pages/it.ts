@@ -693,17 +693,21 @@ export const PAGES_IT: PageIntl[] = [
    * Gabarit dedicato `components/PagePremium`, contenuti in
    * `data/page-premium-intl.ts`: `contenu` resta quindi vuoto qui. Gli esempi
    * seguono il perimetro italiano — Torino, Milano, Courmayeur e Cervinia.
+   *
+   * Lo slug è una parola chiave rilevata sul mercato: « ncc-di-lusso ». NCC
+   * (noleggio con conducente) è il termine che gli italiani cercano davvero,
+   * non « transfer di lusso », prima versione tradotta dall'inglese.
    */
   {
-    slug: "transfer-di-lusso",
+    slug: "ncc-di-lusso",
     visuel: {
       nom: "vehicule-premium",
       alt: "Berlina di alta gamma all'arrivo in una località alpina",
     },
-    metaTitre: "Transfer di lusso sci | Autista, elicottero e jet",
+    metaTitre: "NCC di lusso Alpi | Auto con autista, elicottero",
     metaDescription:
-      "Autista a disposizione, elicottero e jet privato verso le Alpi: matrimoni, eventi di marca, arrivi privati. Proposta scritta entro 24 ore.",
-    h1: "Transfer di lusso — autista a disposizione, elicottero e jet privato",
+      "NCC di lusso verso le località alpine: auto con autista a disposizione, elicottero, jet privato, matrimoni ed eventi di marca.",
+    h1: "NCC di lusso nelle Alpi — auto con autista, elicottero e jet privato",
     chapo:
       "Un'auto con autista a disposizione per tutta la durata del soggiorno, una tratta aerea quando la strada è bloccata, un matrimonio o un evento di marca con un solo coordinatore dal primo arrivo all'ultima partenza. Ci racconti com'è il soggiorno: rispondiamo per iscritto.",
     equivalentEn: "/luxury-ski-transfers/",
