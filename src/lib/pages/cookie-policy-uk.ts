@@ -19,9 +19,12 @@ import type { PageFonctionnelle } from "./types";
  *
  * **À FAIRE RELIRE PAR LE CLIENT**, et surtout à confronter à la réalité
  * technique du site le jour de la mise en ligne : ce qui est écrit ici doit
- * décrire les cookies réellement déposés, pas ceux qu'on imagine. Le site n'en
- * dépose aujourd'hui aucun à des fins de mesure — c'est la meilleure des
- * situations, et elle mérite d'être dite.
+ * décrire les cookies réellement déposés, pas ceux qu'on imagine.
+ *
+ * **Révisée le 29 septembre 2026** dans les quatre langues : Google Analytics
+ * (propriété existante, G-5W2WD3B7VL) est branché derrière un bandeau de
+ * consentement — `components/MesureAudience.tsx`. Si ce composant change
+ * (durée du choix, cookies, prestataire), ces quatre textes changent avec lui.
  */
 export const cookiePolicyUk: PageFonctionnelle = {
   slug: "cookie-policy-uk",
@@ -44,7 +47,7 @@ export const cookiePolicyUk: PageFonctionnelle = {
     {
       type: "paragraphe",
       texte:
-        "We keep this to the minimum. The website is built as static pages and does not run advertising or profiling scripts, so there is nothing to consent to for simply reading it.",
+        "We keep this to the minimum: no advertising, no profiling. The only cookies that need your consent are those used for audience measurement, and they are placed only if you accept them.",
     },
     {
       type: "liste",
@@ -57,14 +60,14 @@ export const cookiePolicyUk: PageFonctionnelle = {
     {
       type: "paragraphe",
       texte:
-        "We do not currently use analytics, advertising or social media cookies. If that changes, this page will be updated and your consent will be requested before any such cookie is placed — consent that you can refuse as easily as you give it, and withdraw at any time.",
+        "Audience measurement (Google Analytics) — only if you accept it in the banner. It counts visits and shows which pages are useful to travellers, through cookies named _ga and _ga_ followed by an identifier, kept for up to thirteen months. The data is processed by Google Ireland Limited and may be transferred to the United States under the EU–US Data Privacy Framework; it is never used for advertising. Until you accept, the Google Analytics script is not even loaded. You can withdraw your consent at any time with the “Cookie settings” link at the bottom of every page, and the cookies are then deleted. We do not use advertising or social media cookies.",
     },
 
     { type: "titre2", texte: "How long they last" },
     {
       type: "paragraphe",
       texte:
-        "Cookies needed for a booking last for the session or for the time needed to complete it. Where a cookie requiring consent is introduced, its lifetime will not exceed thirteen months, and consent will be sought again at the end of that period, in line with CNIL guidance.",
+        "Cookies needed for a booking last for the session or for the time needed to complete it. Audience measurement cookies last at most thirteen months. Your choice — to accept or to refuse — is kept for six months, after which we ask again, in line with CNIL guidance.",
     },
 
     { type: "titre2", texte: "Controlling cookies" },
@@ -89,7 +92,7 @@ export const cookiePolicyUk: PageFonctionnelle = {
     {
       type: "paragraphe",
       texte:
-        "This policy is updated whenever the cookies used by the website change. [À REMPLACER — dater la mise en ligne, puis chaque révision.]",
+        "This policy is updated whenever the cookies used by the website change. Last updated: 29 September 2026.",
     },
   ],
 

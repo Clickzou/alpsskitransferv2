@@ -81,7 +81,11 @@ Ce qui reste, dans cet ordre :
      `Disallow: /`, et la ligne `Sitemap:` présente ;
    - une page au hasard : plus de `<meta name="robots" content="noindex">` ;
    - l'en-tête HTTP : plus de `X-Robots-Tag: noindex` ;
-   - `canonical` auto-référent sur le bon domaine.
+   - `canonical` auto-référent sur le bon domaine ;
+   - **le bandeau cookies apparaît** (il s'allume avec l'indexation, pas
+     avant) : Refuser → aucune requête vers Google ; Accepter → la visite
+     apparaît dans Analytics, rapport « Temps réel ». `NEXT_PUBLIC_GA_ID`
+     (G-5W2WD3B7VL, la propriété existante) est posé depuis le 29/09.
 5. **Recetter les redirections.** Les 261 anciennes URL ont un sort vérifié à
    chaque build, mais il faut le vérifier *en ligne* : tirer au sort une
    quinzaine d'URL dans `wp-export/inventaire.json`, dont les quatre pages en

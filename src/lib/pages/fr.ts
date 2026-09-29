@@ -616,7 +616,7 @@ export const PAGES_FR: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Nous en utilisons le moins possible. Le site est constitué de pages statiques et n’exécute aucun script publicitaire ni de profilage : lire ces pages ne demande aucun consentement.",
+          "Nous en utilisons le moins possible : aucune publicité, aucun profilage. Les seuls cookies soumis à votre consentement sont ceux de la mesure d’audience, et ils ne sont déposés que si vous les acceptez.",
       },
       {
         type: "liste",
@@ -629,14 +629,14 @@ export const PAGES_FR: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Nous n’utilisons aujourd’hui aucun cookie de mesure d’audience, de publicité ou de réseau social. Si cela devait changer, cette page serait mise à jour et votre consentement recueilli avant tout dépôt — un consentement aussi simple à refuser qu’à donner, et retirable à tout moment.",
+          "Mesure d’audience (Google Analytics) — seulement si vous l’acceptez dans le bandeau. Elle compte les visites et montre quelles pages sont utiles aux voyageurs, au moyen de cookies nommés _ga et _ga_ suivi d’un identifiant, conservés treize mois au plus. Les données sont traitées par Google Ireland Limited et peuvent être transférées aux États-Unis dans le cadre du Data Privacy Framework UE–États-Unis ; elles ne servent jamais à la publicité. Tant que vous n’avez pas accepté, le script de Google Analytics n’est même pas chargé. Vous pouvez retirer votre consentement à tout moment par le lien « Gérer les cookies » en bas de chaque page ; les cookies sont alors supprimés. Nous n’utilisons aucun cookie publicitaire ni de réseau social.",
       },
 
       { type: "titre2", texte: "Leur durée de vie" },
       {
         type: "paragraphe",
         texte:
-          "Les cookies nécessaires à une réservation durent le temps de la session ou celui de la réservation. Si un cookie soumis à consentement devait être introduit, sa durée n’excéderait pas treize mois, et le consentement serait redemandé à l’échéance, conformément aux recommandations de la CNIL.",
+          "Les cookies nécessaires à une réservation durent le temps de la session ou celui de la réservation. Les cookies de mesure d’audience durent treize mois au plus. Votre choix — accepter ou refuser — est conservé six mois, puis redemandé, conformément aux recommandations de la CNIL.",
       },
 
       { type: "titre2", texte: "Les contrôler" },
@@ -661,7 +661,7 @@ export const PAGES_FR: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Cette politique est mise à jour chaque fois que les cookies du site changent. [À REMPLACER — dater la mise en ligne, puis chaque révision.]",
+          "Cette politique est mise à jour chaque fois que les cookies du site changent. Dernière mise à jour : 29 septembre 2026.",
       },
     ],
     faq: [],

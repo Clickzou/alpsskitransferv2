@@ -370,7 +370,10 @@ site Clickzou), `GA_PROPERTY_ID`, et `GSC_SITE_URL` si la propriété n'est pas
 `sc-domain:alpsskitransfers.com` ; ajouter le compte de service en « Restreint »
 dans Search Console et en « Lecteur » dans Analytics. Testé le 14 : Google
 accepte le compte, et refuse la propriété tant qu'il n'y est pas ajouté. Le
-nouveau site n'a **aucune balise Analytics** : à poser avec le bandeau cookies.
+nouveau site n'avait **aucune balise Analytics** — **posée le 29/09** avec le bandeau
+cookies (`components/MesureAudience.tsx`, propriété existante G-5W2WD3B7VL,
+`GA_PROPERTY_ID` = 477829689). Rien ne se charge avant « Accepter », et rien
+ne s'allume avant l'ouverture de l'indexation.
 
 **Tests à faire à la fin :** course téléphonique vers une adresse ; Tarifs —
 modifier, aperçu, publier, vérifier un prix sur le site, revenir à la version

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import Animations, { SCRIPT_ANIMATIONS } from "@/components/Animations";
 import { PanierProvider } from "@/components/panier/PanierProvider";
+import MesureAudience from "@/components/MesureAudience";
 import { display, sans } from "../polices";
 import { SITE } from "@/data/site";
 import { absoluteUrl } from "@/lib/seo";
@@ -41,6 +42,7 @@ export default function RootLayoutEn({ children }: { children: React.ReactNode }
         */}
         <PanierProvider>{children}</PanierProvider>
         <Animations />
+        <MesureAudience lang="en" />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BoutonCookies from "@/components/BoutonCookies";
 import Logo from "@/components/Logo";
 import { ENTREPRISE, SITE } from "@/data/site";
 import type { Lang } from "@/lib/i18n";
@@ -128,7 +129,8 @@ export default function Footer({ lang, appel = true }: { lang: Lang; appel?: boo
           © {new Date().getFullYear()} {SITE.nom}. {t.pied.droits} — {t.pied.creePar}{" "}
           <a href="https://clickzou.fr/" className="underline hover:text-white">
             Clickzou
-          </a>
+          </a>{" "}
+          <BoutonCookies lang={lang} />
         </p>
         {/*
           L'identité de l'éditeur. « Alps Ski Transfers » est une marque : le

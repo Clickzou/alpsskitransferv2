@@ -638,7 +638,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "So wenige wie möglich. Die Website besteht aus statischen Seiten und führt keine Werbe- oder Profiling-Skripte aus: für das bloße Lesen ist keine Einwilligung nötig.",
+          "So wenige wie möglich: keine Werbung, kein Profiling. Einwilligungspflichtig sind nur die Cookies der Reichweitenmessung, und sie werden nur gesetzt, wenn Sie zustimmen.",
       },
       {
         type: "liste",
@@ -651,14 +651,14 @@ export const PAGES_DE: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Wir verwenden derzeit keine Cookies für Reichweitenmessung, Werbung oder soziale Netzwerke. Sollte sich das ändern, wird diese Seite aktualisiert und Ihre Einwilligung eingeholt, bevor ein solches Cookie gesetzt wird — eine Einwilligung, die sich ebenso leicht verweigern wie erteilen und jederzeit widerrufen lässt.",
+          "Reichweitenmessung (Google Analytics) — nur, wenn Sie im Banner zustimmen. Sie zählt Besuche und zeigt, welche Seiten Reisenden nützen, mit Cookies namens _ga und _ga_ gefolgt von einer Kennung, die höchstens dreizehn Monate gespeichert werden. Die Daten verarbeitet Google Ireland Limited; sie können auf Grundlage des EU-US Data Privacy Framework in die Vereinigten Staaten übermittelt werden und dienen nie der Werbung. Solange Sie nicht zugestimmt haben, wird das Skript von Google Analytics gar nicht erst geladen. Sie können Ihre Einwilligung jederzeit über den Link „Cookie-Einstellungen“ am Ende jeder Seite widerrufen; die Cookies werden dann gelöscht. Werbe- oder Social-Media-Cookies verwenden wir nicht.",
       },
 
       { type: "titre2", texte: "Wie lange sie gelten" },
       {
         type: "paragraphe",
         texte:
-          "Für eine Buchung erforderliche Cookies gelten für die Sitzung oder für die Dauer der Buchung. Wird ein einwilligungspflichtiges Cookie eingeführt, beträgt seine Laufzeit höchstens dreizehn Monate; danach wird die Einwilligung erneut eingeholt, entsprechend den Empfehlungen der CNIL.",
+          "Für eine Buchung erforderliche Cookies gelten für die Sitzung oder für die Dauer der Buchung. Cookies der Reichweitenmessung gelten höchstens dreizehn Monate. Ihre Entscheidung — Zustimmung oder Ablehnung — wird sechs Monate gespeichert und danach erneut abgefragt, gemäß den Empfehlungen der CNIL.",
       },
 
       { type: "titre2", texte: "Cookies steuern" },
@@ -683,7 +683,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Diese Richtlinie wird aktualisiert, sobald sich die von der Website gesetzten Cookies ändern. [À REMPLACER — Datum der Veröffentlichung und jeder Überarbeitung.]",
+          "Diese Richtlinie wird aktualisiert, sobald sich die von der Website gesetzten Cookies ändern. Letzte Aktualisierung: 29. September 2026.",
       },
     ],
     faq: [],

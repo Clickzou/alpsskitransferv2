@@ -636,7 +636,7 @@ export const PAGES_IT: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Il meno possibile. Il sito è composto da pagine statiche e non esegue script pubblicitari o di profilazione: leggerlo non richiede alcun consenso.",
+          "Il meno possibile: nessuna pubblicità, nessuna profilazione. Gli unici cookie soggetti al tuo consenso sono quelli di misurazione del pubblico, e vengono installati solo se li accetti.",
       },
       {
         type: "liste",
@@ -649,14 +649,14 @@ export const PAGES_IT: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Oggi non utilizziamo cookie di misurazione, pubblicitari o di social network. Se cambiasse, questa pagina verrebbe aggiornata e il tuo consenso raccolto prima di qualsiasi installazione — un consenso facile da negare quanto da concedere, e revocabile in ogni momento.",
+          "Misurazione del pubblico (Google Analytics) — solo se la accetti nel banner. Conta le visite e mostra quali pagine sono utili ai viaggiatori, tramite cookie chiamati _ga e _ga_ seguito da un identificativo, conservati al massimo tredici mesi. I dati sono trattati da Google Ireland Limited e possono essere trasferiti negli Stati Uniti nell’ambito del Data Privacy Framework UE–USA; non vengono mai usati per la pubblicità. Finché non accetti, lo script di Google Analytics non viene nemmeno caricato. Puoi revocare il consenso in qualsiasi momento con il link «Gestisci i cookie» in fondo a ogni pagina; i cookie vengono allora cancellati. Non utilizziamo cookie pubblicitari né di social network.",
       },
 
       { type: "titre2", texte: "Quanto durano" },
       {
         type: "paragraphe",
         texte:
-          "I cookie necessari a una prenotazione durano quanto la sessione o il tempo necessario a completarla. Se venisse introdotto un cookie soggetto a consenso, la sua durata non supererebbe i tredici mesi e il consenso verrebbe richiesto di nuovo alla scadenza, secondo le raccomandazioni della CNIL.",
+          "I cookie necessari a una prenotazione durano quanto la sessione o il tempo necessario a completarla. I cookie di misurazione del pubblico durano al massimo tredici mesi. La tua scelta — accettare o rifiutare — viene conservata sei mesi e poi richiesta di nuovo, secondo le raccomandazioni della CNIL.",
       },
 
       { type: "titre2", texte: "Come controllarli" },
@@ -681,7 +681,7 @@ export const PAGES_IT: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Questa informativa viene aggiornata ogni volta che cambiano i cookie del sito. [À REMPLACER — datare la pubblicazione e ogni revisione.]",
+          "Questa informativa viene aggiornata ogni volta che cambiano i cookie del sito. Ultimo aggiornamento: 29 settembre 2026.",
       },
     ],
     faq: [],
