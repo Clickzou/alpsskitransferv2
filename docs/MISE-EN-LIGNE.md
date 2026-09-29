@@ -18,7 +18,7 @@ qui n'appartiennent qu'au client.
 
 | | Où ça se voit | Bloquant ? |
 |---|---|---|
-| **Barème tarifaire validé** | variable `BAREME_VALIDE` — absente = fermé | **oui** — le moteur affiche des prix mais n'encaisse pas |
+| ~~**Barème tarifaire validé**~~ | **validé par le client le 29/09** ; `BAREME_VALIDE=oui` déjà posé en Production et Preview (sonde : renseignée) | — |
 | **Compte Stripe en production** | voir la section 1 bis ci-dessous | **oui** pour encaisser |
 | **Supabase** | tables créées (`docs/supabase-schema.sql`), clés posées | **oui** pour enregistrer une réservation |
 | **Test de bout en bout** | une réservation réelle : session, carte, webhook signé, e-mails, ligne `payee` | **oui** |

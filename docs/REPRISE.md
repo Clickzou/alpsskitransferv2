@@ -18,6 +18,9 @@
   `docs/`, hors dépôt), valable jusqu'au 29/09/2029. Posé dans les mentions
   légales des quatre langues et au §10 des CGV. L'attestation porte encore
   l'ancienne adresse de Chambéry : à faire mettre à jour chez CM2C.
+- **Grille tarifaire : validée par le client le 29/09** (JC). `BAREME_VALIDE`
+  était déjà à `oui` sur Vercel depuis les tests de paiement : rien à changer.
+  Le site n'encaisse de l'argent réel qu'avec les clés Stripe de production.
 - **Stripe** : dénomination NM TRANSPORTS 73.
 - **Noms** (hélico / jet ?) : « sous peu ». **Photos** : véhicules seulement,
   pas de lui.
