@@ -65,7 +65,7 @@ export async function GET() {
 - Surcharges: weekend, night-time (22:00–06:00) and peak-season departures cost more; the booking page gives the exact price for a date.
 - The "from" prices below are for a Standard vehicle on a weekday in the daytime, computed from the current price list.
 - Booking: ${SITE.url}/book-ski-transfer-tickets/ (also in French: ${SITE.url}/fr/reserver/, German: ${SITE.url}/de/buchen/, Italian: ${SITE.url}/it/prenota/).
-- Bespoke requests: a chauffeur kept at your disposal by the half-day, day or week, helicopter and private jet legs chartered with licensed operators, and transport for weddings, brand events and film productions. These are quoted by hand, not booked online: ${SITE.url}/luxury-ski-transfers-alps/ (also in French: ${SITE.url}/fr/chauffeur-prive-alpes/, German: ${SITE.url}/de/limousinenservice-alpen/, Italian: ${SITE.url}/it/ncc-di-lusso-alpi/).
+- Bespoke requests: a chauffeur kept at your disposal by the half-day, day or week, helicopter legs flown by our partner Jet Systems Hélicoptères and private jets chartered through our partner Jet Miles, and transport for weddings, brand events and film productions. These are quoted by hand, not booked online: ${SITE.url}/luxury-ski-transfers-alps/ (also in French: ${SITE.url}/fr/chauffeur-prive-alpes/, German: ${SITE.url}/de/limousinenservice-alpen/, Italian: ${SITE.url}/it/ncc-di-lusso-alpi/).
 - Contact: ${ENTREPRISE.telephoneAffiche} · ${ENTREPRISE.email}
 
 ## Exact price for a date

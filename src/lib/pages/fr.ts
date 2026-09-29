@@ -841,7 +841,7 @@ export const PAGES_FR: PageIntl[] = [
       {
         question: "Exploitez-vous vous-mêmes les hélicoptères et les jets ?",
         reponse:
-          "Non, et il est important de le dire. Nous sommes transporteur routier — taxi et VTC — et chaque tronçon aérien est affrété auprès d'un opérateur aérien agréé avec lequel nous travaillons. Ce qui nous appartient, c'est le reste : l'itinéraire, les horaires, les chauffeurs aux deux bouts du vol, et un interlocuteur qui répond de l'ensemble. L'opérateur est nommé dans votre devis avant tout engagement.",
+          "Non, et il est important de le dire. Nous sommes transporteur routier — taxi et VTC. Les tronçons en hélicoptère sont assurés par notre partenaire Jet Systems Hélicoptères, compagnie aérienne agréée depuis 1987 ; les jets privés sont affrétés par l'intermédiaire de notre partenaire Jet Miles, auprès d'opérateurs aériens agréés. Ce qui nous appartient, c'est le reste : l'itinéraire, les horaires, les chauffeurs aux deux bouts du vol, et un interlocuteur qui répond de l'ensemble. L'appareil et son opérateur sont nommés dans votre devis avant tout engagement.",
       },
       {
         question: "Que comprend la mise à disposition d'un chauffeur ?",

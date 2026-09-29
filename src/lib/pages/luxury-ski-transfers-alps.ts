@@ -41,7 +41,7 @@ export const luxurySkiTransfersAlps: PageFonctionnelle = {
     {
       question: "Do you operate the helicopters and jets yourselves?",
       reponse:
-        "No, and it matters that we say so. We are a road operator — licensed for passenger transport by taxi and VTC — and every air leg is chartered with a licensed air operator we work with. What we own is the rest: the route, the timings, the drivers at both ends of the flight, and one person answering for the whole programme. The operator is named in your quote before you confirm anything.",
+        "No, and it matters that we say so. We are a road operator — licensed for passenger transport by taxi and VTC. Helicopter legs are flown by our partner Jet Systems Hélicoptères, a licensed helicopter airline since 1987; private jets are chartered through our partner Jet Miles, from licensed air operators. What we own is the rest: the route, the timings, the drivers at both ends of the flight, and one person answering for the whole programme. The aircraft and its operator are named in your quote before you confirm anything.",
     },
     {
       question: "What does “chauffeur at your disposal” include?",

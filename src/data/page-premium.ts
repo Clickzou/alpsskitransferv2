@@ -38,7 +38,10 @@
  *
  * NM Transports 73 est transporteur de voyageurs par taxi et VTC. **Elle
  * n'exploite ni hélicoptère ni avion**, et la page ne le laisse jamais croire :
- * les vols sont affrétés auprès d'opérateurs agréés, ce qui est écrit noir sur
+ * les vols sont affrétés auprès de partenaires nommés — Jet Systems Hélicoptères,
+ * compagnie aérienne, pour l'hélicoptère ; Jet Miles, **courtier** et non
+ * opérateur, pour le jet (noms seuls, sans lien : l'exploitant négocie en
+ * direct, demande du 29/09/2026) —, ce qui est écrit noir sur
  * blanc dans la carte, dans la FAQ et dans la mention sous le formulaire. Une
  * page premium qui promet un appareil qu'elle n'a pas se fait rattraper au
  * premier devis — et la route, la coordination et le sol restent, eux,
@@ -257,11 +260,11 @@ export const PAGE_PREMIUM: ContenuPremium = {
       {
         titre: "Helicopter transfers",
         texte:
-          "On changeover Saturdays the valley roads decide the arrival time, not the distance. An air leg takes that out of the equation: Geneva to a resort altiport is measured in minutes rather than hours. We arrange the flight with licensed operators and drive both ends of it — the run to the apron, and the run from the pad to the door.",
+          "On changeover Saturdays the valley roads decide the arrival time, not the distance. An air leg takes that out of the equation: Geneva to a resort altiport is measured in minutes rather than hours. The flight is operated by our partner Jet Systems Hélicoptères, a licensed helicopter airline since 1987, and we drive both ends of it — the run to the apron, and the run from the pad to the door.",
         points: [
           "Geneva, Annecy, Sion and Chambéry as departure points",
           "Courchevel altiport, Megève, Zermatt and the resort helipads",
-          "Flown by licensed operators; the ground legs are ours",
+          "Flown by Jet Systems Hélicoptères; the ground legs are ours",
           "Weather is the one thing nobody controls — a road plan comes with every quote",
         ],
         image: {
@@ -272,7 +275,7 @@ export const PAGE_PREMIUM: ContenuPremium = {
       {
         titre: "Private jet arrivals",
         texte:
-          "Geneva, Chambéry, Annecy and Sion all take business aviation, and each has its own handling arrangements. We meet the aircraft where the operator allows it and at the FBO door where it does not, with the wait already priced in: a jet lands when it lands, and a driver who is not there is worse than useless.",
+          "The aircraft is chartered through our partner Jet Miles, from licensed operators. Geneva, Chambéry, Annecy and Sion all take business aviation, and each has its own handling arrangements. We meet the aircraft where the operator allows it and at the FBO door where it does not, with the wait already priced in: a jet lands when it lands, and a driver who is not there is worse than useless.",
         points: [
           "Met at the FBO, or on the apron where handling permits",
           "Luggage and ski equipment moved without a second trip",

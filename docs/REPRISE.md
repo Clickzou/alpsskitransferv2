@@ -49,10 +49,13 @@ Parler court à JC : une phrase par point.
 
 - **Le domaine est chez JC** (précisé le 29/09) : il n'attend plus Nassim. La
   bascule suit `docs/MISE-EN-LIGNE.md` — domaine d'abord, indexation ensuite.
-- **Partenaires hélico / jet : « plus tard, on les aura »** (JC, 29/09).
-  Décision : **les deux cartes restent**, ce n'est plus bloquant — la page
-  reste une demande de devis sans paiement, et la réserve « vols affrétés
-  auprès d'opérateurs agréés » doit rester écrite.
+- **Partenaires hélico / jet : réglé le 29/09 au soir.** Hélicoptère :
+  **Jet Systems Hélicoptères** (compagnie aérienne, CTA NFR.AOC.0024, depuis
+  1987) — départs Genève, Chambéry, Annecy, et Suisse et Italie aussi (Nassim).
+  Jet : **Jet Miles** — **courtier, pas opérateur** : le texte dit « affrété
+  par l'intermédiaire de », jamais « opéré par ». **Noms seuls, aucun lien**
+  (Nassim négocie en direct avec eux). Posés dans les cartes, la FAQ et
+  `llms.txt`, quatre langues.
 - **Fiche Google** : en cours, avis compris. Lien à venir.
 - **Adresse** : va passer au **189 Chemin du Cruet, 73240 Drumettaz-Clarafond**,
   en attente de confirmation INPI. **Posée sur le site le 29/09** à la demande
@@ -67,7 +70,7 @@ Parler court à JC : une phrase par point.
   était déjà à `oui` sur Vercel depuis les tests de paiement : rien à changer.
   Le site n'encaisse de l'argent réel qu'avec les clés Stripe de production.
 - **Stripe** : dénomination NM TRANSPORTS 73.
-- **Noms** (hélico / jet ?) : « sous peu ». **Photos** : véhicules seulement,
+- **Noms** (hélico / jet) : reçus, voir plus haut. **Photos** : véhicules seulement,
   pas de lui.
 - **E-mail** : `contact@` reste, relié à alpsskitransfers@gmail.com.
 
@@ -92,9 +95,9 @@ l'exploitant ; **ne pas les redemander, reprendre cette liste.**
    Vercel. Tant que ce n'est pas fait, l'indexation reste fermée et aucun des
    365 pages ne produit le moindre effet. L'ordre des opérations est dans
    `docs/MISE-EN-LIGNE.md` et ne se négocie pas.
-2. **Les partenaires hélicoptère et jet privé.** La page des demandes sur
-   mesure vend des vols affrétés auprès d'opérateurs agréés. Si Nassim n'en a
-   pas, **il faut retirer ou réécrire les deux cartes concernées avant la mise
+2. ~~**Les partenaires hélicoptère et jet privé.**~~ **Réglé le 29/09** :
+   Jet Systems Hélicoptères et Jet Miles, nommés sans lien. Historique : si
+   Nassim n'en avait pas eu, **il aurait fallu retirer ou réécrire les deux cartes concernées avant la mise
    en ligne** — c'est le seul point du dossier qui puisse faire disparaître du
    contenu, et le seul qui coûterait un client mécontent plutôt qu'une position
    perdue.

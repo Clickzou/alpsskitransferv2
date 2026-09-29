@@ -717,7 +717,7 @@ export const PAGES_IT: PageIntl[] = [
       {
         question: "Gestite direttamente elicotteri e jet?",
         reponse:
-          "No, ed è giusto dirlo. Siamo un operatore su strada — autorizzati al trasporto di persone con taxi e NCC — e ogni tratta aerea viene noleggiata presso un operatore aereo autorizzato con cui collaboriamo. Nostro è tutto il resto: il percorso, gli orari, gli autisti alle due estremità del volo e una persona che risponde dell'insieme. L'operatore è indicato per nome nel preventivo, prima di qualsiasi impegno.",
+          "No, ed è giusto dirlo. Siamo un operatore su strada — autorizzati al trasporto di persone con taxi e NCC. Le tratte in elicottero sono effettuate dal nostro partner Jet Systems Hélicoptères, compagnia aerea autorizzata dal 1987; i jet privati sono noleggiati tramite il nostro partner Jet Miles, presso operatori aerei autorizzati. Nostro è tutto il resto: il percorso, gli orari, gli autisti alle due estremità del volo e una persona che risponde dell'insieme. L'aeromobile e il suo operatore sono indicati per nome nel preventivo, prima di qualsiasi impegno.",
       },
       {
         question: "Che cosa comprende l'autista a disposizione?",

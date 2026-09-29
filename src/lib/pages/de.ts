@@ -720,7 +720,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         question: "Betreiben Sie die Helikopter und Jets selbst?",
         reponse:
-          "Nein, und das gehört gesagt. Wir sind ein Straßenbetrieb — konzessioniert für die Personenbeförderung mit Taxi und Mietwagen — und jede Flugetappe wird bei einem zugelassenen Luftfahrtunternehmen gechartert, mit dem wir zusammenarbeiten. Uns gehört der Rest: die Strecke, die Zeiten, die Fahrer an beiden Enden des Fluges und ein Ansprechpartner für das Ganze. Der Operator wird im Angebot namentlich genannt, bevor Sie irgendetwas bestätigen.",
+          "Nein, und das gehört gesagt. Wir sind ein Straßenbetrieb — konzessioniert für die Personenbeförderung mit Taxi und Mietwagen. Helikopter-Etappen fliegt unser Partner Jet Systems Hélicoptères, ein zugelassenes Luftfahrtunternehmen seit 1987; Privatjets werden über unseren Partner Jet Miles bei zugelassenen Luftfahrtunternehmen gechartert. Uns gehört der Rest: die Strecke, die Zeiten, die Fahrer an beiden Enden des Fluges und ein Ansprechpartner für das Ganze. Flugzeug und Operator werden im Angebot namentlich genannt, bevor Sie irgendetwas bestätigen.",
       },
       {
         question: "Was ist bei einem Fahrer zur freien Verfügung enthalten?",

@@ -55,7 +55,8 @@
  * langues.
  *
  * **La réserve sur l'air est reprise à l'identique dans les trois** : les vols
- * sont affrétés auprès d'opérateurs agréés, et l'exploitant n'en exploite aucun.
+ * sont affrétés auprès de Jet Systems Hélicoptères et via Jet Miles (courtier),
+ * nommés sans lien, et l'exploitant n'en exploite aucun.
  * C'est une limite juridique, pas une tournure rédactionnelle — voir l'en-tête
  * de `page-premium.ts`.
  */
@@ -132,11 +133,11 @@ const FR: ContenuPremium = {
       {
         titre: "Transferts en hélicoptère",
         texte:
-          "Les samedis de rotation, c'est la route qui décide de l'heure d'arrivée, pas la distance. Un tronçon aérien supprime la question : de Genève à l'altiport d'une station, le trajet se compte en minutes et non en heures. Nous affrétons le vol auprès d'opérateurs agréés et assurons les deux bouts — la conduite jusqu'à l'aire de départ, puis de l'hélisurface jusqu'à la porte.",
+          "Les samedis de rotation, c'est la route qui décide de l'heure d'arrivée, pas la distance. Un tronçon aérien supprime la question : de Genève à l'altiport d'une station, le trajet se compte en minutes et non en heures. Le vol est assuré par notre partenaire Jet Systems Hélicoptères, compagnie aérienne agréée depuis 1987, et nous assurons les deux bouts — la conduite jusqu'à l'aire de départ, puis de l'hélisurface jusqu'à la porte.",
         points: [
           "Départs de Genève, Annecy, Sion et Chambéry",
           "Altiport de Courchevel, Megève, Zermatt et les hélisurfaces des stations",
-          "Vols opérés par des opérateurs agréés ; les tronçons routiers sont les nôtres",
+          "Vols opérés par Jet Systems Hélicoptères ; les tronçons routiers sont les nôtres",
           "La météo reste la seule inconnue : un plan par la route accompagne chaque devis",
         ],
         image: {
@@ -147,7 +148,7 @@ const FR: ContenuPremium = {
       {
         titre: "Arrivées en jet privé",
         texte:
-          "Genève, Chambéry, Annecy et Sion accueillent l'aviation d'affaires, chacun avec ses propres règles d'assistance. Nous venons au plus près de l'appareil quand l'exploitant l'autorise, à la porte du terminal d'aviation d'affaires sinon, avec l'attente déjà comprise : un jet se pose quand il se pose, et un chauffeur absent est pire qu'inutile.",
+          "L'appareil est affrété par l'intermédiaire de notre partenaire Jet Miles, auprès d'opérateurs agréés. Genève, Chambéry, Annecy et Sion accueillent l'aviation d'affaires, chacun avec ses propres règles d'assistance. Nous venons au plus près de l'appareil quand l'exploitant l'autorise, à la porte du terminal d'aviation d'affaires sinon, avec l'attente déjà comprise : un jet se pose quand il se pose, et un chauffeur absent est pire qu'inutile.",
         points: [
           "Accueil au terminal d'aviation d'affaires, ou au pied de l'appareil si l'assistance le permet",
           "Bagages et matériel de ski emportés sans second voyage",
@@ -402,11 +403,11 @@ const DE: ContenuPremium = {
       {
         titre: "Helikopter-Transfers",
         texte:
-          "An Anreisesamstagen bestimmt die Straße die Ankunftszeit, nicht die Entfernung. Eine Flugetappe nimmt diese Frage heraus: von Zürich oder Sion in den Bergort rechnet man in Minuten statt in Stunden. Wir chartern den Flug bei zugelassenen Operatoren und fahren beide Enden — zum Abflugplatz und vom Landeplatz bis vor die Tür.",
+          "An Anreisesamstagen bestimmt die Straße die Ankunftszeit, nicht die Entfernung. Eine Flugetappe nimmt diese Frage heraus: von Zürich oder Sion in den Bergort rechnet man in Minuten statt in Stunden. Den Flug führt unser Partner Jet Systems Hélicoptères durch, ein zugelassenes Luftfahrtunternehmen seit 1987, und wir fahren beide Enden — zum Abflugplatz und vom Landeplatz bis vor die Tür.",
         points: [
           "Abflug ab Zürich, Sion, Genf und Bern",
           "Zermatt, St. Moritz, Davos und die Landeplätze der Orte",
-          "Geflogen von zugelassenen Operatoren; die Straßenetappen sind unsere",
+          "Geflogen von Jet Systems Hélicoptères; die Straßenetappen sind unsere",
           "Das Wetter bleibt die einzige Unbekannte — zu jedem Angebot gehört ein Plan über die Straße",
         ],
         image: {
@@ -417,7 +418,7 @@ const DE: ContenuPremium = {
       {
         titre: "Ankunft im Privatjet",
         texte:
-          "Zürich, Genf, Sion und Bern nehmen Geschäftsluftfahrt an, jeder mit eigenen Abfertigungsregeln. Wir kommen so nah an das Flugzeug, wie der Betreiber es zulässt, sonst an die Tür des Business-Terminals — die Wartezeit ist bereits eingerechnet: ein Jet landet, wann er landet, und ein Fahrer, der nicht da ist, ist schlimmer als keiner.",
+          "Das Flugzeug wird über unseren Partner Jet Miles bei zugelassenen Operatoren gechartert. Zürich, Genf, Sion und Bern nehmen Geschäftsluftfahrt an, jeder mit eigenen Abfertigungsregeln. Wir kommen so nah an das Flugzeug, wie der Betreiber es zulässt, sonst an die Tür des Business-Terminals — die Wartezeit ist bereits eingerechnet: ein Jet landet, wann er landet, und ein Fahrer, der nicht da ist, ist schlimmer als keiner.",
         points: [
           "Empfang im Business-Terminal oder am Flugzeug, wo die Abfertigung es erlaubt",
           "Gepäck und Skiausrüstung ohne zweite Fahrt",
@@ -672,11 +673,11 @@ const IT: ContenuPremium = {
       {
         titre: "Transfer in elicottero",
         texte:
-          "Nei sabati di cambio turno è la strada a decidere l'ora di arrivo, non la distanza. Una tratta aerea elimina il problema: da Torino o Milano alla località si contano minuti, non ore. Noleggiamo il volo presso operatori autorizzati e copriamo entrambe le estremità — fino alla piazzola di partenza e dall'elisuperficie fino alla porta.",
+          "Nei sabati di cambio turno è la strada a decidere l'ora di arrivo, non la distanza. Una tratta aerea elimina il problema: da Torino o Milano alla località si contano minuti, non ore. Il volo è effettuato dal nostro partner Jet Systems Hélicoptères, compagnia aerea autorizzata dal 1987, e noi copriamo entrambe le estremità — fino alla piazzola di partenza e dall'elisuperficie fino alla porta.",
         points: [
           "Partenze da Torino, Milano, Ginevra e Aosta",
           "Courmayeur, Cervinia, Cortina e le elisuperfici delle località",
-          "Voli operati da operatori autorizzati; le tratte su strada sono nostre",
+          "Voli operati da Jet Systems Hélicoptères; le tratte su strada sono nostre",
           "Il meteo resta l'unica incognita: a ogni preventivo si affianca un piano via strada",
         ],
         image: {
@@ -687,7 +688,7 @@ const IT: ContenuPremium = {
       {
         titre: "Arrivi in jet privato",
         texte:
-          "Torino, Milano, Ginevra e Aosta accolgono l'aviazione d'affari, ognuno con le proprie regole di handling. Andiamo il più vicino possibile all'aeromobile quando l'operatore lo consente, altrimenti alla porta del terminal business, con l'attesa già inclusa: un jet atterra quando atterra, e un autista assente è peggio che inutile.",
+          "L'aeromobile è noleggiato tramite il nostro partner Jet Miles, presso operatori autorizzati. Torino, Milano, Ginevra e Aosta accolgono l'aviazione d'affari, ognuno con le proprie regole di handling. Andiamo il più vicino possibile all'aeromobile quando l'operatore lo consente, altrimenti alla porta del terminal business, con l'attesa già inclusa: un jet atterra quando atterra, e un autista assente è peggio che inutile.",
         points: [
           "Accoglienza al terminal business o sottobordo dove l'handling lo permette",
           "Bagagli e attrezzatura da sci senza un secondo viaggio",
