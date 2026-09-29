@@ -7,7 +7,7 @@ import { VEHICULES } from "@/data/accueil";
 import { CAPACITE, CAPACITE_BAGAGES, devisReservation } from "@/lib/reservation/devis";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
 import { RESORTS_MIGRES } from "@/lib/resorts";
-import { baremeValide } from "@/lib/tarification/bareme";
+import { baremeValide, encaissementSuspendu } from "@/lib/tarification/bareme";
 import { coefficientDe, GRILLE_DEFAUT, type Grille } from "@/lib/tarification/grille";
 import { grilleActive, historiqueGrilles } from "@/lib/tarification/grilles-publiees";
 import { composantesAlpes, instantAlpes } from "@/lib/temps";
@@ -238,9 +238,11 @@ export default async function PageTarifs({
         ) : null}
 
         <p
-          className={`mt-3 text-sm ${baremeValide() ? "text-succes-700" : "text-attention-700"}`}
+          className={`mt-3 text-sm ${baremeValide() && !encaissementSuspendu() ? "text-succes-700" : "text-attention-700"}`}
         >
-          {baremeValide()
+          {encaissementSuspendu()
+            ? "Paiement en ligne suspendu (coupe-circuit, réglage Clickzou) : le site affiche ces prix, et chaque réservation arrive en demande de devis, prix fixes compris."
+            : baremeValide()
             ? "Le site encaisse ces prix en ligne."
             : "Le site affiche ces prix, mais n’encaisse pas encore en ligne — sauf les trajets à prix fixe : il envoie une demande de devis. L’encaissement s’ouvre quand la grille est validée (réglage Clickzou)."}
         </p>

@@ -48,9 +48,14 @@ const base: DemandeTransfert = {
  *
  * On repart donc d'un état connu avant chaque cas : barème non validé, comme au
  * premier jour. Les tests qui vérifient l'ouverture la posent eux-mêmes.
+ *
+ * Même chose pour le coupe-circuit, et c'est plus grave : allumé sur Vercel,
+ * il faisait échouer le prebuild — on n'aurait jamais pu déployer le site au
+ * moment précis où on en a besoin (constaté le 29 septembre 2026).
  */
 beforeEach(() => {
   delete process.env.BAREME_VALIDE;
+  delete process.env.ENCAISSEMENT_SUSPENDU;
 });
 
 describe("calcul du prix", () => {
@@ -264,5 +269,46 @@ describe("interrupteur d'encaissement", () => {
   it("encaisse quand la variable vaut « oui »", () => {
     process.env.BAREME_VALIDE = "oui";
     expect(calculer(base).encaissable).toBe(true);
+  });
+});
+
+/**
+ * Le coupe-circuit, qui remplace le tunnel WooCommerce de repli : il doit
+ * fermer **aussi** les prix fixes, faute de quoi les cinquante trajets les plus
+ * vendus resteraient payables pendant une panne.
+ */
+describe("coupe-circuit d'encaissement", () => {
+  const initial = { bareme: process.env.BAREME_VALIDE, coupe: process.env.ENCAISSEMENT_SUSPENDU };
+  afterEach(() => {
+    for (const [nom, valeur] of [
+      ["BAREME_VALIDE", initial.bareme],
+      ["ENCAISSEMENT_SUSPENDU", initial.coupe],
+    ] as const) {
+      if (valeur === undefined) delete process.env[nom];
+      else process.env[nom] = valeur;
+    }
+  });
+
+  it("coupe le barème validé et les prix fixes", () => {
+    process.env.BAREME_VALIDE = "oui";
+    process.env.ENCAISSEMENT_SUSPENDU = "oui";
+    expect(calculer(base).encaissable).toBe(false);
+    expect(calculer({ ...base, prixFixe: 180 }).encaissable).toBe(false);
+  });
+
+  it("garde le prix affiché : seul le paiement s'arrête", () => {
+    process.env.BAREME_VALIDE = "oui";
+    const ouvert = calculer(base).total;
+    process.env.ENCAISSEMENT_SUSPENDU = "oui";
+    expect(calculer(base).total).toBe(ouvert);
+  });
+
+  it("ne coupe rien quand la variable est absente ou approchante", () => {
+    process.env.BAREME_VALIDE = "oui";
+    for (const valeur of [undefined, "", "true", "OUI", "non"]) {
+      if (valeur === undefined) delete process.env.ENCAISSEMENT_SUSPENDU;
+      else process.env.ENCAISSEMENT_SUSPENDU = valeur;
+      expect(calculer(base).encaissable).toBe(true);
+    }
   });
 });

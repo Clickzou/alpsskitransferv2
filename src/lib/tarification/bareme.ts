@@ -122,3 +122,22 @@ export const BAREME_DEFAUT: Bareme = {
 export function baremeValide(): boolean {
   return process.env.BAREME_VALIDE === "oui";
 }
+
+/**
+ * Le coupe-circuit : `ENCAISSEMENT_SUSPENDU=oui` arrête **tout** paiement en
+ * ligne, prix fixes compris, et chaque réservation redevient une demande de
+ * devis — le client voit son prix, l'exploitant reçoit l'avis de course, rien
+ * n'est débité.
+ *
+ * `BAREME_VALIDE` ne suffit pas à ce rôle : il laisse passer les prix fixes, et
+ * ce sont les cinquante trajets les plus vendus. C'est ce coupe-circuit qui
+ * remplace le tunnel WooCommerce de repli, abandonné le 29 septembre 2026 (il
+ * avait pris dix commandes en tout, dont quatre remboursées).
+ *
+ * Variable serveur : après l'avoir changée sur Vercel, redéployer. Le
+ * back-office (liens de paiement envoyés par l'exploitant) n'est pas concerné :
+ * c'est l'exploitant qui décide de les envoyer.
+ */
+export function encaissementSuspendu(): boolean {
+  return process.env.ENCAISSEMENT_SUSPENDU === "oui";
+}

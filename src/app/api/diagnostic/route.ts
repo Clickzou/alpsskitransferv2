@@ -64,6 +64,7 @@ const ATTENDUES: { nom: string; role: string; prefixe?: boolean }[] = [
   { nom: "STRIPE_TAUX_TVA", role: "taux de TVA 10 % des factures" },
   { nom: "IBAN_VIREMENT", role: "IBAN, BIC et titulaire pour les virements" },
   { nom: "BAREME_VALIDE", role: "autorisation d'encaisser" },
+  { nom: "ENCAISSEMENT_SUSPENDU", role: "coupe-circuit — absente en temps normal, « oui » coupe tout paiement" },
   { nom: "NEXT_PUBLIC_MOTEUR_RESERVATION", role: "moteur interne ou repli WooCommerce" },
   { nom: "NEXT_PUBLIC_INDEXATION", role: "ouverture aux moteurs de recherche" },
 ];

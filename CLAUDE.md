@@ -182,10 +182,14 @@ d'où une forme plus courte.
 
 10. **Le moteur de réservation est livré avec le site, en un mois** (décision du
    7 septembre 2026, voir `docs/moteur-reservation.md`) : formulaire maison en Next +
-   Stripe Checkout + Supabase. Le tunnel WooCommerce est déplacé sur
-   `book.alpsskitransfers.com`, sorti de l'index, et **reste armé en repli** —
-   bascule par variable d'environnement, sans redéploiement — jusqu'à ce que le
-   nouveau moteur ait encaissé des réservations réelles sans incident. Les tarifs et
+   Stripe Checkout + Supabase. **Le repli n'est plus le tunnel WooCommerce**
+   (abandonné le 29 septembre 2026 : dix commandes en tout, dont quatre
+   remboursées, et des prix faux de 30 à 45 %) mais un **coupe-circuit** :
+   `ENCAISSEMENT_SUSPENDU=oui` sur Vercel puis redéployer, et toute réservation,
+   prix fixes compris, devient une demande de devis — prix affiché, avis de
+   course à l'exploitant, rien de débité. Éprouvé sur une préversion le jour
+   même. `NEXT_PUBLIC_MOTEUR_RESERVATION` reste sur `interne` : `book.` n'existe
+   pas. Les tarifs et
    le moteur passent avant la production éditoriale : une page manquante ne coûte
    rien, un tarif faux coûte de l'argent.
 

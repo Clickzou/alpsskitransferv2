@@ -36,6 +36,10 @@ semaines avant le pic de réservations de décembre. Un bug de tarif ou de webho
 se traduit pas par une page moche, mais par des réservations perdues ou encaissées
 de travers, en pleine saison.
 
+> **Révisé le 29 septembre 2026** : le filet n'est plus le tunnel WooCommerce
+> mais le coupe-circuit `ENCAISSEMENT_SUSPENDU` — voir `CLAUDE.md`, règle 10,
+> et `docs/MISE-EN-LIGNE.md`, section 3. Ce qui suit est la décision d'origine.
+
 **Le filet, non négociable :** le tunnel WooCommerce est déplacé sur
 `book.alpsskitransfers.com` et **reste en service comme repli** jusqu'à ce que le
 nouveau moteur ait encaissé une série de réservations réelles sans incident. Une

@@ -2,6 +2,7 @@ import { composantesAlpes } from "@/lib/temps";
 import {
   BAREME_DEFAUT,
   baremeValide,
+  encaissementSuspendu,
   type Bareme,
   type CategorieVehicule,
 } from "./bareme";
@@ -157,7 +158,7 @@ export function calculer(demande: DemandeTransfert, bareme: Bareme = BAREME_DEFA
       aller,
     },
     prixFixe,
-    encaissable: baremeValide() || prixFixe,
+    encaissable: !encaissementSuspendu() && (baremeValide() || prixFixe),
   };
 }
 

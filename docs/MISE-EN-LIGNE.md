@@ -26,7 +26,7 @@ qui n'appartiennent qu'au client.
 | ~~**Médiateur de la consommation**~~ | **réglé le 29/09** : CM2C, adhésion jusqu'au 29/09/2029 — mentions légales (4 langues) et CGV §10 | — |
 | **Fiche Google Business** | doit porter les **mêmes** nom, adresse et téléphone que `src/data/site.ts` | non, mais c'est le premier levier de trafic local |
 | **Avis** | `GOOGLE_PLACE_ID` + `GOOGLE_MAPS_API_KEY` — sans eux, quatre témoignages non vérifiables | non |
-| **Tunnel WooCommerce de repli** | déplacé sur `book.alpsskitransfers.com`, sorti de l'index, joignable | oui — c'est le filet |
+| ~~**Tunnel WooCommerce de repli**~~ | **abandonné le 29/09** au profit du coupe-circuit `ENCAISSEMENT_SUSPENDU` (section 3) | — |
 
 ---
 
@@ -109,10 +109,14 @@ C'est là que se joue la conservation du trafic sur 260 URL déplacées.
 - **Les positions**, sur les requêtes du master SEO. Un creux de quelques
   semaines est normal après une refonte qui déplace 260 URL ; ce qui ne l'est
   pas, c'est un creux qui ne remonte pas au bout d'un mois.
-- **Le repli du moteur.** `NEXT_PUBLIC_MOTEUR_RESERVATION` reste sur
-  `wordpress` tant que le moteur maison n'a pas encaissé des réservations
-  réelles sans incident. La bascule se fait par variable d'environnement, sans
-  redéploiement du code.
+- **Le coupe-circuit, si le paiement se dérègle.** Vercel → Settings →
+  Environment Variables → `ENCAISSEMENT_SUSPENDU` = `oui` en Production, puis
+  *Redeploy*. Le site garde ses prix, chaque réservation (prix fixes compris)
+  arrive chez l'exploitant en demande de devis, rien n'est débité. Pour
+  rouvrir : supprimer la variable et redéployer. La sonde `/api/diagnostic/`
+  dit s'il est allumé ; l'onglet Tarifs du back-office aussi.
+  **Ne jamais repasser `NEXT_PUBLIC_MOTEUR_RESERVATION` sur `wordpress`** :
+  il renverrait vers `book.alpsskitransfers.com`, qui n'existe pas.
 
 ---
 
