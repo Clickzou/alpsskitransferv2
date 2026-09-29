@@ -1,3 +1,48 @@
+# Point de reprise — mardi 29 septembre 2026, fin de journée
+
+**Le site est fini. On attend Nassim, puis on met en ligne.**
+Parler court à JC : une phrase par point.
+
+## Fait le 29 septembre
+
+- **Médiateur CM2C** dans les mentions légales (4 langues) et au §10 des CGV.
+  La plateforme européenne de litiges en ligne, fermée en 2025, n'est plus citée.
+- **Grille tarifaire validée** par le client. `BAREME_VALIDE` était déjà à `oui`.
+- **Stripe** : Nassim invité en Super administrateur sur le compte
+  `acct_1UE6LCAS15fy8zV6` (accès créé par JC), message envoyé avec la marche à
+  suivre. **Ne jamais activer le compte avec la fiche Clickzou ni l'IBAN de JC**
+  (Stripe le propose d'office).
+- **Repli WooCommerce abandonné** au profit du coupe-circuit
+  `ENCAISSEMENT_SUSPENDU` — voir `docs/MISE-EN-LIGNE.md`, section 3.
+- **Google Analytics** (propriété existante G-5W2WD3B7VL) derrière un bandeau de
+  consentement, quatre langues ; s'allume avec l'indexation. Politiques cookies
+  réécrites et datées.
+
+## Ce qui reste, dans l'ordre
+
+**Nassim**
+1. Activer son compte Stripe : pièce d'identité, IBAN. Adresse : celle
+   officiellement enregistrée (Chambéry tant que l'INPI n'a pas validé
+   Drumettaz). Double authentification sur **son** téléphone.
+2. Même adresse partout : fiche Google, Stripe, CM2C (l'attestation porte
+   encore Chambéry).
+3. Finir la fiche Google et envoyer le lien.
+
+**Jour J — quand Stripe a validé** (procédure : `docs/MISE-EN-LIGNE.md`)
+4. Brancher le domaine (chez JC), puis `NEXT_PUBLIC_INDEXATION=ouverte`.
+5. Stripe en réel : clés live, webhook de production, taux de TVA live,
+   réglages Entreprise/Factures, puis `FACTURES_ACTIVES=oui` (Preview d'abord).
+6. Purger les réservations et factures de test.
+7. Recette des redirections en ligne, Search Console, Bing.
+
+**Après**
+- Fiche Google → `sameAs`, `GOOGLE_PLACE_ID`, vrais avis.
+- Onglet Stats SEO : `GA_PROPERTY_ID` = 477829689, compte de service à
+  ajouter en Lecteur dans Analytics et en Restreint dans la Search Console.
+- Les 404 dans la Search Console, deux fois par semaine pendant trois semaines.
+
+---
+
 # Mardi 22 septembre 2026 — la page premium, et la fiche Google qui arrive
 
 ## RÉPONSE DE NASSIM — 29 septembre 2026
