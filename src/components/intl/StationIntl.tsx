@@ -4,6 +4,7 @@ import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
+import PhotoTerrain from "@/components/PhotoTerrain";
 import {
   BoutonAction,
   CarteLien,
@@ -70,7 +71,10 @@ export default function StationIntl({
 
         <Section fond="blanc">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_19rem]">
-            <Contenu blocs={traduction.contenu} />
+            <div>
+              <Contenu blocs={traduction.contenu} />
+              <PhotoTerrain slug={resort.slug} lang={lang} />
+            </div>
 
             <aside className="lg:sticky lg:top-6 lg:h-fit">
               <div className="rounded bg-alpine p-5 text-white">

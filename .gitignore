@@ -20,6 +20,9 @@ devis/
 docs/Audit-alpsskitransfers-Clickzou.pdf
 docs/audit-alpsskitransfers-2026-09-04.html
 docs/concurrence/
+# Photos brutes du client : plaques visibles. Seules les versions masquées
+# et optimisées entrent dans public/.
+docs/photos vehicules/
 
 .vercel
 .env*

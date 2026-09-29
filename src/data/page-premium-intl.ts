@@ -76,8 +76,8 @@ const FR: ContenuPremium = {
   nomService: "Chauffeur privé et VTC de luxe dans les Alpes",
 
   heroImage: {
-    nom: "vehicule-premium",
-    alt: "Berline haut de gamme à l'arrivée d'une station des Alpes",
+    nom: "terrain-classe-s-habitacle",
+    alt: "Sièges arrière de notre Mercedes Classe S, en cuir matelassé",
   },
   introImage: {
     nom: "premium-helicoptere",
@@ -125,8 +125,8 @@ const FR: ContenuPremium = {
           "Restaurants, remontées, spa, dépose et reprise sur les pistes",
         ],
         image: {
-          nom: "premium-chauffeur",
-          alt: "Chauffeur ouvrant la portière arrière d'une berline devant un chalet alpin éclairé",
+          nom: "terrain-classe-s-chalet",
+          alt: "Notre Mercedes Classe S noire devant un chalet alpin, dans la neige",
         },
       },
       {
@@ -346,8 +346,8 @@ const DE: ContenuPremium = {
   nomService: "Limousinen- und Chauffeurservice in den Alpen",
 
   heroImage: {
-    nom: "vehicule-premium",
-    alt: "Oberklasse-Limousine am Fuß eines Alpenorts",
+    nom: "terrain-classe-s-habitacle",
+    alt: "Rücksitze unserer Mercedes S-Klasse, in gestepptem Leder",
   },
   introImage: {
     nom: "premium-helicoptere",
@@ -395,8 +395,8 @@ const DE: ContenuPremium = {
           "Restaurants, Bergbahnen, Spa, die Fahrt zur Piste und zurück",
         ],
         image: {
-          nom: "premium-chauffeur",
-          alt: "Chauffeur öffnet die hintere Wagentür einer Limousine vor einem beleuchteten Alpenchalet",
+          nom: "terrain-classe-s-chalet",
+          alt: "Unsere schwarze Mercedes S-Klasse vor einem Alpenchalet im Schnee",
         },
       },
       {
@@ -616,8 +616,8 @@ const IT: ContenuPremium = {
   nomService: "NCC di lusso e auto con autista nelle Alpi",
 
   heroImage: {
-    nom: "vehicule-premium",
-    alt: "Berlina di alta gamma all'arrivo in una località alpina",
+    nom: "terrain-classe-s-habitacle",
+    alt: "Sedili posteriori della nostra Mercedes Classe S, in pelle trapuntata",
   },
   introImage: {
     nom: "premium-helicoptere",
@@ -665,8 +665,8 @@ const IT: ContenuPremium = {
           "Ristoranti, impianti, spa, andata e ritorno dalle piste",
         ],
         image: {
-          nom: "premium-chauffeur",
-          alt: "Autista apre la portiera posteriore di una berlina davanti a uno chalet alpino illuminato",
+          nom: "terrain-classe-s-chalet",
+          alt: "La nostra Mercedes Classe S nera davanti a uno chalet alpino, sulla neve",
         },
       },
       {

@@ -1,5 +1,37 @@
 # Mardi 22 septembre 2026 — la page premium, et la fiche Google qui arrive
 
+## RÉPONSE DE NASSIM — 29 septembre 2026
+
+- **Le domaine est chez JC** (précisé le 29/09) : il n'attend plus Nassim. La
+  bascule suit `docs/MISE-EN-LIGNE.md` — domaine d'abord, indexation ensuite.
+- **Partenaires hélico / jet : « plus tard, on les aura »** (JC, 29/09).
+  Décision : **les deux cartes restent**, ce n'est plus bloquant — la page
+  reste une demande de devis sans paiement, et la réserve « vols affrétés
+  auprès d'opérateurs agréés » doit rester écrite.
+- **Fiche Google** : en cours, avis compris. Lien à venir.
+- **Adresse** : va passer au **189 Chemin du Cruet, 73240 Drumettaz-Clarafond**,
+  en attente de confirmation INPI. **Posée sur le site le 29/09** à la demande
+  de JC (`data/site.ts`). La fiche Google et Stripe doivent porter la même.
+- **Mentions légales** : EVTC et TVA déjà en ligne, identiques. Assureur
+  **Pacifica, contrat 13033042908** — ajouté aux quatre langues le 29/09.
+- **Pas de médiateur** : obligation légale (art. L.612-1 C. conso) dès qu'on
+  vend à des particuliers. Nassim doit adhérer à un médiateur agréé avant la
+  mise en ligne ; le `[À REMPLACER]` reste en attendant.
+- **Stripe** : dénomination NM TRANSPORTS 73.
+- **Noms** (hélico / jet ?) : « sous peu ». **Photos** : véhicules seulement,
+  pas de lui.
+- **E-mail** : `contact@` reste, relié à alpsskitransfers@gmail.com.
+
+**Photos de la flotte (29/09)** — 44 photos reçues, originaux dans
+`docs/photos vehicules/` (**hors dépôt** : plaques visibles). 18 retenues,
+plaques floutées dans `selection-floutee/` ; celles en ligne sont dans
+`pHOTOS/terrain/` → `terrain-*` (`images:preparer`). Branchées : encart
+`PhotoTerrain` sous le texte des stations Les Arcs, Val Thorens, Courchevel,
+Val d'Isère (données `data/photos-terrain.ts`, EN + FR) ; cartes Business et
+Premium de l'accueil ; bandeau et carte « chauffeur » de la page luxe (Classe S,
+quatre langues). Les détourages `vehicule-*` restent pour le tunnel. En
+réserve : 02, 05, 28, 00, 40, 38, 42, 43, et 35 (Lyon, pas Chambéry).
+
 ## EN ATTENTE DE NASSIM — mail envoyé le 22 septembre 2026
 
 Le travail côté site est terminé. Sept informations ont été demandées à

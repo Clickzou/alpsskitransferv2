@@ -247,6 +247,32 @@ try {
   // Pas encore de visuel premium généré : rien à préparer.
 }
 
+/*
+ * Les photos réelles de la flotte, fournies par l'exploitant le 29 septembre
+ * 2026, dans `pHOTOS/terrain/`, sous `terrain-{nom}`.
+ *
+ * **Les plaques y sont déjà floutées** : les originaux restent hors dépôt, dans
+ * `docs/photos vehicules/`, et seules ces versions entrent dans le site. Elles
+ * sont aussi déjà recadrées au format de leur emplacement — une photo de
+ * téléphone recadrée par `object-cover` coupe au hasard, souvent la voiture.
+ * Largeurs : la colonne d'une page de station, une carte, le bandeau luxe.
+ */
+const LARGEURS_TERRAIN = { "classe-s-habitacle": 1600, "classe-s-chalet": 1000 };
+try {
+  for (const fichier of await readdir(path.join(SOURCE, "terrain"))) {
+    if (!/\.(jpe?g|png|webp)$/i.test(fichier)) continue;
+    const nom = fichier.replace(/\.[a-z]+$/i, "");
+    IMAGES.push({
+      source: path.join("terrain", fichier),
+      nom: `terrain-${nom}`,
+      largeur: LARGEURS_TERRAIN[nom] ?? 800,
+      qualite: 70,
+    });
+  }
+} catch {
+  // Pas de photo de terrain : rien à préparer.
+}
+
 await mkdir(SORTIE, { recursive: true });
 
 const manquantes = [];

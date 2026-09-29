@@ -152,6 +152,22 @@ export function Vehicules({ textes, tunnel = CHEMIN_TUNNEL }: { textes?: Vehicul
               key={v.nom}
               className="group flex flex-col overflow-hidden rounded-xl border border-glacier-200 bg-white shadow-carte transition duration-300 hover:-translate-y-1.5 hover:border-glacier-300 hover:shadow-flottant"
             >
+              {"photo" in v ? (
+                /*
+                  Une vraie photo de la flotte (29 septembre 2026) : pleine
+                  largeur, sans ombre portée — l'ombre dessinée n'a de sens que
+                  sous une voiture détourée. Même ratio que les cartes détourées,
+                  pour que les trois restent alignées.
+                */
+                <div className="aspect-[16/10] overflow-hidden">
+                  <Visuel
+                    nom={v.image.nom}
+                    alt={textes?.alts[v.cle] ?? v.image.alt}
+                    sizes="(min-width: 640px) 32vw, 90vw"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                  />
+                </div>
+              ) : (
               <div className="relative flex aspect-[16/10] items-center justify-center px-6 pb-8 pt-6">
                 {/* L'ombre au sol : une ellipse floutée, pas une image. */}
                 <span
@@ -165,6 +181,7 @@ export function Vehicules({ textes, tunnel = CHEMIN_TUNNEL }: { textes?: Vehicul
                   className="relative h-full w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.05]"
                 />
               </div>
+              )}
 
               <div className="flex flex-1 flex-col border-t border-glacier-200 p-7 lg:p-8">
                 <h3 className="font-display text-titre-carte text-alpine">{v.nom}</h3>

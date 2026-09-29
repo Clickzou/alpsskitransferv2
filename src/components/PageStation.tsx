@@ -5,6 +5,7 @@ import FilAriane from "@/components/FilAriane";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
+import PhotoTerrain from "@/components/PhotoTerrain";
 import {
   AppelAction,
   BandeauReassurance,
@@ -131,7 +132,10 @@ export default function PageStation({ silo, slug }: { silo: string; slug: string
 
         <Section fond="blanc">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_19rem]">
-            <Contenu blocs={station.contenu} />
+            <div>
+              <Contenu blocs={station.contenu} />
+              <PhotoTerrain slug={station.slug} />
+            </div>
 
             {/* Colonne d'appoint : le choix de l'aéroport, sous les yeux pendant la lecture. */}
             <aside className="space-y-6 lg:sticky lg:top-6 lg:h-fit">

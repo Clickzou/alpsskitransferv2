@@ -194,9 +194,14 @@ export const PAGE_PREMIUM: ContenuPremium = {
   filAriane: "Luxury ski transfers in the Alps",
   nomService: "Luxury and bespoke ski transfers in the Alps",
 
+  /*
+   * Photos réelles de la Classe S de l'exploitant (29 septembre 2026), à la
+   * place du détourage et d'un visuel généré : sur une page qui vend le haut de
+   * gamme, montrer la vraie voiture vaut mieux que toute illustration.
+   */
   heroImage: {
-    nom: "vehicule-premium",
-    alt: "Premium saloon waiting at the foot of an Alpine resort",
+    nom: "terrain-classe-s-habitacle",
+    alt: "Rear seats of our Mercedes S-Class, in quilted leather",
   },
 
   introImage: {
@@ -245,8 +250,8 @@ export const PAGE_PREMIUM: ContenuPremium = {
           "Restaurants, ski lifts, spas, the school run to the slopes",
         ],
         image: {
-          nom: "premium-chauffeur",
-          alt: "Chauffeur holding open the rear door of a saloon car outside a lit alpine chalet",
+          nom: "terrain-classe-s-chalet",
+          alt: "Our black Mercedes S-Class outside an alpine chalet, in the snow",
         },
       },
       {

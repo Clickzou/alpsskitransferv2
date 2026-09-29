@@ -84,14 +84,16 @@ export const VEHICULES = {
       nom: "Business",
       modele: "Mercedes V-Class (or Vito Tourer)",
       capacite: "Up to 7 passengers",
-      image: { nom: "vehicule-business", alt: "Black Mercedes V-Class people carrier" },
+      image: { nom: "terrain-vehicule-business", alt: "Our black Mercedes V-Class people carrier" },
+      photo: true,
     },
     {
       cle: "premium",
       nom: "Premium",
       modele: "Mercedes E-Class Sedan",
       capacite: "Up to 4 passengers",
-      image: { nom: "vehicule-premium", alt: "Black Mercedes E-Class saloon" },
+      image: { nom: "terrain-vehicule-premium", alt: "Our black Mercedes E-Class saloon in the snow" },
+      photo: true,
     },
   ],
 } as const;
