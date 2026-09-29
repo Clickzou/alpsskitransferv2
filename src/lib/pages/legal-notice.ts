@@ -15,9 +15,8 @@ import type { PageFonctionnelle } from "./types";
  * de mention du tout, et c'est exactement ce qui arrivait à l'adresse
  * londonienne.
  *
- * **À FAIRE RELIRE PAR LE CLIENT avant mise en ligne**, et à compléter sur les
- * points marqués `[À REMPLACER]` — le contrôle de prebuild les signale tant
- * qu'ils sont là.
+ * **À FAIRE RELIRE PAR LE CLIENT avant mise en ligne.** Plus aucun point en
+ * attente depuis le 29 septembre 2026 : le médiateur était le dernier.
  *
  * La **licence de transport** a été relevée le 9 septembre 2026 dans le registre
  * national des entreprises de transport routier de personnes tenu par le
@@ -34,6 +33,12 @@ import type { PageFonctionnelle } from "./types";
  * **assujettie** : la mention « TVA non applicable, article 293 B du CGI » ne
  * s'applique donc pas, et les prix affichés doivent être cohérents avec ce
  * régime — un point à vérifier avec le client sur la grille tarifaire.
+ *
+ * Le **médiateur de la consommation** est CM2C : attestation d'adhésion du
+ * 29 septembre 2026, valable trois ans (jusqu'au 29/09/2029), rangée hors dépôt
+ * dans `docs/`. Il figure aussi au §10 des CGV — l'article L.616-1 exige les
+ * deux. La plateforme européenne de règlement en ligne des litiges n'est plus
+ * citée : elle a fermé le 20 juillet 2025.
  */
 
 const { adresse, entite } = ENTREPRISE;
@@ -122,7 +127,7 @@ export const legalNotice: PageFonctionnelle = {
     {
       type: "paragraphe",
       texte:
-        "In the event of a dispute, please contact us first at the email address above. If no agreement is reached, consumers resident in the European Union may refer the matter to a consumer mediator, and may use the European Commission's online dispute resolution platform. [À REMPLACER — nom, adresse postale et site du médiateur de la consommation auquel l'entreprise a adhéré. Ce doit être un ORGANISME TIERS AGRÉÉ par la CECMC (CM2C, MEDICYS, AME Conso, SAS Médiation Solution…), et jamais le dirigeant ni un proche de l'entreprise : l'indépendance est la condition même de la médiation. L'adhésion est obligatoire, article L.612-1 du Code de la consommation, pour tout professionnel qui vend à des consommateurs.]",
+        "In the event of a dispute, please first send a written complaint to the email address above. If no amicable solution is reached, consumers may refer the matter, free of charge and within one year of their written complaint, to the consumer mediator the company has joined: CM2C (Centre de la Médiation de la Consommation de Conciliateurs de Justice), 49 rue de Ponthieu, 75008 Paris, France — www.cm2c.net.",
     },
   ],
 

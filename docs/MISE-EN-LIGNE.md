@@ -23,7 +23,7 @@ qui n'appartiennent qu'au client.
 | **Supabase** | tables créées (`docs/supabase-schema.sql`), clés posées | **oui** pour enregistrer une réservation |
 | **Test de bout en bout** | une réservation réelle : session, carte, webhook signé, e-mails, ligne `payee` | **oui** |
 | **Taux de change** | `src/lib/reservation/devises.ts`, figés au 8 septembre 2026 | oui si GBP/USD affichés |
-| **Médiateur de la consommation** | `[À REMPLACER]` dans les mentions légales, les quatre langues | oui — obligation légale (art. L.612-1) |
+| ~~**Médiateur de la consommation**~~ | **réglé le 29/09** : CM2C, adhésion jusqu'au 29/09/2029 — mentions légales (4 langues) et CGV §10 | — |
 | **Fiche Google Business** | doit porter les **mêmes** nom, adresse et téléphone que `src/data/site.ts` | non, mais c'est le premier levier de trafic local |
 | **Avis** | `GOOGLE_PLACE_ID` + `GOOGLE_MAPS_API_KEY` — sans eux, quatre témoignages non vérifiables | non |
 | **Tunnel WooCommerce de repli** | déplacé sur `book.alpsskitransfers.com`, sorti de l'index, joignable | oui — c'est le filet |

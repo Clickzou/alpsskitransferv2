@@ -14,9 +14,10 @@
   de JC (`data/site.ts`). La fiche Google et Stripe doivent porter la même.
 - **Mentions légales** : EVTC et TVA déjà en ligne, identiques. Assureur
   **Pacifica, contrat 13033042908** — ajouté aux quatre langues le 29/09.
-- **Pas de médiateur** : obligation légale (art. L.612-1 C. conso) dès qu'on
-  vend à des particuliers. Nassim doit adhérer à un médiateur agréé avant la
-  mise en ligne ; le `[À REMPLACER]` reste en attendant.
+- **Médiateur : réglé le 29/09.** Nassim a adhéré à **CM2C** (attestation dans
+  `docs/`, hors dépôt), valable jusqu'au 29/09/2029. Posé dans les mentions
+  légales des quatre langues et au §10 des CGV. L'attestation porte encore
+  l'ancienne adresse de Chambéry : à faire mettre à jour chez CM2C.
 - **Stripe** : dénomination NM TRANSPORTS 73.
 - **Noms** (hélico / jet ?) : « sous peu ». **Photos** : véhicules seulement,
   pas de lui.

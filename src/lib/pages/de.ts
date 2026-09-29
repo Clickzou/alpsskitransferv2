@@ -611,7 +611,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Wenden Sie sich bei Beanstandungen zunächst an die oben genannte E-Mail-Adresse. Kommt keine Einigung zustande, können Verbraucher mit Wohnsitz in der Europäischen Union eine Verbraucherschlichtungsstelle anrufen und die Online-Streitbeilegungsplattform der Europäischen Kommission nutzen. [À REMPLACER — Name, Anschrift und Website der Schlichtungsstelle, der das Unternehmen angehört.]",
+          "Wenden Sie sich bei Beanstandungen zunächst schriftlich an die oben genannte E-Mail-Adresse. Kommt keine gütliche Einigung zustande, können Verbraucher innerhalb eines Jahres nach ihrer schriftlichen Beschwerde kostenlos die Verbraucherschlichtungsstelle anrufen, der das Unternehmen angehört: CM2C (Centre de la Médiation de la Consommation de Conciliateurs de Justice), 49 rue de Ponthieu, 75008 Paris, Frankreich – www.cm2c.net.",
       },
     ],
     faq: [],

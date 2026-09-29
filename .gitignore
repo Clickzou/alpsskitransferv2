@@ -26,3 +26,6 @@ docs/photos vehicules/
 
 .vercel
 .env*
+
+# Attestation du médiateur (CM2C) : signée, commerciale — hors dépôt public.
+docs/attestation_*.pdf

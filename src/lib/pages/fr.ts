@@ -589,7 +589,7 @@ export const PAGES_FR: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "En cas de litige, contactez-nous d’abord à l’adresse électronique ci-dessus. À défaut d’accord, tout consommateur résidant dans l’Union européenne peut saisir un médiateur de la consommation et recourir à la plateforme de règlement en ligne des litiges de la Commission européenne. [À REMPLACER — nom, adresse postale et site du médiateur de la consommation auquel l’entreprise a adhéré : un organisme tiers agréé par la CECMC, jamais le dirigeant ni un proche. L’adhésion est obligatoire, article L.612-1 du Code de la consommation.]",
+          "En cas de litige, adressez d’abord une réclamation écrite à l’adresse électronique ci-dessus. À défaut de solution amiable, tout consommateur peut saisir gratuitement, dans un délai d’un an à compter de sa réclamation écrite, le médiateur de la consommation auquel l’entreprise a adhéré : CM2C (Centre de la Médiation de la Consommation de Conciliateurs de Justice), 49 rue de Ponthieu, 75008 Paris — www.cm2c.net.",
       },
     ],
     faq: [],

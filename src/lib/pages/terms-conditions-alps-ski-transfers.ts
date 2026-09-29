@@ -70,7 +70,7 @@ export const termsConditionsAlpsSkiTransfers: PageFonctionnelle = {
     { type: "titre3", texte: "9.2 Data Usage" },
     { type: "liste", items: ["Customer data will never be shared with third parties, except as required for transfer logistics.", "By booking a transfer, you consent to receiving booking confirmations, service updates, and promotional offers."] },
     { type: "titre2", texte: "10. Governing Law & Jurisdiction" },
-    { type: "paragraphe", texte: "These Terms & Conditions are governed by the laws of France. Any disputes shall be settled in the competent courts of France." },
+    { type: "paragraphe", texte: "These Terms & Conditions are governed by the laws of France. Before any legal action, consumers may refer a dispute, free of charge and within one year of their written complaint to us, to the consumer mediator CM2C (Centre de la Médiation de la Consommation de Conciliateurs de Justice), 49 rue de Ponthieu, 75008 Paris, France — www.cm2c.net. Failing an amicable solution, any disputes shall be settled in the competent courts of France." },
     { type: "titre2", texte: "11. Contact Information" },
     { type: "paragraphe", texte: "For any inquiries, modifications, or complaints, contact us at:" },
     { type: "paragraphe", texte: "📧 Email: contact@alpsskitransfers.com📞 Phone: +33 7 69 78 91 89🌍 Website: https://alpsskitransfers.com/" },

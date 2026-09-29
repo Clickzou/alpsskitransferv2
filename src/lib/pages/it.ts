@@ -609,7 +609,7 @@ export const PAGES_IT: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "In caso di controversia, contattaci prima all’indirizzo e-mail sopra indicato. In mancanza di accordo, i consumatori residenti nell’Unione europea possono rivolgersi a un mediatore del consumo e utilizzare la piattaforma europea di risoluzione delle controversie online. [À REMPLACER — nome, indirizzo e sito del mediatore del consumo a cui l’impresa ha aderito.]",
+          "In caso di controversia, invia prima un reclamo scritto all’indirizzo e-mail sopra indicato. In mancanza di una soluzione amichevole, i consumatori possono rivolgersi gratuitamente, entro un anno dal reclamo scritto, al mediatore del consumo a cui l’impresa ha aderito: CM2C (Centre de la Médiation de la Consommation de Conciliateurs de Justice), 49 rue de Ponthieu, 75008 Parigi, Francia – www.cm2c.net.",
       },
     ],
     faq: [],
