@@ -561,6 +561,7 @@ export const PAGES_DE: PageIntl[] = [
           `Personenbeförderungslizenz (LTI) Nr. ${entite.lti.numero}, gültig vom 27. Februar 2026 bis 26. Februar 2036, eingetragen im nationalen Register der Straßenpersonenverkehrsunternehmen für das Departement Savoyen. Verkehrsleiter: ${entite.lti.gestionnaire}.`,
           `SIRET: ${entite.siret}`,
           `USt-IdNr.: ${entite.tva}`,
+          `Berufshaftpflichtversicherung: ${entite.assurance.assureur}, ${entite.assurance.adresse} — Vertragsnr. ${entite.assurance.contrat}`,
         ],
       },
       {

@@ -41,10 +41,15 @@ export const ENTREPRISE = {
   telephoneAffiche: "+33 7 69 78 91 89",
   email: "contact@alpsskitransfers.com",
 
+  /*
+   * Siège transféré à Drumettaz-Clarafond, communiqué par le client le
+   * 29 septembre 2026 — l'ancien était au 317 rue de la Bionne, Chambéry. La
+   * fiche Google et le compte Stripe doivent porter la même.
+   */
   adresse: {
-    rue: "317 rue de la Bionne",
-    ville: "Chambéry",
-    codePostal: "73000",
+    rue: "189 Chemin du Cruet",
+    ville: "Drumettaz-Clarafond",
+    codePostal: "73240",
     pays: "FR",
     /** Région, pour le `LocalBusiness` : c'est le massif desservi. */
     region: "Savoie",
@@ -85,6 +90,17 @@ export const ENTREPRISE = {
     tva: "FR87 889 065 165",
     /** Inscription au registre national des exploitants de VTC. */
     evtc: "EVTC073240010",
+    /**
+     * Assurance responsabilité civile professionnelle — fournie par le client le
+     * 29 septembre 2026. Sa mention est due dès que l'assurance est obligatoire
+     * pour l'activité, ce qui est le cas du transport de personnes (Code de la
+     * consommation, art. R.111-2).
+     */
+    assurance: {
+      assureur: "Pacifica (Crédit Agricole Assurances)",
+      adresse: "8-10 boulevard de Vaugirard, 75724 Paris Cedex 15, France",
+      contrat: "13033042908",
+    },
     /** Licence de transport intérieur de personnes, registre 73 - Savoie. */
     lti: {
       numero: "2026 84 0000542",

@@ -215,7 +215,8 @@ d'où une forme plus courte.
   tranchée : Next + Stripe Checkout + Supabase.
 - ~~Les coordonnées de l'entreprise et le préalable juridique~~ — **réglé le
   9 septembre 2026**. L'exploitant est **NM Transports 73** (Nassim Matmati,
-  entreprise individuelle, SIREN 889 065 165), 317 rue de la Bionne, 73000 Chambéry,
+  entreprise individuelle, SIREN 889 065 165), 189 Chemin du Cruet, 73240
+  Drumettaz-Clarafond (siège transféré le 29 septembre 2026, ex-Chambéry),
   `contact@alpsskitransfers.com`, +33 7 69 78 91 89. Activité déclarée : transport de
   voyageurs par taxi et VTC — ce qui légitime le balisage `TaxiService`. Tout est dans
   `src/data/site.ts` et émis par le `LocalBusiness`.

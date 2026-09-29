@@ -559,6 +559,7 @@ export const PAGES_IT: PageIntl[] = [
           `Licenza di trasporto interno di persone (LTI) n. ${entite.lti.numero}, valida dal 27 febbraio 2026 al 26 febbraio 2036, iscritta al registro nazionale delle imprese di trasporto su strada di persone per la Savoia. Gestore dei trasporti: ${entite.lti.gestionnaire}.`,
           `SIRET: ${entite.siret}`,
           `Partita IVA intracomunitaria: ${entite.tva}`,
+          `Assicurazione di responsabilità civile professionale: ${entite.assurance.assureur}, ${entite.assurance.adresse} — polizza n. ${entite.assurance.contrat}`,
         ],
       },
       {

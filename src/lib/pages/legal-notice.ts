@@ -72,6 +72,7 @@ export const legalNotice: PageFonctionnelle = {
         `Passenger transport licence: LTI (French domestic passenger transport licence) no. ${entite.lti.numero}, valid from 27 February 2026 to 26 February 2036, entered in the national register of road passenger transport operators for Savoie. Transport manager: ${entite.lti.gestionnaire}.`,
         `SIRET: ${entite.siret}`,
         `VAT number: ${entite.tva}`,
+        `Professional liability insurance: ${entite.assurance.assureur}, ${entite.assurance.adresse} — policy no. ${entite.assurance.contrat}`,
       ],
     },
     {

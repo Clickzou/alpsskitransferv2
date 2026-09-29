@@ -539,6 +539,7 @@ export const PAGES_FR: PageIntl[] = [
           `Licence de transport intérieur de personnes (LTI) n° ${entite.lti.numero}, valable du 27 février 2026 au 26 février 2036, inscrite au registre national des entreprises de transport routier de personnes pour la Savoie. Gestionnaire de transport : ${entite.lti.gestionnaire}.`,
           `SIRET : ${entite.siret}`,
           `TVA intracommunautaire : ${entite.tva}`,
+          `Assurance responsabilité civile professionnelle : ${entite.assurance.assureur}, ${entite.assurance.adresse} — contrat n° ${entite.assurance.contrat}`,
         ],
       },
       {
@@ -705,6 +706,7 @@ export const PAGES_FR: PageIntl[] = [
       nom: "VTC et transport de personnes à Chambéry",
       communes: [
         "Chambéry",
+        "Drumettaz-Clarafond",
         "Aix-les-Bains",
         "La Motte-Servolex",
         "Saint-Alban-Leysse",
@@ -719,7 +721,7 @@ export const PAGES_FR: PageIntl[] = [
       { type: "titre2", texte: "Une entreprise de Chambéry, pas une plateforme" },
       {
         type: "paragraphe",
-        texte: `Le siège est au ${ENTREPRISE.adresse.rue}, à ${ENTREPRISE.adresse.ville}. C’est ${entite.nom}, sous l’enseigne ${entite.enseigne}, qui conduit : pas d’intermédiaire, pas de chauffeur affecté au dernier moment par un algorithme. Vous réservez auprès de l’entreprise qui vient vous chercher, et le numéro que vous appelez le jour même est le sien.`,
+        texte: `Le siège est au ${ENTREPRISE.adresse.rue}, à ${ENTREPRISE.adresse.ville}, aux portes de Chambéry. C’est ${entite.nom}, sous l’enseigne ${entite.enseigne}, qui conduit : pas d’intermédiaire, pas de chauffeur affecté au dernier moment par un algorithme. Vous réservez auprès de l’entreprise qui vient vous chercher, et le numéro que vous appelez le jour même est le sien.`,
       },
       {
         type: "paragraphe",
