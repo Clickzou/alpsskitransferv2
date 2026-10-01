@@ -1,7 +1,48 @@
-# Point de reprise — jeudi 1er octobre 2026
+# Point de reprise — jeudi 1er octobre 2026, au soir
 
-**Stripe est activé. Plus rien ne bloque côté Nassim : on peut lancer le jour J.**
-Parler court à JC : une phrase par point.
+**La bascule est préparée. Demain, on reprend au changement du DNS chez
+o2switch — il n'est pas fait** (vérifié le 1er au soir : la zone pointe
+toujours `109.234.166.252`, l'ancien site est en ligne).
+Parler court à JC : une phrase par point, clic par clic.
+
+## Où reprendre, dans l'ordre
+
+1. **DNS chez o2switch** (cPanel → Zone Editor → Gérer `alpsskitransfers.com`),
+   deux lignes, rien d'autre :
+   - la ligne **A** `alpsskitransfers.com.` : `109.234.166.252` → `216.150.1.1` ;
+   - la ligne **CNAME** `www` : `alpsskitransfers.com` →
+     `c6e0cd986deb4771.vercel-dns-016.com`.
+   Valeurs lues sur une capture de Vercel : les recopier avec le bouton
+   « copier » de la page Domains. Ne pas toucher à `mail`, `ftp`, `webmail`,
+   aux MX, au SPF ni aux lignes Resend. Délai : jusqu'à 4 h (TTL de 14 400 s).
+   Pas de ligne AAAA ni CAA dans la zone : rien d'autre à nettoyer.
+2. **Vérifier le site sur le domaine** : une page de chaque type, les
+   certificats, `www` → domaine nu en un saut, une quinzaine d'anciennes URL.
+3. **Stripe en réel** : clés live et webhook sur
+   `https://alpsskitransfers.com/api/stripe/webhook/` posés par JC sur Vercel,
+   taux de TVA live, réglages de facturation, un vrai paiement, **puis éteindre
+   le coupe-circuit**.
+4. **Indexation** (`NEXT_PUBLIC_INDEXATION=ouverte`), purge des tests, Search
+   Console, Bing — `docs/MISE-EN-LIGNE.md`.
+
+## Fait le 1er octobre
+
+- **Le site vit sur `alpsskitransfers.com`, sans `www`** (décision de JC) :
+  c'est la forme de l'ancien site, les pages de station gardent leur adresse à
+  l'identique. `SITE.url` changé ; `src/lib/domaine.ts` envoie l'autre forme
+  vers l'URL finale en un seul saut. En ligne (`bbfc4d8`).
+- **Vercel, page Domains** : `alpsskitransfers.com` sur Production,
+  `www.alpsskitransfers.com` en redirection 308 vers lui. Les deux affichent
+  « Invalid Configuration » tant que le DNS n'a pas changé — normal.
+- **Coupe-circuit allumé** : `ENCAISSEMENT_SUSPENDU=oui` en production (sonde :
+  renseignée). Stripe y est encore en `sk_test_` ; une réservation arrive en
+  demande de devis, rien n'est débité. **À éteindre après le premier paiement
+  réel réussi, pas avant.**
+- Limite connue, antérieure : une ancienne URL tapée **sans** barre finale
+  fait deux sauts (Next normalise avant le proxy). Le WordPress publiait toutes
+  ses URL avec la barre.
+
+**Stripe est activé. Plus rien ne bloque côté Nassim.**
 
 ## Vérifié le 1er octobre, sur le tableau de bord (captures de JC)
 
