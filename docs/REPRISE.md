@@ -1,7 +1,30 @@
+# Point de reprise — jeudi 1er octobre 2026
+
+**Stripe est activé. Plus rien ne bloque côté Nassim : on peut lancer le jour J.**
+Parler court à JC : une phrase par point.
+
+## Vérifié le 1er octobre, sur le tableau de bord (captures de JC)
+
+- Compte réel `acct_1UE6LCAS15fy8zV6` : **« Activer payments » coché**, aucun
+  bandeau de vérification en attente.
+- Adresse de l'entreprise : 317 rue de la Bionne, 73000 Chambéry — celle de
+  Nassim, l'officielle tant que l'INPI n'a pas validé Drumettaz. **À changer
+  dans Stripe ce jour-là** (le site affiche déjà Drumettaz).
+- Compte bancaire : BNP Paribas, IBAN finissant par 3228, BIC BNPAFRPP — le
+  même que `IBAN_VIREMENT`. Ce n'est pas celui de JC.
+- **À corriger** : le fuseau horaire du compte est sur « Etc - UTC » ; le
+  passer sur Europe/Paris (Paramètres → Entreprise), sinon les dates des
+  factures et des rapports sont décalées.
+
+**La suite** : le « Jour J » ci-dessous, à partir du point 4. Les points 1 à 3
+de Nassim : le 1 est fait ; la fiche Google et l'adresse CM2C restent à
+confirmer.
+
+---
+
 # Point de reprise — mardi 29 septembre 2026, fin de journée
 
 **Le site est fini. On attend Nassim, puis on met en ligne.**
-Parler court à JC : une phrase par point.
 
 ## Fait le 29 septembre
 
