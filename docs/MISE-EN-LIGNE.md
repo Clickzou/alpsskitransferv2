@@ -65,8 +65,19 @@ Ce qui reste, dans cet ordre :
 
 ## 2. Le jour J, dans cet ordre
 
+0. **Allumer le coupe-circuit** (`ENCAISSEMENT_SUSPENDU=oui` en Production,
+   puis *Redeploy*) tant que les clés Stripe sont celles du test : dès que le
+   domaine pointe ici, de vrais visiteurs réservent, et une vraie carte est
+   refusée en mode test. On l'éteint après un paiement réel réussi.
 1. **Brancher le domaine sur Vercel.** `www.alpsskitransfers.com` et
-   `alpsskitransfers.com` (redirection vers `www`). Attendre les certificats.
+   `alpsskitransfers.com`, **tous deux sur la production, sans redirection de
+   l'un vers l'autre** : l'ancien site vivait sur le domaine nu, et c'est le
+   proxy qui l'envoie en un seul saut vers l'URL finale en `www`
+   (`src/lib/domaine.ts`). Une redirection posée dans Vercel recrée une chaîne
+   à deux sauts sur les 261 anciennes URL. Chez o2switch, ne changer que la
+   ligne A du domaine nu et la ligne `www` : ni les MX, ni le SPF, ni
+   `mail.`, ni les lignes Resend, ni les serveurs de noms. Attendre les
+   certificats.
 2. **Vérifier que le site répond sur le domaine** — une page de chaque type :
    home, station, trajet, hub pays, tunnel, une page traduite.
 3. **Puis seulement, ouvrir l'indexation.** Variable d'environnement de

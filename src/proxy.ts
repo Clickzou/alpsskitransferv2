@@ -4,6 +4,7 @@ import {
   PAGES_SUPPRIMEES_410,
   REDIRECTIONS_301,
 } from "@/data/redirections";
+import { estDomaineNu, urlCanonique } from "@/lib/domaine";
 import { indexationOuverte } from "@/lib/indexation";
 import {
   COOKIE_ACCES,
@@ -94,6 +95,15 @@ export default async function proxy(request: NextRequest) {
   }
 
   const destination = REDIRECTIONS_301[normalise];
+
+  // Domaine nu : un seul saut vers l'URL finale en `www` — voir `lib/domaine.ts`.
+  if (estDomaineNu(request.headers.get("host"))) {
+    return NextResponse.redirect(
+      urlCanonique(request.nextUrl.pathname, request.nextUrl.search, destination),
+      301,
+    );
+  }
+
   if (destination) {
     return NextResponse.redirect(new URL(destination, request.url), 301);
   }
