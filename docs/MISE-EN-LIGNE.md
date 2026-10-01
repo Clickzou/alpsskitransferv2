@@ -5,7 +5,7 @@ Ce document est la procédure du jour J. Il existe parce que les informations
 qu'une bascule se conduit dans un ordre, pas en piochant dans trois fichiers.
 
 **Le principe qui commande tout le reste : le domaine d'abord, l'indexation
-ensuite.** Ouvrir l'indexation avant que `www.alpsskitransfers.com` ne serve le
+ensuite.** Ouvrir l'indexation avant que `alpsskitransfers.com` ne serve le
 nouveau site expose la préproduction Vercel aux moteurs — un duplicata complet
 sur un domaine parasite, à désindexer ensuite page par page.
 
@@ -53,7 +53,7 @@ Ce qui reste, dans cet ordre :
 4. **Les clés de production dans Vercel**, jamais dans un fichier du dépôt :
    `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`.
 5. **Créer l'endpoint webhook de production** — *Développeurs → Webhooks*, sur
-   `https://www.alpsskitransfers.com/api/stripe/webhook`, événement
+   `https://alpsskitransfers.com/api/stripe/webhook`, événement
    `checkout.session.completed` — et poser son `whsec_` dans Vercel. Celui du
    test ne signe pas les événements de production.
 6. **Ouvrir l'encaissement** : `BAREME_VALIDE=oui`, une fois la grille validée
@@ -69,13 +69,13 @@ Ce qui reste, dans cet ordre :
    puis *Redeploy*) tant que les clés Stripe sont celles du test : dès que le
    domaine pointe ici, de vrais visiteurs réservent, et une vraie carte est
    refusée en mode test. On l'éteint après un paiement réel réussi.
-1. **Brancher le domaine sur Vercel.** `www.alpsskitransfers.com` et
-   `alpsskitransfers.com`, **tous deux sur la production, sans redirection de
-   l'un vers l'autre** : l'ancien site vivait sur le domaine nu, et c'est le
-   proxy qui l'envoie en un seul saut vers l'URL finale en `www`
-   (`src/lib/domaine.ts`). Une redirection posée dans Vercel recrée une chaîne
-   à deux sauts sur les 261 anciennes URL. Chez o2switch, ne changer que la
-   ligne A du domaine nu et la ligne `www` : ni les MX, ni le SPF, ni
+1. **Brancher le domaine sur Vercel.** Le site vit sur
+   `alpsskitransfers.com`, **sans `www`** (décision de JC, 1er octobre 2026 :
+   c'est la forme de l'ancien site, les pages de station y gardent leur
+   adresse à l'identique). `alpsskitransfers.com` se branche sur la
+   production ; `www.alpsskitransfers.com` y renvoie, en redirection
+   **permanente (308)** et non temporaire (307). Chez o2switch, ne changer que
+   la ligne A du domaine nu et la ligne `www` : ni les MX, ni le SPF, ni
    `mail.`, ni les lignes Resend, ni les serveurs de noms. Attendre les
    certificats.
 2. **Vérifier que le site répond sur le domaine** — une page de chaque type :
@@ -88,7 +88,7 @@ Ce qui reste, dans cet ordre :
    puis redéployer (Vercel le propose quand on change une variable). Le build
    doit afficher `[seo] indexation OUVERTE`.
 4. **Contrôler l'ouverture**, sur le domaine définitif :
-   - `https://www.alpsskitransfers.com/robots.txt` → `Allow: /`, plus de
+   - `https://alpsskitransfers.com/robots.txt` → `Allow: /`, plus de
      `Disallow: /`, et la ligne `Sitemap:` présente ;
    - une page au hasard : plus de `<meta name="robots" content="noindex">` ;
    - l'en-tête HTTP : plus de `X-Robots-Tag: noindex` ;

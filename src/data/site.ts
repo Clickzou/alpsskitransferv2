@@ -24,7 +24,7 @@
  */
 export const SITE = {
   nom: "Alps Ski Transfers",
-  url: "https://www.alpsskitransfers.com",
+  url: "https://alpsskitransfers.com",
   defaultLocale: "en-GB",
 } as const;
 

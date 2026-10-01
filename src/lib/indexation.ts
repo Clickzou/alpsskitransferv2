@@ -4,7 +4,7 @@
  * ## Pourquoi il existe
  *
  * Le site vit sur une URL Vercel avant d'être servi depuis
- * `www.alpsskitransfers.com`. Sans garde-fou, cette préproduction est
+ * `alpsskitransfers.com`. Sans garde-fou, cette préproduction est
  * parfaitement explorable : `robots.txt` répond `Allow: /` et aucune page ne
  * porte de `noindex`. Un domaine `.vercel.app` se découvre très bien — par un
  * lien, par les journaux de certificats, par la barre d'adresse d'un

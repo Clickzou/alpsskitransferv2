@@ -1,33 +1,37 @@
 import { SITE } from "@/data/site";
 
 /**
- * Le domaine nu, et le saut unique vers `www`.
+ * Le domaine canonique, et le saut unique depuis son jumeau.
  *
- * L'ancien WordPress vivait sur `alpsskitransfers.com`, sans `www` : c'est
- * sous cette forme que ses 261 URL sont indexées et liées. Le nouveau site vit
- * sur `www`. Laisser Vercel rediriger le domaine nu vers `www` ferait de chaque
- * ancienne URL une chaîne — nu → `www` (308), puis `www` → nouvelle URL (301) —
- * soit exactement ce que `check-redirections.mjs` refuse au build, mais qu'il
- * ne peut pas voir puisqu'il ne connaît que les chemins.
+ * Le site vit sur `alpsskitransfers.com`, **sans `www`** — décision de JC, le
+ * 1er octobre 2026 : c'est la forme sous laquelle le WordPress était indexé et
+ * lié, donc celle où les pages de station gardent leur adresse à l'identique,
+ * sans la moindre redirection.
  *
- * Le proxy s'en charge donc lui-même : sur le domaine nu, il répond d'un seul
- * 301 vers l'URL finale en `www`. **Dans Vercel, le domaine nu se branche sur
- * la production sans redirection** ; en ajouter une recrée la chaîne.
+ * L'autre forme (`www`) doit y mener en **un seul saut**. Si le proxy la
+ * reçoit, il répond d'un 301 vers l'URL finale — règle de migration comprise —
+ * plutôt que d'enchaîner jumeau → canonique, puis ancienne → nouvelle URL, ce
+ * que `check-redirections.mjs` refuse mais ne peut pas voir, lui qui ne connaît
+ * que les chemins. Tout se déduit de `SITE.url` : changer de forme canonique
+ * est une ligne dans `data/site.ts`.
  */
 
 const HOTE_CANONIQUE = new URL(SITE.url).hostname;
-const HOTE_NU = HOTE_CANONIQUE.replace(/^www\./, "");
+const HOTE_JUMEAU = HOTE_CANONIQUE.startsWith("www.")
+  ? HOTE_CANONIQUE.slice(4)
+  : `www.${HOTE_CANONIQUE}`;
 
-/** Vrai pour `alpsskitransfers.com`, avec ou sans port, quelle que soit la casse. */
-export function estDomaineNu(hote: string | null): boolean {
+/** Vrai pour l'autre forme du domaine, avec ou sans port, quelle que soit la casse. */
+export function estDomaineJumeau(hote: string | null): boolean {
   if (!hote) return false;
-  return hote.toLowerCase().split(":")[0] === HOTE_NU;
+  return hote.toLowerCase().split(":")[0] === HOTE_JUMEAU;
 }
 
 /**
  * Le chemin tel que `trailingSlash: true` le servira : avec sa barre finale,
- * sauf pour un fichier (`/llms.txt`). Sans cela, le domaine nu enverrait vers
- * `www` un chemin que Next normaliserait aussitôt — un deuxième saut.
+ * sauf pour un fichier (`/llms.txt`). Sans cela, le jumeau enverrait vers le
+ * domaine canonique un chemin que Next normaliserait aussitôt — un deuxième
+ * saut.
  */
 function avecBarreFinale(chemin: string): string {
   if (chemin.endsWith("/")) return chemin;
@@ -36,7 +40,7 @@ function avecBarreFinale(chemin: string): string {
 }
 
 /**
- * L'URL en `www` où envoyer une requête reçue sur le domaine nu.
+ * L'URL canonique où envoyer une requête reçue sur le jumeau.
  * `destination` est la cible d'une règle 301 quand le chemin en a une ; sinon
  * le chemin et sa chaîne de requête sont conservés.
  */
