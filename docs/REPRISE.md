@@ -1,8 +1,7 @@
-# Point de reprise — vendredi 2 octobre 2026
+# Point de reprise — vendredi 2 octobre 2026, au soir
 
-**Le DNS est basculé : le nouveau site répond sur `alpsskitransfers.com`.**
-On reprend à Stripe en réel (point 3 de la liste du 1er octobre, plus bas).
-Parler court à JC : une phrase par point, clic par clic.
+**Le site est en ligne sur `alpsskitransfers.com`, ouvert à Google, et il
+encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
 
 ## Fait le 2 octobre
 
@@ -23,19 +22,65 @@ Parler court à JC : une phrase par point, clic par clic.
   `/book-ski-transfer-tickets/` (`/reserver/` vers `/fr/reserver/`), corrigé
   dans `generer-redirections.mjs` — 200 règles générées. `/cart/` reste le
   panier, seul chemin en `noindex` du proxy.
-- **Stripe** : fuseau du compte passé sur Europe/Paris.
+- **Stripe** : fuseau du compte passé sur Europe/Paris. **Clés réelles posées
+  en Production** par JC (`sk_live_`, sonde : renseignée) et webhook live
+  `site-alpsskitransfers` créé sur `https://alpsskitransfers.com/api/stripe/webhook/`
+  (`checkout.session.completed`, `invoice.paid`), son `whsec_` posé. Les
+  factures restent éteintes. `STRIPE_TAUX_TVA` est encore celui du mode test —
+  à recréer en réel avant `FACTURES_ACTIVES`.
+- **`/favicon.ico`** répondait 404 : produit par `preparer-logo.mjs` (`17b3eec`).
+- **Les pages de trajet affichaient le barème du code**, pas la grille publiée
+  (Genève → Val Thorens « dès 276 € » pour 314 €) : la lecture sans cache de
+  `grilleActive()` est refusée pendant la fabrication d'une page statique, et
+  `lire()` avalait le refus. `grilleAffichee()` lit avec un cache d'une heure,
+  périmé par `publierGrille` (`f37e8b9`). Vérifié en ligne sur sept trajets,
+  quatre langues. **Non éprouvé** : le rafraîchissement immédiat à la
+  publication d'une grille — à regarder à la prochaine publication.
+- **Indexation ouverte** (`NEXT_PUBLIC_INDEXATION=ouverte`, Production seule,
+  redéployé sans cache) : `robots.txt` en `Allow: /` avec sa ligne `Sitemap`,
+  `index, follow` sur les pages, `noindex` conservé sur le panier, la gestion
+  de réservation et le back-office, 362 URL au sitemap, toutes sur le domaine.
+  `alpsskitransferv2.vercel.app` répond 404 : pas de duplicata à craindre.
+- **Paiement réel prouvé de bout en bout** : réservation téléphonique
+  AST-9F8271 à 1 €, payée par JC, passée « payée » par le webhook, e-mail de
+  confirmation reçu, remboursée depuis la fiche (e-mail de remboursement reçu,
+  fiche « Annulée »). **Piège du jour** : la clé `whsec_` avait été posée sur
+  la ligne **Preview** au lieu de **Production** — le webhook répondait 400 ;
+  corrigé, événement renvoyé depuis Stripe. La ligne Preview a retrouvé la clé
+  du webhook de test (celle de `.env.local`).
+- **Coupe-circuit éteint** : `ENCAISSEMENT_SUSPENDU` supprimée en Production,
+  redéployé (sonde : absente). Le paiement en ligne est ouvert au public.
+- **Search Console** : `sitemap.xml` envoyé (l'ancien `sitemap_index.xml` n'y
+  est plus), indexation de l'accueil demandée. État du sitemap à relire :
+  « Impossible de récupérer » le 2 au soir, première lecture faite quand le DNS
+  de Google servait encore l'ancien site.
+- **Cartes véhicules de l'accueil** : Business et Premium reprennent les
+  détourages d'origine (demande de JC) ; les photos `terrain-vehicule-*`
+  restent dans `public/images/`, inutilisées.
 
-## Reste à faire, dans l'ordre
+## Reste à faire
 
-1. **Stripe en réel** : clés live et webhook sur
-   `https://alpsskitransfers.com/api/stripe/webhook/` posés par JC sur Vercel,
-   taux de TVA live, réglages de facturation, un vrai paiement, **puis éteindre
-   le coupe-circuit**.
-2. **Indexation** (`NEXT_PUBLIC_INDEXATION=ouverte`), purge des tests, Search
-   Console, Bing — `docs/MISE-EN-LIGNE.md`.
-3. **Avant d'allumer les factures** : quatre questions posées à Nassim le
+1. **La compilation dépend de Google Fonts** : deux déploiements ont échoué le
+   2 octobre (`next/font/google queries have exactly one entry` — Google a
+   servi une autre forme d'URL pour Outfit), le troisième est passé. À ranger
+   en `next/font/local` pour qu'un déploiement ne dépende plus d'un tiers.
+2. **E-mail de confirmation** : « Il reste une étape : votre adresse en
+   station, pour que votre… » est pris pour une ligne « libellé : valeur » par
+   `email-html.ts` et coupé en deux.
+3. **Fiche d'une réservation payée en mode test** : « Stripe ne répond pas »
+   au remboursement — normal avec la clé réelle, disparaît à la purge.
+4. **Purge des réservations et factures de test** (une quinzaine, plus
+   AST-9F8271).
+5. **Search Console** : relire le sitemap ; **Bing** ; bandeau cookies vu à
+   l'écran par JC (Accepter → visite dans Analytics « Temps réel » à vérifier).
+6. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
+   (dénomination, ID fiscal, numéro 199), et quatre questions posées à Nassim le
    11 septembre, sans réponse notée — mention « EI », format des numéros, TVA
    des trajets par la Suisse ou en Italie, factures manuelles en parallèle.
+7. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
+   Restreint dans la Search Console, `GSC_CREDENTIALS_B64`,
+   `GA_PROPERTY_ID` = 477829689 — laissé de côté par JC le 2 octobre.
+8. **Nassim** : fiche Google + lien, adresse CM2C.
 
 ---
 
