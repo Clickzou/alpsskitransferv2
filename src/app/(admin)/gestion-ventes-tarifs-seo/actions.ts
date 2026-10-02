@@ -18,9 +18,11 @@ import { formaterAlpes } from "@/lib/temps";
 import { SITE } from "@/data/site";
 import { factureDeReference, factureParId } from "@/lib/admin/factures";
 import {
+  annulerFacture,
   creerAvoir,
   creerSessionCheckout,
   facturesActives,
+  fermerSessionCheckout,
   lireFacture,
   lirePaiementStripe,
   marquerFacturePayee,
@@ -261,6 +263,7 @@ interface ReservationTelephone {
   langue: string | null;
   mode_paiement: string | null;
   facture_stripe: string | null;
+  session_stripe?: string | null;
 }
 
 async function lireReservation(reference: string): Promise<ReservationTelephone | null> {
@@ -372,6 +375,65 @@ export async function actionVirementRecu(donnees: FormData): Promise<void> {
   });
 
   return retourFiche(factureNonMarquee ? "virement-recu-facture" : "virement-recu");
+}
+
+/**
+ * « Annuler cette réservation » — pour une réservation qui n'a pas été payée :
+ * le client a renoncé, ou l'exploitant s'est trompé en la saisissant (demande
+ * de JC, 2 octobre 2026). Une course payée s'annule, elle, en la remboursant.
+ *
+ * La réservation passe à « annulée » et reste en base, pour la trace. Ce qui
+ * permettait de la payer est fermé chez Stripe — la facture d'une réservation
+ * téléphonique, la page de paiement d'une réservation du site — sans quoi le
+ * client pourrait encore régler une course qui n'aura pas lieu. Aucun e-mail :
+ * c'est l'exploitant qui a eu le client au téléphone.
+ */
+export async function actionAnnulerReservation(donnees: FormData): Promise<void> {
+  const utilisateur = await utilisateurCourant();
+  if (!utilisateur) redirect("/gestion-ventes-tarifs-seo/connexion/");
+
+  const reference = String(donnees.get("reference") ?? "");
+  const retourFiche = (fait: string): never => redirect(`${cheminFiche(reference)}?fait=${fait}`);
+
+  const r = await lireReservation(reference);
+  if (!r) return retourFiche("perimee");
+  if (r.statut === "payee") return retourFiche("deja-payee");
+  if (r.statut === "annulee") return retourFiche("annulee");
+
+  // Une seule fois, et jamais sur une course payée entre-temps.
+  const annulees = await mettreAJourSi(
+    "reservations",
+    [
+      { colonne: "reference", valeur: reference },
+      { colonne: "statut", operateur: "in", valeur: "(en-attente-paiement,devis-a-confirmer)" },
+    ],
+    { statut: "annulee" },
+  );
+  if (annulees === null) return retourFiche("echec");
+  if (annulees === 0) return retourFiche("deja-payee");
+
+  const factureRestee = r.facture_stripe ? !(await annulerFacture(r.facture_stripe)) : false;
+  if (r.session_stripe?.startsWith("cs_")) await fermerSessionCheckout(r.session_stripe);
+
+  await inserer("modifications", {
+    reference,
+    champ: "paiement",
+    ancien: null,
+    nouveau: [
+      `Réservation annulée avant paiement par ${utilisateur.email}`,
+      r.facture_stripe
+        ? factureRestee
+          ? "Stripe n’a pas annulé la facture — à annuler dans Stripe"
+          : "facture annulée chez Stripe"
+        : null,
+    ]
+      .filter(Boolean)
+      .join(" · "),
+    statut: "appliquee",
+    source: "exploitant",
+  });
+
+  return retourFiche(factureRestee ? "reservation-annulee-facture" : "reservation-annulee");
 }
 
 /**

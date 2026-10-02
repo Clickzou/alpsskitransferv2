@@ -16,6 +16,7 @@ import { cheminFiche } from "@/lib/reservation/demandes";
 import { facturesActives } from "@/lib/reservation/stripe";
 import {
   actionRefuser,
+  actionAnnulerReservation,
   actionRenvoyerPaiement,
   actionValider,
   actionVirementRecu,
@@ -102,6 +103,14 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
     texte: "Virement noté et client confirmé — mais Stripe n’a pas marqué la facture payée : vérifiez-la dans Stripe.",
   },
   "deja-payee": { alerte: true, texte: "Cette réservation est déjà payée." },
+  "reservation-annulee": {
+    alerte: false,
+    texte: "Réservation annulée. Son lien de paiement ne fonctionne plus ; le client n’a pas reçu d’e-mail.",
+  },
+  "reservation-annulee-facture": {
+    alerte: true,
+    texte: "Réservation annulée — mais Stripe n’a pas annulé la facture, qui reste payable : annulez-la dans Stripe.",
+  },
   renvoye: { alerte: false, texte: "L’e-mail de paiement est reparti chez le client." },
   "adresse-demandee": {
     alerte: false,
@@ -407,6 +416,20 @@ export default async function FicheReservation({
                 <BoutonConfirmation libelle="Renvoyer l’e-mail de paiement" className={boutonSecondaire} />
               </form>
             </div>
+          ) : null}
+          {/*
+            Une réservation qui n'a pas été payée s'annule ici. Payée, elle
+            s'annule en la remboursant : l'argent et la course vont ensemble.
+          */}
+          {!course.payeLe && course.statut !== "payee" && course.statut !== "annulee" ? (
+            <form action={actionAnnulerReservation} className="mt-3">
+              <input type="hidden" name="reference" value={course.reference} />
+              <BoutonConfirmation
+                libelle="Annuler cette réservation"
+                confirmer="Annuler cette réservation ? Le client ne pourra plus la payer, et il ne recevra pas d’e-mail."
+                className={boutonSecondaire}
+              />
+            </form>
           ) : null}
         </Bloc>
       </div>

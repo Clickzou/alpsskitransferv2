@@ -331,6 +331,27 @@ export async function marquerFacturePayee(id: string): Promise<boolean> {
   return reponse !== null;
 }
 
+/**
+ * Annule une facture émise et pas encore payée : sa page ne permet plus de
+ * payer, et son numéro reste pris — une série de factures n'a pas de trou.
+ */
+export async function annulerFacture(id: string): Promise<boolean> {
+  const reponse = await ecrireStripe(`/v1/invoices/${encodeURIComponent(id)}/void`, new URLSearchParams());
+  return reponse !== null;
+}
+
+/**
+ * Ferme une page de paiement Checkout encore ouverte. Stripe refuse quand elle
+ * a déjà expiré — au bout de vingt-quatre heures — ce qui revient au même.
+ */
+export async function fermerSessionCheckout(id: string): Promise<boolean> {
+  const reponse = await ecrireStripe(
+    `/v1/checkout/sessions/${encodeURIComponent(id)}/expire`,
+    new URLSearchParams(),
+  );
+  return reponse !== null;
+}
+
 /** Ce que Stripe sait d'un paiement : l'encaissé, le déjà rendu, et ses frais — en euros. */
 export interface PaiementStripe {
   paye: number;

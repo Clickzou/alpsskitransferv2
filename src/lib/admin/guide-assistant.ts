@@ -71,8 +71,11 @@ Le système refuse si la demande est déjà traitée ou remplacée par une plus 
 - « Virement reçu » (courses téléphoniques payées par virement, pas encore payées) : à cliquer quand l'argent est arrivé sur le compte. La course passe à « Payée », la facture Stripe est marquée payée si elle existe, et le client reçoit sa confirmation.
 - « Renvoyer l'e-mail de paiement » : renvoie au client le récapitulatif avec un lien de paiement neuf (une page de paiement par carte expire au bout de 24 heures) ou l'IBAN et l'échéance pour un virement. Pas de confirmation demandée.
 
-## Rembourser, et annuler une course
-Il n'y a pas de bouton « Annuler » séparé : on annule une course en la remboursant, avec la case « Annuler aussi la course ».
+## Annuler une réservation qui n'a pas été payée
+Sur la fiche d'une réservation en « Paiement attendu », « Paiement non abouti » ou « Devis à confirmer », le bouton « Annuler cette réservation » la passe à « Annulée ». Son lien de paiement ne fonctionne plus (la facture est annulée chez Stripe, son numéro reste pris), et le client ne reçoit pas d'e-mail : le prévenir soi-même. Le bouton n'apparaît pas sur une course payée.
+
+## Rembourser, et annuler une course payée
+Une course payée s'annule en la remboursant, avec la case « Annuler aussi la course ».
 1. Sur la fiche (ou « Rembourser le client → » depuis la liste), cliquer sur « Rembourser le client ».
 2. Choisir « La totalité — X € » ou « Un montant : … € ». Le système propose un montant selon les conditions de vente : la totalité plus de 24 heures avant l'aller (si Stripe a gardé des frais, ils restent à la charge de l'entreprise, c'est écrit) ; 0 € dans les 24 heures ou une fois l'aller fait — on peut quand même saisir un montant, par exemple pour rendre la part d'un retour non effectué.
 3. Cocher « Annuler aussi la course » seulement si la course n'aura pas lieu. Sans la case, un remboursement partiel (geste commercial, retard) laisse la course réservée.
