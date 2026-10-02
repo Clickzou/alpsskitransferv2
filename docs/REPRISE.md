@@ -57,30 +57,36 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
 - **Cartes véhicules de l'accueil** : Business et Premium reprennent les
   détourages d'origine (demande de JC) ; les photos `terrain-vehicule-*`
   restent dans `public/images/`, inutilisées.
+- **La police est dans le dépôt** (`src/polices/`, `next/font/local`) : deux
+  déploiements de production avaient échoué sur `next/font/google queries have
+  exactly one entry`, Google ayant servi une autre forme d'URL pour Outfit. Une
+  compilation ne dépend plus d'aucun tiers (`521b035`).
+- **En-tête sur mobile** : à 360 px (la plupart des Samsung) la rangée mesurait
+  393 px et toute la page défilait de côté. Tient de 320 à 390 px dans les
+  quatre langues, mesuré en ligne.
+- **E-mail de confirmation** : « Il reste une étape : votre adresse… » n'est
+  plus pris pour un « libellé : valeur » (`phraseCoupee`, testé).
+- **Purge** : 24 réservations de test du 10 au 15 septembre supprimées par JC
+  dans l'éditeur SQL de Supabase, avec 12 paiements et 26 lignes d'historique.
+  Sauvegarde des trois tables dans `../Sauvegarde/purge-2026-10-02-*.json`.
 
 ## Reste à faire
 
-1. **La compilation dépend de Google Fonts** : deux déploiements ont échoué le
-   2 octobre (`next/font/google queries have exactly one entry` — Google a
-   servi une autre forme d'URL pour Outfit), le troisième est passé. À ranger
-   en `next/font/local` pour qu'un déploiement ne dépende plus d'un tiers.
-2. **E-mail de confirmation** : « Il reste une étape : votre adresse en
-   station, pour que votre… » est pris pour une ligne « libellé : valeur » par
-   `email-html.ts` et coupé en deux.
-3. **Fiche d'une réservation payée en mode test** : « Stripe ne répond pas »
-   au remboursement — normal avec la clé réelle, disparaît à la purge.
-4. **Purge des réservations et factures de test** (une quinzaine, plus
-   AST-9F8271).
-5. **Search Console** : relire le sitemap ; **Bing** ; bandeau cookies vu à
+1. **Quatre réservations encore en base**, à trancher : AST-3EC73F (Imaad,
+   420 €), AST-337A97 (India Zulu, 508 €) et AST-4EC71F (« jdjdd », 1 538 €),
+   non payées, faites les 28 et 29 septembre sur la préproduction par des
+   inconnus — demander à Nassim ; AST-9F8271, le test réel à 1 € payé puis
+   remboursé, à garder comme trace du mouvement Stripe.
+2. **Search Console** : relire le sitemap ; **Bing** ; bandeau cookies vu à
    l'écran par JC (Accepter → visite dans Analytics « Temps réel » à vérifier).
-6. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
+3. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
    (dénomination, ID fiscal, numéro 199), et quatre questions posées à Nassim le
    11 septembre, sans réponse notée — mention « EI », format des numéros, TVA
    des trajets par la Suisse ou en Italie, factures manuelles en parallèle.
-7. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
+4. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
    Restreint dans la Search Console, `GSC_CREDENTIALS_B64`,
    `GA_PROPERTY_ID` = 477829689 — laissé de côté par JC le 2 octobre.
-8. **Nassim** : fiche Google + lien, adresse CM2C.
+5. **Nassim** : fiche Google + lien, adresse CM2C.
 
 ---
 
