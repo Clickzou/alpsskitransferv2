@@ -14,6 +14,7 @@
  *   automatiquement depuis ces deux noms. Il ne reprend que le monogramme —
  *   la montagne et la route — car un lettrage complet dans un carré de 32 px
  *   n'est plus qu'une tache.
+ * - `src/app/favicon.ico` — le même monogramme en 16, 32 et 48 px.
  *
  * Le PNG est conservé plutôt que converti en AVIF : un logo plat à
  * transparence, de petite taille, ne gagne rien au changement de format et
@@ -94,6 +95,33 @@ function finDuMonogramme(données, largeur, hauteur) {
   return { debut: debutContenu, fin: largeur };
 }
 
+/**
+ * Assemble un fichier `.ico` depuis des PNG carrés.
+ *
+ * Le format accepte des PNG tels quels : un en-tête de six octets, une entrée
+ * de seize octets par image, puis les images à la suite.
+ */
+function ico(tailles, images) {
+  const entete = Buffer.alloc(6);
+  entete.writeUInt16LE(1, 2); // type : icône
+  entete.writeUInt16LE(images.length, 4);
+
+  let position = 6 + 16 * images.length;
+  const entrees = images.map((image, i) => {
+    const entree = Buffer.alloc(16);
+    entree.writeUInt8(tailles[i], 0); // largeur
+    entree.writeUInt8(tailles[i], 1); // hauteur
+    entree.writeUInt16LE(1, 4); // plans
+    entree.writeUInt16LE(32, 6); // bits par pixel
+    entree.writeUInt32LE(image.length, 8);
+    entree.writeUInt32LE(position, 12);
+    position += image.length;
+    return entree;
+  });
+
+  return Buffer.concat([entete, ...entrees, ...images]);
+}
+
 async function main() {
   await mkdir(PUBLIC, { recursive: true });
 
@@ -146,6 +174,19 @@ async function main() {
     .extend({ top: 25, bottom: 25, left: 25, right: 25, background: "#FFFFFF" })
     .png({ compressionLevel: 9 })
     .toFile(path.join(APP, "apple-icon.png"));
+
+  // `/favicon.ico` : l'adresse que demandent d'office les outils qui ne lisent
+  // pas la balise `<link rel="icon">`. Sans ce fichier elle répondait 404.
+  const tailles = [16, 32, 48];
+  const images = await Promise.all(
+    tailles.map((cote) =>
+      sharp(carre)
+        .resize(cote, cote, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png({ compressionLevel: 9 })
+        .toBuffer(),
+    ),
+  );
+  await writeFile(path.join(APP, "favicon.ico"), ico(tailles, images));
 
   await writeFile(
     path.join(PUBLIC, "logo-dimensions.json"),
