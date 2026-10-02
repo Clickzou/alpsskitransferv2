@@ -21,6 +21,8 @@ import {
 import { utilisateurCourant } from "@/lib/admin/session";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { supabaseConfigure } from "@/lib/reservation/supabase";
+import { actionAnnulerReservation } from "./actions";
+import BoutonConfirmation from "./BoutonConfirmation";
 import CarteSens from "./CarteSens";
 import DemanderAdresse from "./DemanderAdresse";
 import Entete from "./Entete";
@@ -174,6 +176,22 @@ function LigneCourse({ course, achat = false }: { course: Course; achat?: boolea
               >
                 Rembourser le client →
               </Link>
+            ) : null}
+            {/*
+              Une réservation jamais payée s'annule d'ici, sans passer par la
+              fiche (demande de JC, 2 octobre 2026 : il cherchait le bouton sur
+              cette ligne). La fiche s'ouvre ensuite, avec le résultat.
+            */}
+            {!course.payeLe && course.statut !== "payee" && course.statut !== "annulee" ? (
+              <form action={actionAnnulerReservation} className="mt-2">
+                <input type="hidden" name="reference" value={course.reference} />
+                <BoutonConfirmation
+                  libelle="Annuler cette réservation"
+                  enCours="Annulation…"
+                  confirmer="Annuler cette réservation ? Le client ne pourra plus la payer, et il ne recevra pas d’e-mail."
+                  className="rounded border border-danger-300 px-3 py-1 text-xs font-semibold text-danger-700 hover:bg-danger-50"
+                />
+              </form>
             ) : null}
           </div>
 

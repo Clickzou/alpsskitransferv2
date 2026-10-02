@@ -25,9 +25,8 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
 - **Stripe** : fuseau du compte passé sur Europe/Paris. **Clés réelles posées
   en Production** par JC (`sk_live_`, sonde : renseignée) et webhook live
   `site-alpsskitransfers` créé sur `https://alpsskitransfers.com/api/stripe/webhook/`
-  (`checkout.session.completed`, `invoice.paid`), son `whsec_` posé. Les
-  factures restent éteintes. `STRIPE_TAUX_TVA` est encore celui du mode test —
-  à recréer en réel avant `FACTURES_ACTIVES`.
+  (`checkout.session.completed`, `invoice.paid`), son `whsec_` posé. Factures
+  allumées le soir même, voir plus bas.
 - **`/favicon.ico`** répondait 404 : produit par `preparer-logo.mjs` (`17b3eec`).
 - **Les pages de trajet affichaient le barème du code**, pas la grille publiée
   (Genève → Val Thorens « dès 276 € » pour 314 €) : la lecture sans cache de
@@ -70,35 +69,56 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
   dans l'éditeur SQL de Supabase, avec 12 paiements et 26 lignes d'historique.
   Sauvegarde des trois tables dans `../Sauvegarde/purge-2026-10-02-*.json`.
 
+- **Factures automatiques allumées en réel** (`FACTURES_ACTIVES=oui`,
+  Production). Réponses de JC : mention « EI », numérotation reprise à 199,
+  TVA 10 % sur tous les trajets (non confirmé par le comptable de Nassim), plus
+  de factures manuelles. Réglages Stripe : nom public « NM TRANSPORTS 73 EI –
+  Alps Ski Transfers », adresse de Chambéry, préfixe `NMT`, prochain numéro
+  199, bas de page (SIREN, TVA, EVTC), numéro FR87889065165 en « FR VAT »,
+  taux de TVA réel `txr_1UMA9kAS15fy8zV62Mc92kmj` (10 %, inclus) posé sur
+  `STRIPE_TAUX_TVA` Production. **Ne pas toucher** à l'onglet « Informations
+  fiscales » du compte : il peut relancer une vérification.
+- **Prouvé en réel** : page de paiement du site à 314 € avec « TVA (10 %
+  inclus) 28,55 € » ; facture téléphonique `NMT-0201` payée par carte,
+  remboursée par Stripe sur la carte, avoir `NMT-0201-CN-01` relié.
+- **Défaut trouvé par le test, corrigé** (`707a66f`) : une facture
+  téléphonique payée par carte était enregistrée sans son paiement — Stripe ne
+  renvoie plus `invoice.payment_intent` — et son remboursement était « noté par
+  virement » sans recréditer la carte. C'est le cas de `NMT-0199`
+  (AST-E06148) : avoir `NMT-0199-CN-01` hors Stripe, **1 € à rendre à la main
+  dans Stripe** (Transactions → paiement de 19 h 42 → Rembourser).
+- **« Payer ma facture »** au lieu de « Voir ma facture » quand l'e-mail
+  demande de régler (`c2e2eb9`).
+- **« Annuler cette réservation »** sur la fiche et dans la ligne dépliée de la
+  liste, pour une réservation non payée : statut « annulée », facture annulée
+  chez Stripe (ou page de paiement fermée), historique. Éprouvé sur AST-45CD21,
+  facture `NMT-0200` annulée.
+- **Une page du back-office « fige » quand un déploiement passe pendant qu'elle
+  est ouverte** : l'action aboutit, l'écran ne suit pas (la réponse vient de la
+  nouvelle version). F5 suffit. À savoir avant de pousser pendant que Nassim
+  travaille.
+
 ## Reste à faire
 
-1. **La base est propre** : il n'y reste que AST-9F8271, le test réel à 1 €
-   payé puis remboursé, gardé comme trace du mouvement Stripe (décision de JC).
-   Les trois réservations non payées des 28 et 29 septembre (AST-3EC73F,
-   AST-337A97, AST-4EC71F), faites sur la préproduction, ont été retirées
-   aussi ; elles sont dans la sauvegarde.
-2. **Search Console** : relire le sitemap — encore « Impossible de récupérer »
-   le 2 au soir, colonne « Dernière lecture » vide, alors que le fichier répond
-   bien à Googlebot (200, 362 URL) : attendre, puis le renvoyer s'il ne passe
-   pas. **Bing** reste à faire. Analytics est vérifié par JC : « Accepter » sur
-   le bandeau, la visite apparaît en « Temps réel ».
-3. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
-   (dénomination, ID fiscal, numéro 199), et les questions posées à Nassim le
-   11 septembre. **Réglé le 2 octobre** (JC) : la mention « EI » — les factures
-   portent « NM TRANSPORTS 73 EI » ; le format des numéros — un simple nombre,
-   la prochaine est la **199**. Stripe impose un préfixe et quatre chiffres :
-   le plus proche est du type `NMT-0199`, à faire valider ; la TVA — **10 % sur
-   tous les trajets**, Suisse et Italie comprises (réponse de JC, c'est déjà ce
-   que fait le code : un seul taux, `STRIPE_TAUX_TVA`). Non confirmé par le
-   comptable de Nassim ; les factures manuelles — **il n'en fera plus**, le
-   site reprend donc sa série à 199 et les courses prises hors du site passent
-   par « + Nouvelle réservation (téléphone) ». **Les quatre réponses sont là :
-   il ne reste que les réglages Stripe en réel, puis `FACTURES_ACTIVES=oui`
-   (Preview d'abord).**
-4. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
+1. **Tests en base**, à retirer par JC dans l'éditeur SQL (la suppression est
+   refusée à Claude Code) : AST-BB95E7 (314 €, non payée), AST-E06148,
+   AST-45CD21, AST-53CA48 — et AST-9F8271, gardée jusqu'ici. Leurs factures
+   `NMT-0199` à `NMT-0201` et leurs avoirs restent chez Stripe : prévenir le
+   comptable de Nassim que la série commence par trois factures de test.
+2. **Rendre 1 € à JC** dans Stripe pour AST-E06148 (voir plus haut).
+3. **E-mail d'avoir de Stripe** : Stripe envoie lui-même « Credit note from… »
+   au client, en anglais, en plus de notre e-mail de remboursement. À couper
+   dans ses réglages si JC veut un seul message.
+4. **Search Console** : relire le sitemap, renvoyé le 2 au soir après un test
+   en ligne réussi (« Google a accès à cette URL »). **Bing** reste à faire.
+5. **Stripe, compte** : l'e-mail du représentant Nassim Matmati est
+   `contact@clickzou.fr` — à remplacer par le sien. Adresse à passer à
+   Drumettaz quand l'INPI l'aura validée.
+6. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
    Restreint dans la Search Console, `GSC_CREDENTIALS_B64`,
    `GA_PROPERTY_ID` = 477829689 — laissé de côté par JC le 2 octobre.
-5. **Nassim** : fiche Google + lien, adresse CM2C.
+7. **Nassim** : fiche Google + lien, adresse CM2C ; lui dire que les courses
+   prises par téléphone passent par « + Nouvelle réservation (téléphone) ».
 
 ---
 
