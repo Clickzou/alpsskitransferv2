@@ -4,7 +4,7 @@ import { articlesPublies } from "@/lib/articles";
 import { devisReservation } from "@/lib/reservation/devis";
 import { resortParSlug, SLUG_PAYS } from "@/lib/resorts";
 import { dateDuJour } from "@/lib/concurrence/comparaison";
-import { grilleActive } from "@/lib/tarification/grilles-publiees";
+import { grilleAffichee } from "@/lib/tarification/grilles-publiees";
 import { segmentTrajet, TRANSFERS } from "@/lib/transfers";
 
 /**
@@ -23,7 +23,7 @@ import { segmentTrajet, TRANSFERS } from "@/lib/transfers";
 export const revalidate = 3600;
 
 export async function GET() {
-  const grille = await grilleActive();
+  const grille = await grilleAffichee();
   const mercredi = dateDuJour("mercredi");
 
   const lignes = TRANSFERS.flatMap((t) => {

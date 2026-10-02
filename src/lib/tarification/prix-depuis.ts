@@ -1,6 +1,6 @@
 import { dateDuJour } from "@/lib/concurrence/comparaison";
 import { devisReservation } from "@/lib/reservation/devis";
-import { grilleActive } from "./grilles-publiees";
+import { grilleAffichee } from "./grilles-publiees";
 
 /**
  * Le prix « à partir de » d'un trajet — décision du 15 septembre 2026, prise
@@ -17,7 +17,7 @@ import { grilleActive } from "./grilles-publiees";
 export async function prixDepuis(airport: string, resort: string): Promise<number | null> {
   const r = devisReservation(
     { airport, resort, categorie: "standard", passagers: 1, aller: dateDuJour("mercredi") },
-    await grilleActive(),
+    await grilleAffichee(),
   );
   return r.ok ? r.devis.total : null;
 }

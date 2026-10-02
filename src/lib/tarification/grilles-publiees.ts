@@ -1,3 +1,4 @@
+import { updateTag } from "next/cache";
 import { inserer, lire } from "@/lib/reservation/supabase";
 import { GRILLE_DEFAUT, validerGrille, type Grille } from "./grille";
 
@@ -56,6 +57,36 @@ export async function grilleActive(): Promise<Grille> {
   return grille;
 }
 
+/** L'étiquette de cache des pages qui affichent un prix tiré de la grille. */
+const ETIQUETTE_GRILLE = "grille-tarifaire";
+
+/**
+ * La grille publiée, pour les pages statiques qui affichent un prix « à partir
+ * de » — title, FAQ, données structurées des pages de trajet.
+ *
+ * `grilleActive()` lit toujours la base à neuf, ce que Next refuse pendant la
+ * fabrication d'une page statique : la lecture échouait en silence et ces pages
+ * affichaient le barème du code à la place de la grille publiée — Genève → Val
+ * Thorens « dès 276 € » pour 314 € vendus, constaté le 2 octobre 2026. Ici la
+ * lecture est mise en cache une heure, et `publierGrille` la périme aussitôt.
+ *
+ * Le moteur de réservation, lui, garde `grilleActive()` : un prix qu'on
+ * encaisse ne sort jamais d'un cache.
+ */
+export async function grilleAffichee(): Promise<Grille> {
+  const [derniere] = await lire<GrillePubliee>("grilles_tarifaires", {
+    colonnes: "id,contenu",
+    tri: { colonne: "id", croissant: false },
+    limite: 1,
+    cache: { secondes: 3600, etiquettes: [ETIQUETTE_GRILLE] },
+  });
+  const valide = derniere ? validerGrille(derniere.contenu) : null;
+  if (valide && !valide.ok) {
+    console.error(`[tarifs] grille ${derniere?.id} illisible, barème du code affiché`, valide.erreurs);
+  }
+  return valide?.ok ? valide.grille : GRILLE_DEFAUT;
+}
+
 /** Les dernières publications, la plus récente d'abord. */
 export async function historiqueGrilles(limite = 20): Promise<GrillePubliee[]> {
   return lire<GrillePubliee>("grilles_tarifaires", {
@@ -76,6 +107,16 @@ export async function grilleParId(id: number): Promise<GrillePubliee | null> {
 
 export async function publierGrille(grille: Grille, par: string, note: string | null): Promise<boolean> {
   const ligne = await inserer("grilles_tarifaires", { contenu: grille, note, publie_par: par });
-  if (ligne) oublierGrilleActive();
+  if (ligne) {
+    oublierGrilleActive();
+    // Les pages de trajet se refont avec le nouveau prix à leur prochaine visite.
+    // La grille est publiée quoi qu'il arrive : au pire, le cache d'une heure
+    // s'en charge.
+    try {
+      updateTag(ETIQUETTE_GRILLE);
+    } catch (erreur) {
+      console.error("[tarifs] cache des pages de trajet non périmé", erreur);
+    }
+  }
   return Boolean(ligne);
 }

@@ -207,6 +207,14 @@ export async function lire<T>(
      * filtres qui combinent plusieurs colonnes, comme la recherche du back-office.
      */
     parametres?: Record<string, string>;
+    /**
+     * Garde la réponse en cache, sous des étiquettes qu'une écriture pourra
+     * périmer. Réservé aux lectures faites par des pages statiques : sans lui
+     * la lecture est toujours fraîche, et Next la refuse pendant la fabrication
+     * d'une page — refus que le `catch` ci-dessous transformerait en « aucune
+     * ligne ».
+     */
+    cache?: { secondes: number; etiquettes: string[] };
   } = {},
 ): Promise<T[]> {
   if (!supabaseConfigure()) return [];
@@ -228,7 +236,15 @@ export async function lire<T>(
     }
     if (options.limite) url.searchParams.set("limit", String(options.limite));
 
-    const reponse = await fetch(url, { headers: entetes(), cache: "no-store" });
+    const reponse = await fetch(
+      url,
+      options.cache
+        ? {
+            headers: entetes(),
+            next: { revalidate: options.cache.secondes, tags: options.cache.etiquettes },
+          }
+        : { headers: entetes(), cache: "no-store" },
+    );
     if (!reponse.ok) {
       console.error(`[supabase] lecture refusée sur ${table}`, await reponse.text());
       return [];
