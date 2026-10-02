@@ -105,9 +105,10 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
 
 ## Reste à faire
 
-1. **Tests en base**, à retirer par JC dans l'éditeur SQL (la suppression est
-   refusée à Claude Code) : AST-BB95E7 (314 €, non payée), AST-E06148,
-   AST-45CD21, AST-53CA48 — et AST-9F8271, gardée jusqu'ici. Leurs factures
+1. **La base est vide** : les cinq réservations de test du 2 octobre ont été
+   retirées par JC dans l'éditeur SQL (la suppression est refusée à Claude
+   Code ; sauvegarde dans `../Sauvegarde/purge-2026-10-02-soir-*.json`). La
+   première réservation qui arrivera sera celle d'un vrai client. Les factures
    `NMT-0199` à `NMT-0201` et leurs avoirs restent chez Stripe : prévenir le
    comptable de Nassim que la série commence par trois factures de test.
 2. **Rendre 1 € à JC** dans Stripe pour AST-E06148 (voir plus haut).
