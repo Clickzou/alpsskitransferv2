@@ -112,9 +112,14 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
    `NMT-0199` à `NMT-0201` et leurs avoirs restent chez Stripe : prévenir le
    comptable de Nassim que la série commence par trois factures de test.
 2. **Rendre 1 € à JC** dans Stripe pour AST-E06148 (voir plus haut).
-3. **E-mail d'avoir de Stripe** : Stripe envoie lui-même « Credit note from… »
-   au client, en anglais, en plus de notre e-mail de remboursement. À couper
-   dans ses réglages si JC veut un seul message.
+3. **E-mails de Stripe coupés** (JC, 2 octobre au soir) : « Send finalized
+   invoices to customers » et « Send credit notes to customers » sont éteints
+   (Paramètres → Billing → Abonnements et e-mails → « Gérez les factures
+   envoyées aux clients »). Stripe envoyait « Credit note from… » en anglais,
+   en double de notre e-mail de remboursement. Le client ne reçoit plus que
+   nos e-mails, qui portent les liens de la facture et de l'avoir. **À vérifier
+   à la première vraie vente du site** : qu'aucun e-mail de reçu Stripe ne
+   parte en double (réglage voisin, Entreprise → Adresses e-mail de clients).
 4. **Search Console** : relire le sitemap, renvoyé le 2 au soir après un test
    en ligne réussi (« Google a accès à cette URL »). **Bing** reste à faire.
 5. **Stripe, compte** : l'e-mail du représentant Nassim Matmati est
