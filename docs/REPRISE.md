@@ -85,9 +85,16 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
 3. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
    (dénomination, ID fiscal, numéro 199), et les questions posées à Nassim le
    11 septembre. **Réglé le 2 octobre** (JC) : la mention « EI » — les factures
-   portent « NM TRANSPORTS 73 EI ». **Encore sans réponse** : le format des
-   numéros, la TVA des trajets par la Suisse ou en Italie, les factures
-   manuelles en parallèle.
+   portent « NM TRANSPORTS 73 EI » ; le format des numéros — un simple nombre,
+   la prochaine est la **199**. Stripe impose un préfixe et quatre chiffres :
+   le plus proche est du type `NMT-0199`, à faire valider ; la TVA — **10 % sur
+   tous les trajets**, Suisse et Italie comprises (réponse de JC, c'est déjà ce
+   que fait le code : un seul taux, `STRIPE_TAUX_TVA`). Non confirmé par le
+   comptable de Nassim ; les factures manuelles — **il n'en fera plus**, le
+   site reprend donc sa série à 199 et les courses prises hors du site passent
+   par « + Nouvelle réservation (téléphone) ». **Les quatre réponses sont là :
+   il ne reste que les réglages Stripe en réel, puis `FACTURES_ACTIVES=oui`
+   (Preview d'abord).**
 4. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
    Restreint dans la Search Console, `GSC_CREDENTIALS_B64`,
    `GA_PROPERTY_ID` = 477829689 — laissé de côté par JC le 2 octobre.
