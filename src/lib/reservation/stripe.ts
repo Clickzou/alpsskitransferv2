@@ -492,6 +492,38 @@ export async function lireAvoir(id: string): Promise<AvoirStripe | null> {
   }
 }
 
+/**
+ * Le paiement par carte qui a réglé une facture — `null` pour un virement, ou
+ * si Stripe ne répond pas.
+ *
+ * La facture ne porte plus son `payment_intent` : depuis la version d'API de
+ * 2025, Stripe le range dans la liste de ses paiements. Le webhook lisait
+ * l'ancien champ, toujours vide — une réservation téléphonique payée par carte
+ * passait pour un virement, et son remboursement était « noté » sans que la
+ * carte soit jamais recréditée (AST-E06148, 2 octobre 2026).
+ */
+export async function paiementDeFacture(id: string): Promise<string | null> {
+  if (!stripeConfigure()) return null;
+  try {
+    const parametres = new URLSearchParams({ invoice: id, status: "paid", limit: "1" });
+    const reponse = await fetch(`https://api.stripe.com/v1/invoice_payments?${parametres}`, {
+      headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+      cache: "no-store",
+    });
+    if (!reponse.ok) {
+      console.error("[stripe] paiement de facture illisible", await reponse.text());
+      return null;
+    }
+    const liste = (await reponse.json()) as {
+      data?: { payment?: { type?: string; payment_intent?: string | null } }[];
+    };
+    return liste.data?.[0]?.payment?.payment_intent ?? null;
+  } catch (erreur) {
+    console.error("[stripe] paiement de facture impossible à lire", erreur);
+    return null;
+  }
+}
+
 /** Relit une facture Stripe — `null` si Stripe n'est pas configuré ou ne répond pas. */
 export async function lireFacture(id: string): Promise<FactureStripe | null> {
   if (!stripeConfigure()) return null;

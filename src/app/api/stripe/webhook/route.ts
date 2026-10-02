@@ -7,7 +7,7 @@ import { envoyer } from "@/lib/reservation/email";
 import { origineSite } from "@/lib/reservation/config";
 import { cheminFiche } from "@/lib/reservation/demandes";
 import { lienGestion } from "@/lib/reservation/gestion";
-import { lireFacture, signatureValide } from "@/lib/reservation/stripe";
+import { lireFacture, paiementDeFacture, signatureValide } from "@/lib/reservation/stripe";
 import { corpsAvis, sujetAvis, textesEmail } from "@/lib/reservation/textes";
 import { inserer, lire, mettreAJour } from "@/lib/reservation/supabase";
 
@@ -28,7 +28,8 @@ interface FacturePayee {
   id: string;
   amount_paid: number;
   currency: string;
-  payment_intent: string | null;
+  /** Absent des versions récentes de l'API : voir `paiementDeFacture`. */
+  payment_intent?: string | null;
   hosted_invoice_url: string | null;
   metadata?: Record<string, string>;
 }
@@ -55,15 +56,19 @@ async function factureTelephonePayee(facture: FacturePayee, requete: Request) {
   });
   if (deja.length > 0) return NextResponse.json({ recu: true, deja: facture.id });
 
+  // Sans lui, la fiche prend la course pour un virement et ne sait plus la
+  // rembourser sur la carte.
+  const paiement = facture.payment_intent ?? (await paiementDeFacture(facture.id));
+
   await mettreAJour("reservations", { colonne: "reference", valeur: reference }, {
     statut: "payee",
-    paiement_stripe: facture.payment_intent,
+    paiement_stripe: paiement,
     paye_le: new Date().toISOString(),
   });
   await inserer("paiements", {
     reference,
     session_stripe: facture.id,
-    paiement_stripe: facture.payment_intent,
+    paiement_stripe: paiement,
     montant: facture.amount_paid / 100,
     devise: facture.currency.toUpperCase(),
     statut: "paye",
