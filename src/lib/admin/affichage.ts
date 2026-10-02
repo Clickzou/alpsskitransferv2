@@ -264,11 +264,18 @@ export function sensDeLaCourse(course: Course, maintenant = new Date()): Sens[] 
  * attente », gris « sans suite ». « Payée » et « En attente de paiement »
  * étaient beige sur beige (revue du 11 septembre 2026).
  */
+/** Tout a-t-il été rendu au client ? */
+export function integralementRemboursee(course: Pick<Course, "payeLe" | "montant" | "rembourse">): boolean {
+  return Boolean(course.payeLe) && course.rembourse > 0 && course.rembourse >= course.montant;
+}
+
 export function pastilleStatut(course: Course): { texte: string; classes: string } {
   const neutre = "border-glacier-300 bg-glacier-100 text-alpine-600";
   const attente = "border-attention-300 bg-attention-50 text-attention-700";
   if (course.statut === "annulee") return { texte: "Annulée", classes: neutre };
   if (course.statut === "payee") {
+    // Remboursée en entier sans être annulée : ni payée, ni à encaisser.
+    if (integralementRemboursee(course)) return { texte: "Remboursée", classes: attente };
     return { texte: "Payée", classes: "border-succes-300 bg-succes-50 text-succes-700" };
   }
   if (estNonAboutie(course)) return { texte: "Paiement non abouti", classes: neutre };

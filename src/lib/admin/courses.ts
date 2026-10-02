@@ -113,6 +113,12 @@ export interface Course {
   montant: number;
   devise: string;
   payeLe: Date | null;
+  /**
+   * Ce qui a déjà été rendu au client, en euros. La liste en a besoin autant
+   * que la fiche : sans lui, une course intégralement remboursée restait
+   * « Payée », avec un bouton « Rembourser » (revue de JC, 2 octobre 2026).
+   */
+  rembourse: number;
   creeLe: Date;
   /** Le chauffeur et la note interne de chaque trajet — l'onglet Planning. */
   planning: {
@@ -196,6 +202,43 @@ async function avecHistorique(courses: Course[]): Promise<Course[]> {
   }
 }
 
+/**
+ * Rattache à chaque course ce qui lui a été remboursé, en une seule requête.
+ * Seules les courses payées sont concernées ; une base qui ne répond pas laisse
+ * zéro, et la fiche reste l'endroit où le montant se vérifie avant de rendre.
+ */
+async function avecRemboursements(courses: Course[]): Promise<Course[]> {
+  const payees = courses.filter((c) => c.payeLe);
+  if (payees.length === 0) return courses;
+  try {
+    const lignes = await lire<{ reference: string; montant: string | number }>("paiements", {
+      colonnes: "reference,montant",
+      filtres: [
+        { colonne: "reference", operateur: "in", valeur: `(${payees.map((c) => c.reference).join(",")})` },
+        { colonne: "statut", operateur: "eq", valeur: "rembourse" },
+      ],
+      limite: 1000,
+    });
+    if (!Array.isArray(lignes) || lignes.length === 0) return courses;
+
+    const parReference = new Map<string, number>();
+    for (const ligne of lignes) {
+      parReference.set(ligne.reference, (parReference.get(ligne.reference) ?? 0) + Number(ligne.montant));
+    }
+    return courses.map((c) => ({
+      ...c,
+      rembourse: Math.round((parReference.get(c.reference) ?? 0) * 100) / 100,
+    }));
+  } catch {
+    return courses;
+  }
+}
+
+/** L'historique et les remboursements : ce que la liste et la fiche lisent en plus de la réservation. */
+async function completer(courses: Course[]): Promise<Course[]> {
+  return avecRemboursements(await avecHistorique(courses));
+}
+
 /** Le nom lisible d'un aéroport ou d'une station, ou son slug si le registre l'ignore. */
 function nomAeroport(slug: string): string {
   return airportParSlug(slug)?.name ?? slug;
@@ -265,6 +308,7 @@ function versCourse(ligne: LigneBase): Course {
     montant: Number(ligne.montant),
     devise: ligne.devise,
     payeLe: ligne.paye_le ? new Date(ligne.paye_le) : null,
+    rembourse: 0,
     creeLe: new Date(ligne.cree_le),
     planning: {
       aller: { chauffeur: ligne.chauffeur?.trim() || null, note: ligne.note_planning?.trim() || null },
@@ -299,7 +343,7 @@ export async function coursesAVenir(limite = 200): Promise<Course[]> {
     parametres: { or: `(aller.gte."${iso}",retour.gte."${iso}")` },
     limite,
   });
-  const courses = await avecHistorique(lignes.map(versCourse));
+  const courses = await completer(lignes.map(versCourse));
   const prochaine = (c: Course) =>
     c.aller.getTime() >= maintenant.getTime() || !c.retour ? c.aller.getTime() : c.retour.getTime();
   return courses.sort((a, b) => prochaine(a) - prochaine(b));
@@ -317,7 +361,7 @@ export async function courseParReference(reference: string): Promise<Course | nu
     limite: 1,
   });
   if (!ligne) return null;
-  const [course] = await avecHistorique([versCourse(ligne)]);
+  const [course] = await completer([versCourse(ligne)]);
   return course ?? null;
 }
 
@@ -334,7 +378,7 @@ export async function rechercherCourses(critere: Critere): Promise<Course[] | nu
     parametres: { and: filtre },
     limite: 200,
   });
-  return avecHistorique(lignes.map(versCourse));
+  return completer(lignes.map(versCourse));
 }
 
 /**
@@ -362,7 +406,7 @@ export async function coursesPassees(limite = 100): Promise<Course[]> {
     parametres: { and: `(aller.lt."${iso}",or(retour.is.null,retour.lt."${iso}"))` },
     limite,
   });
-  return avecHistorique(lignes.map(versCourse));
+  return completer(lignes.map(versCourse));
 }
 
 /**

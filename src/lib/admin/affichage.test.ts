@@ -7,6 +7,7 @@ import {
   estAAssurer,
   euros,
   heure,
+  integralementRemboursee,
   modifieeParLeClient,
   pastilleStatut,
 } from "./affichage";
@@ -48,6 +49,7 @@ function course(champs: Partial<Course>): Course {
     montant: 300,
     devise: "EUR",
     payeLe: null,
+    rembourse: 0,
     creeLe: maintenant,
     planning: {
       aller: { chauffeur: null, note: null },
@@ -158,5 +160,21 @@ describe("adresseManquante", () => {
     expect(
       adresseManquante(course({ statut: "en-attente-paiement", source: "telephone" }), maintenant),
     ).toBe(true);
+  });
+});
+
+describe("course remboursée", () => {
+  const payee = { statut: "payee", payeLe: new Date("2026-10-02T18:00:00Z"), montant: 300 };
+
+  it("reste « Payée » tant qu'il reste quelque chose à rendre", () => {
+    expect(pastilleStatut(course({ ...payee, rembourse: 0 })).texte).toBe("Payée");
+    expect(pastilleStatut(course({ ...payee, rembourse: 50 })).texte).toBe("Payée");
+    expect(integralementRemboursee(course({ ...payee, rembourse: 50 }))).toBe(false);
+  });
+
+  it("devient « Remboursée » quand tout a été rendu, et « Annulée » si elle l'est", () => {
+    expect(pastilleStatut(course({ ...payee, rembourse: 300 })).texte).toBe("Remboursée");
+    expect(integralementRemboursee(course({ ...payee, rembourse: 300 }))).toBe(true);
+    expect(pastilleStatut(course({ ...payee, statut: "annulee", rembourse: 300 })).texte).toBe("Annulée");
   });
 });

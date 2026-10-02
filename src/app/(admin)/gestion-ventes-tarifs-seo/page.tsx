@@ -8,6 +8,7 @@ import {
   estAAssurer,
   euros,
   heure,
+  integralementRemboursee,
   modifieeParLeClient,
   pastilleStatut,
   sensDeLaCourse,
@@ -169,7 +170,13 @@ function LigneCourse({ course, achat = false }: { course: Course; achat?: boolea
               rendu et les frais Stripe ; la liste y mène, formulaire ouvert
               (revue de JC, 14 septembre 2026 : il le cherchait ici).
             */}
-            {course.payeLe ? (
+            {course.rembourse > 0 ? (
+              <p>
+                Remboursé : {euros(course.rembourse, devise)}
+                {integralementRemboursee(course) ? " — tout a été rendu" : ""}
+              </p>
+            ) : null}
+            {course.payeLe && !integralementRemboursee(course) ? (
               <Link
                 href={`${cheminFiche(course.reference)}?rembourser=1#paiement`}
                 className="mt-2 inline-block rounded border border-danger-300 px-3 py-1 text-xs font-semibold text-danger-700 hover:bg-danger-50"
@@ -182,13 +189,17 @@ function LigneCourse({ course, achat = false }: { course: Course; achat?: boolea
               fiche (demande de JC, 2 octobre 2026 : il cherchait le bouton sur
               cette ligne). La fiche s'ouvre ensuite, avec le résultat.
             */}
-            {!course.payeLe && course.statut !== "payee" && course.statut !== "annulee" ? (
+            {course.statut !== "annulee" && (!course.payeLe || integralementRemboursee(course)) ? (
               <form action={actionAnnulerReservation} className="mt-2">
                 <input type="hidden" name="reference" value={course.reference} />
                 <BoutonConfirmation
-                  libelle="Annuler cette réservation"
+                  libelle={course.payeLe ? "Annuler la course" : "Annuler cette réservation"}
                   enCours="Annulation…"
-                  confirmer="Annuler cette réservation ? Le client ne pourra plus la payer, et il ne recevra pas d’e-mail."
+                  confirmer={
+                    course.payeLe
+                      ? "Annuler cette course ? Elle a été intégralement remboursée ; le client ne recevra pas d’autre e-mail."
+                      : "Annuler cette réservation ? Le client ne pourra plus la payer, et il ne recevra pas d’e-mail."
+                  }
                   className="rounded border border-danger-300 px-3 py-1 text-xs font-semibold text-danger-700 hover:bg-danger-50"
                 />
               </form>
