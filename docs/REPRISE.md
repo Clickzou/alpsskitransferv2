@@ -72,11 +72,11 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
 
 ## Reste à faire
 
-1. **Quatre réservations encore en base**, à trancher : AST-3EC73F (Imaad,
-   420 €), AST-337A97 (India Zulu, 508 €) et AST-4EC71F (« jdjdd », 1 538 €),
-   non payées, faites les 28 et 29 septembre sur la préproduction par des
-   inconnus — demander à Nassim ; AST-9F8271, le test réel à 1 € payé puis
-   remboursé, à garder comme trace du mouvement Stripe.
+1. **La base est propre** : il n'y reste que AST-9F8271, le test réel à 1 €
+   payé puis remboursé, gardé comme trace du mouvement Stripe (décision de JC).
+   Les trois réservations non payées des 28 et 29 septembre (AST-3EC73F,
+   AST-337A97, AST-4EC71F), faites sur la préproduction, ont été retirées
+   aussi ; elles sont dans la sauvegarde.
 2. **Search Console** : relire le sitemap ; **Bing** ; bandeau cookies vu à
    l'écran par JC (Accepter → visite dans Analytics « Temps réel » à vérifier).
 3. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
