@@ -93,6 +93,11 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
   liste, pour une réservation non payée : statut « annulée », facture annulée
   chez Stripe (ou page de paiement fermée), historique. Éprouvé sur AST-45CD21,
   facture `NMT-0200` annulée.
+- **La liste sait ce qui a été remboursé** (`eb64a5c`) : pastille
+  « Remboursée », montant rendu, plus de « Rembourser le client » quand tout
+  est rendu, et « Annuler la course » à la place — une course intégralement
+  remboursée sans la case « Annuler aussi la course » restait « Payée » dans
+  « À venir », sans aucun moyen de l'annuler. Vu par JC sur AST-53CA48.
 - **Une page du back-office « fige » quand un déploiement passe pendant qu'elle
   est ouverte** : l'action aboutit, l'écran ne suit pas (la réponse vient de la
   nouvelle version). F5 suffit. À savoir avant de pousser pendant que Nassim
