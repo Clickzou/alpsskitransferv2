@@ -77,8 +77,11 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
    Les trois réservations non payées des 28 et 29 septembre (AST-3EC73F,
    AST-337A97, AST-4EC71F), faites sur la préproduction, ont été retirées
    aussi ; elles sont dans la sauvegarde.
-2. **Search Console** : relire le sitemap ; **Bing** ; bandeau cookies vu à
-   l'écran par JC (Accepter → visite dans Analytics « Temps réel » à vérifier).
+2. **Search Console** : relire le sitemap — encore « Impossible de récupérer »
+   le 2 au soir, colonne « Dernière lecture » vide, alors que le fichier répond
+   bien à Googlebot (200, 362 URL) : attendre, puis le renvoyer s'il ne passe
+   pas. **Bing** reste à faire. Analytics est vérifié par JC : « Accepter » sur
+   le bandeau, la visite apparaît en « Temps réel ».
 3. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
    (dénomination, ID fiscal, numéro 199), et quatre questions posées à Nassim le
    11 septembre, sans réponse notée — mention « EI », format des numéros, TVA
