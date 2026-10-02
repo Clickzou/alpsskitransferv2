@@ -6,7 +6,7 @@
  * wp-export/redirections-a-arbitrer.csv et se traitent à la main dans
  * `redirections.ts`.
  *
- * 188 règles générées le 2026-09-10.
+ * 200 règles générées le 2026-10-02.
  */
 export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/airport-ski-transfers/austria": "/austria-ski-transfers/", // hub pays
@@ -105,6 +105,9 @@ export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/airport-ski-transfers/swiss/zurich-to-verbier-transfers": "/switzerland-ski-transfers/verbier/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-wengen-transfers": "/switzerland-ski-transfers/wengen/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-zermatt-transfers": "/switzerland-ski-transfers/zermatt/zurich-airport-transfers/", // trajet
+  "/booking-page": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/checkout": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/checkout-form": "/book-ski-transfer-tickets/", // page fonctionnelle
   "/contact-alps-ski-transfers": "/contact/", // page fonctionnelle
   "/destination/austria": "/austria-ski-transfers/", // hub pays
   "/destination/austria/innsbruck-aiport": "/austria-ski-transfers/innsbruck-airport/", // hub aéroport
@@ -197,6 +200,15 @@ export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/destination/switzerland/lugano-airport": "/switzerland-ski-transfers/lugano-airport/", // hub aéroport
   "/destination/switzerland/sion-airport": "/switzerland-ski-transfers/sion-airport/", // hub aéroport
   "/destination/switzerland/zurich-airport": "/switzerland-ski-transfers/zurich-airport/", // hub aéroport
+  "/login": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/my-account": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/register": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/reserver": "/fr/reserver/", // page fonctionnelle
+  "/reset-password": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/search-results": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/select-vehicle": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/shop": "/book-ski-transfer-tickets/", // page fonctionnelle
+  "/user-account": "/book-ski-transfer-tickets/", // page fonctionnelle
 };
 
 /** Pages sans trafic ni lien entrant : 410, jamais 301. */
@@ -208,23 +220,10 @@ export const GONE_MIGRATION: string[] = [
 ];
 
 /**
- * Pages du tunnel WooCommerce : conservées en service, sorties de l'index.
- * Aucune redirection — ce sont elles qui encaissent.
+ * Pages du tunnel reprises par le nouveau site : servies, sorties de l'index.
  */
 export const TUNNEL_MIGRATION: string[] = [
-  "/booking-page/",
   "/cart/",
-  "/checkout-form/",
-  "/checkout/",
-  "/login/",
-  "/my-account/",
-  "/register/",
-  "/reserver/",
-  "/reset-password/",
-  "/search-results/",
-  "/select-vehicle/",
-  "/shop/",
-  "/user-account/",
 ];
 
 /** URL reprises telles quelles par le nouveau site : aucune règle nécessaire. */

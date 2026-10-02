@@ -61,10 +61,10 @@ export const PAGES_SUPPRIMEES_410: string[] = [
 /**
  * Pages fonctionnelles à ne jamais indexer.
  *
- * Sur le site actuel, six d'entre elles sont en `index, follow` — seul
- * `/my-account/` est correct. Elles restent servies par WooCommerce tant que le
- * moteur de réservation n'est pas refait (hors périmètre du devis) : le proxy
- * ne les redirige donc pas, il pose seulement l'en-tête `X-Robots-Tag`.
+ * Sur l'ancien site, six d'entre elles étaient en `index, follow`. Il n'en
+ * reste qu'une, le panier : le proxy y pose l'en-tête `X-Robots-Tag`. Les
+ * autres pages du tunnel WooCommerce partent en 301 vers la réservation
+ * (plan généré).
  */
 export const CHEMINS_NOINDEX: string[] = TUNNEL_MIGRATION.map((chemin) =>
   chemin.replace(/\/$/, ""),

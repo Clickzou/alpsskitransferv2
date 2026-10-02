@@ -1,3 +1,44 @@
+# Point de reprise — vendredi 2 octobre 2026
+
+**Le DNS est basculé : le nouveau site répond sur `alpsskitransfers.com`.**
+On reprend à Stripe en réel (point 3 de la liste du 1er octobre, plus bas).
+Parler court à JC : une phrase par point, clic par clic.
+
+## Fait le 2 octobre
+
+- **DNS chez o2switch**, par JC : ligne A du domaine nu → `216.150.1.1`, ligne
+  CNAME `www` → `c6e0cd986deb4771.vercel-dns-016.com`. Rien d'autre touché
+  (`mail`, MX, SPF, Resend intacts). Vercel affiche « Valid Configuration » sur
+  les deux domaines, certificat émis. Les résolveurs publics gardent l'ancienne
+  adresse jusqu'à 4 h (TTL 14 400 s).
+- Conséquence connue : `ftp.alpsskitransfers.com` est un CNAME du domaine nu,
+  il pointe donc sur Vercel. Pour le FTP de l'ancien site, passer par
+  `achacha.o2switch.net`.
+- **Recette en ligne** : 18 pages (une de chaque type) en 200, `www` → domaine
+  nu en un saut, 20 anciennes URL en 301 à un saut, les 410 en 410, indexation
+  toujours fermée.
+- **Douze anciennes URL du tunnel WooCommerce répondaient 404** (`/checkout/`,
+  `/login/`, `/my-account/`…) : le plan les disait « servies par WooCommerce »,
+  abandonné le 29 septembre. Elles partent en 301 vers
+  `/book-ski-transfer-tickets/` (`/reserver/` vers `/fr/reserver/`), corrigé
+  dans `generer-redirections.mjs` — 200 règles générées. `/cart/` reste le
+  panier, seul chemin en `noindex` du proxy.
+- **Stripe** : fuseau du compte passé sur Europe/Paris.
+
+## Reste à faire, dans l'ordre
+
+1. **Stripe en réel** : clés live et webhook sur
+   `https://alpsskitransfers.com/api/stripe/webhook/` posés par JC sur Vercel,
+   taux de TVA live, réglages de facturation, un vrai paiement, **puis éteindre
+   le coupe-circuit**.
+2. **Indexation** (`NEXT_PUBLIC_INDEXATION=ouverte`), purge des tests, Search
+   Console, Bing — `docs/MISE-EN-LIGNE.md`.
+3. **Avant d'allumer les factures** : quatre questions posées à Nassim le
+   11 septembre, sans réponse notée — mention « EI », format des numéros, TVA
+   des trajets par la Suisse ou en Italie, factures manuelles en parallèle.
+
+---
+
 # Point de reprise — jeudi 1er octobre 2026, au soir
 
 **La bascule est préparée. Demain, on reprend au changement du DNS chez

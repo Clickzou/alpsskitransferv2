@@ -118,8 +118,9 @@ const ALIAS_AEROPORTS = {
 /**
  * Sort des pages fonctionnelles, décidé une par une.
  *   "garder"  : l'URL est reprise telle quelle par le nouveau site, aucune règle.
- *   "tunnel"  : page du tunnel WooCommerce, conservée sur book. et mise en noindex
- *               par le proxy — surtout pas de redirection, elle prend l'argent.
+ *   "tunnel"  : page du tunnel reprise par le nouveau site et mise en noindex par
+ *               le proxy. Il n'en reste qu'une, le panier : les autres étaient
+ *               servies par WooCommerce, abandonné le 29 septembre 2026.
  *   "410"     : ni trafic ni lien entrant ; une 301 vers l'accueil y enverrait un
  *               signal de mauvaise qualité.
  *   sinon     : chaîne = destination de la 301.
@@ -153,18 +154,24 @@ const PAGES_FONCTIONNELLES = {
   "/thanks-for-your-inquiry/": "garder",
   // Tunnel de réservation.
   "/cart/": "tunnel",
-  "/checkout/": "tunnel",
-  "/checkout-form/": "tunnel",
-  "/booking-page/": "tunnel",
-  "/reserver/": "tunnel",
-  "/select-vehicle/": "tunnel",
-  "/search-results/": "tunnel",
-  "/login/": "tunnel",
-  "/register/": "tunnel",
-  "/reset-password/": "tunnel",
-  "/my-account/": "tunnel",
-  "/user-account/": "tunnel",
-  "/shop/": "tunnel",
+  /*
+   * L'ancien tunnel WooCommerce. Ces pages devaient rester servies par lui ;
+   * depuis son abandon plus rien ne les sert, et elles répondaient 404 le jour
+   * de la bascule (2 octobre 2026). Un client qui a gardé l'ancien lien doit
+   * arriver sur le formulaire de réservation, pas sur une page d'erreur.
+   */
+  "/checkout/": "/book-ski-transfer-tickets/",
+  "/checkout-form/": "/book-ski-transfer-tickets/",
+  "/booking-page/": "/book-ski-transfer-tickets/",
+  "/reserver/": "/fr/reserver/",
+  "/select-vehicle/": "/book-ski-transfer-tickets/",
+  "/search-results/": "/book-ski-transfer-tickets/",
+  "/login/": "/book-ski-transfer-tickets/",
+  "/register/": "/book-ski-transfer-tickets/",
+  "/reset-password/": "/book-ski-transfer-tickets/",
+  "/my-account/": "/book-ski-transfer-tickets/",
+  "/user-account/": "/book-ski-transfer-tickets/",
+  "/shop/": "/book-ski-transfer-tickets/",
   // Doublons WordPress recyclés et fiches produit techniques.
   "/cart-2/": "410",
   "/checkout-2/": "410",
@@ -353,8 +360,7 @@ ${gone.map((u) => `  "${u}",`).join("\n")}
 ];
 
 /**
- * Pages du tunnel WooCommerce : conservées en service, sorties de l'index.
- * Aucune redirection — ce sont elles qui encaissent.
+ * Pages du tunnel reprises par le nouveau site : servies, sorties de l'index.
  */
 export const TUNNEL_MIGRATION: string[] = [
 ${tunnel.map((u) => `  "${u}",`).join("\n")}
