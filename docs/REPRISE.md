@@ -128,8 +128,15 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
 6. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
    Restreint dans la Search Console, `GSC_CREDENTIALS_B64`,
    `GA_PROPERTY_ID` = 477829689 — laissé de côté par JC le 2 octobre.
-7. **Nassim** : fiche Google + lien, adresse CM2C ; lui dire que les courses
-   prises par téléphone passent par « + Nouvelle réservation (téléphone) ».
+7. **Nassim** : le message d'annonce de la mise en ligne est rédigé
+   (`docs/message-nassim-mise-en-ligne.md`), à envoyer par JC sur WhatsApp. Il
+   lui demande quatre choses — **ne pas les redemander, attendre ses
+   réponses** : prévenir son comptable des trois factures de test, lui faire
+   confirmer la TVA à 10 % sur la Suisse et l'Italie, envoyer le lien de la
+   fiche Google, mettre à jour l'adresse chez CM2C.
+8. **Récap du matin par e-mail** : toujours pas en place, le connecteur Gmail
+   n'est pas autorisé sur claude.ai (à faire par JC : Paramètres →
+   Connecteurs → Gmail). Ce fichier en tient lieu.
 
 ---
 
