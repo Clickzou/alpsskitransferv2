@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { actionRembourser } from "../../actions";
+import { actionAnnulerReservation, actionRembourser } from "../../actions";
 
 /**
  * « Rembourser le client » — sur la fiche, jamais dans la liste : un appui de
@@ -19,7 +19,15 @@ const CHAMP =
 const euros = (n: number) =>
   new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: Number.isInteger(n) ? 0 : 2 }).format(n);
 
-function Envoyer({ libelle, question }: { libelle: string; question: () => string | null }) {
+function Envoyer({
+  libelle,
+  enCours = "Remboursement…",
+  question,
+}: {
+  libelle: string;
+  enCours?: string;
+  question: () => string | null;
+}) {
   const { pending } = useFormStatus();
   return (
     <button
@@ -31,7 +39,7 @@ function Envoyer({ libelle, question }: { libelle: string; question: () => strin
       }}
       className="rounded bg-danger px-4 py-2 text-sm font-semibold text-white transition hover:bg-danger-700 disabled:cursor-wait disabled:opacity-60"
     >
-      {pending ? "Remboursement…" : libelle}
+      {pending ? enCours : libelle}
     </button>
   );
 }
@@ -61,7 +69,27 @@ export default function Remboursement({
   const [montant, setMontant] = useState(String(suggestion.montant).replace(".", ","));
   const [annuler, setAnnuler] = useState(false);
 
-  if (disponible <= 0) return <p className="mt-3 text-sm text-alpine-600">Tout a été remboursé.</p>;
+  if (disponible <= 0) {
+    return (
+      <>
+        <p className="mt-3 text-sm text-alpine-600">Tout a été remboursé.</p>
+        {/*
+          Remboursée sans « Annuler aussi la course » : la course restait à
+          venir, et plus rien ne permettait de l'annuler.
+        */}
+        {!annulee ? (
+          <form action={actionAnnulerReservation} className="mt-2">
+            <input type="hidden" name="reference" value={reference} />
+            <Envoyer
+              libelle="Annuler la course"
+              enCours="Annulation…"
+              question={() => "Annuler cette course ? Elle a été intégralement remboursée ; le client ne recevra pas d’autre e-mail."}
+            />
+          </form>
+        ) : null}
+      </>
+    );
+  }
 
   if (!ouvert) {
     return (

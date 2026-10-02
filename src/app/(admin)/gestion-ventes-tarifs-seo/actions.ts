@@ -387,6 +387,11 @@ export async function actionVirementRecu(donnees: FormData): Promise<void> {
  * téléphonique, la page de paiement d'une réservation du site — sans quoi le
  * client pourrait encore régler une course qui n'aura pas lieu. Aucun e-mail :
  * c'est l'exploitant qui a eu le client au téléphone.
+ *
+ * Elle sert aussi à la course **payée puis intégralement remboursée** sans que
+ * la case « Annuler aussi la course » ait été cochée : tout étant rendu, le
+ * formulaire de remboursement ne s'affiche plus, et la course restait « à
+ * venir » sans moyen de l'annuler (TEST 4 FACTURE, 2 octobre 2026).
  */
 export async function actionAnnulerReservation(donnees: FormData): Promise<void> {
   const utilisateur = await utilisateurCourant();
@@ -397,8 +402,31 @@ export async function actionAnnulerReservation(donnees: FormData): Promise<void>
 
   const r = await lireReservation(reference);
   if (!r) return retourFiche("perimee");
-  if (r.statut === "payee") return retourFiche("deja-payee");
   if (r.statut === "annulee") return retourFiche("annulee");
+
+  if (r.statut === "payee") {
+    // Payée : seulement s'il ne reste plus rien à rendre.
+    if ((await dejaRembourse(reference)) < Number(r.montant)) return retourFiche("deja-payee");
+    const closes = await mettreAJourSi(
+      "reservations",
+      [
+        { colonne: "reference", valeur: reference },
+        { colonne: "statut", valeur: "payee" },
+      ],
+      { statut: "annulee" },
+    );
+    if (closes === null) return retourFiche("echec");
+    if (closes === 0) return retourFiche("annulee");
+    await inserer("modifications", {
+      reference,
+      champ: "paiement",
+      ancien: null,
+      nouveau: `Course annulée après remboursement intégral, par ${utilisateur.email}`,
+      statut: "appliquee",
+      source: "exploitant",
+    });
+    return retourFiche("course-annulee");
+  }
 
   // Une seule fois, et jamais sur une course payée entre-temps.
   const annulees = await mettreAJourSi(

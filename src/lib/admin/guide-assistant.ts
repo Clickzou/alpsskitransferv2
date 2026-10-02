@@ -72,7 +72,7 @@ Le système refuse si la demande est déjà traitée ou remplacée par une plus 
 - « Renvoyer l'e-mail de paiement » : renvoie au client le récapitulatif avec un lien de paiement neuf (une page de paiement par carte expire au bout de 24 heures) ou l'IBAN et l'échéance pour un virement. Pas de confirmation demandée.
 
 ## Annuler une réservation qui n'a pas été payée
-Sur la fiche d'une réservation en « Paiement attendu », « Paiement non abouti » ou « Devis à confirmer », le bouton « Annuler cette réservation » la passe à « Annulée ». Son lien de paiement ne fonctionne plus (la facture est annulée chez Stripe, son numéro reste pris), et le client ne reçoit pas d'e-mail : le prévenir soi-même. Le bouton n'apparaît pas sur une course payée.
+Sur la fiche d'une réservation en « Paiement attendu », « Paiement non abouti » ou « Devis à confirmer », le bouton « Annuler cette réservation » la passe à « Annulée ». Son lien de paiement ne fonctionne plus (la facture est annulée chez Stripe, son numéro reste pris), et le client ne reçoit pas d'e-mail : le prévenir soi-même. Le bouton n'apparaît pas sur une course payée — sauf si elle a été intégralement remboursée sans cocher « Annuler aussi la course » : sous « Tout a été remboursé. », « Annuler la course » la passe alors à « Annulée ».
 
 ## Rembourser, et annuler une course payée
 Une course payée s'annule en la remboursant, avec la case « Annuler aussi la course ».

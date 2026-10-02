@@ -107,6 +107,10 @@ const RETOURS: Record<string, { alerte: boolean; texte: string }> = {
     alerte: false,
     texte: "Réservation annulée. Son lien de paiement ne fonctionne plus ; le client n’a pas reçu d’e-mail.",
   },
+  "course-annulee": {
+    alerte: false,
+    texte: "Course annulée. Le client n’a pas reçu d’e-mail : il a déjà celui de son remboursement.",
+  },
   "reservation-annulee-facture": {
     alerte: true,
     texte: "Réservation annulée — mais Stripe n’a pas annulé la facture, qui reste payable : annulez-la dans Stripe.",
