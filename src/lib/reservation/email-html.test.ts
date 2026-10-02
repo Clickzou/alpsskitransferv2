@@ -42,6 +42,25 @@ describe("texteEnHtml", () => {
     expect(texteEnHtml("Une question : +33 7 69 78 91 89.", "S")).not.toContain(">Une question</td>");
   });
 
+  it("garde entière une phrase dont la première ligne ressemble à un libellé", () => {
+    const html = texteEnHtml(
+      [
+        "Référence : AST-1",
+        "Montant réglé : 1 €",
+        "",
+        "Il reste une étape : votre adresse en station, pour que votre",
+        "chauffeur sache où vous déposer et où venir vous chercher. Indiquez-la",
+        "ici, jusqu'à 24 heures avant :",
+        "https://x.fr/fr/gerer-ma-reservation/?ref=AST-1&j=a#adresses",
+      ].join("\n"),
+      "S",
+    );
+    expect(html).not.toContain(">Il reste une étape</td>");
+    expect(html).toContain("Il reste une étape : votre adresse en station, pour que votre<br>chauffeur sache");
+    expect(html).toContain(">Référence</td>");
+    expect(html).toContain(">Montant réglé</td>");
+  });
+
   it("signale en rouge ce qui reste à faire", () => {
     expect(texteEnHtml("ALLER\n  ADRESSE À OBTENIR PAR TÉLÉPHONE", "S")).toContain("#B42318");
   });

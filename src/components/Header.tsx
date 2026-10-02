@@ -54,7 +54,7 @@ export default function Header({
         colonne de texte, et la barre des pays suit, pour que « Where we drive »
         reste aligné sur le logo.
       */}
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-4 lg:max-w-[76rem]">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-4 lg:max-w-[76rem]">
         <Link href={lienAccueil(lang)} className="shrink-0" aria-label={t.logoAccueil}>
           <Logo lang={lang} />
         </Link>
@@ -93,8 +93,14 @@ export default function Header({
           Les actions restent groupées à droite, et `shrink-0` les y tient : une
           barre où le bouton de réservation se comprime au profit du menu
           inverserait la hiérarchie annoncée en tête de ce fichier.
+
+          Rien ne se comprime, donc tout doit tenir : sur un téléphone de 360 px
+          — la largeur de la plupart des Samsung — la rangée mesurait 393 px et
+          toute la page défilait de côté (2 octobre 2026). Sous 640 px les
+          écarts se resserrent, le globe du sélecteur s'efface et le panier perd
+          4 px ; sous 360 px le logo et le bouton cèdent encore un peu.
         */}
-        <div className="flex shrink-0 items-center gap-x-3 gap-y-2 sm:gap-x-4">
+        <div className="flex shrink-0 items-center gap-x-2 gap-y-2 sm:gap-x-4">
           <SelecteurLangue lang={lang} alternatives={alternatives} />
 
           {/*
@@ -110,7 +116,7 @@ export default function Header({
 
           <Link
             href={lienTunnelLangue(lang)}
-            className="shrink-0 rounded bg-marque px-3 py-2 text-xs font-semibold text-white transition hover:bg-marque-600 sm:px-4 sm:text-sm"
+            className="shrink-0 rounded bg-marque px-3 py-2 text-xs font-semibold text-white transition hover:bg-marque-600 max-[359px]:px-2 sm:px-4 sm:text-sm"
           >
             {t.reserver}
           </Link>

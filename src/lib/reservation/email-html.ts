@@ -156,6 +156,21 @@ function libelleValeur(ligne: string): [string, string] | null {
   return [m[1].trim(), m[2].trim()];
 }
 
+/**
+ * Une phrase écrite sur plusieurs lignes, dont la première ressemble à un
+ * « libellé : valeur » : « Il reste une étape : votre adresse en station, pour
+ * que votre » / « chauffeur sache où vous déposer… ». Rangée au récapitulatif,
+ * elle était coupée en deux (e-mail de confirmation, 2 octobre 2026).
+ *
+ * On la reconnaît à sa longueur — elle va jusqu'au bout de la ligne — et à la
+ * ligne suivante, qui la continue en simple prose.
+ */
+function phraseCoupee(ligne: string, suivante: string | undefined): boolean {
+  if (ligne.trim().length < 50 || suivante === undefined) return false;
+  if (/^\s{2,}\S/.test(suivante) || URL.test(suivante) || enCapitales(suivante)) return false;
+  return libelleValeur(suivante) === null || suivante.trim().endsWith(":");
+}
+
 function enCapitales(ligne: string): boolean {
   const lettres = ligne.replace(/[^A-Za-zÀ-ÿ]/g, "");
   return lettres.length >= 3 && lettres === lettres.toUpperCase() && ligne.trim().length <= 60;
@@ -209,7 +224,7 @@ function bloc(lignes: string[], langue: Langue): string {
     viderTexte();
   };
 
-  for (const brute of lignes) {
+  for (const [i, brute] of lignes.entries()) {
     const ligne = brute.trimEnd();
     const lien = URL.exec(ligne);
 
@@ -242,7 +257,7 @@ function bloc(lignes: string[], langue: Langue): string {
     }
 
     const paire = libelleValeur(ligne);
-    if (paire && !ligne.trim().endsWith(":")) {
+    if (paire && !ligne.trim().endsWith(":") && !phraseCoupee(ligne, lignes[i + 1])) {
       viderEncadre();
       viderTexte();
       recap.push(paire);

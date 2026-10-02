@@ -36,7 +36,7 @@ export default function IconePanier({
         distingue des liens de texte voisins, et reprend l'or du logo juste à
         côté du bouton d'action vert — les deux ne se disputent pas le regard.
       */
-      className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-alpes-300 text-alpine-700 transition hover:border-alpes hover:text-alpes"
+      className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border max-[359px]:h-8 max-[359px]:w-8 sm:h-10 sm:w-10 border-alpes-300 text-alpine-700 transition hover:border-alpes hover:text-alpes"
       aria-label={
         pret && nombre > 0 ? `${etiquette} — ${t.lignesEtInclus(nombre)}` : etiquette
       }

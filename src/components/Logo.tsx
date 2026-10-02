@@ -42,7 +42,7 @@ export default function Logo({
       width={largeur}
       height={hauteur}
       style={{ "--logo-h": `${hauteurAffichee}px` } as CSSProperties}
-      className={`h-[30px] w-auto sm:h-[var(--logo-h)] ${className ?? ""}`}
+      className={`h-[30px] w-auto max-[359px]:h-[24px] sm:h-[var(--logo-h)] ${className ?? ""}`}
       priority
     />
   );

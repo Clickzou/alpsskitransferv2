@@ -49,7 +49,7 @@ export default function SelecteurLangue({
           viewBox="0 0 24 24"
           fill="none"
           aria-hidden="true"
-          className="h-4 w-4 shrink-0 text-alpine-600"
+          className="hidden h-4 w-4 shrink-0 text-alpine-600 sm:block"
         >
           <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
           <path
