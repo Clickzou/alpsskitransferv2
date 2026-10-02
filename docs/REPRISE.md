@@ -83,9 +83,11 @@ encaisse en réel.** Parler court à JC : une phrase par point, clic par clic.
    pas. **Bing** reste à faire. Analytics est vérifié par JC : « Accepter » sur
    le bandeau, la visite apparaît en « Temps réel ».
 3. **Avant d'allumer les factures** : taux de TVA live, réglages Stripe
-   (dénomination, ID fiscal, numéro 199), et quatre questions posées à Nassim le
-   11 septembre, sans réponse notée — mention « EI », format des numéros, TVA
-   des trajets par la Suisse ou en Italie, factures manuelles en parallèle.
+   (dénomination, ID fiscal, numéro 199), et les questions posées à Nassim le
+   11 septembre. **Réglé le 2 octobre** (JC) : la mention « EI » — les factures
+   portent « NM TRANSPORTS 73 EI ». **Encore sans réponse** : le format des
+   numéros, la TVA des trajets par la Suisse ou en Italie, les factures
+   manuelles en parallèle.
 4. **Onglet Stats SEO** : compte de service en Lecteur dans Analytics et en
    Restreint dans la Search Console, `GSC_CREDENTIALS_B64`,
    `GA_PROPERTY_ID` = 477829689 — laissé de côté par JC le 2 octobre.
