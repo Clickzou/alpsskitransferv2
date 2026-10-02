@@ -61,6 +61,32 @@ describe("texteEnHtml", () => {
     expect(html).toContain(">Montant réglé</td>");
   });
 
+  it("invite à payer une facture à régler, et à voir une facture réglée", () => {
+    const lien = "https://invoice.stripe.com/i/acct_1/live_abc";
+    const aRegler = texteEnHtml(
+      `Pour confirmer votre réservation, réglez-la en ligne — c’est l’affaire d’une minute :
+${lien}`,
+      "S",
+    );
+    expect(aRegler).toContain("Payer ma facture");
+    expect(aRegler).not.toContain("Voir ma facture");
+    expect(texteEnHtml(`To confirm your booking, please pay online — it takes a minute:
+${lien}`, "S")).toContain(
+      "Pay my invoice",
+    );
+    expect(texteEnHtml(`Um Ihre Buchung zu bestätigen, bezahlen Sie bitte online:
+${lien}`, "S")).toContain(
+      "Rechnung bezahlen",
+    );
+    expect(texteEnHtml(`Per confermare la prenotazione, paga online — ci vuole un minuto:
+${lien}`, "S")).toContain(
+      "Paga la fattura",
+    );
+    expect(texteEnHtml(`Votre transfert est payé.
+
+Votre facture : ${lien}`, "S")).toContain("Voir ma facture");
+  });
+
   it("signale en rouge ce qui reste à faire", () => {
     expect(texteEnHtml("ALLER\n  ADRESSE À OBTENIR PAR TÉLÉPHONE", "S")).toContain("#B42318");
   });

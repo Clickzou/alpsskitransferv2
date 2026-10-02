@@ -50,6 +50,12 @@ const BOUTONS: Record<string, Record<Langue, string>> = {
     it: "Gestisci la prenotazione",
   },
   facture: { en: "View my invoice", fr: "Voir ma facture", de: "Rechnung ansehen", it: "Vedi la fattura" },
+  factureAPayer: {
+    en: "Pay my invoice",
+    fr: "Payer ma facture",
+    de: "Rechnung bezahlen",
+    it: "Paga la fattura",
+  },
   avoir: {
     en: "Download my credit note",
     fr: "Télécharger mon avoir",
@@ -106,7 +112,19 @@ export function langueDuTexte(texte: string): Langue {
   return (Object.keys(scores) as Langue[]).reduce((a, b) => (scores[b] > scores[a] ? b : a), "en");
 }
 
-function libelleBouton(url: string, langue: Langue): string {
+/**
+ * La phrase qui amène le lien demande-t-elle de payer ? « réglez-la en ligne »,
+ * « please pay online », « bezahlen Sie bitte online », « paga online ».
+ */
+const DEMANDE_DE_PAIEMENT = /(^|[^\p{L}])(pay|payer|payez|régle[rz]|bezahl\p{L}*|zahl\p{L}*|paga\p{L}*)(?!\p{L})/iu;
+
+/**
+ * Le libellé du bouton, d'après l'adresse du lien — et, pour une facture,
+ * d'après la phrase qui l'amène : la même page Stripe sert à payer une
+ * facture et à la consulter une fois réglée. « Voir ma facture » sous
+ * « réglez-la en ligne » n'invitait pas à payer (retour de JC, 2 octobre 2026).
+ */
+function libelleBouton(url: string, langue: Langue, contexte = ""): string {
   const type =
     /gestion-ventes-tarifs-seo/.test(url)
       ? "fiche"
@@ -117,7 +135,9 @@ function libelleBouton(url: string, langue: Langue): string {
         : /credit_notes/.test(url)
           ? "avoir"
           : /invoice\.stripe\.com|pay\.stripe\.com\/invoice/.test(url)
-          ? "facture"
+          ? DEMANDE_DE_PAIEMENT.test(contexte)
+            ? "factureAPayer"
+            : "facture"
           : /checkout\.stripe\.com|buy\.stripe\.com/.test(url)
             ? "paiement"
             : /pay\.stripe\.com\/receipts/.test(url)
@@ -136,11 +156,11 @@ export function lienLisible(url: string): string {
   return sansProtocole.length > 48 ? `${sansProtocole.slice(0, 45)}…` : sansProtocole;
 }
 
-function bouton(url: string, langue: Langue): string {
+function bouton(url: string, langue: Langue, contexte = ""): string {
   const propre = url.replace(/[.,;:)]+$/, "");
   const href = echapper(propre);
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:18px 0 6px"><tr><td style="border-radius:8px;background:${COULEURS.action}">
-<a href="${href}" style="display:inline-block;padding:13px 24px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px">${echapper(libelleBouton(url, langue))} →</a>
+<a href="${href}" style="display:inline-block;padding:13px 24px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px">${echapper(libelleBouton(url, langue, contexte))} →</a>
 </td></tr></table>
 <p style="margin:0 0 14px;font-size:11px;line-height:1.5;color:${COULEURS.doux}"><a href="${href}" style="color:${COULEURS.doux}">${echapper(lienLisible(propre))}</a></p>`;
 }
@@ -232,7 +252,8 @@ function bloc(lignes: string[], langue: Langue): string {
       viderTout();
       const avant = ligne.slice(0, lien.index).trim().replace(/\s*:$/, "");
       if (avant) sortie.push(paragraphe(`<strong>${echapper(avant)}</strong>`));
-      sortie.push(bouton(lien[0], langue));
+      // La phrase d'amorce : sur la ligne du lien, ou juste au-dessus.
+      sortie.push(bouton(lien[0], langue, avant || (lignes[i - 1] ?? "")));
       continue;
     }
 
