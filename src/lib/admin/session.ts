@@ -59,7 +59,7 @@ function cle(): string {
   return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 }
 
-async function poserCookies(acces: string, rafraichissement: string, duree: number) {
+export async function poserCookies(acces: string, rafraichissement: string, duree: number) {
   const boite = await cookies();
   const commun = {
     httpOnly: true,
