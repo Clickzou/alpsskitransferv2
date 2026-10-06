@@ -14,6 +14,8 @@ export const chamberyAirportSkiTransfers: Article = {
   slug: "chambery-airport-ski-resorts-saturday-flights",
   titre: "Chambéry airport: when the Saturday flights make sense",
   metaTitre: "Chambéry Airport Ski Transfers: Resorts and Fallbacks",
+  motCle: "nearest ski resorts to chambery airport",
+  motsClesSecondaires: ["chambery airport ski flights saturday"],
   metaDescription:
     "Which resorts Chambéry airport is closest to, how its weekend winter flights work, and when Lyon or Geneva is the better choice. Real drive times.",
   chapo:

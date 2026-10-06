@@ -22,6 +22,8 @@ export const howSkiTransferPricesWork: Article = {
   slug: "how-ski-transfer-prices-are-calculated",
   titre: "How ski transfer prices are calculated, and what to check before you pay",
   metaTitre: "How Ski Transfer Prices Are Calculated | What to Check",
+  motCle: "how much is a ski transfer from geneva",
+  motsClesSecondaires: ["cheap ski transfers"],
   metaDescription:
     "Distance, vehicle, resort access, Saturday and night pick-ups, fixed route prices: what goes into a fair ski transfer price, and why it is per vehicle.",
   chapo:

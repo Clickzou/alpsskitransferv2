@@ -23,6 +23,7 @@ export const flightDelayedSkiTransfer: Article = {
   slug: "flight-delayed-ski-transfer-what-happens",
   titre: "What happens to your ski transfer if your flight is delayed",
   metaTitre: "Flight Delayed? What Happens to Your Ski Transfer",
+  motCle: "flight delayed ski transfer",
   metaDescription:
     "Flight tracking, waiting time, cancelled and rebooked flights, diversions and late-night landings: what happens to your ski transfer, and what to do.",
   chapo:

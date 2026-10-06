@@ -14,6 +14,7 @@ export const zurichOrGenevaSwissResorts: Article = {
   slug: "zurich-or-geneva-airport-swiss-ski-resorts",
   titre: "Zurich or Geneva: which airport for which Swiss ski resort?",
   metaTitre: "Zurich or Geneva for Swiss Ski Resorts? Airport Guide",
+  motCle: "best airport for swiss ski resorts",
   metaDescription:
     "Davos, St. Moritz, Zermatt, Verbier, Crans-Montana or Villars? Real drive times from Zurich and Geneva, and why the answer splits across Switzerland.",
   chapo:

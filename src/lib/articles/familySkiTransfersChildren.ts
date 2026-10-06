@@ -13,6 +13,7 @@ export const familySkiTransfersChildren: Article = {
   slug: "family-ski-transfers-children-car-seats",
   titre: "Family ski transfers: children, car seats and getting through a long travel day",
   metaTitre: "Family Ski Transfers: Children, Car Seats & Travel Day",
+  motCle: "ski transfer car seat child",
   metaDescription:
     "What to declare for children on a ski transfer, which car seats the law expects, how to plan naps and meals, and which vehicle fits a family.",
   chapo:

@@ -17,6 +17,7 @@ export const privateOrSharedSkiTransfer: Article = {
   slug: "private-or-shared-ski-transfer",
   titre: "Private or shared ski transfer: which one fits your trip?",
   metaTitre: "Private or Shared Ski Transfer: Which One Fits Your Trip?",
+  motCle: "shared or private ski transfer",
   metaDescription:
     "Airport waiting, stops at other resorts, skis, children, groups, per-seat or per-vehicle pricing: how to choose a private or a shared ski transfer.",
   chapo:

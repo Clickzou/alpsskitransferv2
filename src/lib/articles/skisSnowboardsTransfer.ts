@@ -13,6 +13,8 @@ export const skisSnowboardsTransfer: Article = {
   slug: "skis-snowboards-ski-transfer-luggage",
   titre: "Travelling to the Alps with skis and snowboards: bags, boots and what fits in the vehicle",
   metaTitre: "Skis & Snowboards on a Ski Transfer: What Fits Where",
+  motCle: "ski bags transfer",
+  motsClesSecondaires: ["travelling with skis"],
   metaDescription:
     "How many ski bags fit in each transfer vehicle, what counts as luggage, what airlines usually ask, and what to declare when you book your transfer.",
   chapo:

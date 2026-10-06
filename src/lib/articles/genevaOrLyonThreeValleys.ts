@@ -15,6 +15,8 @@ export const genevaOrLyonThreeValleys: Article = {
   slug: "geneva-or-lyon-airport-three-valleys",
   titre: "Geneva or Lyon for the Three Valleys: which airport, for which village?",
   metaTitre: "Geneva or Lyon for the Three Valleys? Airport Guide",
+  motCle: "geneva or lyon for three valleys",
+  motsClesSecondaires: ["best airport for val thorens"],
   metaDescription:
     "Geneva or Lyon for Val Thorens, Courchevel, Méribel and Les Menuires? Real drive times, the Moûtiers bottleneck, Saturday traffic and how to pick a flight.",
   chapo:

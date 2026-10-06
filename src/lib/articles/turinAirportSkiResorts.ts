@@ -17,6 +17,8 @@ export const turinAirportSkiResorts: Article = {
   slug: "turin-airport-ski-resorts-milky-way-cervinia",
   titre: "Flying into Turin for the Milky Way, Cervinia and Monterosa",
   metaTitre: "Turin Airport Ski Transfers: Milky Way and Cervinia",
+  motCle: "milky way ski area nearest airport",
+  motsClesSecondaires: ["how to get to cervinia from turin airport"],
   metaDescription:
     "Sauze d’Oulx, Sestriere, Montgenèvre, Serre Chevalier, Cervinia, Champoluc and Gressoney: real drive times from Turin, compared with Geneva and Milan.",
   chapo:

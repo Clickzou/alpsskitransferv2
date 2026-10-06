@@ -14,6 +14,7 @@ export const verbierCransMontanaTransfers: Article = {
   slug: "how-to-get-to-verbier-from-geneva",
   titre: "How to get to Verbier from Geneva: train or transfer",
   metaTitre: "How to Get to Verbier from Geneva: Train or Transfer",
+  motCle: "how to get to verbier from geneva",
   metaDescription:
     "Geneva to Verbier is 163 km, about 2 h 09 by road. No direct train: how the rail route works, when a transfer is worth it, and Crans-Montana too.",
   chapo:

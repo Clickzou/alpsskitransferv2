@@ -14,6 +14,8 @@ export const saturdayChangeoverDayAlps: Article = {
   slug: "saturday-changeover-day-alps-ski-transfer",
   titre: "Saturday changeover day in the Alps: how to plan around the busiest day of the week",
   metaTitre: "Saturday Changeover Day in the Alps: How to Plan Around It",
+  motCle: "saturday changeover alps traffic",
+  motsClesSecondaires: ["black saturday france"],
   metaDescription:
     "Why Saturday is changeover day in the Alps, where the traffic builds, how much time it adds to a ski transfer, when to fly, and why a Saturday costs more.",
   chapo:

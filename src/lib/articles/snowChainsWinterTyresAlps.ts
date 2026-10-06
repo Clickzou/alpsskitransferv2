@@ -13,6 +13,7 @@ export const snowChainsWinterTyresAlps: Article = {
   slug: "snow-chains-winter-tyres-alps-rules",
   titre: "Snow chains and winter tyres in the Alps: the rules, the roads and your transfer",
   metaTitre: "Snow Chains & Winter Tyres in the Alps: Rules by Country",
+  motCle: "snow chains france ski resort law",
   metaDescription:
     "France, Italy and Switzerland handle winter equipment differently. What the rules say, what closes a mountain road, and how snow changes a transfer time.",
   chapo:

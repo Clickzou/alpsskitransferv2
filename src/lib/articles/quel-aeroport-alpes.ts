@@ -41,6 +41,8 @@ export const quelAeroportAlpes: Article = {
   slug: "which-airport-for-the-french-alps",
   titre: "Which airport should you fly into for the French Alps?",
   metaTitre: "Which Airport for the French Alps? Geneva vs Lyon",
+  motCle: "best airport for the french alps",
+  motsClesSecondaires: ["geneva or lyon airport french alps"],
   metaDescription:
     "Geneva, Lyon, Chambéry, Grenoble or Annecy? Real road distances and drive times to 22 Alpine resorts, and how to choose between them.",
   chapo:

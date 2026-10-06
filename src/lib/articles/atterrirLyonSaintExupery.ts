@@ -26,6 +26,8 @@ const fr: TraductionArticle = {
   slug: "atterrir-a-lyon-saint-exupery-pour-skier",
   titre: "Atterrir à Lyon Saint-Exupéry pour skier : quelles stations, combien de temps de route",
   metaTitre: "Skier depuis Lyon Saint-Exupéry : stations et temps de route",
+  motCle: "transfert lyon alpe d'huez",
+  motsClesSecondaires: ["transfert lyon saint-exupéry courchevel"],
   metaDescription:
     "Depuis l’aéroport de Lyon : Alpe d’Huez 2 h 10, Méribel 2 h 15, Courchevel 2 h 20, Val Thorens 2 h 35, Val d’Isère 3 h. Temps de route réels par station.",
   chapo:

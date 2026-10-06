@@ -26,6 +26,8 @@ export const closestAirportTarentaise: Article = {
   slug: "closest-airport-tignes-val-disere-la-plagne-les-arcs",
   titre: "Closest airport to Tignes, Val d’Isère, La Plagne and Les Arcs: Geneva, Lyon or Chambéry?",
   metaTitre: "Closest Airport to Tignes, Val d’Isère, La Plagne, Les Arcs",
+  motCle: "closest airport to tignes france",
+  motsClesSecondaires: ["nearest airport to tignes", "airport for la plagne"],
   metaDescription:
     "Chambéry, Grenoble, Lyon or Geneva for Tignes, Val d’Isère, La Plagne and Les Arcs: drive times measured route by route, and which flights fit.",
   chapo:

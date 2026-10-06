@@ -11,6 +11,7 @@ export const reserverTransfertSki: Article = {
   slug: "booking-a-ski-transfer-what-to-check",
   titre: "Booking a ski transfer: what to check before you pay",
   metaTitre: "Booking a Ski Transfer: What to Check Before You Pay",
+  motCle: "booking a ski transfer",
   metaDescription:
     "Per vehicle or per person, tolls, ski bags, child seats, flight tracking, cancellation: the eight things that decide what a ski transfer really costs.",
   chapo:

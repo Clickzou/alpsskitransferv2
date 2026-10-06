@@ -96,9 +96,11 @@ export async function GET(requete: Request) {
         ...(image ? { image: `${base}${image}` } : {}),
         apercuUrl: apercu ? `${base}${apercu}` : null,
         auteur: a.auteur,
-        // Le site n'a pas de mot-clé cible par article : le metaTitre en tient lieu.
-        motCle: brut(v.metaTitre || v.titre),
-        motsClesSecondaires: [] as string[],
+        // La requête visée par l'article (`motCle`, dans sa langue). Le repli
+        // sur le metaTitre ne sert qu'à un article oublié — le test
+        // `mots-cles.test.ts` l'interdit pour tout article non brouillon.
+        motCle: v.motCle ?? brut(v.metaTitre || v.titre),
+        motsClesSecondaires: v.motsClesSecondaires ?? [],
         metaDescription: v.metaDescription,
         chapo: brut(v.chapo),
         essentiel: { reponse: brut(v.chapo), points: (v.aRetenir ?? []).map(brut) },

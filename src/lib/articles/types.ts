@@ -13,6 +13,24 @@ export interface Article {
   slug: string;
   titre: string;
   metaTitre: string;
+  /**
+   * La requête Google que l'article vise — courte, telle qu'un internaute la
+   * tape, dans la langue de l'article. Ce n'est ni le titre ni le metaTitre :
+   * un titre de 60 caractères ne se classe jamais tel quel.
+   *
+   * Sources (6 octobre 2026) : la « requête cible » de l'analyse des SERP du
+   * 14 septembre (`docs/concurrence/`, hors dépôt), l'audit articles d'octobre
+   * (`clickzou-v2/docs/audits-articles/2026-10/alps.md`) et, pour les trois
+   * articles du 8 septembre qui n'en avaient pas, le sujet de l'article.
+   * Aucun volume de recherche n'est connu pour ces requêtes.
+   *
+   * Lu par le tableau de bord Clickzou (`/api/articles-programmes/`) ; ne
+   * change ni le title, ni la meta, ni le rendu de la page.
+   * Article sans version anglaise : porté par sa traduction.
+   */
+  motCle?: string;
+  /** Variantes de la même intention, relevées dans les mêmes sources. */
+  motsClesSecondaires?: string[];
   metaDescription: string;
   chapo: string;
   datePublication: string; // ISO
@@ -78,6 +96,9 @@ export interface TraductionArticle {
   slug: string;
   titre: string;
   metaTitre: string;
+  /** La requête visée dans cette langue (voir `Article.motCle`) : on traduit le contenu, jamais le mot-clé. */
+  motCle?: string;
+  motsClesSecondaires?: string[];
   metaDescription: string;
   chapo: string;
   contenu: BlocContenu[];

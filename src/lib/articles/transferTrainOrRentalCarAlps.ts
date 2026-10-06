@@ -17,6 +17,8 @@ export const transferTrainOrRentalCarAlps: Article = {
   slug: "private-transfer-train-or-rental-car-to-the-alps",
   titre: "Private transfer, train or rental car: the best way to reach the Alps",
   metaTitre: "Transfer, Train or Rental Car to the Alps: How to Choose",
+  motCle: "ski transfer vs train alps",
+  motsClesSecondaires: ["car hire vs transfer ski"],
   metaDescription:
     "Door-to-door time, skis and luggage, winter tyres, resort parking and group costs: an honest comparison of transfer, train and hire car to the Alps.",
   chapo:

@@ -11,6 +11,7 @@ export const stationsSansVoitures: Article = {
   slug: "car-free-ski-resorts-how-you-actually-get-there",
   titre: "Car-free ski resorts: how you actually get there",
   metaTitre: "Car-Free Ski Resorts: How You Actually Get There",
+  motCle: "car free ski resorts",
   metaDescription:
     "Zermatt, Wengen, Mürren, Avoriaz, Saas-Fee: where the road stops, what happens to your luggage, and how to time the last stretch of the journey.",
   chapo:

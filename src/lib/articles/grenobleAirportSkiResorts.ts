@@ -13,6 +13,7 @@ export const grenobleAirportSkiResorts: Article = {
   slug: "grenoble-airport-ski-transfers-alpe-dhuez-les-deux-alpes",
   titre: "Grenoble airport for Alpe d’Huez, Les Deux Alpes and Chamrousse",
   metaTitre: "Grenoble Airport to Alpe d’Huez and Les Deux Alpes",
+  motCle: "ski resorts near grenoble airport",
   metaDescription:
     "Grenoble, Lyon, Chambéry or Geneva for Alpe d’Huez, Les Deux Alpes and Chamrousse? Real drive times, the Oisans climbs, and how to choose your flight.",
   chapo:

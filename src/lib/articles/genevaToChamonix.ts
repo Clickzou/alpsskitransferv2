@@ -13,6 +13,7 @@ export const genevaToChamonix: Article = {
   slug: "how-to-get-to-chamonix-from-geneva",
   titre: "Geneva to Chamonix: bus, train or private transfer",
   metaTitre: "Geneva to Chamonix: Bus, Train or Private Transfer?",
+  motCle: "how to get to chamonix from geneva",
   metaDescription:
     "Geneva airport to Chamonix: 91 km and about 1 h 25 by road. Shuttle bus, train or private transfer compared for luggage, skis and late flights.",
   chapo:

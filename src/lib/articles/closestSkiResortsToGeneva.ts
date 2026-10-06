@@ -14,6 +14,7 @@ export const closestSkiResortsToGeneva: Article = {
   slug: "closest-ski-resorts-to-geneva-airport",
   titre: "The closest ski resorts to Geneva airport, ranked by drive time",
   metaTitre: "Closest Ski Resorts to Geneva Airport, by Drive Time",
+  motCle: "closest ski resort to geneva airport",
   metaDescription:
     "Le Grand-Bornand, Les Carroz, La Clusaz, Samoëns, Les Gets, Megève, Chamonix: the ski resorts nearest Geneva airport, ranked by real drive time.",
   chapo:

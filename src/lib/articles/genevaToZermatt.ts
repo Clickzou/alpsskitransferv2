@@ -14,6 +14,7 @@ export const genevaToZermatt: Article = {
   slug: "how-to-get-to-zermatt-from-geneva",
   titre: "How to get to Zermatt from Geneva: train, Täsch or private transfer",
   metaTitre: "How to Get to Zermatt from Geneva: Train or Transfer",
+  motCle: "how to get to zermatt from geneva",
   metaDescription:
     "Zermatt is car-free: every road ends at Täsch. Drive times from Geneva, Zurich and Bergamo, the shuttle train, and when the train beats a private transfer.",
   chapo:
