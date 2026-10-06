@@ -2,7 +2,7 @@ import type { Article } from "./types";
 
 /**
  * Tignes, Val d'Isère, La Plagne, Les Arcs : quel aéroport — programmé au
- * 13 octobre 2026. Sujet n°1 de l'audit articles d'octobre
+ * 20 octobre 2026. Sujet n°1 de l'audit articles d'octobre
  * (`clickzou-v2/docs/audits-articles/2026-10/alps.md`) : la Tarentaise fait
  * 5 350 impressions et 3 clics sur 90 jours, et « closest airport to tignes
  * france » est la requête la plus nette ; aucun article ne couvrait ces
@@ -32,7 +32,7 @@ export const closestAirportTarentaise: Article = {
     "Chambéry, Grenoble, Lyon or Geneva for Tignes, Val d’Isère, La Plagne and Les Arcs: drive times measured route by route, and which flights fit.",
   chapo:
     "For La Plagne, Les Arcs and Val d’Isère, Chambéry is the closest airport by drive time — 1 h 41, 1 h 43 and 2 h 10 — and Geneva the slowest, about an hour further each way. For Tignes, of the two airports we run it from, Grenoble is quicker than Geneva: 2 h 49 against 3 h 07. Which one you land at usually comes down to the day you fly, because Chambéry and Grenoble fly mostly at weekends while Lyon and Geneva fly every day.",
-  datePublication: "2026-10-13",
+  datePublication: "2026-10-20",
   auteur: "Alps Ski Transfers",
   visuel: {
     nom: "station-tignes",

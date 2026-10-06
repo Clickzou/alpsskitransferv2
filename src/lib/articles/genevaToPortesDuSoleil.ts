@@ -1,7 +1,7 @@
 import type { Article } from "./types";
 
 /**
- * Avoriaz, Morzine et Les Gets depuis Genève — programmé au 10 novembre 2026.
+ * Avoriaz, Morzine et Les Gets depuis Genève — programmé au 17 novembre 2026.
  * Sujet de novembre de l'audit articles d'octobre
  * (`clickzou-v2/docs/audits-articles/2026-10/alps.md`) : les Portes du Soleil
  * font 2 271 impressions et 0 clic sur 90 jours, dont trois questions posées
@@ -40,7 +40,7 @@ export const genevaToPortesDuSoleil: Article = {
     "Geneva to Les Gets 1 h 19, Morzine 1 h 29, Avoriaz 1 h 45: the road, Saturday traffic, how the price works and the last stretch into car-free Avoriaz.",
   chapo:
     "From Geneva airport, Les Gets is about 1 h 19 by road, Morzine 1 h 29 and Avoriaz 1 h 45, all on the same road through Cluses and over the col des Gets. Morzine and Les Gets are reached door to door; Avoriaz is car-free, so the road ends at the car parks at the entrance of the resort. Here is how the journey works, what changes on a Saturday, how a private transfer is priced, and what to plan for the last stretch.",
-  datePublication: "2026-11-10",
+  datePublication: "2026-11-17",
   auteur: "Alps Ski Transfers",
   visuel: {
     nom: "station-morzine",

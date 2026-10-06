@@ -2,7 +2,7 @@ import type { Article, TraductionArticle } from "./types";
 
 /**
  * « Atterrir à Lyon Saint-Exupéry pour skier » — en FRANÇAIS SEUL, programmé
- * au 27 octobre 2026. Sujet n°2 de l'audit articles d'octobre
+ * au 3 novembre 2026. Sujet n°2 de l'audit articles d'octobre
  * (`clickzou-v2/docs/audits-articles/2026-10/alps.md`) : deux questions Pulse
  * sur Lyon (Alpe d'Huez, Courchevel), zéro citation sur 22 relevés, et aucun
  * article français ne nourrit les six pages de trajet françaises au départ de
@@ -338,7 +338,7 @@ export const atterrirLyonSaintExupery: Article = {
   metaTitre: fr.metaTitre,
   metaDescription: fr.metaDescription,
   chapo: fr.chapo,
-  datePublication: "2026-10-27",
+  datePublication: "2026-11-03",
   auteur: "Alps Ski Transfers",
   visuel: { nom: "aeroport-lyon-airport", alt: "Glass façade of Terminal 1 at Lyon-Saint-Exupéry airport" },
   contenu: [],

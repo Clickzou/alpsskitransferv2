@@ -2,7 +2,7 @@ import type { Article } from "./types";
 
 /**
  * La Thuile et Courmayeur depuis Genève, par le tunnel du Mont-Blanc —
- * programmé au 24 novembre 2026. Sujet de novembre de l'audit articles
+ * programmé au 1er décembre 2026. Sujet de novembre de l'audit articles
  * d'octobre (`clickzou-v2/docs/audits-articles/2026-10/alps.md`) : La Thuile et
  * Courmayeur font 1 893 impressions et 1 clic sur 90 jours, dont « geneva to
  * la thuile transfer » 321 et « geneva to la thuile shuttle » 126 ; aucun
@@ -39,7 +39,7 @@ export const genevaToLaThuileCourmayeur: Article = {
     "Geneva airport to Courmayeur is 102 km and about 1 h 36, La Thuile 133 km and 2 h 33, through the Mont Blanc tunnel. The route, the borders and Saturdays.",
   chapo:
     "From Geneva airport, Courmayeur is 102 km and about 1 h 36 by road, and La Thuile 133 km and about 2 h 33. Both are reached through the Mont Blanc tunnel: you land in Switzerland, drive through France to Chamonix, and come out in Italy’s Aosta valley. Here is how the route works, why Geneva is usually quicker than Turin for these two resorts, what to expect on a Saturday, and what to give us when you book.",
-  datePublication: "2026-11-24",
+  datePublication: "2026-12-01",
   auteur: "Alps Ski Transfers",
   visuel: {
     nom: "station-la-thuile",
