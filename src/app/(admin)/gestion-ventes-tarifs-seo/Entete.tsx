@@ -22,7 +22,10 @@ const ONGLETS = [
   { cle: "tarifs", nom: "Tarifs", href: "/gestion-ventes-tarifs-seo/tarifs/" },
   { cle: "concurrence", nom: "Concurrence", href: "/gestion-ventes-tarifs-seo/concurrence/" },
   { cle: "factures", nom: "Factures", href: "/gestion-ventes-tarifs-seo/factures/" },
-  { cle: "seo", nom: "Stats SEO", href: "/gestion-ventes-tarifs-seo/seo/" },
+  // Statistiques SEO et visibilité IA : dans le tableau de bord Clickzou, base commune
+  // de tous les clients (règle de JC du 05/10/2026) ; l'ancien onglet « Stats SEO »
+  // faisait doublon. Ce lien ramène à l'espace client.
+  { cle: "statistiques", nom: "Statistiques et IA ↗", href: "https://clickzou.fr/espace-client/dashboard/" },
 ];
 
 function Deconnexion({ pleineLargeur = false }: { pleineLargeur?: boolean }) {
