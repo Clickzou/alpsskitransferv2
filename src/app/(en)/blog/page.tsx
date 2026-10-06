@@ -1,5 +1,5 @@
 import ListeBlog from "@/components/ListeBlog";
-import { articlesPublies } from "@/lib/articles";
+import { articlesEnLigne } from "@/lib/articles";
 import { alternativesIndexBlog } from "@/lib/intl/liens";
 import { pageMetadata } from "@/lib/seo";
 
@@ -18,7 +18,7 @@ export async function generateMetadata() {
       "Airport transfer guides, resort access and winter driving conditions in the French, Swiss, Austrian and Italian Alps.",
     path: "/blog/",
     lang: "en",
-    alternatives: alternativesIndexBlog(articlesPublies(), "en"),
+    alternatives: alternativesIndexBlog(articlesEnLigne(), "en"),
   });
 }
 

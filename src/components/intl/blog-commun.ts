@@ -1,4 +1,4 @@
-import { articlesPublies } from "@/lib/articles";
+import { articlesEnLigne } from "@/lib/articles";
 import type { Article } from "@/lib/articles/types";
 import { LOCALES, type LangueSecondaire } from "@/lib/i18n";
 
@@ -14,7 +14,7 @@ import { LOCALES, type LangueSecondaire } from "@/lib/i18n";
 
 /** Les articles réellement traduits dans cette langue. */
 export function articlesDeLaLangue(lang: LangueSecondaire): Article[] {
-  return articlesPublies().filter((a) => a.traductions?.[lang]);
+  return articlesEnLigne().filter((a) => a.traductions?.[lang]);
 }
 
 /** La date, dans la forme longue de la langue. */

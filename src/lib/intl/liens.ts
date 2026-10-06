@@ -120,7 +120,8 @@ export function alternativesPageEn(pathEn: string): Alternative[] {
 /* ------------------------------------------------------------------ blog */
 
 export function cheminArticle(article: Article, lang: Lang): string | undefined {
-  if (lang === "en") return `/blog/${article.slug}/`;
+  // Un article sans version anglaise n'a pas de page anglaise : pas d'hreflang vers elle.
+  if (lang === "en") return article.sansVersionAnglaise ? undefined : `/blog/${article.slug}/`;
   const traduction = article.traductions?.[lang];
   return traduction ? `/${lang}/blog/${traduction.slug}/` : undefined;
 }

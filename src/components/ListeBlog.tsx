@@ -8,7 +8,7 @@ import {
   HeroInterieur,
   Section,
 } from "@/components/gabarit/Sections";
-import { articlesPublies, nombrePagesBlog, PAR_PAGE_BLOG as PAR_PAGE } from "@/lib/articles";
+import { articlesEnLigne, articlesPublies, nombrePagesBlog, PAR_PAGE_BLOG as PAR_PAGE } from "@/lib/articles";
 
 export { nombrePagesBlog };
 import Pagination from "@/components/Pagination";
@@ -64,7 +64,7 @@ export default function ListeBlog({ page }: { page: number }) {
 
   return (
     <>
-      <Header lang="en" alternatives={alternativesIndexBlog(articlesPublies(), "en")} />
+      <Header lang="en" alternatives={alternativesIndexBlog(articlesEnLigne(), "en")} />
       <main id="contenu">
         <HeroInterieur image={{ nom: "route-alpine", alt: "Mountain road to an Alpine resort" }}>
           <h1 className="max-w-3xl text-balance font-display text-titre-page">

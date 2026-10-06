@@ -1,4 +1,4 @@
-import { articlesPublies } from "@/lib/articles";
+import { articlesEnLigne } from "@/lib/articles";
 import { SEGMENT_AEROPORTS, SEGMENT_STATIONS, type Lang, type LangueSecondaire } from "@/lib/i18n";
 import { HUBS_PAYS } from "@/lib/pays-intl";
 import { PAYS } from "@/lib/pays";
@@ -96,7 +96,7 @@ const NAVIGATION_COMPLETE: Record<Lang, LienNav[]> = {
  */
 export function navigation(lang: Lang): LienNav[] {
   const aUnBlog =
-    lang === "en" || articlesPublies().some((a) => a.traductions?.[lang]);
+    lang === "en" || articlesEnLigne().some((a) => a.traductions?.[lang]);
   return NAVIGATION_COMPLETE[lang].filter((item) => aUnBlog || item.texte !== "Blog");
 }
 

@@ -8,7 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import { AppelAction, CarteLien, EnTeteSection, HeroInterieur, Section } from "@/components/gabarit/Sections";
 import Faq from "@/components/Faq";
 import { airportParSlug } from "@/lib/airports";
-import { articlesLies, articlesVoisins } from "@/lib/articles";
+import { articlesLies, articlesPublies, articlesVoisins } from "@/lib/articles";
 import type { Article } from "@/lib/articles/types";
 import { alternativesArticle, cheminTrajet } from "@/lib/intl/liens";
 import { transferParSlugs } from "@/lib/transfers";
@@ -60,7 +60,14 @@ export default function VueArticle({ article, apercu = false }: { article: Artic
     const chemin = cheminTrajet(station, airport, "en");
     return chemin ? [{ chemin, titre: `${aeroport.name} to ${station.name}` }] : [];
   });
-  const lies = articlesLies(article);
+  // Les lectures choisies (`lectures`) d'abord, puis les articles liés calculés.
+  const choisis = (article.lectures ?? [])
+    .map((slug) => articlesPublies().find((x) => x.slug === slug))
+    .filter((x): x is Article => Boolean(x) && x!.slug !== article.slug);
+  const lies = [
+    ...choisis,
+    ...articlesLies(article, 3).filter((x) => !choisis.some((c) => c.slug === x.slug)),
+  ].slice(0, 3);
   const voisins = articlesVoisins(article.slug);
 
   return (

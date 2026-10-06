@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/seo";
 import { CHEMINS_NOINDEX } from "@/data/redirections";
 import { AIRPORTS } from "@/lib/airports";
-import { articlesPublies, nombrePagesBlog } from "@/lib/articles";
+import { articlesEnLigne, articlesPublies, nombrePagesBlog } from "@/lib/articles";
 import { PAGES } from "@/lib/pages";
 import { pagesDeLaLangue } from "@/lib/pages/intl";
 import { PAYS } from "@/lib/pays";
@@ -114,7 +114,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   */
   const traduites = LANGS_SECONDAIRES.flatMap((lang) => {
     const stationsTraduites = resortsTraduits(lang);
-    const articlesTraduits = articlesPublies().filter((a) => a.traductions?.[lang]);
+    // `articlesEnLigne` : un article sans version anglaise a bien sa page traduite.
+    const articlesTraduits = articlesEnLigne().filter((a) => a.traductions?.[lang]);
     const pagesTraduites = pagesDeLaLangue(lang);
 
     // Une langue sans aucune page n'a pas d'accueil à annoncer.

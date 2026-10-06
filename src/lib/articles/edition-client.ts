@@ -15,10 +15,15 @@
  * ancres de sommaire. Les liens `[ancre](/url/)` éventuels sont contrôlés côté
  * Clickzou : un texte qui en perd ou en change un est refusé avant tout commit.
  *
+ * Article sans version anglaise (`sansVersionAnglaise`) : ce sont les textes de
+ * sa traduction qui sont modifiables, sous `traductions.<langue>.` — mêmes
+ * champs, mêmes verrous. Les traductions d'un article anglais, elles, restent
+ * verrouillées.
+ *
  * L'import du JSON est en chemin RELATIF : ce fichier est aussi chargé hors
  * Next (tests), où l'alias `@/` n'est pas garanti.
  */
-import type { Article } from "./types";
+import type { Article, TraductionArticle } from "./types";
 import corrections from "./corrections-client.json";
 
 export type ChampEditable = {
@@ -43,8 +48,21 @@ const EDITABLES = [
   /^faq\.\d+\.reponse$/,
 ];
 
+const PREFIXE_TRADUCTION = /^traductions\.(fr|de|it)\./;
+
 export function estEditable(chemin: string): boolean {
-  return EDITABLES.some((re) => re.test(chemin));
+  const relatif = chemin.replace(PREFIXE_TRADUCTION, "");
+  return EDITABLES.some((re) => re.test(relatif));
+}
+
+/**
+ * Le texte modifiable d'un article et le préfixe de ses chemins : l'article
+ * lui-même, ou sa traduction s'il n'a pas de version anglaise.
+ */
+function source(a: Article): { prefixe: string; texte: Article | TraductionArticle } | null {
+  if (!a.sansVersionAnglaise) return { prefixe: "", texte: a };
+  const langue = (["fr", "de", "it"] as const).find((l) => a.traductions?.[l]);
+  return langue ? { prefixe: `traductions.${langue}.`, texte: a.traductions![langue]! } : null;
 }
 
 /**
@@ -53,19 +71,26 @@ export function estEditable(chemin: string): boolean {
  * (verrouillé) que pour un paragraphe (modifiable).
  */
 function estEditableDans(a: Article, chemin: string): boolean {
-  if (!estEditable(chemin)) return false;
-  const m = /^contenu\.(\d+)\./.exec(chemin);
+  const s = source(a);
+  if (!s || !chemin.startsWith(s.prefixe)) return false;
+  const relatif = chemin.slice(s.prefixe.length);
+  // Sur un article anglais, un chemin de traduction est toujours verrouillé.
+  if (PREFIXE_TRADUCTION.test(relatif) || !estEditable(relatif)) return false;
+  const m = /^contenu\.(\d+)\./.exec(relatif);
   if (!m) return true;
-  const bloc = a.contenu[Number(m[1])];
+  const bloc = s.texte.contenu[Number(m[1])];
   if (!bloc) return false;
-  if (bloc.type === "liste") return chemin.includes(".items.");
+  if (bloc.type === "liste") return relatif.includes(".items.");
   return bloc.type === "paragraphe" || bloc.type === "titre3";
 }
 
-export function champsEditables(a: Article): ChampEditable[] {
+export function champsEditables(article: Article): ChampEditable[] {
+  const s = source(article);
+  if (!s) return [];
+  const a = s.texte;
   const champs: ChampEditable[] = [];
   const ajouter = (chemin: string, section: string, libelle: string, texte: unknown) => {
-    if (typeof texte === "string" && texte.trim()) champs.push({ chemin, section, libelle, texte });
+    if (typeof texte === "string" && texte.trim()) champs.push({ chemin: s.prefixe + chemin, section, libelle, texte });
   };
   ajouter("chapo", "Introduction", "Chapô", a.chapo);
   (a.aRetenir ?? []).forEach((p, i) => ajouter(`aRetenir.${i}`, "À retenir (Key facts)", `Point ${i + 1}`, p));
@@ -87,7 +112,7 @@ export function champsEditables(a: Article): ChampEditable[] {
     ajouter(`faq.${fi}.question`, "Questions fréquentes", `Question ${fi + 1}`, f.question);
     ajouter(`faq.${fi}.reponse`, "Questions fréquentes", `Réponse ${fi + 1}`, f.reponse);
   });
-  return champs.filter((c) => estEditableDans(a, c.chemin));
+  return champs.filter((c) => estEditableDans(article, c.chemin));
 }
 
 /** Pose un texte à son adresse, seulement si un texte s'y trouve déjà (pas de création de structure). */

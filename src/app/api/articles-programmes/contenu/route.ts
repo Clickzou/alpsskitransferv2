@@ -25,6 +25,7 @@ export async function GET(requete: Request) {
     {
       ok: true,
       slug: article.slug,
+      // Sans version anglaise, `titre` reprend déjà celui de la traduction.
       titre: article.titre,
       datePublication: article.datePublication.slice(0, 10),
       statut: dateAtteinte(article) ? "publie" : "programme",

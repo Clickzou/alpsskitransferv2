@@ -5,9 +5,10 @@ import { ARTICLES, dateAtteinte } from "@/lib/articles";
 import type { Article } from "@/lib/articles/types";
 import { cheminApercu } from "@/lib/articles/apercu";
 import { ENTETES_TABLEAU_DE_BORD, autoriseTableauDeBord } from "@/lib/articles/tableau-de-bord";
-import { cheminTrajet } from "@/lib/intl/liens";
+import { cheminArticle, cheminTrajet } from "@/lib/intl/liens";
+import { LANGS_SECONDAIRES } from "@/lib/i18n";
 import { SLUG_PAYS, resortParSlug } from "@/lib/resorts";
-import { transferParSlugs } from "@/lib/transfers";
+import { SEGMENTS_AEROPORT, transferParSlugs } from "@/lib/transfers";
 
 /**
  * GET /api/articles-programmes/ — la liste des articles pour le tableau de bord
@@ -32,6 +33,19 @@ function brut(texte: string): string {
  * comme chez Un Seul Souffle.
  */
 function pilier(a: Article): { href: string; ancre: string } {
+  // Article sans version anglaise : le premier trajet cité qui a une page dans sa langue.
+  const langue = langueDe(a);
+  if (langue) {
+    for (const { airport, resort } of a.traductions![langue]!.trajetsLies ?? []) {
+      const station = resortParSlug(resort);
+      const href = station && transferParSlugs(airport, resort) ? cheminTrajet(station, airport, langue) : undefined;
+      if (station && href) {
+        const nom = station.traductions?.[langue]?.nom ?? station.name;
+        return { href, ancre: `transfert ${SEGMENTS_AEROPORT[langue][airport]?.nom ?? airport} – ${nom}` };
+      }
+    }
+    return { href: `/${langue}/blog/`, ancre: "blog" };
+  }
   for (const { airport, resort } of a.trajetsLies ?? []) {
     const station = resortParSlug(resort);
     const aeroport = airportParSlug(airport);
@@ -44,6 +58,11 @@ function pilier(a: Article): { href: string; ancre: string } {
     if (station) return { href: `/${SLUG_PAYS[station.country]}/${station.slug}/`, ancre: `${station.name} ski transfers` };
   }
   return { href: "/blog/", ancre: "Alps ski transfer guides" };
+}
+
+/** La langue d'un article sans version anglaise (la première traduite) ; `undefined` sinon. */
+function langueDe(a: Article) {
+  return a.sansVersionAnglaise ? LANGS_SECONDAIRES.find((l) => a.traductions?.[l]) : undefined;
 }
 
 export async function GET(requete: Request) {
@@ -60,25 +79,29 @@ export async function GET(requete: Request) {
     .sort((a, b) => a.datePublication.localeCompare(b.datePublication))
     .map((a) => {
       const publie = dateAtteinte(a);
+      // Sans version anglaise : titre, adresse et textes viennent de la traduction.
+      const langue = langueDe(a);
+      const v = langue ? a.traductions![langue]! : a;
+      const chemin = cheminArticle(a, langue ?? "en") ?? `/blog/${a.slug}/`;
       const apercu = publie ? null : cheminApercu(a.slug);
       // Le WebP plutôt que l'AVIF du site : LinkedIn ne lit pas l'AVIF.
       const image = a.image?.src ?? (a.visuel ? `/images/${a.visuel.nom}.webp` : undefined);
       return {
         slug: a.slug,
-        titre: a.titre,
+        titre: v.titre,
         datePublication: a.datePublication.slice(0, 10),
         statut: publie ? "publie" : "programme",
-        url: `${SITE.url}/blog/${a.slug}/`,
-        urlActuelle: `${base}/blog/${a.slug}/`,
+        url: `${SITE.url}${chemin}`,
+        urlActuelle: `${base}${chemin}`,
         ...(image ? { image: `${base}${image}` } : {}),
         apercuUrl: apercu ? `${base}${apercu}` : null,
         auteur: a.auteur,
         // Le site n'a pas de mot-clé cible par article : le metaTitre en tient lieu.
-        motCle: brut(a.metaTitre || a.titre),
+        motCle: brut(v.metaTitre || v.titre),
         motsClesSecondaires: [] as string[],
-        metaDescription: a.metaDescription,
-        chapo: brut(a.chapo),
-        essentiel: { reponse: brut(a.chapo), points: (a.aRetenir ?? []).map(brut) },
+        metaDescription: v.metaDescription,
+        chapo: brut(v.chapo),
+        essentiel: { reponse: brut(v.chapo), points: (v.aRetenir ?? []).map(brut) },
         pilier: pilier(a),
       };
     });

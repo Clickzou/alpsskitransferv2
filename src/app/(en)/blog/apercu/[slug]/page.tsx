@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import VueArticle from "@/components/VueArticle";
+import ArticleIntl from "@/components/intl/ArticleIntl";
 import { ARTICLES, dateAtteinte } from "@/lib/articles";
 import { apercuValide } from "@/lib/articles/apercu";
+import { cheminArticle } from "@/lib/intl/liens";
+import { LANGS_SECONDAIRES } from "@/lib/i18n";
 
 /**
  * `/blog/apercu/{slug}/?sig=…` — aperçu d'un article programmé, pour la
@@ -45,8 +48,14 @@ export default async function ApercuArticle({
   const article = ARTICLES.find((a) => a.slug === slug && !a.brouillon);
   if (!article || !apercuValide(article.slug, typeof sig === "string" ? sig : undefined)) notFound();
 
-  // Déjà en ligne : l'aperçu n'a plus lieu d'être, on renvoie vers la vraie page.
-  if (dateAtteinte(article)) redirect(`/blog/${article.slug}/`);
+  // Un article sans version anglaise se relit dans sa première langue traduite.
+  const langue = article.sansVersionAnglaise
+    ? LANGS_SECONDAIRES.find((l) => article.traductions?.[l])
+    : undefined;
+  if (article.sansVersionAnglaise && !langue) notFound();
 
-  return <VueArticle article={article} apercu />;
+  // Déjà en ligne : l'aperçu n'a plus lieu d'être, on renvoie vers la vraie page.
+  if (dateAtteinte(article)) redirect(cheminArticle(article, langue ?? "en")!);
+
+  return langue ? <ArticleIntl lang={langue} article={article} apercu /> : <VueArticle article={article} apercu />;
 }

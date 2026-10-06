@@ -11,7 +11,7 @@ import {
   Section,
 } from "@/components/gabarit/Sections";
 import { articlesDeLaLangue, dateLongue, minutesLecture } from "./blog-commun";
-import { articlesPublies } from "@/lib/articles";
+import { articlesEnLigne } from "@/lib/articles";
 import type { LangueSecondaire } from "@/lib/i18n";
 import { ACCUEIL } from "@/lib/intl/accueil";
 import { alternativesIndexBlog } from "@/lib/intl/liens";
@@ -39,7 +39,7 @@ export default function IndexBlogIntl({ lang }: { lang: LangueSecondaire }) {
     <>
       <Header
         lang={lang}
-        alternatives={alternativesIndexBlog(articlesPublies(), lang)}
+        alternatives={alternativesIndexBlog(articlesEnLigne(), lang)}
       />
       <main id="contenu">
         <HeroInterieur image={ACCUEIL[lang].visuel}>

@@ -51,6 +51,24 @@ export interface Article {
   /** Les questions réellement posées, balisées `FAQPage`. Réponses courtes et autonomes. */
   faq?: { question: string; reponse: string }[];
   brouillon?: boolean;
+  /**
+   * Articles à proposer en premier dans « Related guides », par slug — avant
+   * ceux que `articlesLies` calcule. Pour un lien éditorial voulu (l'article
+   * général d'un sujet), que le calcul par lieux partagés ne garantit pas.
+   */
+  lectures?: string[];
+  /**
+   * L'article n'existe pas en anglais : seules ses traductions sont publiées
+   * (6 octobre 2026, article « Atterrir à Lyon » en français seul — une version
+   * anglaise aurait concurrencé les articles Three Valleys et Grenoble).
+   *
+   * Les champs anglais (`titre`, `metaTitre`, `chapo`…) reprennent alors ceux de
+   * la traduction et `contenu` reste vide : l'article est absent du blog
+   * anglais, du sitemap anglais, de llms.txt et des pages de station et de
+   * trajet anglaises, et aucune page ne déclare d'hreflang vers lui en anglais.
+   * Le slug du registre est celui de la traduction française.
+   */
+  sansVersionAnglaise?: boolean;
   /** Les traductions de l'article, par langue. Absente = pas de version. */
   traductions?: Partial<Record<LangueSecondaire, TraductionArticle>>;
 }
@@ -81,4 +99,16 @@ export interface TraductionArticle {
    * `stationsLiees` — ce qui convient quand le sujet est le même des deux côtés.
    */
   stationsLiees?: string[];
+  /**
+   * Les équivalents, dans cette langue, de `aRetenir`, `faq`, `trajetsLies` et
+   * `lectures` de l'article anglais.
+   * Facultatifs : les traductions existantes n'en ont pas, et leur rendu ne
+   * change pas. Un article écrit d'abord dans cette langue s'en sert.
+   */
+  aRetenir?: string[];
+  faq?: { question: string; reponse: string }[];
+  /** Les trajets servis, rendus seulement s'ils ont une page dans cette langue. */
+  trajetsLies?: { airport: string; resort: string }[];
+  /** Articles (slugs du registre) à proposer en lecture, s'ils existent dans cette langue. */
+  lectures?: string[];
 }

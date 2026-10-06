@@ -22,6 +22,8 @@ import { transferTrainOrRentalCarAlps } from "./transferTrainOrRentalCarAlps";
 import { turinAirportSkiResorts } from "./turinAirportSkiResorts";
 import { verbierCransMontanaTransfers } from "./verbierCransMontanaTransfers";
 import { zurichOrGenevaSwissResorts } from "./zurichOrGenevaSwissResorts";
+import { closestAirportTarentaise } from "./closestAirportTarentaise";
+import { atterrirLyonSaintExupery } from "./atterrirLyonSaintExupery";
 
 export type { Article } from "./types";
 
@@ -64,6 +66,10 @@ export const ARTICLES: Article[] = [
   howSkiTransferPricesWork,
   chamonixMorzineLesGetsFromGeneva,
   groupCorporateSkiTransfers,
+  // Octobre 2026, programmés (audit articles d'octobre) : Tarentaise en anglais
+  // le 13, Lyon en français seul le 27.
+  closestAirportTarentaise,
+  atterrirLyonSaintExupery,
   // Les corrections du client (relecture depuis l'espace client Clickzou) sont
   // appliquées ici, une fois : tout le site lit donc le texte relu.
 ].map(appliquerCorrections);
@@ -99,6 +105,15 @@ export function dateAtteinte(article: Article): boolean {
  * les articles : ne jamais lire `ARTICLES` directement dans une page.
  */
 export function articlesPublies() {
+  return articlesEnLigne().filter((a) => !a.sansVersionAnglaise);
+}
+
+/**
+ * Les articles en ligne dans au moins une langue : ceux de `articlesPublies`,
+ * plus les articles sans version anglaise (`sansVersionAnglaise`). C'est la
+ * liste que lisent les blogs traduits — jamais le blog anglais.
+ */
+export function articlesEnLigne() {
   return ARTICLES.filter((a) => !a.brouillon && dateAtteinte(a)).sort((a, b) =>
     b.datePublication.localeCompare(a.datePublication),
   );

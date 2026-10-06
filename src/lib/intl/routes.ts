@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { articlesPublies } from "@/lib/articles";
+import { articlesEnLigne } from "@/lib/articles";
 import type { LangueSecondaire } from "@/lib/i18n";
 import { ACCUEIL } from "./accueil";
 import {
@@ -192,7 +192,7 @@ export async function metadataTrajet(
 /* ------------------------------------------------------------------ blog */
 
 export function articlesDeLaLangue(lang: LangueSecondaire) {
-  return articlesPublies().filter((a) => a.traductions?.[lang]);
+  return articlesEnLigne().filter((a) => a.traductions?.[lang]);
 }
 
 export function paramsArticles(lang: LangueSecondaire) {
@@ -210,7 +210,7 @@ export function metadataIndexBlog(lang: LangueSecondaire): Metadata {
     description: t.blogChapo,
     path: `/${lang}/blog/`,
     lang,
-    alternatives: alternativesIndexBlog(articlesPublies(), lang),
+    alternatives: alternativesIndexBlog(articlesEnLigne(), lang),
   });
 }
 
