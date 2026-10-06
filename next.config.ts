@@ -37,6 +37,18 @@ const nextConfig: NextConfig = {
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
         ],
       },
+      /*
+       * Aperçu signé des articles programmés : jamais indexé, et la signature
+       * ne part pas dans l'en-tête Referer des liens sortants. Placée après la
+       * règle générale, cette entrée l'emporte sur son Referrer-Policy.
+       */
+      {
+        source: "/blog/apercu/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      },
     ];
   },
 };

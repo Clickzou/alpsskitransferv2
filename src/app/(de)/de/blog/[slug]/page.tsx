@@ -3,8 +3,16 @@ import { notFound } from "next/navigation";
 import ArticleIntl from "@/components/intl/ArticleIntl";
 import { articleParSlugTraduit, metadataArticle, paramsArticles } from "@/lib/intl/routes";
 
-/** Seuls les articles réellement traduits ont une page. */
-export const dynamicParams = false;
+/**
+ * Seuls les articles réellement traduits — et publiés — ont une page.
+ *
+ * Publication programmée (6 octobre 2026) : un article qui paraît après le
+ * build est rendu à la première visite (`dynamicParams`) ; un slug inconnu ou
+ * pas encore publié répond 404 (`articleParSlugTraduit` ne lit que les articles
+ * publiés). Régénération au plus toutes les heures.
+ */
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return paramsArticles("de");

@@ -10,7 +10,11 @@ import { pageMetadata } from "@/lib/seo";
  * deux fois le même contenu. Chaque page porte son numéro dans le title et la
  * description — des pages de liste identiques seraient des doublons.
  */
-export const dynamicParams = false;
+// Publication programmée : une page qui apparaît après le build (le blog
+// grossit d'un article) est rendue à la première visite ; un numéro hors
+// limites répond 404 (contrôle dans la page). Régénération toutes les heures.
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return Array.from({ length: Math.max(0, nombrePagesBlog() - 1) }, (_, i) => ({ page: String(i + 2) }));

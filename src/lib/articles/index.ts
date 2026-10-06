@@ -1,4 +1,5 @@
 import type { Article } from "./types";
+import { appliquerCorrections } from "./edition-client";
 import { quelAeroportAlpes } from "./quel-aeroport-alpes";
 import { reserverTransfertSki } from "./reserver-transfert-ski";
 import { stationsSansVoitures } from "./stations-sans-voitures";
@@ -63,11 +64,53 @@ export const ARTICLES: Article[] = [
   howSkiTransferPricesWork,
   chamonixMorzineLesGetsFromGeneva,
   groupCorporateSkiTransfers,
-];
+  // Les corrections du client (relecture depuis l'espace client Clickzou) sont
+  // appliquées ici, une fois : tout le site lit donc le texte relu.
+].map(appliquerCorrections);
 
+/**
+ * La date du jour à Paris, en AAAA-MM-JJ.
+ *
+ * Pas `new Date().toISOString()`, qui donne la date UTC : entre minuit et 1 h
+ * (2 h en été) à Paris, un article daté du jour paraîtrait avec une heure de
+ * retard. Le format `en-CA` est précisément AAAA-MM-JJ.
+ */
+export function aujourdhuiParis(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Paris",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+/** Vrai si la date de publication de l'article (AAAA-MM-JJ) est atteinte à Paris. */
+export function dateAtteinte(article: Article): boolean {
+  return article.datePublication.slice(0, 10) <= aujourdhuiParis();
+}
+
+/**
+ * Les articles en ligne : ni brouillon, ni programmé. Du plus récent au plus ancien.
+ *
+ * Publication programmée (demande de JC, 6 octobre 2026) : un article daté dans
+ * le futur reste invisible — blog, sitemap, llms.txt, maillage — jusqu'à sa
+ * date, puis paraît sans redéploiement : les pages du blog se régénèrent toutes
+ * les heures (`revalidate = 3600`). C'est la SEULE porte d'entrée publique vers
+ * les articles : ne jamais lire `ARTICLES` directement dans une page.
+ */
 export function articlesPublies() {
-  return ARTICLES.filter((a) => !a.brouillon).sort((a, b) =>
+  return ARTICLES.filter((a) => !a.brouillon && dateAtteinte(a)).sort((a, b) =>
     b.datePublication.localeCompare(a.datePublication),
+  );
+}
+
+/**
+ * Les articles programmés : prêts (non brouillons) mais datés dans le futur.
+ * Le prochain à paraître en premier. Lisibles seulement par l'aperçu signé.
+ */
+export function articlesProgrammes() {
+  return ARTICLES.filter((a) => !a.brouillon && !dateAtteinte(a)).sort((a, b) =>
+    a.datePublication.localeCompare(b.datePublication),
   );
 }
 

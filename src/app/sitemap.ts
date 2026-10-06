@@ -26,6 +26,10 @@ import { resortParSlug } from "@/lib/resorts";
  * inexistante. Le sitemap du site actuel liste des pages en 404 et des pages du
  * tunnel de commande — c'est ce qu'on évite ici en dérivant tout de la donnée.
  */
+// Publication programmée : le sitemap se régénère au plus toutes les heures,
+// pour qu'un article y entre à sa date de parution sans redéploiement.
+export const revalidate = 3600;
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const modifie = new Date();
 
