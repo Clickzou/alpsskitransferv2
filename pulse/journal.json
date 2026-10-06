@@ -1,0 +1,101 @@
+[
+  {
+    "id": "2026-10-hreflang-trajets-en",
+    "titre": "Déclarer les versions traduites sur les pages de trajet anglaises",
+    "probleme": "Audit du 06/10/2026 : les 40 pages de trajet anglaises qui ont une version française, allemande ou italienne ne déclarent pas cette version, alors que la page traduite déclare bien la version anglaise (exemple : Genève – Tignes). Google ignore un lien de langue déclaré dans un seul sens. Relevé IA du 05/10/2026 : aucune citation sur les questions de trajet.",
+    "correction": "Ajouter aux pages de trajet anglaises la déclaration de leurs versions traduites (les mêmes que celles déjà calculées pour les pages traduites), pour que le lien soit déclaré dans les deux sens. Aucun texte ni prix modifié.",
+    "type": "technique",
+    "qui": "pulse",
+    "statut": "prevue",
+    "prevue_le": "2026-10-12",
+    "faite_le": null,
+    "verifiee_le": null,
+    "mesure": "citation",
+    "questions": [
+      "Quelle compagnie pour un transfert privé de l'aéroport de Genève à Val Thorens ?",
+      "Transfert de Lyon Saint-Exupéry à Courchevel : qui réserver ?",
+      "Navette privée pour 8 personnes de Genève à Tignes ou Val d'Isère",
+      "Transfert de l'aéroport de Lyon à l'Alpe d'Huez : quel prestataire ?"
+    ]
+  },
+  {
+    "id": "2026-10-sitemap-dates",
+    "titre": "Retirer les fausses dates de mise à jour du plan du site",
+    "probleme": "Audit du 06/10/2026 : dans le plan du site, 333 pages sur 362 portent comme date de modification l'heure de la dernière reconstruction du plan, qui change toutes les heures. Google cesse alors de tenir compte de ces dates, y compris pour les articles qui en ont une vraie.",
+    "correction": "Ne plus indiquer de date de modification pour les pages qui n'en ont pas de réelle ; garder la date de publication ou de mise à jour des articles. Aucune page ajoutée ni retirée du plan.",
+    "type": "technique",
+    "qui": "pulse",
+    "statut": "prevue",
+    "prevue_le": "2026-10-12",
+    "faite_le": null,
+    "verifiee_le": null,
+    "mesure": "citation",
+    "questions": []
+  },
+  {
+    "id": "2026-10-affirmations-ancien-site",
+    "titre": "Confirmer ou retirer les affirmations reprises de l'ancien site",
+    "probleme": "Audit du 06/10/2026 : des phrases reprises de l'ancien site et jamais vérifiées figurent sur de nombreuses pages : « customer service available 24/7 » et « English-speaking driver » (239 pages), « Regular sanitisation » et « Contactless ride » (209 pages), « the lowest price guaranteed » et « regular departures » sur l'accueil, cette dernière formule évoquant une navette alors que le site ne vend que du transfert privé. Les IA reprennent ce type de phrases telles quelles.",
+    "correction": "Faire confirmer chaque affirmation par l'exploitant. Celles qu'il ne confirme pas seront retirées ou reformulées (texte validé par le client, donc pas de correction automatique).",
+    "type": "contenu",
+    "qui": "vous",
+    "statut": "prevue",
+    "prevue_le": "2026-10-14",
+    "faite_le": null,
+    "verifiee_le": null,
+    "mesure": "description",
+    "questions": []
+  },
+  {
+    "id": "2026-10-faq-article-reserver",
+    "titre": "Ajouter « À retenir » et des questions-réponses à l'article « Réserver un transfert »",
+    "probleme": "Relevé IA du 05/10/2026 : aucune citation sur les questions prix par personne ou par véhicule, vol en retard, skis et sièges enfants, alors que l'article français « Réserver un transfert : ce qu'il faut vérifier avant de payer » y répond dans son texte. Audit du 06/10/2026 : contrairement aux 17 articles anglais récents, il n'a ni encadré « À retenir » ni questions-réponses balisées.",
+    "correction": "Ajouter à la version française de l'article un encadré « À retenir » et quatre questions-réponses courtes reprenant ses propres réponses (prix par véhicule, péages compris, suivi du vol, housses à skis et sièges enfants), sans aucun fait nouveau. Le texte existant n'est pas modifié.",
+    "type": "contenu",
+    "qui": "pulse",
+    "statut": "prevue",
+    "prevue_le": "2026-10-19",
+    "faite_le": null,
+    "verifiee_le": null,
+    "mesure": "citation",
+    "questions": [
+      "Que faut-il vérifier avant de réserver un transfert vers une station de ski ?",
+      "Transfert aéroport-station : vaut-il mieux un prix par personne ou par véhicule ?",
+      "Que se passe-t-il pour mon transfert si mon vol a du retard ?",
+      "Les skis et les sièges enfants sont-ils en supplément dans un transfert vers une station ?"
+    ]
+  },
+  {
+    "id": "2026-10-faq-articles-cites",
+    "titre": "Ajouter des questions-réponses aux deux articles français déjà cités",
+    "probleme": "Relevé IA du 05/10/2026 : « Quel aéroport choisir pour les Alpes françaises ? » et « Où la voiture s'arrête vraiment, station par station » sont cités par Gemini, Google AI Mode et les aperçus IA de Google, mais par aucun des quatre autres moteurs. Audit du 06/10/2026 : aucun des deux n'a de questions-réponses balisées.",
+    "correction": "Ajouter à la version française de ces deux articles trois ou quatre questions-réponses courtes tirées de leur propre contenu, sans fait nouveau. Le texte existant n'est pas modifié.",
+    "type": "contenu",
+    "qui": "pulse",
+    "statut": "prevue",
+    "prevue_le": "2026-10-26",
+    "faite_le": null,
+    "verifiee_le": null,
+    "mesure": "citation",
+    "questions": [
+      "Quel aéroport choisir pour aller skier dans les Alpes françaises ?",
+      "Dans quelles stations de ski ne peut-on pas arriver en voiture ?"
+    ]
+  },
+  {
+    "id": "2026-10-page-agences-conciergeries",
+    "titre": "Compléter la page « Agences, conciergeries et entreprises »",
+    "probleme": "Relevé IA du 05/10/2026 : aucune citation sur la question des transferts pour les clients d'une conciergerie dans les Trois Vallées. Audit du 06/10/2026 : la page française qui y répond ne compte qu'environ 300 mots, sans exemple de fonctionnement concret.",
+    "correction": "L'exploitant précise comment il travaille avec les agences et conciergeries (zones, réservation des samedis, facturation groupée, contact) ; Clickzou rédige ensuite le complément de la page à partir de ses réponses. Page qui vend : pas de rédaction automatique.",
+    "type": "contenu",
+    "qui": "vous",
+    "statut": "prevue",
+    "prevue_le": "2026-11-02",
+    "faite_le": null,
+    "verifiee_le": null,
+    "mesure": "citation",
+    "questions": [
+      "Quel transporteur pour les transferts des clients d'une conciergerie dans les Trois Vallées ?"
+    ]
+  }
+]
