@@ -55,7 +55,7 @@ export async function GET() {
 
   const texte = `# ${SITE.nom}
 
-> Private airport transfers to the ski resorts of the French, Swiss and Italian Alps, operated by NM Transports 73 (sole trader, Chambéry, France). Fixed prices per vehicle, not per person, booked and paid online.
+> Private airport transfers to the ski resorts of the French, Swiss and Italian Alps, operated by NM Transports 73 (sole trader, ${ENTREPRISE.adresse.ville}, Savoie, France). Fixed prices per vehicle, not per person, booked and paid online.
 
 ## Key facts
 

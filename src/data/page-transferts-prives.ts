@@ -186,14 +186,8 @@ export const PAGE_TRANSFERTS_PRIVES = {
       {
         airport: "zurich-airport",
         texte:
-          "Zurich serves the Swiss resorts and the Arlberg, with a motorway network that keeps the drive times short for the distance.",
-        resorts: ["verbier", "zermatt", "davos", "st-moritz", "st-anton-am-arlberg", "ischgl"],
-      },
-      {
-        airport: "salzburg-airport",
-        texte:
-          "Salzburg is the quickest way into the Austrian Alps: several of the best resorts are within ninety minutes.",
-        resorts: ["zell-am-see", "kitzbuhel", "bad-gastein", "solden", "obergurgl", "ischgl"],
+          "Zurich serves the Swiss resorts, with a motorway network that keeps the drive times short for the distance.",
+        resorts: ["engelberg", "laax", "davos", "st-moritz", "verbier", "zermatt"],
       },
       {
         airport: "paris-charles-de-gaulle-airport",

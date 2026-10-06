@@ -26,7 +26,7 @@ import type { PageFonctionnelle } from "./types";
 export const airportSkiTransfers: PageFonctionnelle = {
   slug: "airport-ski-transfers",
   metaTitre: "Airport Ski Transfers | Every Airport We Drive From",
-  metaDescription: "All the airports we run ski transfers from, across France, Switzerland, Italy and Austria, with the resorts each one serves and the drive times.",
+  metaDescription: "All the airports we run ski transfers from, with the resorts each one serves in the French, Swiss and Italian Alps and the drive times.",
   h1: "Airport Ski Transfers — Every Airport We Drive From",
   chapo: "Landing at Geneva, Lyon, Zurich or Turin? Find your airport below to see the resorts it serves, the road distance to each and the drive time, then book a private door-to-door transfer.",
 
@@ -36,7 +36,7 @@ export const airportSkiTransfers: PageFonctionnelle = {
     {
       question: "Which airport should I fly into for the Alps?",
       reponse:
-        "Geneva serves the widest range of French and Swiss resorts and has the most flights, which usually makes it the cheapest to reach. Chambéry is closest to the Three Valleys and to the Tarentaise. Grenoble suits the Isère resorts, Turin the Italian ones, Zurich the Swiss. Innsbruck and Salzburg are worth a look for the Dolomites. Compare the drive time as well as the airfare: two hours saved on the road is worth a lot on a Saturday in February.",
+        "Geneva serves the widest range of French and Swiss resorts and has the most flights, which usually makes it the cheapest to reach. Chambéry is closest to the Three Valleys and to the Tarentaise. Grenoble suits the Isère resorts, Turin the Italian ones, Zurich the Swiss. Innsbruck is worth a look for the Dolomites. Compare the drive time as well as the airfare: two hours saved on the road is worth a lot on a Saturday in February.",
     },
     {
       question: "Do you cover every airport in this list?",

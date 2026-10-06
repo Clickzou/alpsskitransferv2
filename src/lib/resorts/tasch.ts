@@ -34,7 +34,6 @@ export const tasch: Resort = {
     { type: "paragraphe", texte: "We also offer custom transfers from Bern, Basel, and Turin, making travel to Täsch as smooth and efficient as possible." },
     { type: "titre2", texte: "Täsch to Zermatt – The Final Stretch to the Slopes" },
     { type: "paragraphe", texte: "Once you arrive in Täsch, the Matterhorn Gotthard Bahn takes you on the last 12-minute journey to Zermatt. Trains run every 20 minutes, ensuring minimal waiting times. If you prefer, we can also arrange a private taxi from Täsch to your hotel in Zermatt for a fully seamless experience." },
-    { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions Täsch Ski Transfer" },
     { type: "liste", items: ["Enter your details – Select your airport and pick-up location.", "Choose your vehicle – Standard, Business or Premium, according to your group.", "Confirm your booking – Secure your spot with instant confirmation.", "Meet your driver – We’ll be waiting for you at your arrival point.", "Enjoy your trip – Relax in comfort as we take you to Täsch."] },
     { type: "paragraphe", texte: "Book your Täsch ski transfer today to ensure the best availability and pricing for your ski holiday." },
@@ -47,7 +46,7 @@ export const tasch: Resort = {
   ],
 
   faq: [
-    { question: "Why Choose Our Täsch Ski Transfers?", reponse: "We offer premium Ischgl ski transfers with a focus on comfort, reliability, and efficiency." },
+    { question: "Why Choose Our Täsch Ski Transfers?", reponse: "We offer premium Täsch ski transfers with a focus on comfort, reliability, and efficiency." },
     { question: "Why Choose Our Täsch Ski Transfers?", reponse: "Whichever vehicle category you choose, our Täsch ski transfers guarantee a stress-free, reliable journey to the Alps." },
     { question: "How to Book Your Täsch Ski Transfer?", reponse: "Booking your Täsch ski transfer is quick and simple:" },
     { question: "Why Visit Zermatt?", reponse: "Zermatt is one of the most prestigious ski resorts in the world, renowned for:" },

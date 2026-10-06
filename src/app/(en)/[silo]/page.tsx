@@ -48,8 +48,14 @@ export async function generateMetadata({
   if (pays) {
     const stations = RESORTS_MIGRES.filter((r) => r.country === pays.code);
     return pageMetadata({
-      title: `${pays.nom} Ski Transfers — Airport to Resort`,
-      description: `Private airport transfers to ${stations.length} ${pays.adjectif} ski resorts. Fixed price per vehicle, flight tracking, winter-equipped vehicles.`,
+      // Un pays sans station desservie (Allemagne, Autriche) ne s'annonce pas
+      // comme une destination : « 0 Austrian ski resorts » en description.
+      title: pays.porteAeroports
+        ? `Ski Transfers from Airports in ${pays.nom}`
+        : `${pays.nom} Ski Transfers — Airport to Resort`,
+      description: pays.porteAeroports
+        ? `We do not serve ${pays.adjectif} resorts: ${pays.nom}'s airports are gateways to the French, Swiss and Italian Alps. Fixed price per vehicle, flight tracking.`
+        : `Private airport transfers to ${stations.length} ${pays.adjectif} ski resorts. Fixed price per vehicle, flight tracking, winter-equipped vehicles.`,
       path: `/${silo}/`,
       lang: "en",
       alternatives: alternativesHubPaysEn(silo),

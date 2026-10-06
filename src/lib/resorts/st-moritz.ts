@@ -28,7 +28,6 @@ export const stMoritz: Resort = {
     { type: "titre3", texte: "Our vehicles" },
     { type: "liste", items: ["Punctual, door-to-door service from Zurich, Milan, Geneva, Innsbruck, and other key airports.", "Three vehicle categories to fit your group and your budget.", "Experienced, English-speaking drivers familiar with winter road conditions.", "Luxury, spacious vehicles with room for ski gear, luggage, and additional passenger requirements.", "24/7 customer support to assist you at every stage of your journey."] },
     { type: "paragraphe", texte: "Avoid the inconvenience of public transport or the stress of navigating Alpine roads in winter. Book your St. Moritz ski transfer today and arrive at your resort in style, comfort, and safety." },
-    { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions St. Moritz Ski Transfer" },
     { type: "liste", items: ["Exclusive vehicle just for you and your group.", "Door-to-door service, no waiting for other passengers.", "Flexible departure times tailored to your schedule.", "Luxury vehicles for a premium experience.", "Affordable pricing with the same high level of safety and reliability.", "Scheduled departures with other passengers heading to the same resort.", "Eco-friendly option by reducing vehicle emissions per traveler."] },
     { type: "paragraphe", texte: "Not sure which transfer suits your trip? Compare our options and book online to secure the best choice for your journey." },

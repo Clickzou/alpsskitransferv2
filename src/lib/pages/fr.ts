@@ -162,7 +162,7 @@ export const PAGES_FR: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Nos véhicules sont équipés pneus hiver et chaînes à bord. En Savoie et en Haute-Savoie, les équipements sont obligatoires du 1ᵉʳ novembre au 31 mars sur les communes concernées ; en Suisse, la règle est l’état de la route plutôt que la date ; en Autriche, l’obligation court du 1ᵉʳ novembre au 15 avril. Nos chauffeurs font ces montées toute la saison.",
+          "Nos véhicules sont équipés pneus hiver et chaînes à bord. En Savoie et en Haute-Savoie, les équipements sont obligatoires du 1ᵉʳ novembre au 31 mars sur les communes concernées ; en Suisse, la règle est l’état de la route plutôt que la date ; au départ de l’aéroport d’Innsbruck, la règle autrichienne court du 1ᵉʳ novembre au 15 avril. Nos chauffeurs font ces montées toute la saison.",
       },
       {
         type: "paragraphe",
@@ -233,7 +233,7 @@ export const PAGES_FR: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Nos véhicules portent pneus hiver et chaînes, obligatoires en Savoie et Haute-Savoie du 1ᵉʳ novembre au 31 mars, en Autriche du 1ᵉʳ novembre au 15 avril et en Italie sur les routes alpines de mi-novembre à mi-avril. Après de fortes chutes, une route d’accès peut fermer une heure ou deux pour déclenchement d’avalanches : votre chauffeur le sait avant vous.",
+          "Nos véhicules portent pneus hiver et chaînes, obligatoires en Savoie et Haute-Savoie du 1ᵉʳ novembre au 31 mars, en Italie sur les routes alpines de mi-novembre à mi-avril et, sur la route de l’aéroport d’Innsbruck, en Autriche du 1ᵉʳ novembre au 15 avril. Après de fortes chutes, une route d’accès peut fermer une heure ou deux pour déclenchement d’avalanches : votre chauffeur le sait avant vous.",
       },
     ],
     faq: [

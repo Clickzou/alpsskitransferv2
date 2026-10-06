@@ -1,7 +1,7 @@
 import { articlesEnLigne } from "@/lib/articles";
 import { SEGMENT_AEROPORTS, SEGMENT_STATIONS, type Lang, type LangueSecondaire } from "@/lib/i18n";
 import { HUBS_PAYS } from "@/lib/pays-intl";
-import { PAYS } from "@/lib/pays";
+import { paysDesservis } from "@/lib/pays";
 import { CHEMIN_TUNNEL } from "@/lib/reservation/config";
 import { lienReserver } from "./textes";
 
@@ -305,12 +305,11 @@ export function colonnesPied(lang: Lang): ColonnePied[] {
  * Depuis le 10 septembre 2026, le lien va vers le hub de la langue quand il
  * existe — et le signale quand il n'existe pas.
  *
- * L'Allemagne reste hors liste : nous n'y desservons aucune station, son hub
- * anglais n'est qu'une porte d'entrée d'aéroports.
+ * L'Allemagne et l'Autriche restent hors liste : nous n'y desservons aucune
+ * station, leur hub anglais n'est qu'une porte d'entrée d'aéroports.
  */
 export function liensPays(lang: Lang): LienNav[] {
-  return Object.entries(PAYS)
-    .filter(([, pays]) => pays.code !== "DE")
+  return paysDesservis()
     .map(([slug, pays]) => {
       if (lang === "en") return { texte: pays.nom, chemin: `/${slug}/` };
 

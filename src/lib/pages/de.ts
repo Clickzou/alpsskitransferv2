@@ -156,7 +156,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         type: "paragraphe",
         texte:
-          "Unsere Fahrzeuge fahren mit Winterreifen und führen Ketten mit. In Österreich gilt die situative Winterausrüstungspflicht vom 1. November bis 15. April, in der Schweiz entscheidet der Straßenzustand statt des Datums, in Frankreich gilt in den ausgewiesenen Gemeinden Savoyens und Hochsavoyens die Pflicht vom 1. November bis 31. März. Unsere Fahrer machen diese Anstiege die ganze Saison.",
+          "Unsere Fahrzeuge fahren mit Winterreifen und führen Ketten mit. In der Schweiz entscheidet der Straßenzustand statt des Datums, in Frankreich gilt in den ausgewiesenen Gemeinden Savoyens und Hochsavoyens die Pflicht vom 1. November bis 31. März, und auf der Brennerstrecke ab dem Flughafen Innsbruck die österreichische Pflicht vom 1. November bis 15. April. Unsere Fahrer machen diese Anstiege die ganze Saison.",
       },
       {
         type: "paragraphe",
@@ -268,7 +268,7 @@ export const PAGES_DE: PageIntl[] = [
       {
         question: "Sprechen die Fahrer Deutsch?",
         reponse:
-          "Auf den Strecken ab Innsbruck, Salzburg, Zürich und München ja. Für andere Strecken sagen Sie es uns bei der Buchung, wir teilen entsprechend ein.",
+          "Auf den Strecken ab Zürich, Innsbruck und München ja. Für andere Strecken sagen Sie es uns bei der Buchung, wir teilen entsprechend ein.",
       },
       {
         question: "Bekomme ich eine Rechnung?",

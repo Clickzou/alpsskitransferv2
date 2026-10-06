@@ -7,7 +7,8 @@
  *
  * **Tout est tranché depuis le 9 septembre 2026.** Le préalable juridique qui
  * bloquait ce dossier — quelle entité opère réellement les transferts — a sa
- * réponse : une entreprise individuelle immatriculée à Chambéry, dont l'activité
+ * réponse : une entreprise individuelle savoyarde (siège à Drumettaz-Clarafond
+ * depuis le 29 septembre 2026, auparavant à Chambéry), dont l'activité
  * déclarée est le transport de voyageurs par taxi et la location de voiture avec
  * chauffeur. C'est exactement ce que le site vend, et c'est ce qui rend légitime
  * le balisage `TaxiService` / `LocalBusiness` : il ne se contente plus d'être le
@@ -111,6 +112,10 @@ export const ENTREPRISE = {
     },
   },
 
-  /** Zones réellement desservies — sert `areaServed` du schéma TaxiService. */
-  zonesDesservies: ["France", "Switzerland", "Austria", "Italy"],
+  /**
+   * Zones réellement desservies — sert `areaServed` du schéma TaxiService.
+   * L'Autriche en est sortie le 10 septembre 2026 (aucune station desservie ;
+   * Innsbruck reste un aéroport de départ, ce qui n'en fait pas une zone).
+   */
+  zonesDesservies: ["France", "Switzerland", "Italy"],
 } as const;

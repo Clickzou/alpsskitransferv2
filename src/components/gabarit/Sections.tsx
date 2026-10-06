@@ -368,7 +368,7 @@ const REASSURANCES_TRADUITES: Record<LangueSecondaire, ReadonlyArray<{ titre: st
     {
       titre: "Winterausrüstung an Bord",
       texte:
-        "Winterreifen und Ketten die ganze Saison — in Österreich vom 1. November bis 15. April Pflicht, in der Schweiz je nach Straßenzustand.",
+        "Winterreifen und Ketten die ganze Saison — in der Schweiz je nach Straßenzustand, in Savoyen vom 1. November bis 31. März Pflicht.",
     },
     {
       titre: "Flug überwacht",

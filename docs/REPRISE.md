@@ -470,7 +470,8 @@ Deux corrections :
 2. **La fiche Google est en cours de mise à jour par le client** (annoncé le
    22 septembre 2026). JC préviendra dès que c'est fait. **À faire ce jour-là :**
    - vérifier que la fiche porte exactement les nom, adresse et téléphone de
-     `data/site.ts` — NM Transports 73, 317 rue de la Bionne, 73000 Chambéry,
+     `data/site.ts` — NM Transports 73, 189 Chemin du Cruet, 73240 Drumettaz-Clarafond
+     (siège depuis le 29 septembre 2026, ex-Chambéry),
      +33 7 69 78 91 89 ;
    - **brancher `sameAs`** dans `organisationSchema()` : l'URL de la fiche
      Google, et les profils sociaux s'il y en a. Le balisage n'en a aucun

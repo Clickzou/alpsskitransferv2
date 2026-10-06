@@ -281,7 +281,6 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
           "Central Switzerland: Engelberg, 1 h 50 — the shortest transfer to a major Swiss resort.",
           "The Grisons: Laax 2 h 20, Arosa 2 h 30, Davos and Klosters, St. Moritz beyond.",
           "The Bernese Oberland: Interlaken 2 h 20, Lauterbrunnen 2 h 30, Grindelwald and Wengen above.",
-          "The Austrian Arlberg: Lech and St. Anton, around 3 h 30.",
           "The Valais: Zermatt via Täsch, about 3 h 20.",
         ],
       },
@@ -324,11 +323,11 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
       {
         type: "liste",
         items: [
-          "The Arlberg: St. Anton about 1 h 30, Lech 2 h 15.",
-          "The Ötztal: Sölden and Obergurgl, one to one and a half hours.",
-          "The Zillertal: Mayrhofen, about an hour.",
-          "The Paznaun: Ischgl, about 1 h 30.",
-          "Serfaus-Fiss-Ladis, a little over an hour.",
+          "Selva Val Gardena and the Dolomiti Superski: 120 km, about 1 h 45 over the Brenner.",
+          "Val di Fiemme: 156 km, about 2 h 15.",
+          "The Grisons: Davos 175 km, about 2 h 30; St. Moritz 187 km, about 2 h 45.",
+          "Livigno: 180 km, about 2 h 45.",
+          "Cortina d’Ampezzo: 220 km, about 3 hours.",
         ],
       },
       { type: "titre2", texte: "A particular approach" },
@@ -351,9 +350,9 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
           "It happens at Innsbruck, where the approach is sensitive to wind. Tell us: we rearrange the transfer from the airport you actually land at rather than leaving you there.",
       },
       {
-        question: "How long to Sölden or Ischgl?",
+        question: "How long to Selva Val Gardena?",
         reponse:
-          "About an hour to Sölden and an hour and a half to Ischgl, without traffic and outside fresh snowfall.",
+          "About 1 h 45 for 120 km over the Brenner, without traffic and outside fresh snowfall.",
       },
       {
         question: "Are winter tyres compulsory?",
@@ -365,37 +364,30 @@ export const CONTENUS_AEROPORTS: Record<string, ContenuAeroport> = {
 
   "salzburg-airport": {
     chapo:
-      "Salzburg is a comfortable, well-connected airport, and since we stopped serving Austrian resorts its interest lies south: the eastern Dolomites are within reach, and the fare is frequently below Milan or Venice. Like Innsbruck, its winter schedule is dense on Saturdays — book the transfer as soon as you have the flight.",
+      "Salzburg is a comfortable, well-connected airport, but we do not serve Austrian resorts, and the resorts we do drive to are a long way from it: Selva Val Gardena is 292 km, about 3 h 40, and Cortina nearly five hours. If you have the choice, Innsbruck is almost two hours closer to the Dolomites. Like Innsbruck, its winter schedule is dense on Saturdays — book the transfer as soon as you have the flight.",
     contenu: [
-      { type: "titre2", texte: "What Salzburg serves best" },
+      { type: "titre2", texte: "Where we drive from Salzburg" },
       {
         type: "liste",
         items: [
-          "Kitzbühel and the Kitzbüheler Alpen: a little over an hour.",
-          "Zell am See and Kaprun: about 1 h 20.",
-          "The Gastein valley: Bad Gastein and Bad Hofgastein, about 2 hours.",
-          "Schladming and Styria, to the east.",
-          "The Ötztal and western Tyrol, further out, three to four hours.",
+          "Selva Val Gardena and the Dolomiti Superski: 292 km, about 3 h 40.",
+          "Val di Fiemme: 328 km, about 4 h 10.",
+          "Davos and the Grisons: 355 km, about 4 h 30.",
+          "Cortina d’Ampezzo: 392 km, nearly 5 hours.",
         ],
       },
-      { type: "titre2", texte: "The Austrian Saturday" },
+      { type: "titre2", texte: "Saturday departures" },
       {
         type: "paragraphe",
         texte:
           "As everywhere in the Alps, the season turns on Saturday: charter rotations follow one another and the valleys fill in a few hours. Allow extra time on that day, and give us your flight number so the pick-up follows the actual landing.",
       },
-      { type: "titre2", texte: "The Tauern car-carrying train" },
-      {
-        type: "paragraphe",
-        texte:
-          "Towards Carinthia the Gastein valley is a dead end for cars: vehicles take the shuttle train from Böckstein to Mallnitz. It is a normal part of local life, and sometimes faster than driving round by the motorway.",
-      },
     ],
     faq: [
       {
-        question: "How long to Bad Gastein?",
+        question: "How long to Selva Val Gardena?",
         reponse:
-          "About 2 hours for 104 km, motorway then valley road. Allow more on a Saturday in high season.",
+          "About 3 h 40 for 292 km, without traffic. From Innsbruck the same resort is under two hours away. Allow more on a Saturday in high season.",
       },
       {
         question: "Does Salzburg fly midweek?",

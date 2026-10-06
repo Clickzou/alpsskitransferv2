@@ -2,7 +2,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import SelecteurLangue from "@/components/SelecteurLangue";
 import IconePanier from "@/components/panier/IconePanier";
-import { PAYS } from "@/lib/pays";
+import { paysDesservis } from "@/lib/pays";
 import type { Alternative, Lang } from "@/lib/i18n";
 import { lienAccueil, lienTunnelLangue, navigation as liensNavigation } from "@/lib/intl/navigation";
 import { T } from "@/lib/intl/textes";
@@ -14,8 +14,9 @@ import { T } from "@/lib/intl/textes";
  * réservation, la navigation. Le bouton d'action est donc le seul élément
  * coloré, et il reste visible sur mobile là où le menu se replie.
  *
- * La barre secondaire liste les quatre pays du silo : c'est le maillage le plus
- * rentable du site, présent sur chaque page.
+ * La barre secondaire liste les pays où nous desservons des stations (France,
+ * Italie, Suisse — l'Autriche en est sortie le 10 septembre 2026) : c'est le
+ * maillage le plus rentable du site, présent sur chaque page.
  *
  * `alternatives` ne contient que des pages qui existent réellement dans l'autre
  * langue — voir `SelecteurLangue`.
@@ -148,8 +149,7 @@ export default function Header({
             <span className="font-semibold uppercase tracking-widest text-alpine-600">
               Where we drive
             </span>
-            {Object.entries(PAYS)
-              .filter(([, pays]) => pays.code !== "DE")
+            {paysDesservis()
               .map(([slug, pays]) => (
                 <Link key={slug} href={`/${slug}/`} className="hover:text-marque">
                   {pays.nom}

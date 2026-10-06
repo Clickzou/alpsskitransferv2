@@ -31,7 +31,6 @@ export const gstaad: Resort = {
     { type: "liste", items: ["Exclusive and personalized – Travel in a luxury sedan, SUV, or minivan.", "Perfect for families, groups, or VIP travelers.", "Non-stop service from your arrival airport straight to Gstaad."] },
     { type: "titre3", texte: "Transfers to Gstaad" },
     { type: "liste", items: ["A cost-effective option for solo travelers or smaller groups.", "Comfortable, high-quality vehicles, and a pick-up time that follows your flight.", "Reliable pick-up from Geneva, Zurich, or Bern airports."] },
-    { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions Gstaad Ski Transfers" },
   ],
 

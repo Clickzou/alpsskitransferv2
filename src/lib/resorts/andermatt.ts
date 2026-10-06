@@ -32,7 +32,6 @@ export const andermatt: Resort = {
     { type: "paragraphe", texte: "We offer private ski transfers from the nearest airports to Andermatt:" },
     { type: "paragraphe", texte: "✅ Zurich Airport (ZRH) → Andermatt – 1h45✅ Milan Malpensa Airport (MXP) → Andermatt – 2h30✅ Geneva Airport (GVA) → Andermatt – 3h30✅ Lugano Airport (LUG) → Andermatt – 2h✅ Bern Airport (BRN) → Andermatt – 2h15" },
     { type: "paragraphe", texte: "Our Zurich to Andermatt ski transfers are the most popular option, offering the fastest and most convenient way to reach the resort." },
-    { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions Andermatt Ski Transfer" },
     { type: "liste", items: ["Choose your airport – Select Zurich, Milan, Geneva, or other nearby airports.", "Pick your vehicle – according to your group size and your luggage.", "Enter your travel details – Specify your pick-up and drop-off locations, flight time, and number of passengers.", "Confirm and book online – Secure your ski transfer with instant confirmation.", "Meet your driver at the airport – Travel comfortably to Andermatt without stress."] },
     { type: "paragraphe", texte: "Booking in advance ensures the best prices and availability, especially during peak ski season." },

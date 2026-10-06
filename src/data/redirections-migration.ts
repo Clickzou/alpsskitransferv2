@@ -6,7 +6,7 @@
  * wp-export/redirections-a-arbitrer.csv et se traitent à la main dans
  * `redirections.ts`.
  *
- * 200 règles générées le 2026-10-02.
+ * 208 règles générées le 2026-10-06.
  */
 export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/airport-ski-transfers/austria": "/austria-ski-transfers/", // hub pays
@@ -105,6 +105,14 @@ export const REDIRECTIONS_MIGRATION: Record<string, string> = {
   "/airport-ski-transfers/swiss/zurich-to-verbier-transfers": "/switzerland-ski-transfers/verbier/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-wengen-transfers": "/switzerland-ski-transfers/wengen/zurich-airport-transfers/", // trajet
   "/airport-ski-transfers/swiss/zurich-to-zermatt-transfers": "/switzerland-ski-transfers/zermatt/zurich-airport-transfers/", // trajet
+  "/austria-ski-transfers/ischgl": "/austria-ski-transfers/", // station hors périmètre
+  "/austria-ski-transfers/kitzbuhel": "/austria-ski-transfers/", // station hors périmètre
+  "/austria-ski-transfers/mayrhofen": "/austria-ski-transfers/", // station hors périmètre
+  "/austria-ski-transfers/obergurgl": "/austria-ski-transfers/", // station hors périmètre
+  "/austria-ski-transfers/serfaus": "/austria-ski-transfers/", // station hors périmètre
+  "/austria-ski-transfers/solden": "/austria-ski-transfers/", // station hors périmètre
+  "/austria-ski-transfers/st-anton-am-arlberg": "/austria-ski-transfers/", // station hors périmètre
+  "/austria-ski-transfers/zell-am-see": "/austria-ski-transfers/", // station hors périmètre
   "/booking-page": "/book-ski-transfer-tickets/", // page fonctionnelle
   "/checkout": "/book-ski-transfer-tickets/", // page fonctionnelle
   "/checkout-form": "/book-ski-transfer-tickets/", // page fonctionnelle

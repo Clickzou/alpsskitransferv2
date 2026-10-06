@@ -83,7 +83,7 @@ export const generalQuestions: PageFonctionnelle = {
     {
       question: "Are your vehicles equipped for winter?",
       reponse:
-        "Yes. All our vehicles carry snow tyres and the equipment needed for safe travel in the Alps, all season — as the law requires in Savoie and Haute-Savoie from 1 November to 31 March, and in Austria in wintry conditions.",
+        "Yes. All our vehicles carry snow tyres and the equipment needed for safe travel in the Alps, all season — as the law requires in Savoie and Haute-Savoie from 1 November to 31 March, and in Austria, on the road from Innsbruck Airport, in wintry conditions.",
     },
     {
       question: "Can you carry skis, snowboards and child seats?",

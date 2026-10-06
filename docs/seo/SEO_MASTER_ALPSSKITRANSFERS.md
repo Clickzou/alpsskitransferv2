@@ -13,10 +13,11 @@ l'inventaire de la base WordPress du 2026-09-07 (`wp-export/inventaire.json`).
 |---|---|
 | Entreprise | Alps Ski Transfers — transferts privés aéroport ↔ stations des Alpes |
 | Site | alpsskitransfers.com (WordPress + WooCommerce + Rank Math, anglais seul) |
-| Adresse affichée sur le site | 275 New North Road, London N1 7AA |
-| Adresse de la fiche Google | Green Lanes, London N15 3EA — **un arrêt de bus**, fiche non revendiquée |
-| Téléphone / e-mail | **à fournir par le client** — absents des données structurées actuelles |
-| Zone desservie | France · Suisse · Autriche · Italie (+ aéroports allemands) |
+| Siège (exploitant) | NM Transports 73 (Nassim Matmati, EI), 189 Chemin du Cruet, 73240 Drumettaz-Clarafond — **depuis le 29/09/2026** (auparavant Chambéry). Source unique : `src/data/site.ts` |
+| Adresse de l'ancien site (avant refonte) | 275 New North Road, London N1 7AA — **obsolète, à ne plus jamais afficher** |
+| Adresse de la fiche Google actuelle | Green Lanes, London N15 3EA — **un arrêt de bus** ; nouvelle fiche (Drumettaz-Clarafond) en attente de l'INPI |
+| Téléphone / e-mail | +33 7 69 78 91 89 · contact@alpsskitransfers.com |
+| Zone desservie | France · Suisse · Italie. **L'Autriche est hors périmètre depuis le 10/09/2026** : aucune station autrichienne ; Innsbruck reste un aéroport de départ (Selva Val Gardena). Aéroports allemands et autrichiens = portes d'entrée seulement |
 | Aéroports | 31 |
 | Stations | **68** (51 au catalogue tarifaire + 17 découvertes dans les URL) |
 | Clientèle | UK · NL · BE · DE en priorité ; le marché français est vierge |
@@ -150,7 +151,8 @@ téléphone.
   `hreflang` n'est déclaré (tout en `en-GB`). Le sélecteur est purement décoratif.
 - **L'allemand sera probablement plus rentable que le français** (Innsbruck, Salzbourg,
   Zurich desservis, pouvoir d'achat élevé, site déjà classé — mal — dessus). À prévoir
-  en phase 2, le néerlandais ensuite.
+  en phase 2, le néerlandais ensuite. *(Écrit le 07/09/2026 ; l'Autriche est sortie du
+  périmètre le 10/09/2026 : l'allemand ne vise plus que la Suisse alémanique.)*
 
 ---
 

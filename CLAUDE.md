@@ -151,12 +151,18 @@ d'où une forme plus courte.
    Dix stations, dix-sept trajets, sept traductions allemandes et un hub pays
    traduit retirés — dans toutes les langues, anglais compris. Le point d'entrée
    est `src/lib/resorts/registry.ts` : tous les scripts en partent, donc une
-   station remise là revient au prochain `migrer:stations`. Les vingt-six URL
-   autrichiennes de l'ancien site partent en 301 vers `/austria-ski-transfers/`,
+   station remise là revient au prochain `migrer:stations`. Les trente-quatre URL
+   autrichiennes de l'ancien site partent en 301 vers `/austria-ski-transfers/`
+   (les huit pages `/austria-ski-transfers/{station}/` n'avaient aucune règle et
+   répondaient 404 jusqu'au 6 octobre 2026 : le silo était supposé conservé en bloc),
    qui subsiste comme **porte d'entrée d'aéroports** — Innsbruck dessert Selva
    Val Gardena — sur le modèle de l'Allemagne, qui n'a jamais eu de station. La
    table `STATIONS_HORS_PERIMETRE` du générateur de redirections porte ces
    destinations : c'est là qu'on ajoute un pays si le périmètre bouge encore.
+   Le hub, l'Allemagne comme l'Autriche, porte `porteAeroports` dans
+   `src/lib/pays.ts` : il garde son URL mais sort de toute liste « pays
+   desservis » (barre « Where we drive », pied de page, index des stations), et
+   `zonesDesservies` (`areaServed`) ne cite que France, Suisse, Italie.
    **Ce qu'il faut savoir** : le silo allemand ne garde que Zermatt, Davos et
    St. Moritz. Le renforcer suppose de traduire d'autres stations suisses.
 

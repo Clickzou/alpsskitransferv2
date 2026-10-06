@@ -20,6 +20,19 @@ export interface Pays {
    * que le registre des stations s'interdit.
    */
   visuel?: { nom: NomVisuel; alt: string };
+  /**
+   * Pays où nous ne desservons **aucune station** : son hub n'est qu'une porte
+   * d'entrée d'aéroports (l'Allemagne depuis toujours, l'Autriche depuis le
+   * 10 septembre 2026). Il garde son URL — cible de redirections — mais ne
+   * figure dans aucune liste « pays desservis » : barre « Where we drive »,
+   * pied de page, index des stations, « autres pays ».
+   */
+  porteAeroports?: true;
+}
+
+/** Les pays où nous desservons réellement des stations. */
+export function paysDesservis(): [string, Pays][] {
+  return Object.entries(PAYS).filter(([, pays]) => !pays.porteAeroports);
 }
 
 export const PAYS: Record<string, Pays> = {
@@ -28,15 +41,16 @@ export const PAYS: Record<string, Pays> = {
     code: "AT",
     nom: "Austria",
     adjectif: "Austrian",
+    porteAeroports: true,
     /*
      * **Nous ne desservons plus les stations autrichiennes** — décision du
      * client, 10 septembre 2026. Ce hub devient ce qu'est celui de l'Allemagne :
-     * une porte d'entrée d'aéroports, utile parce qu'Innsbruck et Salzbourg
-     * ouvrent le Sud-Tyrol italien et les Dolomites, souvent pour moins cher
-     * qu'un vol sur Milan ou Vérone.
+     * une porte d'entrée d'aéroports, utile parce qu'Innsbruck est l'aéroport le
+     * plus proche de la Val Gardena. Aucune station autrichienne n'y est
+     * présentée comme desservie (vérifié le 6 octobre 2026).
      */
     intro: [
-      "We no longer run transfers to Austrian resorts. What Austria still gives you is airports — and two of them are genuinely useful for the Italian side of the Alps: Innsbruck sits an hour and three quarters from Selva Val Gardena over the Brenner, and Salzburg opens the eastern Dolomites when the fare beats Milan or Verona.",
+      "We do not run transfers to Austrian resorts. What Austria still gives you is an airport, and a genuinely useful one for the Italian side of the Alps: Innsbruck sits an hour and three quarters from Selva Val Gardena over the Brenner, closer to the valley than any Italian airport.",
       "Innsbruck's approach is hemmed in by mountains and the airport diverts more often than most, usually to Munich or Salzburg — tell us if that happens and we drive from wherever you actually land, without a second booking. Winter tyres are compulsory across the country from 1 November to 15 April in wintry conditions, and our vehicles carry chains as well.",
     ],
   },
@@ -74,9 +88,10 @@ export const PAYS: Record<string, Pays> = {
     code: "DE",
     nom: "Germany",
     adjectif: "German",
+    porteAeroports: true,
     intro: [
-      "We do not serve German resorts — the Bavarian ski areas are small, and our drivers work the Alps proper. What Germany gives you is airports: Munich, Memmingen, Friedrichshafen and Stuttgart are all within a few hours of the Tyrol and the Arlberg, and their fares are frequently lower than Innsbruck's.",
-      "Munich is the useful one: a major hub with flights from everywhere, about two hours from the Zillertal and three from Solden or Ischgl. Friedrichshafen, on Lake Constance, is the quickest way into the Arlberg and the Grisons. Pick your airport below and you will see every resort we drive to from it, with distance and drive time.",
+      "We do not serve German resorts — the Bavarian ski areas are small, and our drivers work the Alps proper. What Germany gives you is airports: Munich, Memmingen, Friedrichshafen and Stuttgart, with fares that are sometimes lower than those into Zurich or Milan.",
+      "Friedrichshafen, on Lake Constance, is the quickest way into the Grisons: Laax is about 1 h 50 away and Davos about 2 hours. Munich, the biggest hub, puts Selva Val Gardena just under four hours away over the Brenner. Pick your airport below and you will see every resort we drive to from it, with distance and drive time.",
     ],
   },
 };

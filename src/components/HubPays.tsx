@@ -17,7 +17,7 @@ import {
 import { AIRPORTS } from "@/lib/airports";
 import { alternativesHubPaysEn } from "@/lib/intl/liens";
 import { dessertes } from "@/lib/airports/dessertes";
-import { PAYS } from "@/lib/pays";
+import { PAYS, paysDesservis } from "@/lib/pays";
 import { lienReservation } from "@/lib/reservation/config";
 import { RESORTS_MIGRES } from "@/lib/resorts";
 import { filArianeSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
@@ -71,18 +71,37 @@ export default function HubPays({ silo }: { silo: string }) {
         >
           <FilAriane clair elements={filAriane} />
 
+          {/*
+            Un pays « porte d'aéroports » (Allemagne, Autriche depuis le
+            10 septembre 2026) ne dessert aucune station : le titre et le chapô
+            le disent, au lieu d'annoncer « 0 resorts » comme une offre.
+          */}
           <h1 className="mt-4 max-w-3xl text-balance font-display text-titre-page">
-            Ski transfers in {pays.nom}
+            {pays.porteAeroports
+              ? `Ski transfers from airports in ${pays.nom}`
+              : `Ski transfers in ${pays.nom}`}
           </h1>
           <p className="mt-4 max-w-2xl text-chapo text-glacier-200">
-            Private transfers to {stations.length} {pays.adjectif} resorts, from{" "}
-            {aeroports.length} airports and beyond. Fixed price per vehicle, flight
-            tracking, winter-equipped vehicles.
+            {pays.porteAeroports ? (
+              <>
+                We do not serve {pays.adjectif} resorts. {pays.nom}&rsquo;s airports are
+                gateways to the resorts we drive to in the French, Swiss and Italian
+                Alps. Fixed price per vehicle, flight tracking, winter-equipped vehicles.
+              </>
+            ) : (
+              <>
+                Private transfers to {stations.length} {pays.adjectif} resorts, from{" "}
+                {aeroports.length} airports and beyond. Fixed price per vehicle, flight
+                tracking, winter-equipped vehicles.
+              </>
+            )}
           </p>
 
           <Reperes
             items={[
-              { libelle: "Resorts", valeur: String(stations.length) },
+              ...(stations.length > 0
+                ? [{ libelle: "Resorts", valeur: String(stations.length) }]
+                : []),
               { libelle: "Airports", valeur: String(aeroports.length) },
               ...(trajets > 0 ? [{ libelle: "Routes", valeur: String(trajets) }] : []),
             ]}
@@ -172,10 +191,13 @@ export default function HubPays({ silo }: { silo: string }) {
         ) : null}
 
         <Section fond="glacier">
-          <EnTeteSection surtitre="Elsewhere in the Alps" titre="Other countries we serve" />
+          <EnTeteSection
+            surtitre="Elsewhere in the Alps"
+            titre={pays.porteAeroports ? "Countries we serve" : "Other countries we serve"}
+          />
           <ul className="mt-6 flex flex-wrap gap-2">
-            {Object.entries(PAYS)
-              .filter(([slugPays, autre]) => slugPays !== silo && autre.code !== "DE")
+            {paysDesservis()
+              .filter(([slugPays]) => slugPays !== silo)
               .map(([slugPays, autre]) => (
                 <li key={slugPays}>
                   <Link
@@ -189,7 +211,13 @@ export default function HubPays({ silo }: { silo: string }) {
           </ul>
         </Section>
 
-        <AppelAction titre={`Book your ski transfer in ${pays.nom}`} />
+        <AppelAction
+          titre={
+            pays.porteAeroports
+              ? `Book your ski transfer from ${pays.nom}`
+              : `Book your ski transfer in ${pays.nom}`
+          }
+        />
       </main>
       <Footer lang="en" />
       <JsonLd

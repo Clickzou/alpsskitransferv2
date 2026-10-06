@@ -37,7 +37,6 @@ export const villarsSurOllon: Resort = {
     { type: "paragraphe", texte: "We provide Villars-sur-Ollon Ski Transfers from the following airports:" },
     { type: "liste", items: ["✅ Geneva Airport (GVA) – 1h30", "✅ Zurich Airport (ZRH) – 2h30", "✅ Milan Malpensa Airport (MXP) – 3h00", "✅ Bern Airport (BRN) – 1h45", "✅ Sion Airport (SIR) – 1h15"] },
     { type: "paragraphe", texte: "Our transfers offer a comfortable and hassle-free journey, with flight tracking, flexible schedules, and a choice of three vehicle categories." },
-    { type: "titre3", texte: "Top Ski Resorts in Austria for Private Transfers" },
     { type: "titre2", texte: "Frequently asked questions Villars-sur-Ollon Ski Transfer" },
     { type: "liste", items: ["Enter your travel details – Select your airport and drop-off location.", "Choose your transfer type – Standard, Business or Premium, depending on your group.", "Book online – Secure your spot with instant confirmation.", "Meet your driver – Enjoy a hassle-free ride to your ski resort."] },
     { type: "paragraphe", texte: "Book your transfer today to ensure a smooth, comfortable, and stress-free start to your ski holiday in Villars-sur-Ollon!" },

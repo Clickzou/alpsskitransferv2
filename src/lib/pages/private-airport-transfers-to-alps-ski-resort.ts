@@ -61,7 +61,7 @@ export const privateAirportTransfersToAlpsSkiResort: PageFonctionnelle = {
     {
       question: "Which airports do you transfer from?",
       reponse:
-        "Geneva, Lyon, Chambéry-Savoie, Grenoble-Isère, Turin, Milan Malpensa, Zurich, Salzburg, Nice and Paris Charles de Gaulle, among others. Geneva is the most used gateway to the French Alps; Chambéry is the closest airport to the Three Valleys. Each airport has its own page listing the resorts it serves and the drive time to each.",
+        "Geneva, Lyon, Chambéry-Savoie, Grenoble-Isère, Turin, Milan Malpensa, Zurich, Nice and Paris Charles de Gaulle, among others. Geneva is the most used gateway to the French Alps; Chambéry is the closest airport to the Three Valleys. Each airport has its own page listing the resorts it serves and the drive time to each.",
     },
     {
       question: "Which ski resorts can I reach by transfer?",

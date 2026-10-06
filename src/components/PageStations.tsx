@@ -18,7 +18,7 @@ import {
 import { PAGE_STATIONS } from "@/data/page-stations";
 import { accesStation, duree } from "@/lib/airports/dessertes";
 import type { PageFonctionnelle } from "@/lib/pages";
-import { PAYS } from "@/lib/pays";
+import { paysDesservis } from "@/lib/pays";
 import { LIEUX } from "@/lib/reservation/lieux";
 import { RESORTS_MIGRES, SLUG_PAYS } from "@/lib/resorts";
 import { filArianeSchema, faqSchema, grapheJsonLd, organisationSchema } from "@/lib/schema";
@@ -49,8 +49,7 @@ export default function PageStations({ page }: { page: PageFonctionnelle }) {
    * son aéroport le plus rapide : c'est le repère qui aide à choisir, bien plus
    * qu'une distance à vol d'oiseau.
    */
-  const parPays = Object.entries(PAYS)
-    .filter(([, pays]) => pays.code !== "DE")
+  const parPays = paysDesservis()
     .map(([silo, pays]) => ({
       silo,
       nom: pays.nom,

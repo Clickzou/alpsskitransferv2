@@ -69,7 +69,7 @@ const PAYS_ANCIEN = {
  * même sujet : l'Autriche, ses aéroports, ce qu'on y fait encore. Un visiteur
  * qui cherchait « transfert Innsbruck Ischgl » y trouve une réponse — nous n'y
  * allons plus, voici ce que nous desservons depuis Innsbruck — là où une 410
- * lui ferme la porte au nez. Ces vingt-six URL avaient des liens entrants et de
+ * lui ferme la porte au nez. Ces trente-quatre URL avaient des liens entrants et de
  * l'antériorité ; les jeter serait s'appauvrir deux fois.
  */
 const STATIONS_HORS_PERIMETRE = {
@@ -225,7 +225,16 @@ for (const entree of inventaire) {
   const segments = url.split("/").filter(Boolean);
 
   // --- 1. Le silo conservé : rien à faire ------------------------------------
+  /*
+   * Sauf pour une station sortie du périmètre. Le silo était supposé conservé
+   * en bloc, si bien que les huit pages `/austria-ski-transfers/{station}/` de
+   * l'ancien site n'avaient aucune règle : elles répondaient 404 en production
+   * depuis la mise en ligne (constaté le 6 octobre 2026). Elles suivent
+   * maintenant la règle des autres URL autrichiennes.
+   */
   if (/^\/[a-z]+-ski-transfers\//.test(url) && !url.startsWith("/airport-ski-transfers/")) {
+    const horsPerimetre = segments.length >= 2 ? STATIONS_HORS_PERIMETRE[segments[1]] : undefined;
+    if (horsPerimetre) poser(url, horsPerimetre, "station hors périmètre");
     continue;
   }
 

@@ -167,10 +167,10 @@ export const DEPARTS = {
       lien: { texte: "Transfers from Geneva", chemin: "/switzerland-ski-transfers/geneva-airport/" },
     },
     {
-      titre: "Private transfers from Paris, Milan, Turin, Zurich, Salzburg",
+      titre: "Private transfers from Paris, Milan, Turin, Zurich",
       image: { nom: "aeroport-paris-milan-turin", alt: "Aircraft on approach over Paris" },
       texte:
-        "Traveling from Paris, Milan, Turin, Zurich, or Salzburg? Alps Ski Transfers offers private transfers to top French Alps ski resorts: door-to-door service, flexible schedule and premium comfort, with modern vehicles with space for luggage and ski equipment.",
+        "Traveling from Paris, Milan, Turin or Zurich? Alps Ski Transfers offers private transfers to top French Alps ski resorts: door-to-door service, flexible schedule and premium comfort, with modern vehicles with space for luggage and ski equipment.",
       lien: { texte: "All airports", chemin: "/italy-ski-transfers/" },
     },
   ],
@@ -258,7 +258,7 @@ export const FAQ_ACCUEIL = {
     {
       question: "What are the best ski transfer options?",
       reponse:
-        "Choosing the right ski transfer depends on your budget and preferences. We offer private transfers from Geneva, Paris, Milan, Turin, Zurich, Salzburg, Lyon, Grenoble and Chambéry Airports — a door-to-door private transfer for maximum comfort — reliable ski transfers with insured vehicles and experienced drivers, and affordable ski transfers with competitive rates to top resorts.",
+        "Choosing the right ski transfer depends on your budget and preferences. We offer private transfers from Geneva, Paris, Milan, Turin, Zurich, Lyon, Grenoble and Chambéry Airports — a door-to-door private transfer for maximum comfort — reliable ski transfers with insured vehicles and experienced drivers, and affordable ski transfers with competitive rates to top resorts.",
     },
     {
       question: "How to book ski transfers?",
@@ -268,7 +268,7 @@ export const FAQ_ACCUEIL = {
     {
       question: "What airports offer ski transfers?",
       reponse:
-        "We provide airport ski transfers from all major hubs serving the Alps: Geneva Airport, the busiest gateway to the top resorts, Lyon, Grenoble and Chambéry for the French Alps, and Paris, Milan, Turin, Zurich and Salzburg for longer approaches.",
+        "We provide airport ski transfers from all major hubs serving the Alps: Geneva Airport, the busiest gateway to the top resorts, Lyon, Grenoble and Chambéry for the French Alps, and Paris, Milan, Turin and Zurich for longer approaches.",
     },
     {
       question: "What ski resorts are popular for transfers?",

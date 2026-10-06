@@ -231,6 +231,18 @@ function assembler(blocs) {
   return sortie;
 }
 
+/**
+ * L'Autriche est hors périmètre depuis le 10 septembre 2026. Plusieurs pages
+ * suisses du WordPress portaient un titre « Top Ski Resorts in Austria for
+ * Private Transfers » (la liste qui suivait était un widget, non repris) et
+ * Davos une liste « Lech & Zürs (Austria) ». Retirés à la main le 6 octobre
+ * 2026 ; ce filtre les empêche de revenir au prochain `migrer:stations`.
+ */
+function annonceAutriche(b) {
+  if (b.type === "liste") return b.items.every((i) => /\(Austria\)/.test(i));
+  return /Ski Resorts in Austria/i.test(b.texte);
+}
+
 /** Sépare la FAQ du corps : un titre interrogatif et le texte qui le suit. */
 function separerFaq(blocs) {
   const corps = [];
@@ -345,7 +357,7 @@ for (const [slug, page] of parSlug) {
     continue;
   }
 
-  const blocs = assembler(extraire(html));
+  const blocs = assembler(extraire(html)).filter((b) => !annonceAutriche(b));
   const { corps, faq } = separerFaq(blocs);
 
   // Le H1 rédigé dans la page vaut mieux que le titre WordPress, qui n'est
