@@ -1,0 +1,936 @@
+{
+  "version": 1,
+  "depot": "Clickzou/alpsskitransferv2",
+  "site": "https://alpsskitransfers.com",
+  "propriete_search_console": "https://alpsskitransfers.com/",
+  "genere_le": "2026-10-06T21:02:24.903Z",
+  "periodes": {
+    "j90": {
+      "du": "2026-07-06",
+      "au": "2026-10-03"
+    },
+    "j28": {
+      "du": "2026-09-06",
+      "au": "2026-10-03"
+    }
+  },
+  "quota_contenus_mois": 2,
+  "inventaire": "complet",
+  "arbitrage": {
+    "decision": "laisser_murir",
+    "explication_client": "20 de vos articles ont moins de 3 mois : Google met en général deux à trois mois à bien placer un nouvel article. Plutôt que d'en ajouter d'autres tout de suite, nous les laissons prendre leur place et nous renforçons les liens vers vos pages principales.",
+    "stats": {
+      "articles_mesures": 25,
+      "articles_90j_et_plus": 0,
+      "invisibles": 0,
+      "taux_invisibles": null,
+      "en_zone_refresh": 0,
+      "articles_moins_90j": 20
+    },
+    "recommandations": [],
+    "deja_au_journal": {}
+  },
+  "requetes_mal_couvertes": [
+    {
+      "requete": "austria ski transfers",
+      "impressions": 1042,
+      "meilleure_position": 23.7,
+      "meilleure_page": "/austria-ski-transfers",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "ski resorts transfer",
+      "impressions": 857,
+      "meilleure_position": 21.9,
+      "meilleure_page": "/",
+      "page_dediee": false,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "ski transfers geneva",
+      "impressions": 582,
+      "meilleure_position": 34.6,
+      "meilleure_page": "/",
+      "page_dediee": false,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "geneva ski transfers",
+      "impressions": 503,
+      "meilleure_position": 41.3,
+      "meilleure_page": "/",
+      "page_dediee": false,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "turin to sauze d'oulx transfer",
+      "impressions": 480,
+      "meilleure_position": 40.5,
+      "meilleure_page": "/italy-ski-transfers/sauze-doulx",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "courchevel transfers",
+      "impressions": 469,
+      "meilleure_position": 56.1,
+      "meilleure_page": "/france-ski-transfers/val-thorens-2",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "airport ski transfers italy",
+      "impressions": 430,
+      "meilleure_position": 20.8,
+      "meilleure_page": "/",
+      "page_dediee": false,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "turin to cervinia transfer",
+      "impressions": 388,
+      "meilleure_position": 32.1,
+      "meilleure_page": "/airport-ski-transfers/italy/turin-to-cervinia-transfers",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "turin to sestriere transfer",
+      "impressions": 366,
+      "meilleure_position": 33.6,
+      "meilleure_page": "/airport-ski-transfers/italy/turin-to-sestriere-transfers",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "france ski transfers",
+      "impressions": 352,
+      "meilleure_position": 32.5,
+      "meilleure_page": "/",
+      "page_dediee": false,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "la thuile transfers",
+      "impressions": 351,
+      "meilleure_position": 30.2,
+      "meilleure_page": "/italy-ski-transfers/la-thuile",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "geneva to la thuile transfer",
+      "impressions": 321,
+      "meilleure_position": 31.1,
+      "meilleure_page": "/italy-ski-transfers/la-thuile",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "italy ski transfers",
+      "impressions": 294,
+      "meilleure_position": 23.2,
+      "meilleure_page": "/",
+      "page_dediee": false,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "airport ski transfers italy turin to sestriere transfers",
+      "impressions": 292,
+      "meilleure_position": 37.8,
+      "meilleure_page": "/airport-ski-transfers/italy",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    },
+    {
+      "requete": "ski lifts transfers",
+      "impressions": 289,
+      "meilleure_position": 31,
+      "meilleure_page": "/private-airport-transfers-to-alps-ski-resort",
+      "page_dediee": true,
+      "informationnelle": false,
+      "candidate_nouvel_article": false
+    }
+  ],
+  "pages_money_a_soutenir": [
+    {
+      "chemin": "/",
+      "impressions": 19341,
+      "clics": 103,
+      "position": 21.6,
+      "requetes": [
+        {
+          "requete": "ski transfers",
+          "impressions": 2202,
+          "clics": 1,
+          "position": 12.4
+        },
+        {
+          "requete": "alps transfers",
+          "impressions": 1206,
+          "clics": 12,
+          "position": 8.8
+        },
+        {
+          "requete": "ski resort transfers",
+          "impressions": 1090,
+          "clics": 1,
+          "position": 11.8
+        }
+      ]
+    },
+    {
+      "chemin": "/airport-ski-transfers/italy",
+      "impressions": 1636,
+      "clics": 6,
+      "position": 28.1,
+      "requetes": [
+        {
+          "requete": "airport ski transfers italy bergamo to lauterbrunnen transfers",
+          "impressions": 96,
+          "clics": 0,
+          "position": 36.6
+        },
+        {
+          "requete": "airport ski transfers italy milan to champoluc transfers",
+          "impressions": 92,
+          "clics": 0,
+          "position": 31
+        },
+        {
+          "requete": "airport ski transfers italy turin to sestriere transfers",
+          "impressions": 91,
+          "clics": 0,
+          "position": 37.8
+        }
+      ]
+    },
+    {
+      "chemin": "/switzerland-ski-transfers/tasch",
+      "impressions": 844,
+      "clics": 1,
+      "position": 20.8,
+      "requetes": [
+        {
+          "requete": "milan to tasch transfer",
+          "impressions": 228,
+          "clics": 0,
+          "position": 26.8
+        },
+        {
+          "requete": "switzerland ski transfers tasch",
+          "impressions": 108,
+          "clics": 0,
+          "position": 1.3
+        },
+        {
+          "requete": "tasch to milan transfer",
+          "impressions": 104,
+          "clics": 0,
+          "position": 25.6
+        }
+      ]
+    },
+    {
+      "chemin": "/italy-ski-transfers/selva-val-gardena",
+      "impressions": 568,
+      "clics": 1,
+      "position": 28.3,
+      "requetes": [
+        {
+          "requete": "transfer selva val gardena",
+          "impressions": 170,
+          "clics": 0,
+          "position": 32.3
+        },
+        {
+          "requete": "selva di val gardena airport transfer",
+          "impressions": 124,
+          "clics": 0,
+          "position": 50.1
+        },
+        {
+          "requete": "italy ski transfers selva val gardena",
+          "impressions": 94,
+          "clics": 0,
+          "position": 19.5
+        }
+      ]
+    },
+    {
+      "chemin": "/italy-ski-transfers/cortina",
+      "impressions": 493,
+      "clics": 1,
+      "position": 26.8,
+      "requetes": [
+        {
+          "requete": "cortina transfers",
+          "impressions": 167,
+          "clics": 0,
+          "position": 40
+        },
+        {
+          "requete": "italy ski transfers cortina",
+          "impressions": 121,
+          "clics": 0,
+          "position": 10.3
+        },
+        {
+          "requete": "cortina d ampezzo transfers",
+          "impressions": 97,
+          "clics": 0,
+          "position": 31.9
+        }
+      ]
+    },
+    {
+      "chemin": "/switzerland-ski-transfers/villars-sur-ollon",
+      "impressions": 374,
+      "clics": 0,
+      "position": 26.3,
+      "requetes": [
+        {
+          "requete": "geneva to villars transfer",
+          "impressions": 143,
+          "clics": 0,
+          "position": 46.8
+        },
+        {
+          "requete": "switzerland ski transfers villars sur ollon",
+          "impressions": 99,
+          "clics": 0,
+          "position": 1.8
+        },
+        {
+          "requete": "airport ski transfers swiss zurich to crans montana transfers",
+          "impressions": 14,
+          "clics": 0,
+          "position": 81.1
+        }
+      ]
+    },
+    {
+      "chemin": "/switzerland-ski-transfers/davos",
+      "impressions": 347,
+      "clics": 0,
+      "position": 21.7,
+      "requetes": [
+        {
+          "requete": "switzerland ski transfers davos",
+          "impressions": 94,
+          "clics": 0,
+          "position": 12.3
+        },
+        {
+          "requete": "davos transfers",
+          "impressions": 91,
+          "clics": 0,
+          "position": 23.6
+        },
+        {
+          "requete": "airport ski transfers swiss zurich to davos transfers",
+          "impressions": 77,
+          "clics": 0,
+          "position": 33
+        }
+      ]
+    },
+    {
+      "chemin": "/airport-ski-transfers/austria/innsbruck-to-mayrhofen",
+      "impressions": 325,
+      "clics": 0,
+      "position": 19.8,
+      "requetes": [
+        {
+          "requete": "ski transfer innsbruck mayrhofen",
+          "impressions": 210,
+          "clics": 0,
+          "position": 18.7
+        },
+        {
+          "requete": "airport ski transfers austria innsbruck to mayrhofen",
+          "impressions": 85,
+          "clics": 0,
+          "position": 25.7
+        }
+      ]
+    },
+    {
+      "chemin": "/switzerland-ski-transfers/st-moritz",
+      "impressions": 292,
+      "clics": 0,
+      "position": 22.3,
+      "requetes": [
+        {
+          "requete": "switzerland ski transfers st moritz",
+          "impressions": 89,
+          "clics": 0,
+          "position": 15.6
+        },
+        {
+          "requete": "airport ski transfers swiss zurich to st moritz transfers",
+          "impressions": 77,
+          "clics": 0,
+          "position": 26.7
+        },
+        {
+          "requete": "st moritz transfer",
+          "impressions": 23,
+          "clics": 0,
+          "position": 46.9
+        }
+      ]
+    },
+    {
+      "chemin": "/austria-ski-transfers/serfaus",
+      "impressions": 289,
+      "clics": 1,
+      "position": 10.7,
+      "requetes": [
+        {
+          "requete": "austria ski transfers serfaus",
+          "impressions": 113,
+          "clics": 1,
+          "position": 5.9
+        },
+        {
+          "requete": "airport ski transfers austria innsbruck to serfaus",
+          "impressions": 56,
+          "clics": 0,
+          "position": 13.6
+        },
+        {
+          "requete": "austria ski transfers",
+          "impressions": 1,
+          "clics": 0,
+          "position": 76
+        }
+      ]
+    }
+  ],
+  "suivi_effets": [],
+  "articles": [
+    {
+      "chemin": "/blog/snow-chains-winter-tyres-alps-rules",
+      "titre": "Snow chains and winter tyres in the Alps: the rules, the roads and your transfer",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 15,
+        "clics": 1,
+        "position": 5.9
+      },
+      "j28": {
+        "impressions": 15,
+        "clics": 1,
+        "position": 5.9
+      },
+      "requetes": [
+        {
+          "requete": "december 2026",
+          "impressions": 1,
+          "clics": 0,
+          "position": 7
+        },
+        {
+          "requete": "lake annecy",
+          "impressions": 1,
+          "clics": 0,
+          "position": 4
+        }
+      ]
+    },
+    {
+      "chemin": "/blog/how-to-get-to-chamonix-from-geneva",
+      "titre": "Geneva to Chamonix: bus, train or private transfer",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 8,
+        "clics": 0,
+        "position": 13
+      },
+      "j28": {
+        "impressions": 8,
+        "clics": 0,
+        "position": 13
+      },
+      "requetes": [
+        {
+          "requete": "geneva to le tour shuttle",
+          "impressions": 2,
+          "clics": 0,
+          "position": 6
+        },
+        {
+          "requete": "find reliable private transfer options from geneva airport to chamonix with transparent pricing and door-to-door service",
+          "impressions": 1,
+          "clics": 0,
+          "position": 3
+        },
+        {
+          "requete": "from geneva to chamonix",
+          "impressions": 1,
+          "clics": 0,
+          "position": 11
+        }
+      ]
+    },
+    {
+      "chemin": "/blog/car-free-ski-resorts-how-you-actually-get-there",
+      "titre": "Car-free ski resorts: how you actually get there",
+      "publie_le": "2026-09-08",
+      "j90": {
+        "impressions": 6,
+        "clics": 0,
+        "position": 11.2
+      },
+      "j28": {
+        "impressions": 6,
+        "clics": 0,
+        "position": 11.2
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/which-airport-for-the-french-alps",
+      "titre": "Which airport should you fly into for the French Alps?",
+      "publie_le": "2026-09-08",
+      "j90": {
+        "impressions": 6,
+        "clics": 0,
+        "position": 6.8
+      },
+      "j28": {
+        "impressions": 6,
+        "clics": 0,
+        "position": 6.8
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/closest-ski-resorts-to-geneva-airport",
+      "titre": "The closest ski resorts to Geneva airport, ranked by drive time",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 4.8
+      },
+      "j28": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 4.8
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/geneva-or-lyon-airport-three-valleys",
+      "titre": "Geneva or Lyon for the Three Valleys: which airport, for which village?",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 8.8
+      },
+      "j28": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 8.8
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/how-to-get-to-verbier-from-geneva",
+      "titre": "How to get to Verbier from Geneva: train or transfer",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 10.3
+      },
+      "j28": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 10.3
+      },
+      "requetes": [
+        {
+          "requete": "geneva verbier train",
+          "impressions": 1,
+          "clics": 0,
+          "position": 11
+        },
+        {
+          "requete": "train geneva to verbier",
+          "impressions": 1,
+          "clics": 0,
+          "position": 11
+        }
+      ]
+    },
+    {
+      "chemin": "/it/blog/quale-aeroporto-per-le-alpi",
+      "titre": null,
+      "publie_le": null,
+      "j90": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 35.3
+      },
+      "j28": {
+        "impressions": 4,
+        "clics": 0,
+        "position": 35.3
+      },
+      "requetes": [
+        {
+          "requete": "ncc innsbruck cortina",
+          "impressions": 1,
+          "clics": 0,
+          "position": 50
+        },
+        {
+          "requete": "transfer malpensa ginevra",
+          "impressions": 1,
+          "clics": 0,
+          "position": 78
+        }
+      ]
+    },
+    {
+      "chemin": "/blog/grenoble-airport-ski-transfers-alpe-dhuez-les-deux-alpes",
+      "titre": "Grenoble airport for Alpe d’Huez, Les Deux Alpes and Chamrousse",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 3,
+        "clics": 0,
+        "position": 12.3
+      },
+      "j28": {
+        "impressions": 3,
+        "clics": 0,
+        "position": 12.3
+      },
+      "requetes": [
+        {
+          "requete": "grenoble airport to alpe d'huez",
+          "impressions": 1,
+          "clics": 0,
+          "position": 21
+        }
+      ]
+    },
+    {
+      "chemin": "/blog/skis-snowboards-ski-transfer-luggage",
+      "titre": "Travelling to the Alps with skis and snowboards: bags, boots and what fits in the vehicle",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 3,
+        "clics": 0,
+        "position": 45.3
+      },
+      "j28": {
+        "impressions": 3,
+        "clics": 0,
+        "position": 45.3
+      },
+      "requetes": [
+        {
+          "requete": "how to pack skis and bikes for moving",
+          "impressions": 3,
+          "clics": 0,
+          "position": 45.3
+        }
+      ]
+    },
+    {
+      "chemin": "/blog/zurich-or-geneva-airport-swiss-ski-resorts",
+      "titre": "Zurich or Geneva: which airport for which Swiss ski resort?",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 3,
+        "clics": 1,
+        "position": 6.3
+      },
+      "j28": {
+        "impressions": 3,
+        "clics": 1,
+        "position": 6.3
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/how-to-get-to-zermatt-from-geneva",
+      "titre": "How to get to Zermatt from Geneva: train, Täsch or private transfer",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 31.5
+      },
+      "j28": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 31.5
+      },
+      "requetes": [
+        {
+          "requete": "geneva to zermatt",
+          "impressions": 1,
+          "clics": 0,
+          "position": 61
+        }
+      ]
+    },
+    {
+      "chemin": "/blog/private-transfer-train-or-rental-car-to-the-alps",
+      "titre": "Private transfer, train or rental car: the best way to reach the Alps",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 10
+      },
+      "j28": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 10
+      },
+      "requetes": [
+        {
+          "requete": "compare ski transfer options for alpine resorts",
+          "impressions": 1,
+          "clics": 0,
+          "position": 7
+        }
+      ]
+    },
+    {
+      "chemin": "/de/blog/autofreie-skiorte",
+      "titre": null,
+      "publie_le": null,
+      "j90": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 7.5
+      },
+      "j28": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 7.5
+      },
+      "requetes": [
+        {
+          "requete": "st moritz autofrei",
+          "impressions": 1,
+          "clics": 0,
+          "position": 5
+        }
+      ]
+    },
+    {
+      "chemin": "/fr/blog/quel-aeroport-pour-les-alpes",
+      "titre": null,
+      "publie_le": null,
+      "j90": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 4
+      },
+      "j28": {
+        "impressions": 2,
+        "clics": 0,
+        "position": 4
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/turin-airport-ski-resorts-milky-way-cervinia",
+      "titre": "Flying into Turin for the Milky Way, Cervinia and Monterosa",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 1,
+        "clics": 0,
+        "position": 5
+      },
+      "j28": {
+        "impressions": 1,
+        "clics": 0,
+        "position": 5
+      },
+      "requetes": [
+        {
+          "requete": "turin to sestriere transfer time",
+          "impressions": 1,
+          "clics": 0,
+          "position": 5
+        }
+      ]
+    },
+    {
+      "chemin": "/de/blog/welcher-flughafen-fuer-die-alpen",
+      "titre": null,
+      "publie_le": null,
+      "j90": {
+        "impressions": 1,
+        "clics": 0,
+        "position": 7
+      },
+      "j28": {
+        "impressions": 1,
+        "clics": 0,
+        "position": 7
+      },
+      "requetes": [
+        {
+          "requete": "flüge über die schweizer alpen",
+          "impressions": 1,
+          "clics": 0,
+          "position": 7
+        }
+      ]
+    },
+    {
+      "chemin": "/it/blog/dove-finisce-la-strada",
+      "titre": null,
+      "publie_le": null,
+      "j90": {
+        "impressions": 1,
+        "clics": 0,
+        "position": 2
+      },
+      "j28": {
+        "impressions": 1,
+        "clics": 0,
+        "position": 2
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/booking-a-ski-transfer-what-to-check",
+      "titre": "Booking a ski transfer: what to check before you pay",
+      "publie_le": "2026-09-08",
+      "j90": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "j28": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/chambery-airport-ski-resorts-saturday-flights",
+      "titre": "Chambéry airport: when the Saturday flights make sense",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "j28": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/family-ski-transfers-children-car-seats",
+      "titre": "Family ski transfers: children, car seats and getting through a long travel day",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "j28": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/flight-delayed-ski-transfer-what-happens",
+      "titre": "What happens to your ski transfer if your flight is delayed",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "j28": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/how-ski-transfer-prices-are-calculated",
+      "titre": "How ski transfer prices are calculated, and what to check before you pay",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "j28": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/private-or-shared-ski-transfer",
+      "titre": "Private or shared ski transfer: which one fits your trip?",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "j28": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "requetes": []
+    },
+    {
+      "chemin": "/blog/saturday-changeover-day-alps-ski-transfer",
+      "titre": "Saturday changeover day in the Alps: how to plan around the busiest day of the week",
+      "publie_le": "2026-09-15",
+      "j90": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "j28": {
+        "impressions": 0,
+        "clics": 0,
+        "position": null
+      },
+      "requetes": []
+    }
+  ]
+}
