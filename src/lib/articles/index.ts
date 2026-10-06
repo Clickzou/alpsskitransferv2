@@ -25,6 +25,7 @@ import { zurichOrGenevaSwissResorts } from "./zurichOrGenevaSwissResorts";
 import { closestAirportTarentaise } from "./closestAirportTarentaise";
 import { atterrirLyonSaintExupery } from "./atterrirLyonSaintExupery";
 import { genevaToPortesDuSoleil } from "./genevaToPortesDuSoleil";
+import { genevaToLaThuileCourmayeur } from "./genevaToLaThuileCourmayeur";
 
 export type { Article } from "./types";
 
@@ -71,8 +72,10 @@ export const ARTICLES: Article[] = [
   // le 13, Lyon en français seul le 27.
   closestAirportTarentaise,
   atterrirLyonSaintExupery,
-  // Novembre 2026, programmés (même audit) : Portes du Soleil depuis Genève le 10.
+  // Novembre 2026, programmés (même audit) : Portes du Soleil depuis Genève le 10,
+  // La Thuile et Courmayeur par le tunnel du Mont-Blanc le 24.
   genevaToPortesDuSoleil,
+  genevaToLaThuileCourmayeur,
   // Les corrections du client (relecture depuis l'espace client Clickzou) sont
   // appliquées ici, une fois : tout le site lit donc le texte relu.
 ].map(appliquerCorrections);
